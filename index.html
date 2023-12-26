@@ -34,6 +34,57 @@
 			background-color: #FFFFFF;
 			font-family: 'Inter', sans-serif;
 		}
+/* Add this style for the new button */
+.search-container button {
+    background-color: #CD201F;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px; /* Adjust the margin as needed */
+}
+
+/* Add this style for the new button hover state */
+.search-container button:hover {
+    background-color: #7e1515;
+}
+
+
+.modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Add this style for the modal content */
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* Add this style for the close button */
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+        }
 
 		th,
 		td {
@@ -136,9 +187,19 @@
 	</div>
 	<h1>Email Signature</h1>
 	<div class="search-container">
-		<i class="fas fa-search search-icon"></i>
-		<input type="text" placeholder="Search names..." class="search-box">
-	</div>
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search names..." class="search-box">
+        <button onclick="openTutorialModal()">Watch Tutorial</button>
+    </div>
+
+	<div id="tutorialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTutorialModal()">&times;</span>
+            <!-- Embedded YouTube video iframe -->
+            <iframe width="960" height="540" src="https://www.youtube.com/embed/bdBfeI8jVEA" frameborder="0"
+                allowfullscreen></iframe>
+        </div>
+    </div>
 	<table>
 		<thead>
 			<tr>
@@ -448,7 +509,8 @@
 		</tbody>
 	</table>
 	<div id="notAvailable" class="not-available" style="display: none;">
-		Email Signature Not Available
+		Email Signature - Not Available. 
+		Share your photo with Ruchita to get your email signature designed.
 	</div>
 
 </body>
@@ -516,6 +578,26 @@
 			document.body.removeChild(toast);
 		}, 2000);
 	}
+
+ // Function to open the modal
+        function openTutorialModal() {
+            var modal = document.getElementById('tutorialModal');
+            modal.style.display = 'block';
+        }
+
+        // Function to close the modal
+        function closeTutorialModal() {
+            var modal = document.getElementById('tutorialModal');
+            modal.style.display = 'none';
+        }
+
+        // Close the modal if the user clicks outside of it
+        window.onclick = function (event) {
+            var modal = document.getElementById('tutorialModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
 </script>
 
 </body>

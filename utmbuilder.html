@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTM Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            width: 400px;
+            font-family: 'Inter', sans-serif;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #222;
+            font-weight: 600;
+        }
+        label {
+            font-weight: 600;
+        }
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+        .button {
+            background-color: #009356;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+        .button:hover {
+            background-color: #0e8c6b;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #eef2f5;
+            border-radius: 8px;
+            font-size: 14px;
+            word-break: break-all;
+            position: relative;
+            font-family: 'Inter', sans-serif;
+        }
+        .copy-text-btn {
+            margin-top: 10px;
+            background-color: #f5f6f7;
+            color: #52525b;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>UTM Builder</h2>
+        <label class="required">Source</label>
+        <select id="source" onchange="updateMedium()" required>
+            <option value="">Select Source</option>
+            <option value="Paid Digital Marketing">Paid Digital Marketing</option>
+            <option value="Events">Events</option>
+            <option value="Telecaller">Telecaller</option>
+            <option value="Referral">Referral</option>
+            <option value="Referral Partners">Referral Partners</option>
+            <option value="Organic">Organic</option>
+            <option value="Direct Sales">Direct Sales</option>
+        </select>
+
+        <label class="required">Medium</label>
+        <select id="medium" required>
+            <option value="">Select Medium</option>
+        </select>
+
+        <label class="required">Campaign</label>
+        <input type="text" id="campaign" placeholder="Enter campaign name" required>
+
+        <label class="required">Term</label>
+        <input type="text" id="term" placeholder="Enter term" required>
+
+        <label class="required">CTA/Content</label>
+        <input type="text" id="cta" placeholder="Enter CTA (e.g. landing page)" required>
+
+        <label class="required">Link</label>
+        <select id="link" onchange="fillCustomLink()">
+            <option value="">Select or Enter Custom Link</option>
+            <option value="https://calendly.com/finnovate/financial-fitness-consultation">FinnFit Consultation - Calendly</option>
+            <option value="https://calendly.com/finnovate/fire-number-consultation">FIRE Consultation - Calendly</option>
+            <option value="https://calendly.com/finnovate/tax-planning">Tax Planning - Calendly</option>
+            <option value="https://plan.finnovate.in/finnfit">FinnFit Score</option>
+            <option value="https://insurance.finnovate.in">Insurance Landing Page</option>
+            <option value="custom">Custom</option>
+        </select>
+        <input type="text" id="custom-link" placeholder="Enter custom link" style="display:none;">
+
+        <button class="button" onclick="generateUTM()">Generate</button>
+        <div id="output"></div>
+        <button class="copy-text-btn" onclick="copyUTM()">Copy Text</button>
+    </div>
+
+    <script>
+        const mediumOptions = {
+            "Paid Digital Marketing": ["Facebook", "Google", "LinkedIn", "Email","Youtube"],
+            "Events": ["RTM", "Organised Event", "Participated Event", "Webinar"],
+            "Telecaller": ["Call"],
+            "Referral": ["In-Person", "Call"],
+            "Referral Partners": ["Direct", "YouTube"],
+            "Organic": ["Website", "Social Media Posting", "Email", "WhatsApp"],
+            "Direct Sales": ["Direct Visit", "Calling"]
+        };
+
+        function updateMedium() {
+            const source = document.getElementById("source").value;
+            const mediumSelect = document.getElementById("medium");
+            mediumSelect.innerHTML = "<option value=''>Select Medium</option>";
+            if (mediumOptions[source]) {
+                mediumOptions[source].forEach(medium => {
+                    let option = document.createElement("option");
+                    option.value = medium;
+                    option.textContent = medium;
+                    mediumSelect.appendChild(option);
+                });
+            }
+        }
+
+        function fillCustomLink() {
+            const linkDropdown = document.getElementById("link");
+            const customLinkInput = document.getElementById("custom-link");
+            if (linkDropdown.value === "custom") {
+                customLinkInput.style.display = "block";
+            } else {
+                customLinkInput.style.display = "none";
+                customLinkInput.value = "";
+            }
+        }
+
+        function generateUTM() {
+            let source = document.getElementById("source").value;
+            let medium = document.getElementById("medium").value;
+            let campaign = document.getElementById("campaign").value.trim();
+            let term = document.getElementById("term").value.trim();
+            let cta = document.getElementById("cta").value.trim();
+            let linkVal = document.getElementById("link").value;
+            let link = linkVal;
+            if (linkVal === "custom") {
+                link = document.getElementById("custom-link").value.trim();
+            }
+
+            // Validate all fields
+            if (!source || !medium || !campaign || !term || !cta || !link) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            // Validate link
+            if (!link.startsWith("http")) {
+                alert("Please enter a valid URL.");
+                return;
+            }
+
+            let utmURL = `${link}?utm_source=${encodeURIComponent(source)}&utm_medium=${encodeURIComponent(medium)}&utm_campaign=${encodeURIComponent(campaign)}&utm_term=${encodeURIComponent(term)}&utm_content=${encodeURIComponent(cta)}`;
+            document.getElementById("output").innerText = utmURL;
+        }
+
+        function copyUTM() {
+            let output = document.getElementById("output").innerText;
+            if (!output) {
+                alert("No URL to copy.");
+                return;
+            }
+            navigator.clipboard.writeText(output).then(() => {
+                alert("UTM link copied to clipboard.");
+            });
+        }
+    </script>
+</body>
+</html>

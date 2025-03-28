@@ -76,6 +76,7 @@
     }
 
     button {
+      font-family: 'Inter', sans-serif;
       position: relative;
       overflow: hidden;
       width: 100%;
@@ -117,6 +118,27 @@
       font-size: 18px;
       text-align: center;
       font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      html, body {
+        padding: 10px;
+      }
+      .container {
+        padding: 20px;
+        box-shadow: none;
+        border-radius: 12px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      select, input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
+      .result {
+        font-size: 16px;
+      }
     }
   </style>
 </head>

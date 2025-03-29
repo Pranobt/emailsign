@@ -130,6 +130,7 @@
         border-radius: 12px;
       }
       h2 {
+        font-weight: 600;
         font-size: 20px;
       }
       select, input, button {
@@ -145,21 +146,19 @@
 <body>
   <div class="container">
     <h2>Finnovate Advisory Fee Calculator</h2>
-    <label for="product">Select Products:</label>
+    <label for="product">Select Strategy:</label>
     <select id="product">
-      <option value="mf">Mutual Funds Only</option>
-      <option value="combo">Mutual Funds + PMS/Direct Equity/ETF/Bond</option>
+      <option value="mf">Mutual Fund Strategy</option>
+      <option value="combo">Multi Asset Strategy (Equity + ETF + Bonds)</option>
     </select>
 
     <label for="amount">Enter Investment Amount (in ₹):</label>
     <input type="text" id="amount" placeholder="e.g., 75,00,000" oninput="formatAmount()">
     <div id="amountWords"></div>
 
-    <label for="rate">Rate Applied:</label>
-    <input type="text" id="rate" disabled placeholder="% will be shown here">
-
     <button onclick="calculateFee()">Calculate Fee</button>
 
+    <div class="result" id="rateField"></div>
     <div class="result" id="result"></div>
     <div class="result" id="gstResult"></div>
   </div>
@@ -202,22 +201,22 @@
       const amount = parseFloat(amountRaw);
       const result = document.getElementById('result');
       const gstResult = document.getElementById('gstResult');
-      const rateField = document.getElementById('rate');
+      const rateField = document.getElementById('rateField');
 
       if (isNaN(amount) || amount <= 0) {
         result.innerText = 'Please enter a valid amount.';
         gstResult.innerText = '';
-        rateField.value = '';
+        rateField.innerText = '';
         return;
       }
 
       let fee = 0;
       let rate = '';
 
-      if (product === 'mf') {
+      if (product === 'mf' || product === 'combo') {
         if (amount <= 5000000) {
           fee = 40000;
-          rate = 'Flat ₹40,000';
+          rate = 'Flat ₹40,000 (Upto ₹50 Lakhs)';
         } else if (amount <= 20000000) {
           fee = amount * 0.0075;
           rate = '0.75%';
@@ -227,35 +226,22 @@
         } else if (amount <= 100000000) {
           fee = amount * 0.0060;
           rate = '0.60%';
-        } else {
+        } else if (amount <= 200000000) {
           fee = amount * 0.0050;
           rate = '0.50%';
-        }
-      } else if (product === 'combo') {
-        if (amount < 5000000) {
-          result.innerText = 'Less than ₹50 Lacs not accepted for this product combination.';
-          gstResult.innerText = '';
-          rateField.value = '';
-          return;
-        } else if (amount <= 20000000) {
-          fee = amount * 0.01;
-          rate = '1.00%';
-        } else if (amount <= 50000000) {
-          fee = amount * 0.009;
-          rate = '0.90%';
-        } else if (amount <= 100000000) {
-          fee = amount * 0.008;
-          rate = '0.80%';
         } else {
-          fee = amount * 0.007;
-          rate = '0.70%';
+          rate = 'Custom';
+          result.innerText = 'Please connect with us for custom pricing.';
+          gstResult.innerText = '';
+          rateField.innerText = `Rate Applied: ${rate}`;
+          return;
         }
       }
 
       const gst = fee * 0.18;
       const totalWithGst = fee + gst;
 
-      rateField.value = rate;
+      rateField.innerText = `Rate Applied: ${rate}`;
       result.innerText = `Estimated Advisory Fee (excl. GST): ₹${Math.round(fee).toLocaleString('en-IN')}`;
       gstResult.innerText = `Including 18% GST: ₹${Math.round(totalWithGst).toLocaleString('en-IN')}`;
     }

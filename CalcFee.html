@@ -9,9 +9,10 @@
     :root {
       --primary-color: #009356;
       --background: #ffffff;
-      --input-bg: #f1f5f9;
+      --input-bg: #f9fafb;
       --text-color: #111827;
       --border-color: #e2e8f0;
+      --gray-text: #6b7280;
     }
 
     html, body {
@@ -19,7 +20,7 @@
       font-family: 'Inter', sans-serif;
       background-color: var(--background);
       color: var(--text-color);
-      padding: 30px;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -28,24 +29,26 @@
 
     .container {
       width: 100%;
-      max-width: 500px;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      max-width: 520px;
+      background-color: #fff;
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
       box-sizing: border-box;
     }
 
     h2 {
       text-align: center;
       color: var(--primary-color);
-      margin-bottom: 24px;
+      margin-bottom: 30px;
+      font-size: 24px;
     }
 
     label {
       font-size: 14px;
       font-weight: 600;
       display: block;
+      margin-bottom: 6px;
     }
 
     select, input {
@@ -53,26 +56,19 @@
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
       padding: 12px;
-      margin-top: 6px;
-      margin-bottom: 16px;
-      border-radius: 8px;
+      margin-bottom: 20px;
+      border-radius: 10px;
       border: 1px solid var(--border-color);
       background-color: var(--input-bg);
       font-size: 15px;
-      transition: border 0.3s ease;
     }
 
-    select:focus, input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-    }
-
-    #amountWords {
-      margin-top: -10px;
-      margin-bottom: 10px;
+    .words-display {
       font-size: 13px;
-      color: #6b7280;
       font-style: italic;
+      color: var(--gray-text);
+      margin-top: -16px;
+      margin-bottom: 12px;
     }
 
     button {
@@ -82,10 +78,10 @@
       padding: 14px;
       background-color: var(--primary-color);
       color: white;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 16px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -94,49 +90,35 @@
       background-color: #007d48;
     }
 
-    button::after {
+    button:active::after {
       content: '';
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.5);
-      transform: translate(-50%, -50%);
-      border-radius: 100%;
-      transition: width 0.4s ease, height 0.4s ease;
-    }
-
-    button:active::after {
       width: 200%;
       height: 500%;
+      background: rgba(255, 255, 255, 0.4);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .result {
-      margin-top: 20px;
-      font-size: 18px;
+      margin-top: 18px;
+      font-size: 16px;
       text-align: center;
-      font-weight: 600;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .highlight {
+      font-weight: 700;
+      color: var(--primary-color);
     }
 
     @media (max-width: 600px) {
-      html, body {
-        padding: 10px;
-      }
       .container {
         padding: 20px;
-        box-shadow: none;
-        border-radius: 12px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      select, input, button {
-        font-size: 14px;
-        padding: 10px;
-      }
-      .result {
-        font-size: 16px;
       }
     }
   </style>
@@ -144,34 +126,37 @@
 <body>
   <div class="container">
     <h2>Finnovate Advisory Fee Calculator</h2>
-    <label for="product">Select Strategy:</label>
+    <label for="product">Select Strategy</label>
     <select id="product">
       <option value="mf">MF Strategy</option>
       <option value="combo">Multi Asset Strategy (Equity + ETF + Bonds)</option>
     </select>
 
-    <label for="amount">Enter Investment Amount (in ₹):</label>
-    <input type="text" id="amount" placeholder="e.g., 75,00,000" oninput="formatAmount()">
-    <div id="amountWords"></div>
+    <label for="lumpsum">Lumpsum Investment (₹)</label>
+    <input type="text" id="lumpsum" placeholder="e.g., 10,00,000" oninput="formatAmountInput(this, 'lumpWords')">
+    <div class="words-display" id="lumpWords"></div>
+
+    <label for="sip">Monthly SIP Amount (₹)</label>
+    <input type="text" id="sip" placeholder="e.g., 25,000" oninput="formatAmountInput(this, 'sipWords')">
+    <div class="words-display" id="sipWords"></div>
 
     <button onclick="calculateFee()">Calculate Fee</button>
 
+    <div class="result" id="totalInvestment"></div>
     <div class="result" id="rateField"></div>
     <div class="result" id="result"></div>
     <div class="result" id="gstResult"></div>
   </div>
 
   <script>
-    function formatAmount() {
-      let input = document.getElementById('amount');
+    function formatAmountInput(input, targetId) {
       let raw = input.value.replace(/[^\d]/g, '');
-      if (raw === '') {
-        document.getElementById('amountWords').innerText = '';
+      if (!raw) {
+        document.getElementById(targetId).innerText = '';
         return;
       }
-      let formatted = new Intl.NumberFormat('en-IN').format(raw);
-      input.value = formatted;
-      document.getElementById('amountWords').innerText = toWords(parseInt(raw)) + ' rupees';
+      input.value = new Intl.NumberFormat('en-IN').format(raw);
+      document.getElementById(targetId).innerText = toWords(parseInt(raw)) + ' rupees';
     }
 
     function toWords(num) {
@@ -195,16 +180,22 @@
 
     function calculateFee() {
       const product = document.getElementById('product').value;
-      const amountRaw = document.getElementById('amount').value.replace(/[^\d]/g, '');
-      const amount = parseFloat(amountRaw);
+      const lumpsumRaw = document.getElementById('lumpsum').value.replace(/[^\d]/g, '');
+      const sipRaw = document.getElementById('sip').value.replace(/[^\d]/g, '');
+      const lumpsum = parseFloat(lumpsumRaw) || 0;
+      const sip = parseFloat(sipRaw) || 0;
+      const amount = lumpsum + (sip * 12);
+
       const result = document.getElementById('result');
       const gstResult = document.getElementById('gstResult');
       const rateField = document.getElementById('rateField');
+      const totalInvestment = document.getElementById('totalInvestment');
 
-      if (isNaN(amount) || amount <= 0) {
-        result.innerText = 'Please enter a valid amount.';
+      if (amount <= 0) {
+        result.innerText = 'Please enter a valid investment amount.';
         gstResult.innerText = '';
         rateField.innerText = '';
+        totalInvestment.innerText = '';
         return;
       }
 
@@ -232,6 +223,7 @@
           result.innerText = 'Please connect with us for custom pricing.';
           gstResult.innerText = '';
           rateField.innerText = `Rate Applied: ${rate}`;
+          totalInvestment.innerText = '';
           return;
         }
       } else if (product === 'combo') {
@@ -240,6 +232,7 @@
           result.innerText = 'This strategy is not available below ₹50 Lakhs.';
           gstResult.innerText = '';
           rateField.innerText = `Rate Applied: ${rate}`;
+          totalInvestment.innerText = '';
           return;
         } else if (amount <= 20000000) {
           fee = amount * 0.02;
@@ -258,6 +251,7 @@
           result.innerText = 'Please connect with us for custom pricing.';
           gstResult.innerText = '';
           rateField.innerText = `Rate Applied: ${rate}`;
+          totalInvestment.innerText = '';
           return;
         }
       }
@@ -265,9 +259,10 @@
       const gst = fee * 0.18;
       const totalWithGst = fee + gst;
 
-      rateField.innerText = `Rate Applied: ${rate}`;
-      result.innerText = `Estimated Advisory Fee (excl. GST): ₹${Math.round(fee).toLocaleString('en-IN')}`;
-      gstResult.innerText = `Including 18% GST: ₹${Math.round(totalWithGst).toLocaleString('en-IN')}`;
+      totalInvestment.innerHTML = `<span class="highlight">Total Investment Considered for Fee:</span> ₹${Math.round(amount).toLocaleString('en-IN')}`;
+      rateField.innerHTML = `<span class="highlight">Rate Applied:</span> ${rate}`;
+      result.innerHTML = `<span class="highlight">Estimated Advisory Fee (excl. GST):</span> ₹${Math.round(fee).toLocaleString('en-IN')}`;
+      gstResult.innerHTML = `<span class="highlight">Including 18% GST:</span> ₹${Math.round(totalWithGst).toLocaleString('en-IN')}`;
     }
   </script>
 </body>

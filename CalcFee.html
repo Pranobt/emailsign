@@ -76,7 +76,6 @@
     }
 
     button {
-      font-family: 'Inter', sans-serif;
       position: relative;
       overflow: hidden;
       width: 100%;
@@ -130,7 +129,6 @@
         border-radius: 12px;
       }
       h2 {
-        font-weight: 600;
         font-size: 20px;
       }
       select, input, button {
@@ -148,7 +146,7 @@
     <h2>Finnovate Advisory Fee Calculator</h2>
     <label for="product">Select Strategy:</label>
     <select id="product">
-      <option value="mf">Mutual Fund Strategy</option>
+      <option value="mf">MF Strategy</option>
       <option value="combo">Multi Asset Strategy (Equity + ETF + Bonds)</option>
     </select>
 
@@ -213,7 +211,7 @@
       let fee = 0;
       let rate = '';
 
-      if (product === 'mf' || product === 'combo') {
+      if (product === 'mf') {
         if (amount <= 5000000) {
           fee = 40000;
           rate = 'Flat ₹40,000 (Upto ₹50 Lakhs)';
@@ -229,6 +227,32 @@
         } else if (amount <= 200000000) {
           fee = amount * 0.0050;
           rate = '0.50%';
+        } else {
+          rate = 'Custom';
+          result.innerText = 'Please connect with us for custom pricing.';
+          gstResult.innerText = '';
+          rateField.innerText = `Rate Applied: ${rate}`;
+          return;
+        }
+      } else if (product === 'combo') {
+        if (amount <= 5000000) {
+          rate = 'NA';
+          result.innerText = 'This strategy is not available below ₹50 Lakhs.';
+          gstResult.innerText = '';
+          rateField.innerText = `Rate Applied: ${rate}`;
+          return;
+        } else if (amount <= 20000000) {
+          fee = amount * 0.02;
+          rate = '2.00%';
+        } else if (amount <= 50000000) {
+          fee = amount * 0.015;
+          rate = '1.50%';
+        } else if (amount <= 100000000) {
+          fee = amount * 0.01;
+          rate = '1.00%';
+        } else if (amount <= 200000000) {
+          fee = amount * 0.0075;
+          rate = '0.75%';
         } else {
           rate = 'Custom';
           result.innerText = 'Please connect with us for custom pricing.';

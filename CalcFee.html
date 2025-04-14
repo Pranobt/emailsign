@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finnovate Advisory Fee Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #009356;
+      --background: #ffffff;
+      --input-bg: #f9fafb;
+      --text-color: #111827;
+      --border-color: #e2e8f0;
+      --gray-text: #6b7280;
+    }
+
+    html, body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--text-color);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background-color: #fff;
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    select, input {
+      width: 100%;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--input-bg);
+      font-size: 15px;
+    }
+
+    .words-display {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--gray-text);
+      margin-top: -16px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #007d48;
+    }
+
+    button:active::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 200%;
+      height: 500%;
+      background: rgba(255, 255, 255, 0.4);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .result {
+      margin-top: 18px;
+      font-size: 16px;
+      text-align: center;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .highlight {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Finnovate Advisory Fee Calculator</h2>
+    <label for="product">Select Strategy</label>
+    <select id="product">
+      <option value="mf">MF Strategy</option>
+      <option value="combo">Multi Asset Strategy (Equity + ETF + Bonds)</option>
+    </select>
+
+    <label for="lumpsum">Lumpsum Investment (₹)</label>
+    <input type="text" id="lumpsum" placeholder="e.g., 10,00,000" oninput="formatAmountInput(this, 'lumpWords')">
+    <div class="words-display" id="lumpWords"></div>
+
+    <label for="sip">Monthly SIP Amount (₹)</label>
+    <input type="text" id="sip" placeholder="e.g., 25,000" oninput="formatAmountInput(this, 'sipWords')">
+    <div class="words-display" id="sipWords"></div>
+
+    <button onclick="calculateFee()">Calculate Fee</button>
+
+    <div class="result" id="totalInvestment"></div>
+    <div class="result" id="rateField"></div>
+    <div class="result" id="result"></div>
+    <div class="result" id="gstResult"></div>
+  </div>
+
+  <script>
+    function formatAmountInput(input, targetId) {
+      let raw = input.value.replace(/[^\d]/g, '');
+      if (!raw) {
+        document.getElementById(targetId).innerText = '';
+        return;
+      }
+      input.value = new Intl.NumberFormat('en-IN').format(raw);
+      document.getElementById(targetId).innerText = toWords(parseInt(raw)) + ' rupees';
+    }
+
+    function toWords(num) {
+      const a = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+      const b = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+      function inWords(n) {
+        if ((n = n.toString()).length > 9) return "overflow";
+        const nNum = ('000000000' + n).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+        if (!nNum) return;
+        let str = '';
+        str += (nNum[1] != 0) ? (a[Number(nNum[1])] || b[nNum[1][0]] + " " + a[nNum[1][1]]) + ' crore ' : '';
+        str += (nNum[2] != 0) ? (a[Number(nNum[2])] || b[nNum[2][0]] + " " + a[nNum[2][1]]) + ' lakh ' : '';
+        str += (nNum[3] != 0) ? (a[Number(nNum[3])] || b[nNum[3][0]] + " " + a[nNum[3][1]]) + ' thousand ' : '';
+        str += (nNum[4] != 0) ? (a[Number(nNum[4])] || b[nNum[4][0]] + " " + a[nNum[4][1]]) + ' hundred ' : '';
+        str += (nNum[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(nNum[5])] || b[nNum[5][0]] + " " + a[nNum[5][1]]) + ' ' : '';
+        return str.trim();
+      }
+      return inWords(num);
+    }
+
+    function calculateFee() {
+      const product = document.getElementById('product').value;
+      const lumpsumRaw = document.getElementById('lumpsum').value.replace(/[^\d]/g, '');
+      const sipRaw = document.getElementById('sip').value.replace(/[^\d]/g, '');
+      const lumpsum = parseFloat(lumpsumRaw) || 0;
+      const sip = parseFloat(sipRaw) || 0;
+      const amount = lumpsum + (sip * 12);
+
+      const result = document.getElementById('result');
+      const gstResult = document.getElementById('gstResult');
+      const rateField = document.getElementById('rateField');
+      const totalInvestment = document.getElementById('totalInvestment');
+
+      if (amount <= 0) {
+        result.innerText = 'Please enter a valid investment amount.';
+        gstResult.innerText = '';
+        rateField.innerText = '';
+        totalInvestment.innerText = '';
+        return;
+      }
+
+      let fee = 0;
+      let rate = '';
+
+      if (product === 'mf') {
+        if (amount <= 5000000) {
+          fee = 40000;
+          rate = 'Flat ₹40,000 (Upto ₹50 Lakhs)';
+        } else if (amount <= 20000000) {
+          fee = amount * 0.0075;
+          rate = '0.75%';
+        } else if (amount <= 50000000) {
+          fee = amount * 0.0065;
+          rate = '0.65%';
+        } else if (amount <= 100000000) {
+          fee = amount * 0.0060;
+          rate = '0.60%';
+        } else if (amount <= 200000000) {
+          fee = amount * 0.0050;
+          rate = '0.50%';
+        } else {
+          rate = 'Custom';
+          result.innerText = 'Please connect with us for custom pricing.';
+          gstResult.innerText = '';
+          rateField.innerText = `Rate Applied: ${rate}`;
+          totalInvestment.innerText = '';
+          return;
+        }
+      } else if (product === 'combo') {
+        if (amount <= 5000000) {
+          rate = 'NA';
+          result.innerText = 'This strategy is not available below ₹50 Lakhs.';
+          gstResult.innerText = '';
+          rateField.innerText = `Rate Applied: ${rate}`;
+          totalInvestment.innerText = '';
+          return;
+        } else if (amount <= 20000000) {
+          fee = amount * 0.02;
+          rate = '2.00%';
+        } else if (amount <= 50000000) {
+          fee = amount * 0.015;
+          rate = '1.50%';
+        } else if (amount <= 100000000) {
+          fee = amount * 0.01;
+          rate = '1.00%';
+        } else if (amount <= 200000000) {
+          fee = amount * 0.0075;
+          rate = '0.75%';
+        } else {
+          rate = 'Custom';
+          result.innerText = 'Please connect with us for custom pricing.';
+          gstResult.innerText = '';
+          rateField.innerText = `Rate Applied: ${rate}`;
+          totalInvestment.innerText = '';
+          return;
+        }
+      }
+
+      const gst = fee * 0.18;
+      const totalWithGst = fee + gst;
+
+      totalInvestment.innerHTML = `<span class="highlight">Total Investment Considered for Fee:</span> ₹${Math.round(amount).toLocaleString('en-IN')}`;
+      rateField.innerHTML = `<span class="highlight">Rate Applied:</span> ${rate}`;
+      result.innerHTML = `<span class="highlight">Estimated Advisory Fee (excl. GST):</span> ₹${Math.round(fee).toLocaleString('en-IN')}`;
+      gstResult.innerHTML = `<span class="highlight">Including 18% GST:</span> ₹${Math.round(totalWithGst).toLocaleString('en-IN')}`;
+    }
+  </script>
+</body>
+</html>

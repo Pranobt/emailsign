@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mumbai Interactive Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style>
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+      .label {
+        font-size: 14px;
+        font-weight: bold;
+        background-color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        box-shadow: 0 0 3px rgba(0,0,0,0.3);
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3uBe823HvbZFsEigNh_C7HDX6QCJfDF8"></script>
+    <script>
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 11,
+          center: { lat: 19.0760, lng: 72.8777 },
+        });
+
+        const locations = [
+          { name: "Pranob", position: { lat: 19.2288, lng: 72.8560 } }, // Borivali West
+          { name: "Amrita", position: { lat: 19.2047, lng: 72.8424 } }, // Kandivali West
+          { name: "Sundar", position: { lat: 19.0176, lng: 72.8562 } }, // Dadar
+          { name: "Aarav", position: { lat: 19.1000, lng: 72.8500 } }, // Goregaon
+          { name: "Mira", position: { lat: 19.0330, lng: 72.8430 } }, // Andheri
+          { name: "Isha", position: { lat: 18.9500, lng: 72.8200 } }, // Marine Lines
+          { name: "Dev", position: { lat: 19.2500, lng: 72.8500 } }, // Dahisar
+          { name: "Neha", position: { lat: 19.1500, lng: 72.8500 } }, // Malad
+          { name: "Raj", position: { lat: 19.0400, lng: 72.8600 } }, // Bandra
+          { name: "Simran", position: { lat: 18.9900, lng: 72.8400 } }, // Worli
+          { name: "Yash", position: { lat: 18.9700, lng: 72.8200 } }, // Colaba
+          { name: "Riya", position: { lat: 19.1300, lng: 72.8600 } }, // Jogeshwari
+        ];
+
+        locations.forEach((loc) => {
+          const marker = new google.maps.Marker({
+            position: loc.position,
+            map: map,
+          });
+
+          const label = new google.maps.InfoWindow({
+            content: `<div class="label">${loc.name}</div>`
+          });
+
+          marker.addListener("click", () => {
+            label.open(map, marker);
+          });
+
+          label.open(map, marker); // Automatically show label on load
+        });
+      }
+    </script>
+  </head>
+  <body onload="initMap()">
+    <div id="map"></div>
+  </body>
+</html>

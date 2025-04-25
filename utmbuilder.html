@@ -6,9 +6,7 @@
     <title>UTM Builder</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fc;
@@ -20,37 +18,28 @@
             margin: 0;
         }
         .container {
+            
             background: white;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: left;
             width: 400px;
+        }
+        h2 { margin-bottom: 20px; color: #222; font-weight: 600; font-family: 'Inter', sans-serif; }
+        label { font-weight: 600; font-family: 'Inter', sans-serif; }
+        .required::after { content: " *"; color: red; }
+        select, input {
             font-family: 'Inter', sans-serif;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #222;
-            font-weight: 600;
-        }
-        label {
-            font-weight: 600;
-        }
-        .required::after {
-            content: " *";
-            color: red;
-        }
-        select,
-        input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 14px;
-            font-family: 'Inter', sans-serif;
         }
         .button {
+            font-family: 'Inter', sans-serif;
             background-color: #009356;
             color: white;
             border: none;
@@ -58,25 +47,21 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            display: block;
             width: 100%;
             text-align: center;
-            font-family: 'Inter', sans-serif;
         }
-        .button:hover {
-            background-color: #0e8c6b;
-        }
+        .button:hover { background-color: #0e8c6b; }
         #output {
+            font-family: 'Inter', sans-serif;
             margin-top: 20px;
             padding: 10px;
             background: #eef2f5;
             border-radius: 8px;
             font-size: 14px;
             word-break: break-all;
-            position: relative;
-            font-family: 'Inter', sans-serif;
         }
         .copy-text-btn {
+            font-family: 'Inter', sans-serif;
             margin-top: 10px;
             background-color: #f5f6f7;
             color: #52525b;
@@ -85,32 +70,35 @@
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
-            display: block;
             width: 100%;
             text-align: center;
-            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>UTM Builder</h2>
-        <label class="required">Source</label>
-        <select id="source" onchange="updateMedium()" required>
-            <option value="">Select Source</option>
-            <option value="Paid Digital Marketing">Paid Digital Marketing</option>
-            <option value="Events">Events</option>
-            <option value="Telecaller">Telecaller</option>
-            <option value="Referral">Referral</option>
-            <option value="Referral Partners">Referral Partners</option>
+        <label class="required">Origin</label>
+        <select id="origin" onchange="updateFields()" required>
+            <option value="">Select Origin</option>
+            <option value="Database">Database</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="Client Referral">Client Referral</option>
+            <option value="Partner Referral">Partner Referral</option>
             <option value="Organic">Organic</option>
-            <option value="Direct Sales">Direct Sales</option>
+            <option value="PR">PR</option>
+            <option value="Direct Lead">Direct Lead</option>
+            <option value="Events">Events</option>
         </select>
 
-        <label class="required">Medium</label>
-        <select id="medium" required>
-            <option value="">Select Medium</option>
-        </select>
+        <div id="source-container">
+            <label class="required">Source</label>
+            <input type="text" id="source" placeholder="Select origin first" disabled>
+        </div>
+        <div id="medium-container">
+            <label class="required">Medium</label>
+            <input type="text" id="medium" placeholder="Select origin first" disabled>
+        </div>
 
         <label class="required">Campaign</label>
         <input type="text" id="campaign" placeholder="Enter campaign name" required>
@@ -139,78 +127,107 @@
     </div>
 
     <script>
-        const mediumOptions = {
-            "Paid Digital Marketing": ["Facebook", "Google", "LinkedIn", "Email","Youtube"],
-            "Events": ["RTM", "Organised Event", "Participated Event", "Webinar"],
-            "Telecaller": ["Call"],
-            "Referral": ["In-Person", "Call"],
-            "Referral Partners": ["Direct", "YouTube"],
-            "Organic": ["Website", "Social Media Posting", "Email", "WhatsApp"],
-            "Direct Sales": ["Direct Visit", "Calling"]
+        // Configuration based on origin
+        const originConfig = {
+            "Database": {
+                source: { type: "input" },
+                medium: { type: "input" }
+            },
+            "Digital Marketing": {
+                source: { type: "select", options: ["Facebook", "LinkedIn", "YouTube", "Instagram"] },
+                medium: { type: "input" }
+            },
+            "Client Referral": {
+                source: { type: "input" },
+                medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting"] }
+            },
+            "Partner Referral": {
+                source: { type: "input" },
+                medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting"] }
+            },
+            "Organic": {
+                source: { type: "select", options: ["Website"] },
+                medium: { type: "select", options: ["Social Media Post", "Video", "Search", "PR"] }
+            },
+            "PR": {
+                source: { type: "select", options: ["Print", "Digital", "TV"] },
+                medium: { type: "input" }
+            },
+            "Direct Lead": {
+                source: { type: "input" },
+                medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting", "Letter", "Email"] }
+            },
+            "Events": {
+                source: { type: "input" },
+                medium: { type: "select", options: ["RTM", "Organised Event", "Participated Event", "Webinar", "Workshop"] }
+            }
         };
 
-        function updateMedium() {
-            const source = document.getElementById("source").value;
-            const mediumSelect = document.getElementById("medium");
-            mediumSelect.innerHTML = "<option value=''>Select Medium</option>";
-            if (mediumOptions[source]) {
-                mediumOptions[source].forEach(medium => {
-                    let option = document.createElement("option");
-                    option.value = medium;
-                    option.textContent = medium;
-                    mediumSelect.appendChild(option);
-                });
+        function updateFields() {
+            const origin = document.getElementById("origin").value;
+            const sourceContainer = document.getElementById("source-container");
+            const mediumContainer = document.getElementById("medium-container");
+
+            sourceContainer.innerHTML = '<label class="required">Source</label>';
+            mediumContainer.innerHTML = '<label class="required">Medium</label>';
+
+            const cfg = originConfig[origin];
+            if (cfg) {
+                // Source
+                if (cfg.source.type === "select") {
+                    let selectHTML = '<select id="source"><option value="">Select Source</option>';
+                    cfg.source.options.forEach(opt => selectHTML += `<option value="${opt}">${opt}</option>`);
+                    selectHTML += '</select>';
+                    sourceContainer.innerHTML += selectHTML;
+                } else {
+                    sourceContainer.innerHTML += '<input type="text" id="source" placeholder="Enter source">';
+                }
+                // Medium
+                if (cfg.medium.type === "select") {
+                    let selectMHTML = '<select id="medium"><option value="">Select Medium</option>';
+                    cfg.medium.options.forEach(opt => selectMHTML += `<option value="${opt}">${opt}</option>`);
+                    selectMHTML += '</select>';
+                    mediumContainer.innerHTML += selectMHTML;
+                } else {
+                    mediumContainer.innerHTML += '<input type="text" id="medium" placeholder="Enter medium">';
+                }
+            } else {
+                sourceContainer.innerHTML += '<input type="text" id="source" placeholder="Select origin first" disabled>';
+                mediumContainer.innerHTML += '<input type="text" id="medium" placeholder="Select origin first" disabled>';
             }
         }
 
         function fillCustomLink() {
-            const linkDropdown = document.getElementById("link");
-            const customLinkInput = document.getElementById("custom-link");
-            if (linkDropdown.value === "custom") {
-                customLinkInput.style.display = "block";
-            } else {
-                customLinkInput.style.display = "none";
-                customLinkInput.value = "";
-            }
+            const linkVal = document.getElementById("link").value;
+            const customInput = document.getElementById("custom-link");
+            if (linkVal === "custom") customInput.style.display = "block";
+            else { customInput.style.display = "none"; customInput.value = ""; }
         }
 
         function generateUTM() {
-            let source = document.getElementById("source").value;
-            let medium = document.getElementById("medium").value;
-            let campaign = document.getElementById("campaign").value.trim();
-            let term = document.getElementById("term").value.trim();
-            let cta = document.getElementById("cta").value.trim();
+            const origin = document.getElementById("origin").value;
+            const source = document.getElementById("source").value.trim();
+            const medium = document.getElementById("medium").value.trim();
+            const campaign = document.getElementById("campaign").value.trim();
+            const term = document.getElementById("term").value.trim();
+            const cta = document.getElementById("cta").value.trim();
             let linkVal = document.getElementById("link").value;
-            let link = linkVal;
-            if (linkVal === "custom") {
-                link = document.getElementById("custom-link").value.trim();
-            }
+            let link = linkVal === "custom" ? document.getElementById("custom-link").value.trim() : linkVal;
 
-            // Validate all fields
-            if (!source || !medium || !campaign || !term || !cta || !link) {
+            if (!origin || !source || !medium || !campaign || !term || !cta || !link) {
                 alert("Please fill in all required fields.");
                 return;
             }
+            if (!link.startsWith("http")) { alert("Please enter a valid URL."); return; }
 
-            // Validate link
-            if (!link.startsWith("http")) {
-                alert("Please enter a valid URL.");
-                return;
-            }
-
-            let utmURL = `${link}?utm_source=${encodeURIComponent(source)}&utm_medium=${encodeURIComponent(medium)}&utm_campaign=${encodeURIComponent(campaign)}&utm_term=${encodeURIComponent(term)}&utm_content=${encodeURIComponent(cta)}`;
+            const utmURL = `${link}?utm_origin=${encodeURIComponent(origin)}&utm_source=${encodeURIComponent(source)}&utm_medium=${encodeURIComponent(medium)}&utm_campaign=${encodeURIComponent(campaign)}&utm_term=${encodeURIComponent(term)}&utm_content=${encodeURIComponent(cta)}`;
             document.getElementById("output").innerText = utmURL;
         }
 
         function copyUTM() {
-            let output = document.getElementById("output").innerText;
-            if (!output) {
-                alert("No URL to copy.");
-                return;
-            }
-            navigator.clipboard.writeText(output).then(() => {
-                alert("UTM link copied to clipboard.");
-            });
+            const output = document.getElementById("output").innerText;
+            if (!output) { alert("No URL to copy."); return; }
+            navigator.clipboard.writeText(output).then(() => alert("UTM link copied to clipboard."));
         }
     </script>
 </body>

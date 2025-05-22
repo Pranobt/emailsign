@@ -29,7 +29,7 @@
 
     .container {
       width: 100%;
-      max-width: 520px;
+      max-width: 750px;
       background-color: #fff;
       padding: 32px;
       border-radius: 20px;
@@ -142,12 +142,19 @@
     <input type="text" id="sip" placeholder="e.g., 25,000" oninput="formatAmountInput(this, 'sipWords')">
     <div class="words-display" id="sipWords"></div>
 
+    <label for="years">Number of Years</label>
+    <input type="number" id="years" placeholder="e.g., 5" value="1">
+
+    <label for="stepUp">Annual SIP Step-up (%)</label>
+    <input type="number" id="stepUp" placeholder="e.g., 5" value="0">
+
     <button onclick="calculateFee()">Calculate Fee</button>
 
     <div class="result" id="totalInvestment"></div>
     <div class="result" id="rateField"></div>
     <div class="result" id="result"></div>
     <div class="result" id="gstResult"></div>
+    <div class="result" id="feeTableContainer"></div>
   </div>
 
   <script>
@@ -182,89 +189,100 @@
 
     function calculateFee() {
       const product = document.getElementById('product').value;
+      const years = parseInt(document.getElementById('years').value) || 1;
+      const stepUp = parseFloat(document.getElementById('stepUp').value) || 0;
       const lumpsumRaw = document.getElementById('lumpsum').value.replace(/[^\d]/g, '');
       const sipRaw = document.getElementById('sip').value.replace(/[^\d]/g, '');
       const lumpsum = parseFloat(lumpsumRaw) || 0;
       const sip = parseFloat(sipRaw) || 0;
       const amount = lumpsum + (sip * 12);
 
+      const totalInvestment = document.getElementById('totalInvestment');
+      const rateField = document.getElementById('rateField');
       const result = document.getElementById('result');
       const gstResult = document.getElementById('gstResult');
-      const rateField = document.getElementById('rateField');
-      const totalInvestment = document.getElementById('totalInvestment');
+      const feeTableContainer = document.getElementById('feeTableContainer');
 
       if (amount <= 0) {
         result.innerText = 'Please enter a valid investment amount.';
         gstResult.innerText = '';
         rateField.innerText = '';
         totalInvestment.innerText = '';
+        feeTableContainer.innerHTML = '';
         return;
       }
 
-      let fee = 0;
-      let rate = '';
+      // Show summary for first year
+      const { fee: firstFee, rate: firstRate } = computeFee(product, amount);
+      const firstGst = firstFee * 0.18;
+      totalInvestment.innerHTML = `<span class="highlight">Total Investment Considered for Fee:</span> ₹${Math.round(amount).toLocaleString('en-IN')}`;
+      rateField.innerHTML = `<span class="highlight">Rate Applied:</span> ${firstRate}`;
+      result.innerHTML = `<span class="highlight">Estimated Advisory Fee (excl. GST):</span> ₹${Math.round(firstFee).toLocaleString('en-IN')}`;
+      gstResult.innerHTML = `<span class="highlight">Including 18% GST:</span> ₹${Math.round(firstFee + firstGst).toLocaleString('en-IN')}`;
 
+      // Build year-on-year fee table
+      let tableHTML = '<div style="overflow-x:auto; margin-top:20px;">'
+        + '<table style="min-width:600px; width:100%; border-collapse: collapse;">';
+      tableHTML += '<thead><tr>'
+        + '<th style="border:1px solid #ccc; padding:8px;">Year</th>'
+        + '<th style="border:1px solid #ccc; padding:8px;">AUM (₹)</th>'
+        + '<th style="border:1px solid #ccc; padding:8px;">Rate Applied</th>'
+        + '<th style="border:1px solid #ccc; padding:8px;">Fee (excl. GST)</th>'
+        + '<th style="border:1px solid #ccc; padding:8px;">GST</th>'
+        + '<th style="border:1px solid #ccc; padding:8px;">Total Fee</th>'
+        + '</tr></thead><tbody>';
+      let currentSip = sip;
+      for (let y = 1; y <= years; y++) {
+        const yearAmount = lumpsum + (currentSip * 12);
+        const { fee, rate } = computeFee(product, yearAmount);
+        const gst = fee * 0.18;
+        tableHTML += `<tr>
+          <td style="border:1px solid #ccc; padding:8px;">${y}</td>
+          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(yearAmount).toLocaleString('en-IN')}</td>
+          <td style="border:1px solid #ccc; padding:8px;">${rate}</td>
+          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(fee).toLocaleString('en-IN')}</td>
+          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(gst).toLocaleString('en-IN')}</td>
+          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(fee + gst).toLocaleString('en-IN')}</td>
+        </tr>`;
+        currentSip *= (1 + stepUp / 100);
+      }
+      tableHTML += '</tbody></table></div>';
+      feeTableContainer.innerHTML = tableHTML;
+    }
+
+    // Extracted fee computation into helper
+    function computeFee(product, amount) {
+      let fee = 0, rate = '';
       if (product === 'mf') {
         if (amount <= 5000000) {
-          fee = 40000;
-          rate = 'Flat ₹40,000 (Upto ₹50 Lakhs)';
+          fee = 40000; rate = 'Flat ₹40,000 (Up to ₹50 Lakhs)';
         } else if (amount <= 20000000) {
-          fee = amount * 0.0075;
-          rate = '0.75%';
+          fee = amount * 0.0075; rate = '0.75%';
         } else if (amount <= 50000000) {
-          fee = amount * 0.0065;
-          rate = '0.65%';
+          fee = amount * 0.0065; rate = '0.65%';
         } else if (amount <= 100000000) {
-          fee = amount * 0.0060;
-          rate = '0.60%';
+          fee = amount * 0.0060; rate = '0.60%';
         } else if (amount <= 200000000) {
-          fee = amount * 0.0050;
-          rate = '0.50%';
+          fee = amount * 0.0050; rate = '0.50%';
         } else {
-          rate = 'Custom';
-          result.innerText = 'Please connect with us for custom pricing.';
-          gstResult.innerText = '';
-          rateField.innerText = `Rate Applied: ${rate}`;
-          totalInvestment.innerText = '';
-          return;
+          return { fee: 0, rate: 'Custom' };
         }
-      } else if (product === 'combo') {
+      } else { // combo
         if (amount <= 5000000) {
-          rate = 'NA';
-          result.innerText = 'This strategy is not available below ₹50 Lakhs.';
-          gstResult.innerText = '';
-          rateField.innerText = `Rate Applied: ${rate}`;
-          totalInvestment.innerText = '';
-          return;
+          return { fee: 0, rate: 'NA' };
         } else if (amount <= 20000000) {
-          fee = amount * 0.02;
-          rate = '2.00%';
+          fee = amount * 0.02; rate = '2.00%';
         } else if (amount <= 50000000) {
-          fee = amount * 0.015;
-          rate = '1.50%';
+          fee = amount * 0.015; rate = '1.50%';
         } else if (amount <= 100000000) {
-          fee = amount * 0.01;
-          rate = '1.00%';
+          fee = amount * 0.01; rate = '1.00%';
         } else if (amount <= 200000000) {
-          fee = amount * 0.0075;
-          rate = '0.75%';
+          fee = amount * 0.0075; rate = '0.75%';
         } else {
-          rate = 'Custom';
-          result.innerText = 'Please connect with us for custom pricing.';
-          gstResult.innerText = '';
-          rateField.innerText = `Rate Applied: ${rate}`;
-          totalInvestment.innerText = '';
-          return;
+          return { fee: 0, rate: 'Custom' };
         }
       }
-
-      const gst = fee * 0.18;
-      const totalWithGst = fee + gst;
-
-      totalInvestment.innerHTML = `<span class="highlight">Total Investment Considered for Fee:</span> ₹${Math.round(amount).toLocaleString('en-IN')}`;
-      rateField.innerHTML = `<span class="highlight">Rate Applied:</span> ${rate}`;
-      result.innerHTML = `<span class="highlight">Estimated Advisory Fee (excl. GST):</span> ₹${Math.round(fee).toLocaleString('en-IN')}`;
-      gstResult.innerHTML = `<span class="highlight">Including 18% GST:</span> ₹${Math.round(totalWithGst).toLocaleString('en-IN')}`;
+      return { fee, rate };
     }
   </script>
 </body>

@@ -130,7 +130,7 @@
     <h2>Finnovate Advisory Fee Calculator</h2>
     <label for="product">Select Strategy</label>
     <select id="product">
-      <option value="mf">MF Strategy</option>
+      <option value="mf">Mutual Funds + Equity</option>
       <option value="combo">Multi Asset Strategy (Equity + ETF + Bonds)</option>
     </select>
 
@@ -155,6 +155,9 @@
     <div class="result" id="result"></div>
     <div class="result" id="gstResult"></div>
     <div class="result" id="feeTableContainer"></div>
+    <div class="note" style="font-size:14px; color:#555; margin-top:10px;">
+      Note: If AUM crosses ₹50,00,000, the fee will be calculated on a prorated basis and billed quarterly.
+    </div>
   </div>
 
   <script>
@@ -262,7 +265,7 @@
           fee = amount * 0.0065; rate = '0.65%';
         } else if (amount <= 100000000) {
           fee = amount * 0.0060; rate = '0.60%';
-        } else if (amount <= 200000000) {
+        } else if (amount <= 200000000000) {
           fee = amount * 0.0050; rate = '0.50%';
         } else {
           return { fee: 0, rate: 'Custom' };

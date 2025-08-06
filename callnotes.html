@@ -1,0 +1,274 @@
+<!-- ============================================================
+Tele‑Caller CRM Notes ‑ Design Variations
+===============================================================
+Author: ChatGPT (o3) - 2025‑08‑06
+----------------------------------------------------------------
+• Variation 1  →  Split‑screen card (default)
+• Variation 2  →  Minimalist accordion (commented)
+• Variation 3  →  Dark sticky sidebar (commented)
+Copy the variant you prefer into its own file for use.
+============================================================ -->
+
+<!-- ==========  VARIATION 1 — SPLIT‑SCREEN  ================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Notes — Split‑Screen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #009356;
+      --green-dark: #0e8c6b;
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --text: #333;
+      --muted: #6b7280;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .wrapper {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      width: 100%;
+      max-width: 1000px;
+    }
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+      padding: 32px;
+    }
+    h1 {
+      margin: 0 0 24px;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #222;
+    }
+    label, legend { font-weight: 600; display: block; margin-top: 16px; }
+    .required::after { content: ' *'; color: red; }
+    select, input[type=text], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    fieldset { border: none; padding: 0; margin: 0; }
+    .radio { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+    .radio label { font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .btn, .copy-btn {
+      border: none;
+      font-family: inherit;
+      cursor: pointer;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .btn { background: var(--green); color: #fff; margin-top: 32px; }
+    .btn:hover { background: var(--green-dark); }
+    .copy-btn { background: #f5f6f7; color: #52525b; margin-top: 12px; font-size: 14px; }
+    .copy-btn:hover { background: #e5e7eb; }
+    .copy-btn.copied { background: var(--green); color: #fff; }
+    pre#output {
+      margin-top: 28px;
+      padding: 16px;
+      background: #eef2f5;
+      border-radius: 10px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .hidden { display: none; }
+    input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-visible, .copy-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+    /*  SIDEBAR NOTES  */
+    aside {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: var(--card);
+      padding: 24px 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.06);
+      overflow: auto;
+      max-height: calc(100vh - 48px);
+    }
+    aside h2 { margin: 0 0 18px; font-size: 1.25rem; font-weight: 600; }
+    .note {
+      margin-bottom: 16px;
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+    .note strong { color: var(--text); }
+
+    /*  Custom textarea reveal  */
+    #helpDetailsWrap { display: none; }
+
+    /*  MOBILE  */
+    @media (max-width: 880px) {
+      .wrapper { grid-template-columns: 1fr; max-width: 620px; }
+      aside { position: static; max-height: none; margin-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- =====================  FORM  ======================= -->
+    <div class="card">
+      <h1>Lead Qualification</h1>
+      <form id="leadForm" novalidate>
+        <label class="required" for="callerName">Your Name</label>
+        <input type="text" id="callerName" placeholder="e.g. Priya" required />
+
+        <label class="required" for="helpWith">Lead Needs Help With</label>
+        <select id="helpWith" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Goal‑Based Strategy">Goal‑Based Strategy</option>
+          <option value="Portfolio Review">Portfolio Review</option>
+          <option value="Investment Guidance">Investment Guidance</option>
+          <option value="Other">Other (specify)</option>
+        </select>
+        <!-- Custom reply textarea -->
+        <div id="helpDetailsWrap">
+          <textarea id="helpDetails" rows="3" placeholder="Describe what the lead is looking for…"></textarea>
+        </div>
+
+        <fieldset>
+          <legend class="required">Annual Income</legend>
+          <div class="radio">
+            <label><input type="radio" name="income" value="Less than ₹15 L" required />Less than ₹15 L</label>
+            <label><input type="radio" name="income" value="₹15–25 L" />₹15–25 L</label>
+            <label><input type="radio" name="income" value="₹25–50 L" />₹25–50 L</label>
+            <label><input type="radio" name="income" value="More than ₹50 L" />More than ₹50 L</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="required">Current Portfolio Size</legend>
+          <div class="radio">
+            <label><input type="radio" name="portfolio" value="Less than ₹15 L" required />Less than ₹15 L</label>
+            <label><input type="radio" name="portfolio" value="₹15–25 L" />₹15–25 L</label>
+            <label><input type="radio" name="portfolio" value="₹25–50 L" />₹25–50 L</label>
+            <label><input type="radio" name="portfolio" value="More than ₹50 L" />More than ₹50 L</label>
+          </div>
+        </fieldset>
+
+        <label class="required" for="profession">Profession</label>
+        <input type="text" id="profession" placeholder="e.g. Doctor, Manager, CXO" required />
+
+        <fieldset>
+          <legend class="required">Timeline to Act</legend>
+          <div class="radio">
+            <label><input type="radio" name="timeline" value="Less than 1 month" required />Less than 1 month</label>
+            <label><input type="radio" name="timeline" value="1–3 months" />1–3 months</label>
+            <label><input type="radio" name="timeline" value="More than 3 months" />More than 3 months</label>
+          </div>
+        </fieldset>
+
+        <label class="required" for="pain">Biggest Money Challenge</label>
+        <textarea id="pain" rows="3" placeholder="e.g. Unsure how much to invest via SIP vs. goals" required></textarea>
+
+        <button type="button" class="btn" id="generate">Generate CRM Notes</button>
+      </form>
+
+      <pre id="output" class="hidden"></pre>
+      <button class="copy-btn hidden" id="copyBtn">Copy Notes to Clipboard</button>
+    </div>
+
+    <!-- =====================  SIDEBAR  ===================== -->
+    <aside>
+      <h2>Caller Script</h2>
+      <p class="note"><strong>Your Name</strong>: "May I note your name for our record?"</p>
+      <p class="note"><strong>Lead Needs</strong>: "Which of these would help you most right now—goal planning, revisiting your current investments, guidance on new investments, or something else?"</p>
+      <p class="note"><strong>Income Range</strong>: "Which range best describes your annual household income? A ballpark is fine."</p>
+      <p class="note"><strong>Portfolio Size</strong>: "Roughly how large is your current investment portfolio today?"
+      </p>
+      <p class="note"><strong>Profession</strong>: "Could you tell me your profession or role?"</p>
+      <p class="note"><strong>Timeline</strong>: "By when are you looking to take the next step—within a month, 1–3 months, or later?"</p>
+      <p class="note"><strong>Key Challenge</strong>: "What’s the biggest challenge you face in managing your money right now?"</p>
+    </aside>
+  </div>
+
+  <!-- ================= JS ================= -->
+  <script>
+    const $ = selector => document.querySelector(selector);
+
+    const form         = $('#leadForm');
+    const outputEl     = $('#output');
+    const copyBtn      = $('#copyBtn');
+    const helpWithSel  = $('#helpWith');
+    const helpDetailsW = $('#helpDetailsWrap');
+    const helpDetails  = $('#helpDetails');
+
+    // Show custom details textarea when "Other" selected
+    helpWithSel.addEventListener('change', () => {
+      if (helpWithSel.value === 'Other') {
+        helpDetailsW.style.display = 'block';
+        helpDetails.required = true;
+      } else {
+        helpDetailsW.style.display = 'none';
+        helpDetails.value = '';
+        helpDetails.required = false;
+      }
+    });
+
+    // Generate note
+    $('#generate').addEventListener('click', () => {
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      const caller     = $('#callerName').value.trim() || 'Tele‑Caller';
+      let need         = helpWithSel.value;
+      if (need === 'Other') need += ` — ${helpDetails.value.trim()}`;
+      const income     = form.elements['income'].value;
+      const portfolio  = form.elements['portfolio'].value;
+      const profession = $('#profession').value.trim();
+      const timeline   = form.elements['timeline'].value;
+      const pain       = $('#pain').value.trim();
+      const timestamp  = new Date().toLocaleString('en-IN', { hour12: false });
+
+      const note = `${caller} | ${timestamp}\n\n` +
+        `Need      : ${need}\n` +
+        `Profession: ${profession}\n` +
+        `Income    : ${income}\n` +
+        `Portfolio : ${portfolio}\n` +
+        `Timeline  : ${timeline}\n\n` +
+        `Key Challenge → ${pain}`;
+
+      outputEl.textContent = note;
+      outputEl.classList.remove('hidden');
+      copyBtn.classList.remove('hidden');
+    });
+
+    // Clipboard
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(outputEl.textContent).then(() => {
+        copyBtn.classList.add('copied');
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.textContent = 'Copy Notes to Clipboard';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
+

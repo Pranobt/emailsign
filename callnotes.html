@@ -60,7 +60,10 @@ Copy the variant you prefer into its own file for use.
     }
     label, legend { font-weight: 600; display: block; margin-top: 16px; }
     .required::after { content: ' *'; color: red; }
-    select, input[type=text], textarea {
+    select,
+    input[type=text],
+    .money-input,
+    textarea {
       width: 100%;
       padding: 10px 12px;
       margin-top: 8px;
@@ -141,7 +144,9 @@ Copy the variant you prefer into its own file for use.
         <label class="required" for="helpWith">Lead Needs Help With</label>
         <select id="helpWith" required>
           <option value="" disabled selected>Select an option</option>
-          <option value="Goal‑Based Strategy">Goal‑Based Strategy</option>
+          <option value="Goal Based Financial Planning and Investment Advice">Goal Based Financial Planning and Investment Advice</option>
+          <option value="Tax Planning">Tax Planning</option>
+          <option value="Financial Health Checkup">Financial Health Checkup</option>
           <option value="Portfolio Review">Portfolio Review</option>
           <option value="Investment Guidance">Investment Guidance</option>
           <option value="Other">Other (specify)</option>
@@ -158,6 +163,9 @@ Copy the variant you prefer into its own file for use.
             <label><input type="radio" name="income" value="₹15–25 L" />₹15–25 L</label>
             <label><input type="radio" name="income" value="₹25–50 L" />₹25–50 L</label>
             <label><input type="radio" name="income" value="More than ₹50 L" />More than ₹50 L</label>
+            <label><input type="radio" name="income" value="Not disclosed" />Not disclosed</label>
+            <label><input type="radio" name="income" value="custom" id="incomeCustomRadio" />Exact amount</label>
+            <input type="text" id="incomeCustomInput" class="hidden money-input" placeholder="Enter amount in ₹" pattern="[0-9,]*" />
           </div>
         </fieldset>
 
@@ -168,6 +176,9 @@ Copy the variant you prefer into its own file for use.
             <label><input type="radio" name="portfolio" value="₹15–25 L" />₹15–25 L</label>
             <label><input type="radio" name="portfolio" value="₹25–50 L" />₹25–50 L</label>
             <label><input type="radio" name="portfolio" value="More than ₹50 L" />More than ₹50 L</label>
+            <label><input type="radio" name="portfolio" value="Not disclosed" />Not disclosed</label>
+            <label><input type="radio" name="portfolio" value="custom" id="portfolioCustomRadio" />Exact amount</label>
+            <input type="text" id="portfolioCustomInput" class="hidden money-input" placeholder="Enter amount in ₹" pattern="[0-9,]*" />
           </div>
         </fieldset>
 
@@ -211,12 +222,62 @@ Copy the variant you prefer into its own file for use.
   <script>
     const $ = selector => document.querySelector(selector);
 
+    // Format number string to Indian comma style — 1234567 -> 12,34,567
+    const formatIndian = (val) => {
+      val = val.replace(/[^0-9]/g, '');          // keep digits only
+      if (!val) return '';
+      const last3 = val.slice(-3);
+      const other = val.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+      return other ? other + ',' + last3 : last3;
+    };
+
+    // Custom amount elements
+    const incomeCustomRadio  = $('#incomeCustomRadio');
+    const incomeCustomInput  = $('#incomeCustomInput');
+    const portfolioCustomRadio = $('#portfolioCustomRadio');
+    const portfolioCustomInput = $('#portfolioCustomInput');
+
     const form         = $('#leadForm');
     const outputEl     = $('#output');
     const copyBtn      = $('#copyBtn');
     const helpWithSel  = $('#helpWith');
     const helpDetailsW = $('#helpDetailsWrap');
     const helpDetails  = $('#helpDetails');
+
+    // Show / hide custom number fields
+    document.querySelectorAll('input[name="income"]').forEach(el => {
+      el.addEventListener('change', () => {
+        if (incomeCustomRadio.checked) {
+          incomeCustomInput.classList.remove('hidden');
+          incomeCustomInput.required = true;
+        } else {
+          incomeCustomInput.classList.add('hidden');
+          incomeCustomInput.required = false;
+          incomeCustomInput.value = '';
+        }
+      });
+    });
+    document.querySelectorAll('input[name="portfolio"]').forEach(el => {
+      el.addEventListener('change', () => {
+        if (portfolioCustomRadio.checked) {
+          portfolioCustomInput.classList.remove('hidden');
+          portfolioCustomInput.required = true;
+        } else {
+          portfolioCustomInput.classList.add('hidden');
+          portfolioCustomInput.required = false;
+          portfolioCustomInput.value = '';
+        }
+      });
+    });
+
+    // Attach input listeners for Indian comma formatting
+    [incomeCustomInput, portfolioCustomInput].forEach(inp => {
+      inp.addEventListener('input', () => {
+        const pos = inp.selectionStart;           // keep caret position
+        inp.value = formatIndian(inp.value);
+        inp.setSelectionRange(pos, pos);          // restore caret
+      });
+    });
 
     // Show custom details textarea when "Other" selected
     helpWithSel.addEventListener('change', () => {
@@ -237,8 +298,18 @@ Copy the variant you prefer into its own file for use.
       const caller     = $('#callerName').value.trim() || 'Tele‑Caller';
       let need         = helpWithSel.value;
       if (need === 'Other') need += ` — ${helpDetails.value.trim()}`;
-      const income     = form.elements['income'].value;
-      const portfolio  = form.elements['portfolio'].value;
+      // const income     = form.elements['income'].value;
+      // const portfolio  = form.elements['portfolio'].value;
+      const incomeRadVal   = form.elements['income'].value;
+      const income = incomeRadVal === 'custom'
+        ? `₹${incomeCustomInput.value.trim()}`
+        : incomeRadVal;
+
+      const portfolioRadVal  = form.elements['portfolio'].value;
+      const portfolio = portfolioRadVal === 'custom'
+        ? `₹${portfolioCustomInput.value.trim()}`
+        : portfolioRadVal;
+
       const profession = $('#profession').value.trim();
       const timeline   = form.elements['timeline'].value;
       const pain       = $('#pain').value.trim();
@@ -271,4 +342,3 @@ Copy the variant you prefer into its own file for use.
   </script>
 </body>
 </html>
-

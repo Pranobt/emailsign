@@ -16,14 +16,16 @@ Copy the variant you prefer into its own file for use.
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lead Notes — Split‑Screen</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --green: #009356;
+      --green: #10a37f;
       --green-dark: #0e8c6b;
-      --bg: #f7f9fc;
+      --bg: #f0fdf9;
       --card: #ffffff;
-      --text: #333;
+      --text: #202123;
       --muted: #6b7280;
     }
     * { box-sizing: border-box; }
@@ -63,7 +65,8 @@ Copy the variant you prefer into its own file for use.
     select,
     input[type=text],
     .money-input,
-    textarea {
+    textarea,
+    input[type=url] {
       width: 100%;
       padding: 10px 12px;
       margin-top: 8px;
@@ -71,7 +74,7 @@ Copy the variant you prefer into its own file for use.
       border-radius: 8px;
       font-size: 14px;
     }
-    fieldset { border: none; padding: 0; margin: 0; }
+    fieldset { border: none; padding: 0; margin: 0 0 20px; }
     .radio { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
     .radio label { font-weight: 500; display: flex; align-items: center; gap: 6px; }
     .btn, .copy-btn {
@@ -121,6 +124,27 @@ Copy the variant you prefer into its own file for use.
       color: var(--muted);
     }
     .note strong { color: var(--text); }
+    .sidebar-section {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #d1d5db;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+    .sidebar-section strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .sidebar-section ol {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .sidebar-section ol li {
+      margin-bottom: 8px;
+    }
 
     /*  Custom textarea reveal  */
     #helpDetailsWrap { display: none; }
@@ -130,13 +154,45 @@ Copy the variant you prefer into its own file for use.
       .wrapper { grid-template-columns: 1fr; max-width: 620px; }
       aside { position: static; max-height: none; margin-top: 24px; }
     }
+    /* Tooltip styling for info icon */
+    .info-icon {
+      display: inline-block;
+      margin-left: 6px;
+      color: var(--green-dark);
+      font-weight: 600;
+      cursor: help;
+      border-bottom: 1px dotted var(--green-dark);
+      font-size: 0.9em;
+      position: relative;
+    }
+    .info-icon:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-size: 12px;
+      z-index: 10;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .info-icon::after {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease-in-out;
+    }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <!-- =====================  FORM  ======================= -->
     <div class="card">
-      <h1>Lead Qualification</h1>
+      <h1>Lead Qualification <span style="font-size:0.9rem;font-weight:400;">v0.2</span></h1>
       <form id="leadForm" novalidate>
         <label class="required" for="callerName">Your Name</label>
         <input type="text" id="callerName" placeholder="e.g. Priya" required />
@@ -144,11 +200,10 @@ Copy the variant you prefer into its own file for use.
         <label class="required" for="helpWith">Lead Needs Help With</label>
         <select id="helpWith" required>
           <option value="" disabled selected>Select an option</option>
-          <option value="Goal Based Financial Planning and Investment Advice">Goal Based Financial Planning and Investment Advice</option>
+          <option value="Financial Planning and Investment Advice">Financial Planning and Investment Advice</option>
           <option value="Tax Planning">Tax Planning</option>
-          <option value="Financial Health Checkup">Financial Health Checkup</option>
           <option value="Portfolio Review">Portfolio Review</option>
-          <option value="Investment Guidance">Investment Guidance</option>
+          <option value="Overall Investment Advice (Wealth Management)">Overall Investment Advice (Wealth Management)</option>
           <option value="Other">Other (specify)</option>
         </select>
         <!-- Custom reply textarea -->
@@ -170,7 +225,7 @@ Copy the variant you prefer into its own file for use.
         </fieldset>
 
         <fieldset>
-          <legend class="required">Current Portfolio Size</legend>
+          <legend class="required">Current Portfolio Size (Mutual Funds, Equity Stocks, and FD)</legend>
           <div class="radio">
             <label><input type="radio" name="portfolio" value="Less than ₹15 L" required />Less than ₹15 L</label>
             <label><input type="radio" name="portfolio" value="₹15–25 L" />₹15–25 L</label>
@@ -185,16 +240,10 @@ Copy the variant you prefer into its own file for use.
         <label class="required" for="profession">Profession</label>
         <input type="text" id="profession" placeholder="e.g. Doctor, Manager, CXO" required />
 
-        <fieldset>
-          <legend class="required">Timeline to Act</legend>
-          <div class="radio">
-            <label><input type="radio" name="timeline" value="Less than 1 month" required />Less than 1 month</label>
-            <label><input type="radio" name="timeline" value="1–3 months" />1–3 months</label>
-            <label><input type="radio" name="timeline" value="More than 3 months" />More than 3 months</label>
-          </div>
-        </fieldset>
+        <label for="linkedin">Lead's LinkedIn Profile URL <span class="info-icon" data-tooltip="Don’t ask the lead. First search LinkedIn or copy from CRM.">(i)</span></label>
+        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username" />
 
-        <label class="required" for="pain">Biggest Money Challenge</label>
+        <label class="required" for="pain">What is the problem you are facing right now that you want to solve as soon as possible?</label>
         <textarea id="pain" rows="3" placeholder="e.g. Unsure how much to invest via SIP vs. goals" required></textarea>
 
         <button type="button" class="btn" id="generate">Generate CRM Notes</button>
@@ -208,13 +257,22 @@ Copy the variant you prefer into its own file for use.
     <aside>
       <h2>Caller Script</h2>
       <p class="note"><strong>Your Name</strong>: "May I note your name for our record?"</p>
-      <p class="note"><strong>Lead Needs</strong>: "Which of these would help you most right now—goal planning, revisiting your current investments, guidance on new investments, or something else?"</p>
+      <p class="note"><strong>Lead Needs</strong>: "Please tell me all this so we can serve you better."</p>
       <p class="note"><strong>Income Range</strong>: "Which range best describes your annual household income? A ballpark is fine."</p>
-      <p class="note"><strong>Portfolio Size</strong>: "Roughly how large is your current investment portfolio today?"
+      <p class="note"><strong>Portfolio Size</strong>: "Can you tell me the size of your investments in Mutual Funds, Stocks, and FDs together?"
       </p>
       <p class="note"><strong>Profession</strong>: "Could you tell me your profession or role?"</p>
-      <p class="note"><strong>Timeline</strong>: "By when are you looking to take the next step—within a month, 1–3 months, or later?"</p>
-      <p class="note"><strong>Key Challenge</strong>: "What’s the biggest challenge you face in managing your money right now?"</p>
+      <p class="note"><strong>LinkedIn</strong>: "Could you share your LinkedIn profile link so we can connect better?"</p>
+      <p class="note"><strong>Key Challenge</strong>: "What is the problem you are facing right now that you want to solve as soon as possible?"</p>
+
+      <div class="sidebar-section">
+        <strong>How to find LinkedIn URL</strong>
+        <ol>
+          <li>First check if lead came from LinkedIn form – if yes, copy URL from CRM directly.</li>
+          <li>Otherwise, use lead’s email / phone / city from Facebook form to search LinkedIn.</li>
+          <li>Manually copy‑paste the profile URL into the form.</li>
+        </ol>
+      </div>
     </aside>
   </div>
 
@@ -311,21 +369,41 @@ Copy the variant you prefer into its own file for use.
         : portfolioRadVal;
 
       const profession = $('#profession').value.trim();
-      const timeline   = form.elements['timeline'].value;
+      const linkedin = $('#linkedin').value.trim();
+      // const timeline   = form.elements['timeline'].value;
       const pain       = $('#pain').value.trim();
       const timestamp  = new Date().toLocaleString('en-IN', { hour12: false });
 
       const note = `${caller} | ${timestamp}\n\n` +
         `Need      : ${need}\n` +
         `Profession: ${profession}\n` +
+        `LinkedIn  : ${linkedin}\n` +
         `Income    : ${income}\n` +
-        `Portfolio : ${portfolio}\n` +
-        `Timeline  : ${timeline}\n\n` +
+        `Portfolio : ${portfolio}\n\n` +
         `Key Challenge → ${pain}`;
 
       outputEl.textContent = note;
       outputEl.classList.remove('hidden');
       copyBtn.classList.remove('hidden');
+      if (typeof confetti === "function") {
+        const btn = $('#generate');
+        const rect = btn.getBoundingClientRect();
+        const yPos = (rect.top + rect.height / 2) / window.innerHeight;
+        // left side
+        confetti({
+          particleCount: 80,
+          angle: 60,
+          spread: 70,
+          origin: { x: 0, y: yPos }
+        });
+        // right side
+        confetti({
+          particleCount: 80,
+          angle: 120,
+          spread: 70,
+          origin: { x: 1, y: yPos }
+        });
+      }
     });
 
     // Clipboard

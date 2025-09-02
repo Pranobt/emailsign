@@ -642,7 +642,7 @@ submitBtn.addEventListener("click", async ()=>{
       body: params.toString()
     });
 
-    showStatus(`Sent to Zoho Flow. (One-row mode). In Flow → History, map from: Date, Prepared_By, Attendance_Aggregated, RM_Names, Total_RMs, Total_Clients, Clients_Summary.`);
+    showStatus(`Sent to Zoho Flow.`);
   }catch(e){
     showStatus("Could not send from the browser. If this persists, contact Pranob.", true);
   }

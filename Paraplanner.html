@@ -109,8 +109,9 @@
           </select>
         </div>
         <div>
-          <label for="reportDate">Date (dd-MMM-yyyy)</label>
-          <input id="reportDate" type="date" />
+          <label for="reportDate">Date (dd-MM-yyyy)</label>
+          <input id="reportDate" type="text" inputmode="numeric" placeholder="dd-MM-yyyy" maxlength="10" />
+          <div id="datePreview" class="muted" style="margin-top:4px"></div>
         </div>
       </div>
     </div>
@@ -162,12 +163,44 @@ const preparedByCustom = document.getElementById("preparedByCustom");
 /** Date helpers */
 function pad(n){ return n.toString().padStart(2,"0"); }
 function monthShort(m){ return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m]; }
-function format_ddMMMyyyy(date){ return `${pad(date.getDate())}-${monthShort(date.getMonth())}-${date.getFullYear()}`; }
+function format_ddMMyyyy(date){ return `${pad(date.getDate())}-${pad(date.getMonth()+1)}-${date.getFullYear()}`; }
+function parse_ddMMyyyy(str){
+  if(!str) return null;
+  const m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(str.trim());
+  if(!m) return null;
+  const dd = parseInt(m[1],10), mm = parseInt(m[2],10), yyyy = parseInt(m[3],10);
+  if(mm < 1 || mm > 12 || dd < 1 || dd > 31) return null;
+  const d = new Date(yyyy, mm-1, dd);
+  return (d.getFullYear()===yyyy && d.getMonth()===(mm-1) && d.getDate()===dd) ? d : null;
+}
+function maskDateInput(e){
+  // keep digits only and auto-insert dashes at 2 and 5
+  let v = e.target.value.replace(/[^\d]/g,'').slice(0,8);
+  if(v.length >= 5) v = v.slice(0,2) + '-' + v.slice(2,4) + '-' + v.slice(4);
+  else if(v.length >= 3) v = v.slice(0,2) + '-' + v.slice(2);
+  e.target.value = v;
+  updateDatePreview();
+}
 (function setToday(){
   const today = new Date();
-  const yyyy = today.getFullYear(), mm = pad(today.getMonth()+1), dd = pad(today.getDate());
-  reportDateInput.value = `${yyyy}-${mm}-${dd}`;
+  reportDateInput.value = format_ddMMyyyy(today);
+  updateDatePreview();
 })();
+
+function updateDatePreview(){
+  const el = document.getElementById("datePreview");
+  if(!reportDateInput.value){
+    el.textContent = "Select a date";
+    return;
+  }
+  const d = parse_ddMMyyyy(reportDateInput.value);
+  if(!d){
+    el.textContent = "Invalid date (use dd-MM-yyyy)";
+    return;
+  }
+}
+reportDateInput.addEventListener("change", updateDatePreview);
+reportDateInput.addEventListener("input", maskDateInput);
 
 /** Prepared By dropdown → custom input toggle */
 preparedBySelect.addEventListener("change", () => {
@@ -235,7 +268,7 @@ function createClientBlock(index){
       <label>Area (tick relevant)</label>
       <div class="areasWrap"></div>
       <label>Notes</label>
-      <textarea class="notes" placeholder="Key updates, blockers, next steps"></textarea>
+      <textarea class="notes" placeholder="Key updates, action taken, next steps"></textarea>
     </div>
   `;
   cb.querySelector(".tasksWrap").appendChild(chips("tasks", TASKS));
@@ -412,11 +445,11 @@ function updateAllCounts(){
 
 /** Collect data */
 function collectData(){
-  // Date convert yyyy-mm-dd -> dd-MMM-yyyy
+  // Date input is dd-MM-yyyy → keep as dd-MM-yyyy (validated via parse)
   let outDate = "";
   if(reportDateInput.value){
-    const d = new Date(reportDateInput.value + "T00:00:00");
-    if(!isNaN(d)) outDate = format_ddMMMyyyy(d);
+    const d = parse_ddMMyyyy(reportDateInput.value);
+    if(d) outDate = format_ddMMyyyy(d);
   }
   const attendance = attendanceInput.value;
   const preparedBy = getPreparedBy();
@@ -444,7 +477,7 @@ function collectData(){
 /** Cliq message */
 function buildCliqMessage(payload){
   const lines = [];
-  lines.push(`*Daily Task Update – ${payload.date || format_ddMMMyyyy(new Date())}*`);
+  lines.push(`*Daily Task Update – ${payload.date || format_ddMMyyyy(new Date())}*`);
   lines.push(`Prepared by: ${payload.preparedBy || "N/A"}`);
   lines.push(`Attendance: ${payload.attendance || "N/A"}`);
   lines.push("");
@@ -516,6 +549,7 @@ submitBtn.addEventListener("click", async ()=>{
     params.append("date", payload.date || "");
     params.append("preparedBy", payload.preparedBy || "");
     params.append("attendance", payload.attendance || "");
+    params.append("payload", JSON.stringify(payload));
     // Full structured objects
     params.append("payload_json", JSON.stringify(payload)); // entire payload (string)
     params.append("rms_json", JSON.stringify(payload.rms || [])); // just the rms array (string)
@@ -532,9 +566,9 @@ submitBtn.addEventListener("click", async ()=>{
       body: params.toString()
     });
 
-    showStatus(`Sent to Zoho Flow. (Local check: form body ${bytes} bytes). Browser response is opaque due to CORS — check Flow history to confirm fields like date/preparedBy/attendance/cliq_message/payload_json.`);
+    showStatus(`Sent to Zoho Flow. (Local check: form body ${bytes} bytes)`);
   }catch(e){
-    showStatus("Could not send from the browser. If this persists, consider hosting on HTTPS (you already are) and/or using a tiny serverless proxy.", true);
+    showStatus("Could not send from the browser. If this persists, contact Pranob.", true);
   }
 });
 </script>

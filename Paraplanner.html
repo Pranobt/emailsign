@@ -474,6 +474,71 @@ function collectData(){
   return { date: outDate, preparedBy, attendance, rms };
 }
 
+/** Build flat client rows matching Google Sheet columns */
+function buildClientRows(payload){
+  const rows = [];
+  const date = payload.date || "";
+  const preparedBy = payload.preparedBy || "";
+  const attendance = payload.attendance || "";
+  (payload.rms || []).forEach(item=>{
+    const rmName = item.rmName || "";
+    const total = item.total_clients ?? (item.clients ? item.clients.length : 0);
+    (item.clients || []).forEach(child=>{
+      rows.push({
+        "Date": date,
+        "Prepared By": preparedBy,
+        "Attendance": attendance,
+        "RM Name": rmName,
+        "Client #": child.index ?? "",
+        "Client Name": child.name || "",
+        "Client Type": child.type || "",
+        "Tasks": (child.tasks || []).join(", "),
+        "Areas": (child.areas || []).join(", "),
+        "Notes": child.notes || "",
+        "RM Total Clients": total
+      });
+    });
+  });
+  return rows;
+}
+
+/** Build ONE summary row (one spreadsheet row per submission) */
+function buildSubmissionRow(payload){
+  const date = payload.date || "";
+  const preparedBy = payload.preparedBy || "";
+  const attendance = payload.attendance || "";
+  const rms = payload.rms || [];
+  const rmNames = rms.map(r => (r.rmName || "")).filter(Boolean);
+  const totalRMs = rms.length;
+  const totalClients = rms.reduce((acc, r) => acc + ((r.clients || []).length), 0);
+
+  // Build a compact per-client summary (newline-separated)
+  const lines = [];
+  rms.forEach(rm=>{
+    (rm.clients || []).forEach(c=>{
+      const tasks = (c.tasks || []).join(", ");
+      const areas = (c.areas || []).join(", ");
+      lines.push(
+        `RM: ${rm.rmName || "N/A"} | #${c.index ?? ""} ${c.name || "N/A"} (${c.type || "N/A"})` +
+        `${tasks ? " | Tasks: " + tasks : ""}` +
+        `${areas ? " | Areas: " + areas : ""}` +
+        `${c.notes ? " | Notes: " + c.notes : ""}`
+      );
+    });
+  });
+  const clientsSummary = lines.join("\n"); // keep newlines for Sheets
+
+  return {
+    "Date": date,
+    "Prepared_By": preparedBy,
+    "Attendance": attendance,
+    "RM_Names": rmNames.join(", "),
+    "Total_RMs": totalRMs,
+    "Total_Clients": totalClients,
+    "Clients_Summary": clientsSummary
+  };
+}
+
 /** Cliq message */
 function buildCliqMessage(payload){
   const lines = [];
@@ -518,34 +583,6 @@ function showStatus(html, isError=false){
   statusArea.innerHTML = `<div class="${isError?'error':'success'}">${html}</div>`;
 }
 
-/** Build flat rows for Google Sheets (11 fields per client) */
-function buildRows(payload){
-  const rows = [];
-  const date = payload.date || "";
-  const preparedBy = payload.preparedBy || "";
-  const attendance = payload.attendance || "";
-  (payload.rms || []).forEach(item=>{
-    const rmName = item.rmName || "";
-    const rmTotalClients = item.total_clients ?? ((item.clients||[]).length);
-    (item.clients || []).forEach(child=>{
-      rows.push({
-        date,
-        preparedBy,
-        attendance,
-        rmName,
-        clientIndex: child.index ?? "",
-        clientName: child.name || "",
-        clientType: child.type || "",
-        tasks: (child.tasks || []).join(", "),
-        areas: (child.areas || []).join(", "),
-        notes: child.notes || "",
-        rmTotalClients
-      });
-    });
-  });
-  return rows;
-}
-
 /** Copy Cliq message */
 copyCliqBtn.addEventListener("click",()=>{
   const payload = collectData();
@@ -560,9 +597,6 @@ copyCliqBtn.addEventListener("click",()=>{
 submitBtn.addEventListener("click", async ()=>{
   const payload = collectData();
   const err = validate(payload);
-  // Build flat 11-column rows and embed in the payload for convenience
-  const rows = buildRows(payload);
-  payload.rows = rows;
   if(err){ showStatus(err, true); return; }
 
   // offline guard
@@ -572,6 +606,7 @@ submitBtn.addEventListener("click", async ()=>{
   }
 
   const cliq_message = buildCliqMessage(payload);
+  const submissionRow = buildSubmissionRow(payload);
 
   try{
     // Build a simple x-www-form-urlencoded body.
@@ -580,10 +615,20 @@ submitBtn.addEventListener("click", async ()=>{
     params.append("date", payload.date || "");
     params.append("preparedBy", payload.preparedBy || "");
     params.append("attendance", payload.attendance || "");
-    params.append("payload", JSON.stringify(payload));             // full payload with rows
-    params.append("payload_json", JSON.stringify(payload));        // duplicate for Flow convenience
-    params.append("rms_json", JSON.stringify(payload.rms || []));  // nested rms only
-    params.append("rows_json", JSON.stringify(rows || []));        // NEW: flat 11-field rows
+    params.append("payload", JSON.stringify(payload));
+    // One-row-per-submission fields (safe keys)
+    params.append("Date", submissionRow.Date);
+    params.append("Prepared_By", submissionRow.Prepared_By);
+    params.append("Attendance_Aggregated", submissionRow.Attendance); // avoid clashing with plain "attendance"
+    params.append("RM_Names", submissionRow.RM_Names);
+    params.append("Total_RMs", String(submissionRow.Total_RMs));
+    params.append("Total_Clients", String(submissionRow.Total_Clients));
+    params.append("Clients_Summary", submissionRow.Clients_Summary);
+    // Also provide a JSON object of the single row
+    params.append("submission_row_json", JSON.stringify(submissionRow));
+    // Full structured objects
+    params.append("payload_json", JSON.stringify(payload)); // entire payload (string)
+    params.append("rms_json", JSON.stringify(payload.rms || [])); // just the rms array (string)
     // Cliq
     params.append("cliq_message", cliq_message || "");
 
@@ -597,7 +642,7 @@ submitBtn.addEventListener("click", async ()=>{
       body: params.toString()
     });
 
-    showStatus(`Sent to Zoho Flow. (Local check: form body ${bytes} bytes). In Flow history you should now see: date/preparedBy/attendance, payload (with rows), rms_json, and rows_json.`);
+    showStatus(`Sent to Zoho Flow. (One-row mode). In Flow → History, map from: Date, Prepared_By, Attendance_Aggregated, RM_Names, Total_RMs, Total_Clients, Clients_Summary.`);
   }catch(e){
     showStatus("Could not send from the browser. If this persists, contact Pranob.", true);
   }

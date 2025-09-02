@@ -508,25 +508,31 @@ submitBtn.addEventListener("click", async ()=>{
   const cliq_message = buildCliqMessage(payload);
 
   try{
-    // Use FormData to avoid preflight and ensure fields arrive at Flow.
-    const fd = new FormData();
-    fd.append("payload", JSON.stringify(payload));   // Flow will see payload as a text field
-    fd.append("cliq_message", cliq_message);         // Flow will see this as a text field too
+    // Build a simple x-www-form-urlencoded body.
+    // Many webhook services (including Zoho Flow) parse these fields reliably.
+    const params = new URLSearchParams();
+    params.append("date", payload.date || "");
+    params.append("preparedBy", payload.preparedBy || "");
+    params.append("attendance", payload.attendance || "");
+    // Full structured objects
+    params.append("payload_json", JSON.stringify(payload)); // entire payload (string)
+    params.append("rms_json", JSON.stringify(payload.rms || [])); // just the rms array (string)
+    // Cliq
+    params.append("cliq_message", cliq_message || "");
+
+    const bytes = new Blob([params.toString()]).size;
 
     showStatus("Submitting…");
     await fetch(WEBHOOK_URL, {
       method: "POST",
       mode: "no-cors",
-      body: fd
-      // NOTE: No manual headers — browser will set multipart/form-data with boundary
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: params.toString()
     });
 
-    // Local confirmation (we can't read response in no-cors)
-    const preview = JSON.stringify(payload);
-    const bytes = new Blob([preview]).size;
-    showStatus(`Sent to Zoho Flow. (Local check: payload ${bytes} bytes). Due to browser CORS we can't read the response — check Flow history / Sheet / Cliq to confirm.`);
+    showStatus(`Sent to Zoho Flow. (Local check: form body ${bytes} bytes). Browser response is opaque due to CORS — check Flow history to confirm fields like date/preparedBy/attendance/cliq_message/payload_json.`);
   }catch(e){
-    showStatus("Could not send from the browser. If this persists, host the page on HTTPS or use a tiny serverless proxy.", true);
+    showStatus("Could not send from the browser. If this persists, consider hosting on HTTPS (you already are) and/or using a tiny serverless proxy.", true);
   }
 });
 </script>

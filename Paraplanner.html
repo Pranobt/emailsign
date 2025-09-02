@@ -518,6 +518,34 @@ function showStatus(html, isError=false){
   statusArea.innerHTML = `<div class="${isError?'error':'success'}">${html}</div>`;
 }
 
+/** Build flat rows for Google Sheets (11 fields per client) */
+function buildRows(payload){
+  const rows = [];
+  const date = payload.date || "";
+  const preparedBy = payload.preparedBy || "";
+  const attendance = payload.attendance || "";
+  (payload.rms || []).forEach(item=>{
+    const rmName = item.rmName || "";
+    const rmTotalClients = item.total_clients ?? ((item.clients||[]).length);
+    (item.clients || []).forEach(child=>{
+      rows.push({
+        date,
+        preparedBy,
+        attendance,
+        rmName,
+        clientIndex: child.index ?? "",
+        clientName: child.name || "",
+        clientType: child.type || "",
+        tasks: (child.tasks || []).join(", "),
+        areas: (child.areas || []).join(", "),
+        notes: child.notes || "",
+        rmTotalClients
+      });
+    });
+  });
+  return rows;
+}
+
 /** Copy Cliq message */
 copyCliqBtn.addEventListener("click",()=>{
   const payload = collectData();
@@ -532,6 +560,9 @@ copyCliqBtn.addEventListener("click",()=>{
 submitBtn.addEventListener("click", async ()=>{
   const payload = collectData();
   const err = validate(payload);
+  // Build flat 11-column rows and embed in the payload for convenience
+  const rows = buildRows(payload);
+  payload.rows = rows;
   if(err){ showStatus(err, true); return; }
 
   // offline guard
@@ -549,10 +580,10 @@ submitBtn.addEventListener("click", async ()=>{
     params.append("date", payload.date || "");
     params.append("preparedBy", payload.preparedBy || "");
     params.append("attendance", payload.attendance || "");
-    params.append("payload", JSON.stringify(payload));
-    // Full structured objects
-    params.append("payload_json", JSON.stringify(payload)); // entire payload (string)
-    params.append("rms_json", JSON.stringify(payload.rms || [])); // just the rms array (string)
+    params.append("payload", JSON.stringify(payload));             // full payload with rows
+    params.append("payload_json", JSON.stringify(payload));        // duplicate for Flow convenience
+    params.append("rms_json", JSON.stringify(payload.rms || []));  // nested rms only
+    params.append("rows_json", JSON.stringify(rows || []));        // NEW: flat 11-field rows
     // Cliq
     params.append("cliq_message", cliq_message || "");
 
@@ -566,7 +597,7 @@ submitBtn.addEventListener("click", async ()=>{
       body: params.toString()
     });
 
-    showStatus(`Sent to Zoho Flow. (Local check: form body ${bytes} bytes)`);
+    showStatus(`Sent to Zoho Flow. (Local check: form body ${bytes} bytes). In Flow history you should now see: date/preparedBy/attendance, payload (with rows), rms_json, and rows_json.`);
   }catch(e){
     showStatus("Could not send from the browser. If this persists, contact Pranob.", true);
   }

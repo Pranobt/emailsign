@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Daily Task Update → Zoho Flow</title>
+<style>
+  :root { --bg:#f7f7f8; --card:#ffffff; --ink:#111; --muted:#666; --accent:#009356; --line:#e5e7eb; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+  .wrap{max-width:920px;margin:24px auto;padding:0 16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px;margin-bottom:16px}
+  h1{font-size:20px;margin:8px 0 12px}
+  h2{font-size:18px;margin:10px 0}
+  h3{font-size:16px;margin:10px 0 6px}
+  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
+  input[type="text"], input[type="date"], select, textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none
+  }
+  textarea{min-height:72px;resize:vertical}
+  .row{display:grid;gap:12px}
+  .grid-2{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr 1fr 1fr}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:999px}
+  .chip input{margin:0}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
+  .btn.secondary{background:#fff;color:var(--accent)}
+  .btn.ghost{border-color:var(--line);color:var(--ink);background:#fff}
+  .muted{color:var(--muted);font-size:13px}
+  .rm-block{border:1px dashed var(--line);border-radius:12px;padding:12px;margin-top:8px}
+  .client-block{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fafafa}
+  .hr{height:1px;background:var(--line);margin:12px 0}
+  .right{margin-left:auto}
+  .success{border-left:4px solid #16a34a;padding:10px;background:#ecfdf5;border-radius:8px}
+  .error{border-left:4px solid #dc2626;padding:10px;background:#fef2f2;border-radius:8px}
+  .hidden{display:none}
+  .rm-header-line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .rm-title{font-weight:600}
+  .rm-count{margin-left:auto;font-size:13px;color:var(--muted)}
+  @media (max-width:720px){ .grid-2,.grid-3{grid-template-columns:1fr} .bar{gap:8px} .rm-count{margin-left:0} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Daily Task Update</h1>
+
+      <!-- HEADER: Prepared By (dropdown + custom), Attendance, Date -->
+      <div class="row grid-3">
+        <div>
+          <label for="preparedBySelect">Prepared By</label>
+          <select id="preparedBySelect">
+            <option value="">Select…</option>
+            <option>Satyashree</option>
+            <option>Preshita</option>
+            <option>Unnati</option>
+            <option>Vandana</option>
+            <option>Sushant</option>
+            <option>Other (type)</option>
+          </select>
+          <input type="text" id="preparedByCustom" class="hidden" placeholder="Type name" />
+        </div>
+        <div>
+          <label for="attendance">Attendance</label>
+          <select id="attendance">
+            <option value="">Select…</option>
+            <option>Present</option>
+            <option>WFH</option>
+            <option>Half Day</option>
+            <option>Leave</option>
+          </select>
+        </div>
+        <div>
+          <label for="reportDate">Date (dd-MMM-yyyy)</label>
+          <input id="reportDate" type="date" />
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="bar">
+        <button id="addRmBtn" class="btn" type="button">+ Add RM</button>
+        <button id="expandAll" class="btn secondary" type="button">Expand All</button>
+        <button id="collapseAll" class="btn secondary" type="button">Collapse All</button>
+        <span class="muted right">Start with one RM & one client.</span>
+      </div>
+    </div>
+
+    <div id="rmContainer"></div>
+
+    <div class="card">
+      <div class="bar">
+        <button id="submitBtn" class="btn" type="button">Submit to Zoho Flow</button>
+        <button id="copyCliqBtn" class="btn secondary" type="button">Copy Cliq Message</button>
+        <span class="muted right">Webhook is configured.</span>
+      </div>
+      <div id="statusArea" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+<script>
+/** Webhook (your URL) */
+const WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.d578e23c3472dcfbacc3c4a4eef46a9f.04980ed41a4276af5720dfb2d1fbd4e5&isdebug=false";
+
+const TASKS = [
+  "Portfolio Review","SIP Recommendation","Lumpsum Recommendation",
+  "Portfolio Rebalancing","Operations","Coordination","Online Meeting",
+  "Offline Meeting","CRM Update","Dashboard Update","Mail MOM",
+  "Comprehensive Plan","Quotes Shared"
+];
+const AREAS = ["Health Insurance","Term Insurance","Mutual Funds","Stocks","Bonds","FDs"];
+
+const rmContainer = document.getElementById("rmContainer");
+const addRmBtn = document.getElementById("addRmBtn");
+const expandAllBtn = document.getElementById("expandAll");
+const collapseAllBtn = document.getElementById("collapseAll");
+const submitBtn = document.getElementById("submitBtn");
+const copyCliqBtn = document.getElementById("copyCliqBtn");
+const statusArea = document.getElementById("statusArea");
+const reportDateInput = document.getElementById("reportDate");
+const attendanceInput = document.getElementById("attendance");
+const preparedBySelect = document.getElementById("preparedBySelect");
+const preparedByCustom = document.getElementById("preparedByCustom");
+
+/** Date helpers */
+function pad(n){ return n.toString().padStart(2,"0"); }
+function monthShort(m){ return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m]; }
+function format_ddMMMyyyy(date){ return `${pad(date.getDate())}-${monthShort(date.getMonth())}-${date.getFullYear()}`; }
+(function setToday(){
+  const today = new Date();
+  const yyyy = today.getFullYear(), mm = pad(today.getMonth()+1), dd = pad(today.getDate());
+  reportDateInput.value = `${yyyy}-${mm}-${dd}`;
+})();
+
+/** Prepared By dropdown → custom input toggle */
+preparedBySelect.addEventListener("change", () => {
+  if (preparedBySelect.value === "Other (type)") {
+    preparedByCustom.classList.remove("hidden");
+    preparedByCustom.focus();
+  } else {
+    preparedByCustom.classList.add("hidden");
+    preparedByCustom.value = "";
+  }
+});
+function getPreparedBy(){
+  if(preparedBySelect.value === "Other (type)"){
+    return (preparedByCustom.value || "").trim();
+  }
+  return preparedBySelect.value;
+}
+
+/** Chips */
+function chips(name, options){
+  const wrap = document.createElement("div");
+  wrap.className = "chips";
+  options.forEach(opt=>{
+    const c = document.createElement("label");
+    c.className = "chip";
+    c.innerHTML = `<input type="checkbox" name="${name}" value="${opt}"><span>${opt}</span>`;
+    wrap.appendChild(c);
+  });
+  return wrap;
+}
+
+/** Client block */
+function createClientBlock(index){
+  const cb = document.createElement("div");
+  cb.className="client-block";
+  cb.dataset.collapsed="false";
+  cb.innerHTML = `
+    <div class="bar">
+      <h3 style="margin:0">Client ${index}</h3>
+      <button class="btn ghost right toggleClient" type="button">Collapse</button>
+      <button class="btn secondary removeClient" type="button">Remove</button>
+    </div>
+    <div class="clientBody">
+      <div class="row grid-2">
+        <div>
+          <label>Client Name</label>
+          <input type="text" class="clientName" placeholder="Client full name" />
+        </div>
+        <div>
+          <label>Client Type</label>
+          <select class="clientType">
+            <option value="">Select…</option>
+            <option>New</option>
+            <option>Lead</option>
+            <option>Existing</option>
+          </select>
+        </div>
+      </div>
+      <label style="margin-top:10px">Tasks (tick relevant)</label>
+      <div class="tasksWrap"></div>
+      <label>Area (tick relevant)</label>
+      <div class="areasWrap"></div>
+      <label>Notes</label>
+      <textarea class="notes" placeholder="Key updates, blockers, next steps"></textarea>
+    </div>
+  `;
+  cb.querySelector(".tasksWrap").appendChild(chips("tasks", TASKS));
+  cb.querySelector(".areasWrap").appendChild(chips("areas", AREAS));
+  return cb;
+}
+
+/** RM block (RM Name + Total Clients on header line) */
+function createRmBlock(){
+  const rb = document.createElement("div");
+  rb.className="card rm-block";
+  rb.innerHTML = `
+    <div class="bar">
+      <div class="rm-header-line" style="width:100%">
+        <span class="rm-title">RM Name:</span>
+        <input type="text" class="rmName" placeholder="Type RM name" style="max-width:260px" />
+        <span class="rm-count">Total Clients: <strong class="clientCount">0</strong></span>
+        <button class="btn secondary right addClient" type="button">+ Add Client</button>
+        <button class="btn ghost removeRm" type="button">Remove RM</button>
+      </div>
+    </div>
+    <div class="clients"></div>
+  `;
+  const clientsWrap = rb.querySelector(".clients");
+  // default ONE client
+  clientsWrap.appendChild(createClientBlock(1));
+  updateAllCounts();
+  return rb;
+}
+
+/** Insert initial RM */
+rmContainer.appendChild(createRmBlock());
+
+/** Add RM */
+addRmBtn.addEventListener("click",()=>{ rmContainer.appendChild(createRmBlock()); updateAllCounts(); });
+
+/** Expand/Collapse all clients */
+expandAllBtn.addEventListener("click",()=>{
+  document.querySelectorAll(".client-block").forEach(cb=>{
+    cb.dataset.collapsed="false";
+    cb.querySelector(".clientBody").style.display="";
+    cb.querySelector(".toggleClient").textContent="Collapse";
+  });
+});
+collapseAllBtn.addEventListener("click",()=>{
+  document.querySelectorAll(".client-block").forEach(cb=>{
+    cb.dataset.collapsed="true";
+    cb.querySelector(".clientBody").style.display="none";
+    cb.querySelector(".toggleClient").textContent="Expand";
+  });
+});
+
+/** Event delegation for dynamic buttons */
+rmContainer.addEventListener("click",(e)=>{
+  const addBtn = e.target.closest(".addClient");
+  const removeClientBtn = e.target.closest(".removeClient");
+  const toggleBtn = e.target.closest(".toggleClient");
+  const removeRmBtn = e.target.closest(".removeRm");
+
+  if(addBtn){
+    const rmBlock = addBtn.closest(".rm-block");
+    const wrap = rmBlock.querySelector(".clients");
+    const count = wrap.querySelectorAll(".client-block").length;
+    if(count>=10){ alert("Limit: 10 clients per RM."); return; }
+    wrap.appendChild(createClientBlock(count+1));
+    updateAllCounts();
+  }
+  if(removeClientBtn){
+    const cb = removeClientBtn.closest(".client-block");
+    const rmBlock = removeClientBtn.closest(".rm-block");
+    cb.remove();
+    resequenceClients(rmBlock);
+    updateAllCounts();
+  }
+  if(toggleBtn){
+    const cb = toggleBtn.closest(".client-block");
+    const body = cb.querySelector(".clientBody");
+    const collapsed = cb.dataset.collapsed==="true";
+    cb.dataset.collapsed = collapsed ? "false" : "true";
+    body.style.display = collapsed ? "" : "none";
+    toggleBtn.textContent = collapsed ? "Collapse" : "Expand";
+  }
+  if(removeRmBtn){
+    removeRmBtn.closest(".rm-block").remove();
+    updateAllCounts();
+  }
+});
+
+/** Helpers */
+function resequenceClients(rmBlock){
+  rmBlock.querySelectorAll(".client-block h3").forEach((h3, idx)=> h3.textContent = `Client ${idx+1}`);
+}
+function updateAllCounts(){
+  document.querySelectorAll(".rm-block").forEach(rb=>{
+    const count = rb.querySelectorAll(".client-block").length;
+    const cc = rb.querySelector(".clientCount");
+    if(cc) cc.textContent = count;
+    resequenceClients(rb);
+  });
+}
+
+/** Collect data */
+function collectData(){
+  // Date convert yyyy-mm-dd -> dd-MMM-yyyy
+  let outDate = "";
+  if(reportDateInput.value){
+    const d = new Date(reportDateInput.value + "T00:00:00");
+    if(!isNaN(d)) outDate = format_ddMMMyyyy(d);
+  }
+  const attendance = attendanceInput.value;
+  const preparedBy = getPreparedBy();
+
+  const rms = [];
+  document.querySelectorAll(".rm-block").forEach(rb=>{
+    const rmName = rb.querySelector(".rmName").value.trim();
+    const clients = [];
+    rb.querySelectorAll(".client-block").forEach((cb, idx)=>{
+      const clientName = cb.querySelector(".clientName").value.trim();
+      const type = cb.querySelector(".clientType").value;
+      const notes = cb.querySelector(".notes").value.trim();
+      const tasks = Array.from(cb.querySelectorAll('input[name="tasks"]:checked')).map(x=>x.value);
+      const areas = Array.from(cb.querySelectorAll('input[name="areas"]:checked')).map(x=>x.value);
+      if(!clientName && !type && tasks.length===0 && areas.length===0 && !notes){ return; }
+      clients.push({ index: idx+1, name: clientName, type, tasks, areas, notes });
+    });
+    if(!rmName && clients.length===0){ return; }
+    rms.push({ rmName, clients, total_clients: rb.querySelectorAll(".client-block").length });
+  });
+
+  return { date: outDate, preparedBy, attendance, rms };
+}
+
+/** Cliq message */
+function buildCliqMessage(payload){
+  const lines = [];
+  lines.push(`*Daily Task Update – ${payload.date || format_ddMMMyyyy(new Date())}*`);
+  lines.push(`Prepared by: ${payload.preparedBy || "N/A"}`);
+  lines.push(`Attendance: ${payload.attendance || "N/A"}`);
+  lines.push("");
+
+  payload.rms.forEach((rm)=>{
+    lines.push(`*RM:* ${rm.rmName || "N/A"}  ·  *Total Clients:* ${rm.total_clients ?? 0}`);
+    if(!rm.clients || rm.clients.length===0){ lines.push("_No client entries_"); lines.push(""); return; }
+    rm.clients.forEach((c)=>{
+      lines.push(`${c.index}) *Client:* ${c.name || "N/A"}  ·  *Type:* ${c.type || "N/A"}`);
+      if(c.tasks?.length) lines.push(`   • *Tasks:* ${c.tasks.join(", ")}`);
+      if(c.areas?.length) lines.push(`   • *Area:* ${c.areas.join(", ")}`);
+      if(c.notes) lines.push(`   • *Notes:* ${c.notes}`);
+    });
+    lines.push("");
+  });
+
+  return lines.join("\n");
+}
+
+/** Validation */
+function validate(payload){
+  if(!payload.date) return "Please select Date.";
+  const pb = payload.preparedBy || "";
+  if(pb.trim().length===0) return "Please select or type Prepared By.";
+  if(!payload.attendance) return "Please select Attendance.";
+  if(payload.rms.length===0) return "Add at least one RM and one client row with some data.";
+  for(const rm of payload.rms){
+    if(rm.clients.length>0 && !rm.rmName) return "RM Name is required for each RM group.";
+    for(const c of rm.clients){
+      if(!c.name) return "Client Name is required for each client row.";
+      if(!c.type) return "Client Type is required for each client row.";
+    }
+  }
+  return null;
+}
+
+function showStatus(html, isError=false){
+  statusArea.innerHTML = `<div class="${isError?'error':'success'}">${html}</div>`;
+}
+
+/** Copy Cliq message */
+copyCliqBtn.addEventListener("click",()=>{
+  const payload = collectData();
+  const err = validate(payload);
+  if(err){ showStatus(err, true); return; }
+  const cliq = buildCliqMessage(payload);
+  navigator.clipboard.writeText(cliq).then(()=> showStatus("Cliq message copied."))
+    .catch(()=> showStatus("Could not copy to clipboard.", true));
+});
+
+/** Submit to Zoho Flow */
+submitBtn.addEventListener("click", async ()=>{
+  const payload = collectData();
+  const err = validate(payload);
+  if(err){ showStatus(err, true); return; }
+  const cliq_message = buildCliqMessage(payload);
+
+  try{
+    const res = await fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ payload, cliq_message })
+    });
+    if(!res.ok){ throw new Error(`HTTP ${res.status}`); }
+    showStatus("Submitted successfully to Zoho Flow. 🎉");
+  }catch(e){
+    showStatus("Error submitting to Zoho Flow: "+ e.message, true);
+  }
+});
+</script>
+</body>
+</html>

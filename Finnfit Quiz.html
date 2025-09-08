@@ -32,6 +32,16 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.0/dist/jspdf.plugin.autotable.min.js"></script>
 
 <style>
+  /* Form fonts */
+  input[type="text"], input[type="number"], input[type="email"], input[type="tel"], select, textarea, label, .btn {
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial !important;
+  }
+  h1, h2, h3 { font-family: "Source Serif 4", Georgia, serif; }
+
+  /* Calendly popup width override */
+  .calendly-overlay .calendly-popup,
+  .calendly-overlay .calendly-popup-content { max-width: 980px !important; }
+  .calendly-overlay .calendly-popup iframe { width: 100% !important; }
   :root{ --green:#009356; --ink:#263643; --accent:#D3FB91; --bg:#F5F7F8; --card:#ffffff; --muted:#6B7A8C; --danger:#C62828; --ok:#2E7D32; --shadow:0 8px 24px rgba(0,0,0,.08); --r:16px; }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
@@ -103,11 +113,6 @@
   @keyframes pop{to{transform:scale(1)}}
   /* Sticky actions at bottom on mobile */
   .sticky-mobile{position:static}
-  @media (max-width:720px){
-    .sticky-mobile{position:fixed;left:0;right:0;bottom:0;background:#fff;padding:12px 16px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(0,0,0,.12);border-top-left-radius:16px;border-top-right-radius:16px;z-index:120}
-    body{padding-bottom:120px}
-    .wrap{padding-bottom:120px}
-  }
 </style>
 </head>
 <body>
@@ -131,8 +136,8 @@
   <div class="modal-backdrop" id="reg-modal" style="display:none" hidden>
     <div class="modal">
       <button class="close" aria-label="Close" data-close>&times;</button>
-      <h3 style="font-family:'Source Serif 4'">Register for Financial Plan (₹15,000 value)</h3>
-      <p class="muted" id="reg-note">We’ll contact you to schedule the planning call.</p>
+      <h3 style="font-family:'Source Serif 4'">Request a Callback</h3>
+      <p class="muted" id="reg-note">Share your details and our team will call you back.</p>
       <div class="row">
         <div class="col">
           <label>Your Name</label>
@@ -160,43 +165,17 @@
     </div>
   </div>
 
-  <!-- Modal: OTP Verify (hidden by default) -->
-  <div class="modal-backdrop" id="otp-modal" style="display:none" hidden>
-    <div class="modal">
-      <button class="close" aria-label="Close" data-close>&times;</button>
-      <h3 style="font-family:'Source Serif 4'">Verify Mobile</h3>
-      <p class="muted">We sent a 4‑digit OTP to <span id="otp-mobile-text"></span>.</p>
-      <div id="otp-error" class="error-text" style="display:none"></div>
-      <div class="notice" id="otp-hint" style="display:none;margin-top:6px"></div>
-      <div class="pin" id="pin">
-        <input type="tel" inputmode="numeric" maxlength="1" aria-label="Digit 1">
-        <input type="tel" inputmode="numeric" maxlength="1" aria-label="Digit 2">
-        <input type="tel" inputmode="numeric" maxlength="1" aria-label="Digit 3">
-        <input type="tel" inputmode="numeric" maxlength="1" aria-label="Digit 4">
-      </div>
-      <div class="otp-row">
-        <button class="btn btn-primary" id="otp-verify">Verify</button>
-        <button class="btn btn-muted" id="otp-resend" disabled>Resend OTP (30s)</button>
-        <div class="verified" id="otp-verified"><div class="checkmark" id="otp-tick"></div> Verified</div>
-      </div>
-    </div>
-  </div>
 
 <script>
 (function(){
   // ===== Config =====
   const WEBHOOK_ENDPOINT = "https://example.com/finnfit-webhook"; // replace
   const CALENDLY_URL = "https://calendly.com/finnovate/financial-fitness-consultation";
-  // OTP via WATI — wire through your backend
-  const BACKEND_OTP_SEND = "https://example.com/otp/send";
-  const BACKEND_OTP_VERIFY = "https://example.com/otp/verify";
-  const OTP_RESEND_SECONDS = 30;
 
   // ==== TEST MODE via URL query params ====
-  // Use ?testmode=1&otp=4566 (defaults to 4566)
+  // Use ?testmode=1
   const __params = new URLSearchParams(window.location.search);
   const TEST_MODE = __params.get('testmode') === '1' || __params.get('test') === '1';
-  const TEST_OTP_CODE = ( __params.get('otp') || '4566' ).replace(/[^0-9]/g,'').slice(0,4);
 
   const DISCLAIMER = `This financial fitness score is provided for educational and informational purposes only and is not intended to provide investment, tax, or legal advice. The score is calculated based on the information you provide and is not a guarantee of future performance or success. Your personal financial situation is unique, and the score may not reflect your true financial health. It is important to seek professional advice before making any financial decisions. The score is not a substitute for professional judgment and is subject to change without notice. The provider of this score assumes no responsibility for any errors or omissions in the information provided. By using this score, you agree to hold harmless the provider and its affiliates for any losses or damages that may result from any inaccuracies or incompleteness of the information.
 \nRegistration granted by SEBI, membership of BASL and certification from NISM in no way guarantee performance of the intermediary or provide any assurance of returns to investors
@@ -245,7 +224,7 @@ nor guaranteed.
   const progress = document.getElementById('progress');
 
   // TEST MODE badge
-  if(TEST_MODE){ const h=document.querySelector('header'); if(h){ const b=document.createElement('div'); b.className='pill'; b.style.background='#FFE8B0'; b.textContent='TEST MODE'; h.appendChild(b); } console.info('FinnFit Quiz TEST MODE – OTP:', TEST_OTP_CODE); }
+  if(TEST_MODE){ const h=document.querySelector('header'); if(h){ const b=document.createElement('div'); b.className='pill'; b.style.background='#FFE8B0'; b.textContent='TEST MODE'; h.appendChild(b); } }
 
   let current = 0;
   function setProgress(){ const pct = ((current+1)/QUESTIONS.length)*100; progress.style.width = pct+'%'; }
@@ -328,14 +307,11 @@ nor guaranteed.
           if(!/^\d{10}$/.test(mobile)){ showCardError(card,'Please enter a valid 10-digit Indian mobile.'); markInvalid(mobileEl); return; }
           if(!consent){ showCardError(card,'Please accept the contact authorization.'); return; }
 
-          const needsOtp = (!state.mobileVerified) || (state.mobile && state.mobile !== mobile);
-          state.email=email; // staged
-          if(needsOtp){
-            try { await sendOtp('+91'+mobile); } catch(e){ showCardError(card,'Could not send OTP. Please try again.'); return; }
-            state.pendingMobile = mobile; openOtpModal('+91'+mobile); return;
-          }
-
-          state.mobile = mobile; state.consent = true;
+          // Directly accept after validation, set verified true, call webhook, show result
+          state.email = email;
+          state.mobile = mobile;
+          state.consent = true;
+          state.mobileVerified = true;
           const payload = buildPayload();
           try { await postJSON(WEBHOOK_ENDPOINT, { action:"QUIZ_SUBMIT", data: payload }); } catch(e){ console.warn('Webhook error:', e); }
           renderResult(payload); go(idx+1);
@@ -356,7 +332,7 @@ nor guaranteed.
               <div id="band-text" style="margin-top:8px"></div>
               <div class="actions actions-row sticky-mobile" style="margin-top:10px">
                 <button class="btn btn-primary" id="btn-calendly">Book a free slot</button>
-                <button class="btn btn-outline" id="btn-register">Register for Plan</button>
+                <button class="btn btn-outline" id="btn-register">Request Callback</button>
                 <button class="btn btn-muted" id="btn-pdf">Download PDF</button>
               </div>
             </div>
@@ -413,8 +389,16 @@ nor guaranteed.
     sec.querySelector('#result-title').textContent = `${name}, your FinnFit score is ${score}/20`;
     sec.querySelector('#score-badge').textContent = `${score}/20`;
     const chip = sec.querySelector('#band-chip'); chip.className = 'band '+payload.band.key; chip.textContent = payload.band.title;
-    const bandText = sec.querySelector('#band-text'); bandText.innerHTML = `
-      <p><strong>Want a +3 to +5 jump in 90 days?</strong> Your answers reveal high‑leverage fixes. Get a mini‑plan tailored to you in a 20‑min call.</p>
+    const bandText = sec.querySelector('#band-text');
+    const jumpMsgByBand = {
+      bad:{title:"+5 to +8 jump in 90 days",sub:"Your answers show easy, high‑impact fixes. Get a mini‑plan in a 20‑min call."},
+      ok:{title:"+3 to +5 jump in 90 days",sub:"Tighten 2–3 levers for a quick lift. Get a mini‑plan in a 20‑min call."},
+      good:{title:"+1 to +3 jump in 60–90 days",sub:"A few tweaks can push you to 20/20. Get a mini‑plan in a 20‑min call."},
+      top:{title:"Keep it at 20/20",sub:"Do a quick review call to stress‑test your plan. No hard sell."}
+    };
+    const jm = jumpMsgByBand[payload.band.key] || jumpMsgByBand.ok;
+    bandText.innerHTML = `
+      <p><strong>Want a ${jm.title}?</strong> <br>${jm.sub}</p>
       <ul class="muted" style="margin:8px 0 0 18px">
         <li>Quick wins for your 2 weakest pillars</li>
         <li>Simple action plan you can start this week</li>
@@ -454,66 +438,6 @@ nor guaranteed.
     sec.querySelector('#btn-pdf').onclick = ()=> generatePDF(payload);
   }
 
-  // ===== OTP helpers =====
-  const otpModal = document.getElementById('otp-modal');
-  const otpErr = document.getElementById('otp-error');
-  const otpMobText = document.getElementById('otp-mobile-text');
-  const otpResendBtn = document.getElementById('otp-resend');
-  const otpVerifyBtn = document.getElementById('otp-verify');
-  const otpVerified = document.getElementById('otp-verified');
-  const otpTick = document.getElementById('otp-tick');
-  let otpTimerId=null, otpExpiresAt=0;
-
-  function maskMobile(full){ const m = full.replace('+91',''); return '+91 ******'+m.slice(-4); }
-  function openOtpModal(fullMobile){
-    otpMobText.textContent = maskMobile(fullMobile);
-    document.querySelectorAll('#pin input').forEach(i=>{ i.value=''; });
-    otpErr.style.display='none'; otpErr.textContent='';
-    const hint = document.getElementById('otp-hint');
-    if(hint){ if(TEST_MODE){ hint.style.display='block'; hint.textContent = 'Test mode: use OTP '+TEST_OTP_CODE; } else { hint.style.display='none'; } }
-    otpVerified.style.display='none'; otpTick.style.animation='';
-    otpModal.style.display='flex'; otpModal.removeAttribute('hidden');
-    document.querySelector('#pin input')?.focus();
-    startOtpTimer();
-  }
-  function closeOtpModal(){ otpModal.style.display='none'; otpModal.setAttribute('hidden',''); }
-  document.querySelectorAll('#otp-modal [data-close]').forEach(el=> el.addEventListener('click', closeOtpModal));
-
-  function startOtpTimer(){ clearInterval(otpTimerId); otpExpiresAt = Date.now() + OTP_RESEND_SECONDS*1000; updateOtpTimer(); otpTimerId=setInterval(updateOtpTimer, 500); }
-  function updateOtpTimer(){ const s = Math.max(0, Math.ceil((otpExpiresAt - Date.now())/1000)); if(s>0){ otpResendBtn.disabled=true; otpResendBtn.textContent = `Resend OTP (${s}s)`; } else { otpResendBtn.disabled=false; otpResendBtn.textContent='Resend OTP'; clearInterval(otpTimerId); otpTimerId=null; } }
-
-  otpResendBtn.addEventListener('click', async ()=>{
-    if(otpResendBtn.disabled) return;
-    try{ await sendOtp('+91'+(state.pendingMobile||state.mobile||'')); startOtpTimer(); }
-    catch(e){ otpErr.style.display='block'; otpErr.textContent='Could not resend. Try again in a moment.'; otpModal.querySelector('.modal').classList.add('shake'); setTimeout(()=> otpModal.querySelector('.modal').classList.remove('shake'), 450); }
-  });
-
-  const pinInputs = Array.from(document.querySelectorAll('#pin input'));
-  pinInputs.forEach((input, idx)=>{
-    input.addEventListener('input', ()=>{ input.value = (input.value||'').replace(/\D/g,'').slice(0,1); if(input.value && idx<pinInputs.length-1){ pinInputs[idx+1].focus(); } });
-    input.addEventListener('keydown', (e)=>{ if(e.key==='Backspace' && !input.value && idx>0){ pinInputs[idx-1].focus(); } });
-    input.addEventListener('paste', (e)=>{ const t=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,4); if(t){ e.preventDefault(); pinInputs.forEach((inp,i)=> inp.value = t[i]||''); pinInputs[Math.min(3,t.length-1)].focus(); } });
-  });
-  if(pinInputs.length){ pinInputs[pinInputs.length-1].addEventListener('keydown',(e)=>{ if(e.key==='Enter') otpVerifyBtn.click(); }); }
-
-  otpVerifyBtn.addEventListener('click', async ()=>{
-    const code = pinInputs.map(i=>i.value).join('');
-    if(code.length!==4){ otpErr.style.display='block'; otpErr.textContent='Enter the 4‑digit OTP.'; otpModal.querySelector('.modal').classList.add('shake'); setTimeout(()=> otpModal.querySelector('.modal').classList.remove('shake'), 450); return; }
-    otpErr.style.display='none'; otpVerifyBtn.disabled=true; otpVerifyBtn.textContent='Verifying…';
-    try{
-      const ok = await verifyOtp('+91'+(state.pendingMobile||state.mobile||''), code);
-      if(!ok) throw new Error('Invalid OTP');
-      otpVerified.style.display='flex'; requestAnimationFrame(()=>{ otpTick.style.animation='pop .4s forwards'; });
-      state.mobileVerified=true; state.mobile = state.pendingMobile || state.mobile; state.consent=true;
-      const payload = buildPayload();
-      try { await postJSON(WEBHOOK_ENDPOINT, { action:"QUIZ_SUBMIT", data: payload }); } catch(e){ console.warn('Webhook error:', e); }
-      setTimeout(()=>{ closeOtpModal(); renderResult(payload); go(QUESTIONS.length-1); }, 550);
-    }catch(e){ otpErr.style.display='block'; otpErr.textContent='Incorrect OTP. Please try again.'; otpModal.querySelector('.modal').classList.add('shake'); setTimeout(()=> otpModal.querySelector('.modal').classList.remove('shake'), 450); }
-    finally{ otpVerifyBtn.disabled=false; otpVerifyBtn.textContent='Verify'; }
-  });
-
-  async function sendOtp(mobile){ if(TEST_MODE){ await new Promise(r=>setTimeout(r,300)); return { ok:true, test:true, code: TEST_OTP_CODE }; } return postJSON(BACKEND_OTP_SEND, { mobile, vendor:'wati' }); }
-  async function verifyOtp(mobile, code){ if(TEST_MODE){ await new Promise(r=>setTimeout(r,200)); return code === TEST_OTP_CODE; } const res = await postJSON(BACKEND_OTP_VERIFY, { mobile, code }); return !!(res && (res.ok===true || res.verified===true)); }
 
   // Calendly
   function openCalendly(){ if(window.__calendlyReady && window.Calendly && typeof Calendly.initPopupWidget==='function'){ Calendly.initPopupWidget({ url: CALENDLY_URL }); } else { window.open(CALENDLY_URL,'_blank','noopener'); } }
@@ -526,7 +450,7 @@ nor guaranteed.
   if(regModal){ regModal.style.display='none'; regModal.setAttribute('hidden',''); }
   function openRegisterModal(){ document.getElementById('reg-name').value = state.name || ''; document.getElementById('reg-email').value = state.email || ''; document.getElementById('reg-mobile').value = state.mobile || ''; document.getElementById('reg-status').style.display='none'; regModal.style.display='flex'; regModal.removeAttribute('hidden'); }
   function closeRegisterModal(){ regModal.style.display='none'; regModal.setAttribute('hidden',''); }
-  document.querySelectorAll('[data-close]').forEach(el=> el.addEventListener('click', (e)=>{ const mb=e.target.closest('.modal-backdrop'); if(mb && mb.id==='reg-modal') closeRegisterModal(); if(mb && mb.id==='otp-modal') closeOtpModal(); }));
+  document.querySelectorAll('[data-close]').forEach(el=> el.addEventListener('click', (e)=>{ const mb=e.target.closest('.modal-backdrop'); if(mb && mb.id==='reg-modal') closeRegisterModal(); }));
   regModal.addEventListener('click', e=>{ if(e.target===regModal) closeRegisterModal(); });
 
   document.getElementById('reg-submit').addEventListener('click', async ()=>{
@@ -546,34 +470,218 @@ nor guaranteed.
     status.style.display='block'; status.style.color='#263643'; status.textContent = 'Submitting...';
 
     const payload = buildPayload();
-    const reg = { action:"PLAN_REGISTER", data:{ ...payload, contact:{ email, mobile:"+91"+mobile, consent:true, verified: state.mobileVerified && (state.mobile===(mobile)) } } };
+    const reg = { action:"PLAN_REGISTER", data:{ ...payload, contact:{ email, mobile:"+91"+mobile, consent:true, verified:true } } };
     try{ await postJSON(WEBHOOK_ENDPOINT, reg); status.textContent = 'Thanks! We have received your request. Our team will contact you.'; setTimeout(closeRegisterModal, 1200); }
     catch(e){ status.textContent = 'Could not submit right now. Please try again or use the Calendly option.'; console.warn('Register webhook error:', e); }
   });
 
-  // PDF generation
-  function generatePDF(payload){
-    const { jsPDF } = window.jspdf; const doc = new jsPDF({unit:'pt', format:'a4'});
-    const margin = 40; let y = margin;
-    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.text('FinnFit Report', margin, y); y += 18;
-    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.text(`Name: ${payload.user.name}   Age: ${payload.user.age}`, margin, y); y += 16;
+  // PDF: logo and custom fonts
+  async function fetchAsBase64(url){
+    const res = await fetch(url); const buf = await res.arrayBuffer();
+    let binary=''; const bytes=new Uint8Array(buf);
+    for(let i=0;i<bytes.byteLength;i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+  async function ensurePdfAssets(){
+    if(window.__pdfAssetsReady) return;
+    try{
+      // Use provided logo URL (PNG)
+      window.__pdfLogoB64 = await fetchAsBase64('https://i.imgur.com/wVqOSwV.png');
+      window.__pdfLogoFmt = 'PNG';
+    }catch(e){
+      // Silent failover: no logo
+      window.__pdfLogoB64 = null;
+      window.__pdfLogoFmt = null;
+    }
+    window.__pdfAssetsReady = true;
+  }
+
+  // --- PDF helper functions for Q&A labels ---
+  function getTopAnswerLabel(q){
+    if(!q || !Array.isArray(q.options) || !q.options.length) return '—';
+    return q.options.reduce((best, cur)=> cur.value > best.value ? cur : best, q.options[0]).label;
+  }
+  function getUserAnswerLabel(qid, payload){
+    const q = QINDEX[qid];
+    const v = payload.answers && payload.answers['q'+qid];
+    if(q && q.options){ const hit = q.options.find(o=> o.value === v); return hit ? hit.label : '—'; }
+    return '—';
+  }
+
+  async function generatePDF(payload){
+    const { jsPDF } = window.jspdf;
+    await ensurePdfAssets();
+    const doc = new jsPDF({unit:'pt', format:'a4'});
+
+    const margin = 40;
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    let y = margin;
+
+    // Header: logo at top-right
+    try{
+      if(window.__pdfLogoB64 && window.__pdfLogoFmt){
+        const logoW = 110, logoH = 28;
+        doc.addImage(window.__pdfLogoB64, window.__pdfLogoFmt, pageW - margin - logoW, y - 4, logoW, logoH);
+      }
+    }catch(e){}
+
+    // Title
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(18);
+    doc.text('FinnFit Report', margin, y+44);
+    y += 64;
+
+    // Meta
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(11);
+    doc.text(`Name: ${payload.user.name}   Age: ${payload.user.age}`, margin, y); y += 16;
     doc.text(`Total Score: ${payload.total}/20`, margin, y); y += 20;
 
-    const summaryRows = Object.keys(PILLARS).map(p=>{ const s = payload.pillarScores[p]; const max = PILLAR_MAX[p]; const pct = Math.round((s/max)*100); return [p, `${s} / ${max}`, `${isFinite(pct)?pct:0}%`]; });
-    doc.autoTable({ startY:y, head:[['Pillar','Score','Percent']], body:summaryRows, styles:{ fontSize:10 }, theme:'striped', headStyles:{ fillColor:[0,147,86] } });
+    // Table of pillar scores
+    const summaryRows = Object.keys(PILLARS).map(p=>{ const s=payload.pillarScores[p]; const max=PILLAR_MAX[p]; const pct=Math.round((s/max)*100); return [p, `${s} / ${max}`, `${isFinite(pct)?pct:0}%`]; });
+    doc.autoTable({ startY:y, head:[['Pillar','Score','Percent']], body:summaryRows, styles:{ font:'helvetica', fontSize:10 }, theme:'striped', headStyles:{ fillColor:[0,147,86] } });
     y = doc.lastAutoTable.finalY + 16;
 
-    const MESSAGES = buildMessages();
-    Object.keys(PILLARS).forEach(pillar=>{
-      const s = payload.pillarScores[pillar]; const max = PILLAR_MAX[pillar]; const pct = Math.round((s/max)*100);
-      const msg = chooseMsg(MESSAGES[pillar], pct);
-      if(y>760){ doc.addPage(); y = margin; }
-      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text(pillar+` – ${s}/${max} (${isFinite(pct)?pct:0}%)`, margin, y); y += 14;
-      doc.setFont('helvetica','normal'); doc.setFontSize(10);
-      const lines = doc.splitTextToSize(msg, 515); lines.forEach(line=>{ if(y>780){ doc.addPage(); y = margin; } doc.text(line, margin, y); y += 14; });
-      y += 6;
-    });
+    // Helper to add a footer to the current page
+    function addFooter(){
+      const curH = doc.internal.pageSize.getHeight();
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text('www.finnovate.in', margin, curH - 20);
+      doc.setTextColor(38,54,67); // reset ink
+    }
 
+    // Draw pillar boxes (rounded light grey with heading + message)
+    const MESSAGES = buildMessages();
+    const boxPad = 12;
+    const boxW = pageW - 2*margin;
+    const lineH = 16; // taller line height to prevent overlap
+    const lightGrey = 245; // very light grey background
+
+    for(const pillar of Object.keys(PILLARS)){
+      const s = payload.pillarScores[pillar];
+      const max = PILLAR_MAX[pillar];
+      const pct = Math.round((s/max)*100);
+      const msg = chooseMsg(MESSAGES[pillar], pct);
+
+      // Pre-compute text lines to get the height
+      const heading = `${pillar} – ${s}/${max} (${isFinite(pct)?pct:0}%)`;
+      const textLines = doc.splitTextToSize(msg, boxW - 2*boxPad);
+      const headingH = 18; // reserve vertical space for heading
+
+      // Compute extra height for per-question details
+      const qids = PILLARS[pillar] || [];
+      let qaLinesTotal = 0;
+      const qSections = qids.map(qid => {
+        const q = QINDEX[qid];
+        const qText = q ? q.text : '';
+        const qTextLines = doc.splitTextToSize(qText, boxW - 2*boxPad);
+        const topLabel = getTopAnswerLabel(q);
+        const userLabel = getUserAnswerLabel(qid, payload);
+        const topAnsLines = doc.splitTextToSize('Top answer: ' + topLabel, boxW - 2*boxPad);
+        const yourAnsLines = doc.splitTextToSize('Your answer: ' + userLabel, boxW - 2*boxPad);
+        qaLinesTotal += qTextLines.length + topAnsLines.length + yourAnsLines.length;
+        return { qid, qTextLines, topLabel, userLabel, topAnsLines, yourAnsLines };
+      });
+
+      const boxH = boxPad + headingH + 10 /* gap after heading */ + textLines.length*lineH
+                  + (qSections.length ? 12 : 0) /* gap before Q&A */
+                  + qaLinesTotal * lineH + boxPad;
+
+      // New page if needed
+      if(y + boxH > pageH - margin){
+        addFooter();
+        doc.addPage();
+        y = margin;
+      }
+
+      // Background box
+      doc.setFillColor(lightGrey);
+      doc.roundedRect(margin, y, boxW, boxH, 8, 8, 'F');
+
+      // Heading
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(14);
+      doc.setTextColor(38,54,67);
+      const headingY = y + boxPad + 14; // baseline within reserved headingH
+      doc.text(heading, margin + boxPad, headingY);
+
+      // Body text
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(11);
+      let ty = y + boxPad + headingH + 10;
+      textLines.forEach(line=>{ doc.text(line, margin + boxPad, ty); ty += lineH; });
+
+      // Q&A block
+      if(qSections.length){ ty += 12; }
+      qSections.forEach(sec => {
+        // Question text
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(11);
+        sec.qTextLines.forEach(line=>{
+          doc.text(line, margin + boxPad, ty, { maxWidth: boxW - 2*boxPad });
+          ty += lineH;
+        });
+        // Top answer
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(10);
+        sec.topAnsLines.forEach(line=>{
+          doc.text(line, margin + boxPad, ty);
+          ty += lineH;
+        });
+        // Your answer
+        sec.yourAnsLines.forEach(line=>{
+          doc.text(line, margin + boxPad, ty);
+          ty += lineH;
+        });
+        ty += 4; // small gap between questions
+      });
+
+      doc.setTextColor(38,54,67);
+      y += boxH + 10; // gap between boxes
+    }
+
+    // CTA copy above button
+    const ctaCopy = [
+      'Ready to fix your financial health?',
+      'Book a quick call and get a mini-plan with next steps for your top 2 weak pillars.'
+    ];
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    const copyStartY = Math.min(pageH - margin - 80, y + 4);
+    doc.text(ctaCopy[0], margin, copyStartY);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(11);
+    doc.text(ctaCopy[1], margin, copyStartY + 16);
+    y = copyStartY + 26;
+
+    // CTA button on the last page (above footer)
+    const btnW = 220, btnH = 36;
+    const btnX = margin;
+    const btnY = Math.min(pageH - margin - 40, y + 12);
+
+    doc.setFillColor(0,147,86);
+    doc.roundedRect(btnX, btnY, btnW, btnH, 10, 10, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    doc.setTextColor(255);
+    const btnLabel = 'Book a free slot';
+    const dims = doc.getTextDimensions(btnLabel);
+    const textY = btnY + (btnH + dims.h) / 2 - 1; // -1 tiny optical tweak
+    doc.text(btnLabel, btnX + btnW/2, textY, { align: 'center' });
+    // Clickable area
+    try{ doc.link(btnX, btnY, btnW, btnH, { url: CALENDLY_URL }); }catch(e){}
+
+    // Footer on all pages
+    const totalPages = doc.getNumberOfPages();
+    for(let i=1;i<=totalPages;i++){
+      doc.setPage(i);
+      addFooter();
+    }
+
+    // Save
     doc.save(`FinnFit_Report_${(payload.user.name||'').replace(/\s+/g,'_')}.pdf`);
   }
   function chooseMsg(defs, pct){ if(pct<0) return defs.lt0; if(pct<50) return defs.lt50; if(pct<80) return defs.mid; return defs.top; }

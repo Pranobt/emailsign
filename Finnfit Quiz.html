@@ -496,6 +496,39 @@ nor guaranteed.
     window.__pdfAssetsReady = true;
   }
 
+  // Helper to draw a faint watermark (logo + email)
+  function drawWatermark(doc, pageW, pageH){
+    try{
+      // Setup a low opacity graphics state if available
+      if(doc.GState){
+        var g = new doc.GState({ opacity: 0.05 });
+        doc.setGState(g);
+      } else {
+        // Fallback: set very light color before drawing
+        doc.setTextColor(200);
+      }
+      // Centered logo (large, faint)
+      if(window.__pdfLogoB64 && window.__pdfLogoFmt){
+        const wmW = Math.min(360, pageW * 0.5);
+        const wmH = wmW * 0.26; // keep a gentle horizontal logo ratio
+        const wmX = (pageW - wmW)/2;
+        const wmY = (pageH - wmH)/2 - 20;
+        doc.addImage(window.__pdfLogoB64, window.__pdfLogoFmt, wmX, wmY, wmW, wmH);
+      }
+      // Diagonal email text watermark
+      const email = 'hello@finnovate.in';
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(30);
+      doc.setTextColor(180);
+      doc.saveGraphicsState && doc.saveGraphicsState();
+      doc.rotate(-25, { origin: [pageW/2, pageH/2 + 40] });
+      doc.text(email, pageW/2, pageH/2 + 40, { align: 'center' });
+      doc.restoreGraphicsState && doc.restoreGraphicsState();
+      // reset colors
+      doc.setTextColor(38,54,67);
+    }catch(e){ /* ignore watermark errors */ }
+  }
+
   // --- PDF helper functions for Q&A labels ---
   function getTopAnswerLabel(q){
     if(!q || !Array.isArray(q.options) || !q.options.length) return '—';
@@ -521,8 +554,8 @@ nor guaranteed.
     // Header: logo at top-right
     try{
       if(window.__pdfLogoB64 && window.__pdfLogoFmt){
-        const logoW = 110, logoH = 28;
-        doc.addImage(window.__pdfLogoB64, window.__pdfLogoFmt, pageW - margin - logoW, y - 4, logoW, logoH);
+        const logoW = 120, logoH = 32; // slightly larger, better aspect
+        doc.addImage(window.__pdfLogoB64, window.__pdfLogoFmt, pageW - margin - logoW, y - 6, logoW, logoH);
       }
     }catch(e){}
 
@@ -557,38 +590,51 @@ nor guaranteed.
     const MESSAGES = buildMessages();
     const boxPad = 12;
     const boxW = pageW - 2*margin;
-    const lineH = 16; // taller line height to prevent overlap
     const lightGrey = 245; // very light grey background
+    // Typographic constants
+    const fsHeading = 14, fsBody = 11, fsQ = 12, fsA = 10;
+    const lhHeading = 22;              // reserved height for heading line
+    const lhBody = Math.round(fsBody*1.45);   // 16
+    const lhQ = Math.round(fsQ*1.45);         // 17-18
+    const lhA = Math.round(fsA*1.5);          // 15
 
     for(const pillar of Object.keys(PILLARS)){
+      // ----- Measure content with correct fonts before drawing -----
       const s = payload.pillarScores[pillar];
       const max = PILLAR_MAX[pillar];
       const pct = Math.round((s/max)*100);
       const msg = chooseMsg(MESSAGES[pillar], pct);
-
-      // Pre-compute text lines to get the height
       const heading = `${pillar} – ${s}/${max} (${isFinite(pct)?pct:0}%)`;
-      const textLines = doc.splitTextToSize(msg, boxW - 2*boxPad);
-      const headingH = 18; // reserve vertical space for heading
 
-      // Compute extra height for per-question details
+      // Body message (use body font while measuring)
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(fsBody);
+      const textLines = doc.splitTextToSize(msg, boxW - 2*boxPad);
+
+      // Build Q&A sections with proper measurement fonts
       const qids = PILLARS[pillar] || [];
-      let qaLinesTotal = 0;
+      let qaPixelHeight = 0;
       const qSections = qids.map(qid => {
         const q = QINDEX[qid];
         const qText = q ? q.text : '';
+        // Question lines (measure using question font)
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(fsQ);
         const qTextLines = doc.splitTextToSize(qText, boxW - 2*boxPad);
+        // Answer lines (measure using answer font)
         const topLabel = getTopAnswerLabel(q);
         const userLabel = getUserAnswerLabel(qid, payload);
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(fsA);
         const topAnsLines = doc.splitTextToSize('Top answer: ' + topLabel, boxW - 2*boxPad);
         const yourAnsLines = doc.splitTextToSize('Your answer: ' + userLabel, boxW - 2*boxPad);
-        qaLinesTotal += qTextLines.length + topAnsLines.length + yourAnsLines.length;
-        return { qid, qTextLines, topLabel, userLabel, topAnsLines, yourAnsLines };
+        // Height: question lines + small gap + both answer blocks + small inter-question gap
+        qaPixelHeight += (qTextLines.length*lhQ) + 2 + (topAnsLines.length*lhA) + (yourAnsLines.length*lhA) + 4;
+        return { qid, qTextLines, topAnsLines, yourAnsLines };
       });
 
-      const boxH = boxPad + headingH + 10 /* gap after heading */ + textLines.length*lineH
-                  + (qSections.length ? 12 : 0) /* gap before Q&A */
-                  + qaLinesTotal * lineH + boxPad;
+      // Total box height: padding + heading + gap + body + gap + Q&A + padding
+      const boxH = boxPad + lhHeading + 10 + (textLines.length*lhBody) + (qSections.length?12:0) + qaPixelHeight + boxPad;
 
       // New page if needed
       if(y + boxH > pageH - margin){
@@ -597,51 +643,62 @@ nor guaranteed.
         y = margin;
       }
 
-      // Background box
+      // ----- Draw box background -----
       doc.setFillColor(lightGrey);
       doc.roundedRect(margin, y, boxW, boxH, 8, 8, 'F');
 
-      // Heading
+      // ----- Heading -----
       doc.setFont('helvetica','bold');
-      doc.setFontSize(14);
+      doc.setFontSize(fsHeading);
       doc.setTextColor(38,54,67);
-      const headingY = y + boxPad + 14; // baseline within reserved headingH
+      const headingY = y + boxPad + (fsHeading);
       doc.text(heading, margin + boxPad, headingY);
 
-      // Body text
+      // ----- Body message -----
       doc.setFont('helvetica','normal');
-      doc.setFontSize(11);
-      let ty = y + boxPad + headingH + 10;
-      textLines.forEach(line=>{ doc.text(line, margin + boxPad, ty); ty += lineH; });
+      doc.setFontSize(fsBody);
+      let ty = y + boxPad + lhHeading + 10;
+      textLines.forEach(line=>{ doc.text(line, margin + boxPad, ty); ty += lhBody; });
 
-      // Q&A block
+      // ----- Q&A block -----
       if(qSections.length){ ty += 12; }
       qSections.forEach(sec => {
-        // Question text
+        // Question
         doc.setFont('helvetica','bold');
-        doc.setFontSize(11);
-        sec.qTextLines.forEach(line=>{
-          doc.text(line, margin + boxPad, ty, { maxWidth: boxW - 2*boxPad });
-          ty += lineH;
-        });
-        // Top answer
+        doc.setFontSize(fsQ);
+        sec.qTextLines.forEach(line=>{ doc.text(line, margin + boxPad, ty, { maxWidth: boxW - 2*boxPad }); ty += lhQ; });
+        ty += 2; // gap before answers
+        // Answers
         doc.setFont('helvetica','normal');
-        doc.setFontSize(10);
-        sec.topAnsLines.forEach(line=>{
-          doc.text(line, margin + boxPad, ty);
-          ty += lineH;
-        });
-        // Your answer
-        sec.yourAnsLines.forEach(line=>{
-          doc.text(line, margin + boxPad, ty);
-          ty += lineH;
-        });
-        ty += 4; // small gap between questions
+        doc.setFontSize(fsA);
+        sec.topAnsLines.forEach(line=>{ doc.text(line, margin + boxPad, ty); ty += lhA; });
+        sec.yourAnsLines.forEach(line=>{ doc.text(line, margin + boxPad, ty); ty += lhA; });
+        ty += 4; // gap between questions
       });
 
       doc.setTextColor(38,54,67);
       y += boxH + 10; // gap between boxes
     }
+
+    // Ensure space for CTA section (copy + button) on current page
+    const reserveCTA = 26 /*copy*/ + 12 /*gap*/ + 36 /*button*/ + 40 /*footer gap*/;
+    if(y + reserveCTA > pageH - margin){
+      addFooter();
+      doc.addPage();
+      y = margin;
+    }
+
+    // === CTA PAGE CONTENT (with watermark and background block for visibility) ===
+    // Calculate CTA area placement and dimensions
+    const ctaAreaH = 160;
+    const copyStartY = Math.min(pageH - margin - 88, y + 4);
+    // Background block for CTA section (ensure watermark is faint behind CTA)
+    doc.setFillColor(255,255,255);
+    doc.rect(margin-10, copyStartY-20, pageW - 2*margin + 20, ctaAreaH, 'F');
+    // Faint watermark behind CTA
+    drawWatermark(doc, pageW, pageH);
+    // Re-apply full text color and font for CTA text
+    doc.setTextColor(38,54,67);
 
     // CTA copy above button
     const ctaCopy = [
@@ -650,35 +707,35 @@ nor guaranteed.
     ];
     doc.setFont('helvetica','bold');
     doc.setFontSize(12);
-    const copyStartY = Math.min(pageH - margin - 80, y + 4);
     doc.text(ctaCopy[0], margin, copyStartY);
     doc.setFont('helvetica','normal');
     doc.setFontSize(11);
-    doc.text(ctaCopy[1], margin, copyStartY + 16);
-    y = copyStartY + 26;
+    doc.text(ctaCopy[1], margin, copyStartY + 18);
+    y = copyStartY + 30;
 
-    // CTA button on the last page (above footer)
-    const btnW = 220, btnH = 36;
+    // CTA button (vertically centered text)
+    const btnW = 260, btnH = 40;
     const btnX = margin;
-    const btnY = Math.min(pageH - margin - 40, y + 12);
-
+    const btnY = Math.min(pageH - margin - 48, y + 14);
     doc.setFillColor(0,147,86);
-    doc.roundedRect(btnX, btnY, btnW, btnH, 10, 10, 'F');
+    doc.roundedRect(btnX, btnY, btnW, btnH, 12, 12, 'F');
     doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
+    doc.setFontSize(13);
     doc.setTextColor(255);
     const btnLabel = 'Book a free slot';
     const dims = doc.getTextDimensions(btnLabel);
-    const textY = btnY + (btnH + dims.h) / 2 - 1; // -1 tiny optical tweak
+    const textY = btnY + (btnH + dims.h) / 2 - 1;
     doc.text(btnLabel, btnX + btnW/2, textY, { align: 'center' });
-    // Clickable area
     try{ doc.link(btnX, btnY, btnW, btnH, { url: CALENDLY_URL }); }catch(e){}
+    doc.setTextColor(38,54,67);
+    y = btnY + btnH + 10;
 
-    // Footer on all pages
+    // Footer on all pages (after all drawing)
     const totalPages = doc.getNumberOfPages();
     for(let i=1;i<=totalPages;i++){
       doc.setPage(i);
       addFooter();
+      doc.setTextColor(38,54,67); // reset ink after footer
     }
 
     // Save

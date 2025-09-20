@@ -50,6 +50,9 @@
   .error{border-left:4px solid #dc2626;padding:10px;background:#fef2f2;border-radius:8px}
   .hidden{display:none}
 
+  .warn{color:#b91c1c;font-size:12.5px;margin-top:4px}
+  .rmName.dup{border-color:#dc2626;background:#fef2f2}
+
   /* Tabs */
   .tabs{
     display:flex;gap:8px;align-items:center;overflow:auto;padding:4px 2px 8px 2px;margin:0 0 8px 0;
@@ -145,8 +148,8 @@
 /** Webhook (your URL) */
 const WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.d578e23c3472dcfbacc3c4a4eef46a9f.04980ed41a4276af5720dfb2d1fbd4e5&isdebug=false";
 
-const TASKS = ["Portfolio Review","Portfolio Comparison","SIP Recommendation","Lumpsum Recommendation","Portfolio Rebalancing","Operations","Coordination","Online Meeting","Offline Meeting","CRM Update","Dashboard Update","Mail MOM","Comprehensive Plan","Insurance Review","Quotes Shared"];
-const AREAS = ["Health Insurance","Term Insurance","Mutual Funds","Stocks","Bonds","FDs"];
+const TASKS = ["Portfolio Review","Portfolio Comparison","SIP Recommendation","Lumpsum Recommendation","Portfolio Rebalancing","Operations","Coordination","Online Meeting","Offline Meeting","CRM Update","Dashboard Update","Mail MOM","Comprehensive Plan","Insurance Review","Quotes Shared","Advisory communication","Advisory Invoice","Discussion with RM","Others"];
+const AREAS = ["Health Insurance","Term Insurance","Mutual Funds","Stocks","Bonds","FDs","PMS","Back Office Related"];
 
 const rmContainer = document.getElementById("rmContainer");
 const rmTabs = document.getElementById("rmTabs");
@@ -261,6 +264,7 @@ function createRmBlock(){
       <div class="rm-header-line" style="width:100%">
         <span class="rm-title">RM Name:</span>
         <input type="text" class="rmName" placeholder="Type RM name" style="max-width:260px" />
+        <div class="rmNameWarn warn hidden">RM name already exists</div>
         <span class="rm-count">Total Clients: <strong class="clientCount">0</strong></span>
         <div class="rm-actions right">
           <button class="btn secondary addClient" type="button">+ Add Client</button>
@@ -274,6 +278,22 @@ function createRmBlock(){
   clientsWrap.appendChild(createClientBlock(1));
   updateAllCounts();
   return rb;
+}
+
+function updateRmDuplicateWarnings(){
+  const counts = {};
+  document.querySelectorAll('.rm-block .rmName').forEach(inp=>{
+    const key = (inp.value||'').trim().toLowerCase();
+    if(!key) return; counts[key] = (counts[key]||0)+1;
+  });
+  document.querySelectorAll('.rm-block').forEach(rb=>{
+    const inp = rb.querySelector('.rmName');
+    const warn = rb.querySelector('.rmNameWarn');
+    const key = (inp.value||'').trim().toLowerCase();
+    const isDup = key && counts[key]>1;
+    if(isDup){ inp.classList.add('dup'); warn && warn.classList.remove('hidden'); }
+    else{ inp.classList.remove('dup'); warn && warn.classList.add('hidden'); }
+  });
 }
 
 /** Tabs */
@@ -297,6 +317,7 @@ function renderTabs(){
   plus.title = "Add RM";
   plus.dataset.plus = "1";
   rmTabs.appendChild(plus);
+  updateRmDuplicateWarnings();
 }
 
 function activeRmIndex(){
@@ -310,6 +331,7 @@ function showOnlyRmById(rmId){
     b.style.display = (b.dataset.rmid === rmId) ? "" : "none";
   });
   renderTabs();
+  updateRmDuplicateWarnings();
 }
 
 /** Insert initial RM */
@@ -322,6 +344,7 @@ function addRm(){
   const rb = createRmBlock();
   rmContainer.appendChild(rb);
   showOnlyRmById(rb.dataset.rmid);
+  updateRmDuplicateWarnings();
 }
 
 /** Tab interactions */
@@ -336,6 +359,7 @@ rmTabs.addEventListener("click",(e)=>{
 rmContainer.addEventListener("input",(e)=>{
   if(e.target.classList.contains("rmName")){
     renderTabs();
+    updateRmDuplicateWarnings();
   }
 });
 
@@ -398,6 +422,7 @@ rmContainer.addEventListener("click",(e)=>{
     const next = document.querySelector(".rm-block");
     if(next){ next.style.display = ""; }
     updateAllCounts();
+    updateRmDuplicateWarnings();
   }
 });
 
@@ -554,6 +579,16 @@ function validate(payload){
       if(!c.name) return "Client Name is required for each client row.";
       if(!c.type) return "Client Type is required for each client row.";
     }
+  }
+  // Ensure RM names are unique (case-insensitive)
+  const seen = new Map();
+  for(const rm of payload.rms){
+    const key = (rm.rmName||'').trim().toLowerCase();
+    if(!key) continue;
+    if(seen.has(key)){
+      return `Duplicate RM Name: "${rm.rmName}" already exists.`;
+    }
+    seen.set(key,true);
   }
   return null;
 }

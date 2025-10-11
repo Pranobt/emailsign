@@ -329,7 +329,9 @@
       const url = new URL(base);
       // Preserve existing query, then add UTM
       Object.entries(params).forEach(([k,v])=> url.searchParams.set(k, v));
-      return url.toString();
+      const out = url.toString();
+      // Ensure spaces are encoded as %20 (not +) to avoid visual plus signs
+      return out.replace(/\+/g, '%20');
     }
 
     function showError(id){ const el = document.getElementById(id); if(el){ el.style.display = 'block'; } }

@@ -194,8 +194,8 @@ Copy the variant you prefer into its own file for use.
     <div class="card">
       <h1>Lead Qualification <span style="font-size:0.9rem;font-weight:400;">v0.2</span></h1>
       <form id="leadForm" novalidate>
-        <label class="required" for="callerName">Your Name</label>
-        <input type="text" id="callerName" placeholder="e.g. Priya" required />
+        <label class="required" for="callerName">Caller Name</label>
+        <input type="text" id="callerName" placeholder="e.g. Pranav Kumar, Vishal Kadganchi" required />
 
         <label class="required" for="helpWith">Lead Needs Help With</label>
         <select id="helpWith" required>
@@ -256,21 +256,33 @@ Copy the variant you prefer into its own file for use.
     <!-- =====================  SIDEBAR  ===================== -->
     <aside>
       <h2>Caller Script</h2>
-      <p class="note"><strong>Your Name</strong>: "May I note your name for our record?"</p>
-      <p class="note"><strong>Lead Needs</strong>: "Please tell me all this so we can serve you better."</p>
-      <p class="note"><strong>Income Range</strong>: "Which range best describes your annual household income? A ballpark is fine."</p>
-      <p class="note"><strong>Portfolio Size</strong>: "Can you tell me the size of your investments in Mutual Funds, Stocks, and FDs together?"
-      </p>
-      <p class="note"><strong>Profession</strong>: "Could you tell me your profession or role?"</p>
-      <p class="note"><strong>LinkedIn</strong>: "Could you share your LinkedIn profile link so we can connect better?"</p>
-      <p class="note"><strong>Key Challenge</strong>: "What is the problem you are facing right now that you want to solve as soon as possible?"</p>
+      <p class="note"><strong>Overall script (before questions)</strong></p>
+      <ol class="note" style="padding-left:20px; margin:0 0 12px;">
+        <li>Good morning, I'm <strong><span id="callerNamePreview">[Your Name]</span></strong>, calling on behalf of Finnovate.</li>
+        <li>I'm following up on the form you filled on LinkedIn regarding your FIRE number / Retirement Planning.</li>
+        <li>Would you be available for a 1‑on‑1 consultation with our certified financial experts?</li>
+        <li>When can I schedule the meeting?</li>
+        <li>Great — I will schedule it for you.</li>
+        <li>I have just a few questions to pass on to the team so they can prepare well before the meet.</li>
+      </ol>
 
       <div class="sidebar-section">
-        <strong>How to find LinkedIn URL</strong>
+        <strong>Questions to ask</strong>
+        <ol>
+          <li><strong>Lead Needs</strong>: "Please tell me what you need help with so we can serve you better."</li>
+          <li><strong>Annual Income</strong>: "Which range best describes your annual household income? A ballpark is fine."</li>
+          <li><strong>Investment Portfolio Size</strong>: "What will be your investment portfolio size (MF + Stocks + FDs together)?"</li>
+          <li><strong>Profession</strong>: "Could you tell me your profession or role?"</li>
+          <li><strong>Key Challenge</strong>: "What problem are you facing right now that you want to solve as soon as possible?"</li>
+        </ol>
+      </div>
+
+      <div class="sidebar-section">
+        <strong>How to find LinkedIn URL (internal)</strong>
         <ol>
           <li>First check if lead came from LinkedIn form – if yes, copy URL from CRM directly.</li>
           <li>Otherwise, use lead’s email / phone / city from Facebook form to search LinkedIn.</li>
-          <li>Manually copy‑paste the profile URL into the form.</li>
+          <li>Manually copy‑paste the profile URL into the form (not asked on call).</li>
         </ol>
       </div>
     </aside>
@@ -301,6 +313,7 @@ Copy the variant you prefer into its own file for use.
     const helpWithSel  = $('#helpWith');
     const helpDetailsW = $('#helpDetailsWrap');
     const helpDetails  = $('#helpDetails');
+    const callerNamePreview = document.getElementById('callerNamePreview');
 
     // Show / hide custom number fields
     document.querySelectorAll('input[name="income"]').forEach(el => {
@@ -349,6 +362,11 @@ Copy the variant you prefer into its own file for use.
       }
     });
 
+    // Mirror caller name into the sidebar script preview
+    $('#callerName').addEventListener('input', (e) => {
+      const v = e.target.value.trim();
+      callerNamePreview.textContent = v ? v : '[Your Name]';
+    });
     // Generate note
     $('#generate').addEventListener('click', () => {
       if (!form.checkValidity()) { form.reportValidity(); return; }

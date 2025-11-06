@@ -729,6 +729,15 @@
       };
     }
 
+    function buildSheetRow(payload){
+      return {
+        Date: payload.date || '',
+        Staff: payload.staff || '',
+        Task_Count: String(payload.task_count ?? 0),
+        Tasks_Summary: payload.tasks_summary || ''
+      };
+    }
+
     function hideToasts(){
       okEl.style.display = 'none';
       badEl.style.display = 'none';

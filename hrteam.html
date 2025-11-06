@@ -801,12 +801,14 @@
       try {
         setLoading(true);
         // Using no-cors to avoid browser CORS issues; Flow will still receive the JSON.
-        await fetch(ZOHO_FLOW_WEBHOOK_URL, {
+        const response = await fetch(ZOHO_FLOW_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          mode: 'no-cors'
+          body: JSON.stringify(payload)
         });
+        if (!response.ok){
+          throw new Error(`Webhook responded with ${response.status}`);
+        }
         setLoading(false);
         showToast(okEl);
         // Optional: clear rows after submit

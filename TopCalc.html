@@ -19,7 +19,7 @@
   .title{font-weight:800;letter-spacing:.2px;line-height:1.15;font-size:clamp(22px,2.4vw,34px)}
   .badge{background:linear-gradient(90deg,var(--brand),#16a06c);color:#fff;padding:10px 14px;border-radius:999px;font-weight:700;box-shadow:0 8px 26px rgba(0,147,86,.22)}
 
-  .grid{display:grid;gap:22px;grid-template-columns:1.05fr .95fr}
+  .grid{display:grid;gap:22px;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}
   @media (max-width:1020px){.grid{grid-template-columns:1fr}}
 
   .card{background:var(--card);border:1px solid var(--soft);border-radius:var(--radius);padding:20px 18px}
@@ -49,15 +49,23 @@
   .asset h5{margin:0 0 6px;font-size:14px;font-weight:900;color:var(--brand)}
   .asset .row{grid-template-columns:1fr 1fr}
 
-  /* Results table */
-  .tablewrap{border:1px solid var(--soft);border-radius:16px;overflow:hidden;background:#fff}
-  table.comp-table{width:100%;border-collapse:separate;border-spacing:0}
-  .comp-table thead th{padding:16px 14px;text-align:center;font-weight:900;color:var(--brand);font-size:18px;border-bottom:1px solid var(--soft)}
-  .comp-table thead th:first-child{color:var(--ink);text-align:left}
-  .comp-table tbody td{padding:16px 14px;text-align:center;font-weight:800}
-  .comp-table tbody td:first-child{font-weight:900;color:var(--ink);text-align:left}
-  .comp-table tbody tr:nth-child(odd) td{background:#f9fdfb}
+  /* Results grid */
+  .results-meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+  .pill-label{padding:8px 12px;border-radius:999px;border:1px solid var(--soft);font-size:13px;font-weight:700;color:var(--ink);background:#f8fbf9}
+  .pill-label strong{color:var(--brand)}
+  .result-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .result-card{border:1px solid var(--soft);border-radius:16px;padding:16px;background:#fff;box-shadow:0 8px 20px rgba(38,54,67,.05);display:flex;flex-direction:column;min-height:220px}
+  .result-card h4{margin:0;font-size:18px;color:var(--brand)}
+  .metrics{margin-top:14px;display:grid;gap:10px}
+  .metric{display:flex;justify-content:space-between;font-weight:700;font-size:14px;color:var(--ink)}
+  .metric span{color:var(--note);font-size:12px;text-transform:uppercase;letter-spacing:.2px;font-weight:800}
+  .metric b{font-size:16px;color:var(--ink)}
+  .divider{height:1px;background:var(--soft);margin:10px 0}
   .error{margin-top:8px;color:#fff;background:var(--red);padding:8px 10px;border-radius:10px;display:none;font-size:13px}
+
+  @media (max-width:720px){
+    .grid{gap:18px}
+  }
 </style>
 </head>
 <body>
@@ -188,70 +196,12 @@
     <!-- Results -->
     <div class="card" aria-live="polite">
       <h3>Results</h3>
-      <div class="tablewrap">
-        <table class="comp-table" id="compTable">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Fixed Deposit</th>
-              <th>Gold (per 10 g)</th>
-              <th>Real Estate Property (Per Sq Feet)</th>
-              <th>Sensex</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="row_y0_label">1979</td>
-              <td id="fd_y0">—</td>
-              <td id="gold_y0">—</td>
-              <td id="re_y0">—</td>
-              <td id="sensex_y0">—</td>
-            </tr>
-            <tr>
-              <td id="row_y1_label">2025</td>
-              <td id="fd_y1">—</td>
-              <td id="gold_y1">—</td>
-              <td id="re_y1">—</td>
-              <td id="sensex_y1">—</td>
-            </tr>
-            <tr>
-              <td>CAGR</td>
-              <td id="fd_cagr">—</td>
-              <td id="gold_cagr">—</td>
-              <td id="re_cagr">—</td>
-              <td id="sensex_cagr">—</td>
-            </tr>
-            <tr>
-              <td>1 Lakh becomes</td>
-              <td id="fd_final">—</td>
-              <td id="gold_final">—</td>
-              <td id="re_final">—</td>
-              <td id="sensex_final">—</td>
-            </tr>
-            <tr>
-              <td>Post tax value</td>
-              <td id="fd_posttax">—</td>
-              <td id="gold_posttax">—</td>
-              <td id="re_posttax">—</td>
-              <td id="sensex_posttax">—</td>
-            </tr>
-            <tr>
-              <td>Tax paid</td>
-              <td id="fd_taxpaid">—</td>
-              <td id="gold_taxpaid">—</td>
-              <td id="re_taxpaid">—</td>
-              <td id="sensex_taxpaid">—</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td id="fd_times">—</td>
-              <td id="gold_times">—</td>
-              <td id="re_times">—</td>
-              <td id="sensex_times">—</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="results-meta">
+        <div class="pill-label">Start Year: <strong id="row_y0_label">1979</strong></div>
+        <div class="pill-label">End Year: <strong id="row_y1_label">2025</strong></div>
+        <div class="pill-label">Investment: <strong id="amount_label">₹1,00,000</strong></div>
       </div>
+      <div class="result-grid" id="resultGrid" aria-live="polite"></div>
       <div class="note" style="margin-top:10px">Change any input and the table updates instantly.</div>
     </div>
   </div>
@@ -295,6 +245,14 @@
     sensex: { v0: $('sensex_v0'), v1: $('sensex_v1'), tax: $('sensex_tax'), exempt: $('sensex_exempt') }
   };
   const keys = ['fd','gold','re','sensex'];
+  const assetNames = {
+    fd: 'Fixed Deposit',
+    gold: 'Gold (per 10 g)',
+    re: 'Real Estate',
+    sensex: 'Sensex'
+  };
+  const resultGrid = $('resultGrid');
+  const amountLabel = $('amount_label');
 
   // ---------- Compute ----------
   function build(){
@@ -305,9 +263,13 @@
     const y0 = +f.startYear.value || 0;
     const y1 = +f.endYear.value   || 0;
     const years = y1 - y0;
+    const startLabel = y0? String(y0) : 'Start';
+    const endLabel = y1? String(y1) : 'End';
+    const mobileData = {};
 
-    set('row_y0_label', y0? String(y0) : 'Start');
-    set('row_y1_label', y1? String(y1) : 'End');
+    set('row_y0_label', startLabel);
+    set('row_y1_label', endLabel);
+    if(amountLabel) amountLabel.textContent = inr(A);
 
     if(!(years>0)){
       f.err.style.display = 'block';
@@ -319,13 +281,21 @@
       const v1 = parseINR(a[k].v1.value);
       const r  = parsePct(a[k].tax.value);
       const ex = parseINR(a[k].exempt.value);
-
-      // echo base values
-      set(k+'_y0', v0? fmt0.format(v0) : '—');
-      set(k+'_y1', v1? fmt0.format(v1) : '—');
+      const base = {
+        name: assetNames[k],
+        startLabel,
+        endLabel,
+        start: v0? fmt0.format(v0) : '—',
+        end: v1? fmt0.format(v1) : '—',
+        cagr: '—',
+        final: '—',
+        postTax: '—',
+        taxPaid: '—',
+        times: '—'
+      };
 
       if(!(years>0 && v0>0 && v1>0)){
-        set(k+'_cagr','—'); set(k+'_final','—'); set(k+'_posttax','—'); set(k+'_taxpaid','—'); set(k+'_times','—');
+        mobileData[k] = base;
         return;
       }
 
@@ -336,12 +306,39 @@
       const taxable = Math.max(0, gain - ex);
       const taxAmt = taxable * r;
       const P = Math.max(0, F - taxAmt);
+      const times = (m<10? m.toFixed(2) : Math.round(m)) + ' Times';
+      base.cagr = fmtPct(c);
+      base.final = inr(F);
+      base.postTax = inr(P);
+      base.taxPaid = inr(taxAmt);
+      base.times = times;
+      mobileData[k] = base;
+    });
 
-      set(k+'_cagr', fmtPct(c));
-      set(k+'_final', inr(F));
-      set(k+'_posttax', inr(P));
-      set(k+'_taxpaid', inr(taxAmt));
-      set(k+'_times', (m<10? m.toFixed(2) : Math.round(m)) + ' Times');
+    renderResultCards(mobileData);
+  }
+
+  function renderResultCards(data){
+    if(!resultGrid) return;
+    resultGrid.innerHTML = '';
+    keys.forEach(key=>{
+      const item = data[key];
+      if(!item) return;
+      const card = document.createElement('article');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <h4>${item.name}</h4>
+        <div class="divider"></div>
+        <div class="metrics">
+          <div class="metric"><span>${item.startLabel}</span><b>${item.start}</b></div>
+          <div class="metric"><span>${item.endLabel}</span><b>${item.end}</b></div>
+          <div class="metric"><span>CAGR</span><b>${item.cagr}</b></div>
+          <div class="metric"><span>₹1 L Becomes</span><b>${item.final}</b></div>
+          <div class="metric"><span>Post Tax Value</span><b>${item.postTax}</b></div>
+          <div class="metric"><span>Tax Paid</span><b>${item.taxPaid}</b></div>
+          <div class="metric"><span>Multiplier</span><b>${item.times}</b></div>
+        </div>`;
+      resultGrid.appendChild(card);
     });
   }
 
@@ -351,6 +348,10 @@
   });
 
   ids(['amount','startYear','endYear']).forEach(el=> el.addEventListener('input', build));
+  f.amount.addEventListener('blur', ()=>{
+    const val = parseINR(f.amount.value);
+    f.amount.value = val? fmt0.format(val) : '';
+  });
   keys.forEach(k=>{
     ['v0','v1','tax','exempt'].forEach(prop=>{
       a[k][prop].addEventListener('input', build);

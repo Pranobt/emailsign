@@ -173,7 +173,7 @@
       margin-bottom: 6px;
       text-transform: uppercase;
     }
-    input[type="text"], input[type="time"], input[type="date"], input[type="search"], select, textarea {
+    input[type="text"], input[type="time"], input[type="date"], select, textarea {
       width: 100%;
       padding: 13px 14px;
       border-radius: 14px;
@@ -183,7 +183,7 @@
       color: var(--ink);
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    input[type="text"]:focus, input[type="time"]:focus, input[type="date"]:focus, input[type="search"]:focus, select:focus, textarea:focus {
+    input[type="text"]:focus, input[type="time"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 2px rgba(16,163,127,0.2);
@@ -359,7 +359,7 @@
     @media (max-width: 480px) {
       h1 { font-size: 22px; }
       .card { padding: 18px; }
-      input[type="text"], input[type="time"], input[type="date"], input[type="search"], select, textarea { font-size: 14px; }
+      input[type="text"], input[type="time"], input[type="date"], select, textarea { font-size: 14px; }
       button { width: 100%; justify-content: center; }
       .right { width: 100%; justify-content: flex-start; }
       .btn-ghost { width: 100%; }
@@ -413,7 +413,6 @@
         </div>
 
         <div class="tasks" id="tasks"></div>
-        <datalist id="taskOptions"></datalist>
 
         <div class="submit-wrap">
           <button type="submit" class="btn" id="submitBtn">Submit EOD</button>
@@ -471,7 +470,6 @@
     const submitBtn = document.getElementById('submitBtn');
     const loadingEl = document.getElementById('loading');
     const themeToggle = document.getElementById('themeToggle');
-    const taskOptionsList = document.getElementById('taskOptions');
     let toastTimeout;
 
     const THEME_STORAGE_KEY = 'hrteam-theme';
@@ -525,39 +523,48 @@
     function refreshTaskOptions(){
       const options = getAvailableTasks();
       const lower = options.map(t => t.toLowerCase());
-      if (taskOptionsList){
-        taskOptionsList.innerHTML = '';
-        options.forEach(t => {
+      document.querySelectorAll('[data-task]').forEach(sel => {
+        if (!sel) return;
+        const current = (sel.value || '').trim();
+        sel.innerHTML = '';
+        const placeholderOpt = document.createElement('option');
+        placeholderOpt.value = '';
+        placeholderOpt.textContent = 'Select task';
+        placeholderOpt.disabled = true;
+        sel.appendChild(placeholderOpt);
+        options.forEach(task => {
           const opt = document.createElement('option');
-          opt.value = t;
-          taskOptionsList.appendChild(opt);
+          opt.value = task;
+          opt.textContent = task;
+          sel.appendChild(opt);
         });
-      }
-      document.querySelectorAll('[data-task]').forEach(inp => {
-        if (!inp) return;
-        const current = (inp.value || '').trim();
-        if (!current) return;
-        const idx = lower.indexOf(current.toLowerCase());
-        if (idx === -1) {
-          inp.value = '';
+        if (current){
+          const idx = lower.indexOf(current.toLowerCase());
+          if (idx !== -1){
+            sel.value = options[idx];
+          } else {
+            sel.value = '';
+            placeholderOpt.selected = true;
+          }
         } else {
-          inp.value = options[idx];
+          sel.value = '';
+          placeholderOpt.selected = true;
         }
       });
       return options;
     }
 
-    function buildTaskInput(selectedValue=""){
-      const input = document.createElement('input');
-      input.type = 'search';
-      input.placeholder = 'Start typing task...';
-      input.setAttribute('data-task','');
-      input.setAttribute('list','taskOptions');
-      input.required = true;
-      input.autocomplete = 'off';
-      input.spellcheck = false;
-      if (selectedValue) input.value = selectedValue;
-      return input;
+    function buildTaskInput(){
+      const select = document.createElement('select');
+      select.setAttribute('data-task','');
+      select.required = true;
+      const placeholderOpt = document.createElement('option');
+      placeholderOpt.value = '';
+      placeholderOpt.textContent = 'Select task';
+      placeholderOpt.disabled = true;
+      placeholderOpt.selected = true;
+      select.appendChild(placeholderOpt);
+      return select;
     }
 
     function ordinal(n){
@@ -675,6 +682,7 @@
 
     function addTaskRow(){
       tasksEl.appendChild(createTaskRow(tasksEl.children.length));
+      refreshTaskOptions();
       recalcTotals();
     }
 

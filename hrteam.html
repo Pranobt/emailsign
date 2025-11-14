@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HR EOD Task Form</title>
+  <link href="https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Denton Bold";
+      src: url("https://db.onlinewebfonts.com/t/e373b099e1b8f8973fec8aac136a4c9f.eot");
+      src: url("https://db.onlinewebfonts.com/t/e373b099e1b8f8973fec8aac136a4c9f.eot?#iefix") format("embedded-opentype"),
+           url("https://db.onlinewebfonts.com/t/e373b099e1b8f8973fec8aac136a4c9f.woff2") format("woff2"),
+           url("https://db.onlinewebfonts.com/t/e373b099e1b8f8973fec8aac136a4c9f.woff") format("woff"),
+           url("https://db.onlinewebfonts.com/t/e373b099e1b8f8973fec8aac136a4c9f.ttf") format("truetype"),
+           url("https://db.onlinewebfonts.com/t/e373b099e1b8f8973fec8aac136a4c9f.svg#Denton Bold") format("svg");
+      font-display: swap;
+    }
+    :root {
+      color-scheme: light;
+      --bg: #f7f7f8;
+      --bg-muted: #ececf1;
+      --bg-card: #ffffff;
+      --ink: #202123;
+      --muted: #4b5365;
+      --ring: #d3d3e2;
+      --danger: #ef3a4c;
+      --accent: #10a37f;
+      --toast: rgba(16,163,127,0.95);
+      --toast-error: rgba(239,58,76,0.95);
+      --shadow-card: 0 14px 30px rgba(0,0,0,0.08);
+      --shadow-task: 0 10px 22px rgba(0,0,0,0.06);
+    }
+    body.dark-mode {
+      color-scheme: dark;
+      --bg: #131314;
+      --bg-muted: #1e1f24;
+      --bg-card: #1f2024;
+      --ink: #ececf1;
+      --muted: #a0a6b5;
+      --ring: #2a2b30;
+      --danger: #ef7a84;
+      --accent: #10a37f;
+      --toast: rgba(16,163,127,0.95);
+      --toast-error: rgba(239,90,102,0.95);
+      --shadow-card: 0 18px 36px rgba(0,0,0,0.45);
+      --shadow-task: 0 14px 28px rgba(0,0,0,0.4);
+    }
+    * {
+      box-sizing: border-box;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      padding: max(env(safe-area-inset-top), 18px) 0 32px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 32px);
+    }
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding: 0 clamp(8px, 2vw, 12px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img {
+      width: clamp(142px, 5vw, 52px);
+      height: auto;
+      display: block;
+    }
+    .brand-name {
+      font-family: "Denton Bold", "Inter", system-ui;
+      font-size: clamp(18px, 3vw, 22px);
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    .theme-label {
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .theme-toggle input {
+      width: 0;
+      height: 0;
+      opacity: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--bg-muted);
+      transition: background 0.2s ease;
+      box-shadow: inset 0 0 0 1px var(--ring);
+    }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .theme-toggle input:checked + .toggle-track {
+      background: rgba(16,163,127,0.35);
+      box-shadow: inset 0 0 0 1px rgba(16,163,127,0.5);
+    }
+    .theme-toggle input:checked + .toggle-track .toggle-thumb {
+      transform: translateX(22px);
+      background: var(--accent);
+      box-shadow: 0 6px 14px rgba(16,163,127,0.35);
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: clamp(22px, 4vw, 30px);
+      border: 1px solid var(--ring);
+      box-shadow: var(--shadow-card);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    h1 {
+      font-family: "Denton Bold", "Inter", system-ui;
+      font-size: clamp(22px, 4vw, 28px);
+      letter-spacing: -0.01em;
+      margin: 0 0 10px;
+      text-transform: none;
+    }
+    .sub {
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    input[type="text"], input[type="time"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--ring);
+      background: var(--bg-card);
+      font-size: 15px;
+      color: var(--ink);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input[type="text"]:focus, input[type="time"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(16,163,127,0.2);
+    }
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%), linear-gradient(to right, transparent, transparent);
+      background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 13px) calc(50% - 3px), 100% 0;
+      background-size: 8px 8px, 8px 8px, 2.5rem 2.5rem;
+      background-repeat: no-repeat;
+    }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .tasks {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .task-row {
+      border-radius: 18px;
+      padding: clamp(16px, 3vw, 20px);
+      background: var(--bg-card);
+      border: 1px solid var(--ring);
+      box-shadow: var(--shadow-task);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .task-grid {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 14px;
+      align-items: start;
+    }
+    .exp-wrap { grid-column: 1 / -1; }
+    .task-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: flex-end;
+    }
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(16,163,127,0.28);
+    }
+    .btn:hover {
+      filter: brightness(1.04);
+    }
+    .btn-ghost {
+      background: var(--bg-muted);
+      color: var(--ink);
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.4);
+    }
+    body.dark-mode .btn-ghost {
+      color: var(--ink);
+    }
+    .btn-ghost:hover {
+      filter: brightness(1.03);
+    }
+    .btn-danger {
+      background: rgba(239,58,76,0.16);
+      color: var(--danger);
+      box-shadow: none;
+    }
+    .btn-danger:hover {
+      filter: brightness(1.02);
+    }
+    .submit-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 22px;
+    }
+    .bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    .right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 24px;
+      line-height: 1.55;
+    }
+    .totals {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: var(--accent);
+      border-right-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+    }
+    .toast {
+      position: fixed;
+      inset: auto 24px 24px auto;
+      min-width: 250px;
+      background: var(--toast);
+      color: #fff;
+      padding: 13px 18px;
+      border-radius: 14px;
+      box-shadow: 0 16px 30px rgba(0,0,0,0.18);
+      display: none;
+      z-index: 1100;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+    .toast.error {
+      background: var(--toast-error);
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (max-width: 760px) {
+      body { padding-top: max(env(safe-area-inset-top), 12px); }
+      .masthead { flex-direction: column; align-items: flex-start; gap: 12px; padding: 0; }
+      .theme-toggle { align-self: flex-end; }
+      .card { padding: clamp(20px, 5vw, 26px); border-radius: 18px; }
+      .row { grid-template-columns: 1fr; gap: 14px; }
+      .task-grid { grid-template-columns: 1fr; gap: 12px; }
+      .exp-wrap { grid-column: 1; }
+      .task-actions { justify-content: flex-start; }
+      .submit-wrap { justify-content: stretch; }
+      .submit-wrap .btn { width: 100%; }
+      .toast { inset: auto 16px 16px 16px; min-width: auto; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 22px; }
+      .card { padding: 18px; }
+      input[type="text"], input[type="time"], input[type="date"], select, textarea { font-size: 14px; }
+      button { width: 100%; justify-content: center; }
+      .right { width: 100%; justify-content: flex-start; }
+      .btn-ghost { width: 100%; }
+      .totals { width: 100%; }
+      .tasks { gap: 12px; }
+      .task-actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div class="brand">
+        <img src="https://www.finnovate.in/assets/images/logo.svg" alt="Finnovate logo" />
+      </div>
+      <label class="theme-toggle" for="themeToggle">
+        <span class="theme-label">Dark mode</span>
+        <input type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="toggle-track">
+          <span class="toggle-thumb"></span>
+        </span>
+      </label>
+    </header>
+    <div class="card">
+      <h1>HR End‑of‑Day Task Form</h1>
+      <p class="sub">Fill your tasks for the day. Use <b>Add Task</b> for multiple lines. Submit once when done.</p>
+
+      <form id="eodForm">
+        <div class="row">
+          <div>
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required />
+          </div>
+          <div>
+            <label for="staff">Name of Staff</label>
+            <select id="staff" name="staff" required>
+              <option value="" disabled selected>Select staff</option>
+              <option>Ajay Chariya</option>
+              <option>Akshata</option>
+              <option>Ruchita</option>
+              <option>Vibha</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="totals" id="totals">Total time: 0 hrs 0 mins</div>
+          <div class="right">
+            <button type="button" class="btn-ghost" id="addTaskBtn">+ Add Task</button>
+          </div>
+        </div>
+
+        <div class="tasks" id="tasks"></div>
+
+        <div class="submit-wrap">
+          <button type="submit" class="btn" id="submitBtn">Submit EOD</button>
+        </div>
+
+        <div id="ok" class="toast" role="status" aria-live="polite">Submitted. We’ll also notify the Cliq group.</div>
+        <div id="bad" class="toast error" role="status" aria-live="assertive">Could not submit. Please try again or contact admin.</div>
+      </form>
+      <div id="loading" class="loading-overlay" role="alert" aria-live="assertive" aria-busy="true">
+        <div class="spinner"></div>
+      </div>
+
+      <p class="note">Tip: You can bookmark staff‑specific links like <code>?staff=Ruchita</code> to auto‑select & lock the staff.</p>
+    </div>
+  </div>
+
+  <script>
+    // 🔧 CONFIG — replace with your Zoho Flow Webhook URL
+    const ZOHO_FLOW_WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.e43081a652d596a799c1a68f00a61a76.047ec911d7e90bdf5ebe737a0d17be90&isdebug=false";
+
+    // Task options shared by Ruchita, Vibha, Akshata
+    const BASE_TASKS = [
+      "Recruitment Activities",
+      "Pre-Onboarding",
+      "Onboarding",
+      "Orientation",
+      "CRM management",
+      "Campus Hiring",
+      "BVC - OnGrid",
+      "Work Drive Updates",
+      "HR Analytics",
+      "HR Operations",
+      "Letters and formats",
+      "Payroll",
+      "Expenses",
+      "Attendance and Leaves",
+      "Daily / Routine Updates on HR Grps",
+      "Engagement activities",
+      "Training activities",
+      "Exit management",
+      "HR Connects with Staff",
+      "HR Branch Visits",
+      "HR - SRLT discussions",
+      "Review meets",
+      "Other HR Tasks"
+    ].sort((a,b) => a.localeCompare(b));
+
+    const EXTRA_AJAY = "Branch Support Activities"; // Ajay only
+
+    const tasksEl = document.getElementById('tasks');
+    const staffEl = document.getElementById('staff');
+    const totalsEl = document.getElementById('totals');
+    const okEl = document.getElementById('ok');
+    const badEl = document.getElementById('bad');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingEl = document.getElementById('loading');
+    const themeToggle = document.getElementById('themeToggle');
+    let toastTimeout;
+
+    const THEME_STORAGE_KEY = 'hrteam-theme';
+
+    function applyTheme(mode){
+      document.body.classList.toggle('dark-mode', mode === 'dark');
+      if (themeToggle) themeToggle.checked = mode === 'dark';
+    }
+
+    (function initTheme(){
+      let initial = 'light';
+      try {
+        const stored = localStorage.getItem(THEME_STORAGE_KEY);
+        if (stored === 'dark' || stored === 'light') initial = stored;
+      } catch (err) {
+        initial = 'light';
+      }
+      applyTheme(initial);
+      if (themeToggle){
+        themeToggle.addEventListener('change', () => {
+          const mode = themeToggle.checked ? 'dark' : 'light';
+          applyTheme(mode);
+          try { localStorage.setItem(THEME_STORAGE_KEY, mode); } catch (err) {}
+        });
+      }
+    })();
+
+    // Prefill date = today
+    const dateEl = document.getElementById('date');
+    const today = new Date();
+    dateEl.value = today.toISOString().slice(0,10);
+
+    // URL param to lock staff (e.g., ?staff=Ruchita)
+    (function applyStaffLockFromURL(){
+      const q = new URLSearchParams(location.search);
+      const s = q.get('staff');
+      if (!s) return;
+      [...staffEl.options].forEach(opt => {
+        if (opt.value.toLowerCase() === s.toLowerCase()) { staffEl.value = opt.value; }
+      });
+      if (staffEl.value) { staffEl.disabled = true; }
+    })();
+
+    function isAjaySelected(){ return staffEl.value === 'Ajay Chariya'; }
+
+    function getAvailableTasks(){
+      const tasks = isAjaySelected() ? [...BASE_TASKS, EXTRA_AJAY] : [...BASE_TASKS];
+      return tasks.sort((a,b) => a.localeCompare(b));
+    }
+
+    function refreshTaskOptions(){
+      const options = getAvailableTasks();
+      const lower = options.map(t => t.toLowerCase());
+      document.querySelectorAll('[data-task]').forEach(sel => {
+        if (!sel) return;
+        const current = (sel.value || '').trim();
+        sel.innerHTML = '';
+        const placeholderOpt = document.createElement('option');
+        placeholderOpt.value = '';
+        placeholderOpt.textContent = 'Select task';
+        placeholderOpt.disabled = true;
+        sel.appendChild(placeholderOpt);
+        options.forEach(task => {
+          const opt = document.createElement('option');
+          opt.value = task;
+          opt.textContent = task;
+          sel.appendChild(opt);
+        });
+        if (current){
+          const idx = lower.indexOf(current.toLowerCase());
+          if (idx !== -1){
+            sel.value = options[idx];
+          } else {
+            sel.value = '';
+            placeholderOpt.selected = true;
+          }
+        } else {
+          sel.value = '';
+          placeholderOpt.selected = true;
+        }
+      });
+      return options;
+    }
+
+    function buildTaskInput(){
+      const select = document.createElement('select');
+      select.setAttribute('data-task','');
+      select.required = true;
+      const placeholderOpt = document.createElement('option');
+      placeholderOpt.value = '';
+      placeholderOpt.textContent = 'Select task';
+      placeholderOpt.disabled = true;
+      placeholderOpt.selected = true;
+      select.appendChild(placeholderOpt);
+      return select;
+    }
+
+    function ordinal(n){
+      const s = ["th","st","nd","rd"];
+      const v = n % 100;
+      return n + (s[(v-20)%10] || s[v] || s[0]);
+    }
+
+    function createTaskRow(index){
+      const wrap = document.createElement('div');
+      wrap.className = 'task-row';
+
+      const grid = document.createElement('div');
+      grid.className = 'task-grid';
+
+      // Task + Explanation
+      const mid = document.createElement('div');
+      const taskLabel = document.createElement('label'); taskLabel.textContent = `${ordinal(index+1)} Task`; taskLabel.setAttribute('data-task-label','');
+      const taskInput = buildTaskInput();
+      mid.appendChild(taskLabel); mid.appendChild(taskInput);
+
+      // Time taken
+      const timeWrap = document.createElement('div');
+      const timeLabel = document.createElement('label'); timeLabel.textContent = 'Time taken (HH:MM)';
+      const time = document.createElement('input'); time.type='text'; time.placeholder='e.g. 01:30'; time.pattern='^\\d{1,2}:[0-5]\\d$'; time.required=true; time.setAttribute('data-time','');
+      timeWrap.appendChild(timeLabel); timeWrap.appendChild(time);
+
+      const expWrap = document.createElement('div');
+      expWrap.className = 'exp-wrap';
+      const expLabel2 = document.createElement('label'); expLabel2.textContent = 'Explanation';
+      const expArea = document.createElement('textarea'); expArea.placeholder='Add notes / what was done'; expArea.setAttribute('data-explanation','');
+      expWrap.appendChild(expLabel2); expWrap.appendChild(expArea);
+
+      grid.appendChild(mid);
+      grid.appendChild(timeWrap);
+      grid.appendChild(expWrap);
+
+      const actions = document.createElement('div'); actions.className='task-actions';
+      const remove = document.createElement('button'); remove.type='button'; remove.className='btn-danger'; remove.textContent='Remove';
+      remove.addEventListener('click', () => { wrap.remove(); renumberRows(); recalcTotals(); });
+      actions.appendChild(remove);
+
+      wrap.appendChild(grid); wrap.appendChild(actions);
+      return wrap;
+    }
+
+    function renumberRows(){
+      [...document.querySelectorAll('[data-task-label]')].forEach((el, i) => {
+        el.textContent = `${ordinal(i+1)} Task`;
+      });
+    }
+
+    function normalizeTimeValue(raw){
+      if (!raw) return '';
+      const trimmed = String(raw).trim();
+      if (!trimmed) return '';
+      if (/^\d{1,2}:[0-5]\d$/.test(trimmed)) return trimmed;
+
+      const colonParts = trimmed.split(':');
+      let hours = 0;
+      let minutes = 0;
+
+      if (colonParts.length === 2){
+        const [hPart, mPart] = colonParts;
+        const hDigits = hPart.replace(/\D/g,'');
+        const mDigits = mPart.replace(/\D/g,'');
+        hours = hDigits ? parseInt(hDigits, 10) : 0;
+        minutes = mDigits ? parseInt(mDigits, 10) : 0;
+      } else {
+        const digits = trimmed.replace(/\D/g,'');
+        if (!digits) return '';
+        if (digits.length <= 2){
+          minutes = parseInt(digits, 10);
+        } else {
+          minutes = parseInt(digits.slice(-2), 10);
+          hours = parseInt(digits.slice(0, -2), 10);
+        }
+      }
+
+      if (Number.isNaN(minutes)) minutes = 0;
+      if (Number.isNaN(hours)) hours = 0;
+      if (minutes >= 60){
+        hours += Math.floor(minutes / 60);
+        minutes = minutes % 60;
+      }
+      const hh = String(hours).padStart(2,'0');
+      const mm = String(minutes).padStart(2,'0');
+      return `${hh}:${mm}`;
+    }
+
+    function formatTotalTime(totalMins){
+      const hours = Math.floor(totalMins / 60);
+      const minutes = totalMins % 60;
+      const hourLabel = `${hours} hr${hours === 1 ? '' : 's'}`;
+      const minuteLabel = `${minutes} min${minutes === 1 ? '' : 's'}`;
+      return `${hourLabel} ${minuteLabel}`;
+    }
+
+    function updateTotalsDisplay(totalMins){
+      totalsEl.textContent = `Total time: ${formatTotalTime(totalMins)}`;
+    }
+
+    function recalcTotals(){
+      let totalMins = 0;
+      [...document.querySelectorAll('[data-time]')].forEach(inp => {
+        const v = (inp.value||'').trim();
+        if (/^\d{1,2}:[0-5]\d$/.test(v)){
+          const [h,m] = v.split(':').map(Number);
+          totalMins += h*60 + m;
+        }
+      });
+      updateTotalsDisplay(totalMins);
+      return totalMins;
+    }
+
+    function addTaskRow(){
+      tasksEl.appendChild(createTaskRow(tasksEl.children.length));
+      refreshTaskOptions();
+      recalcTotals();
+    }
+
+    document.getElementById('addTaskBtn').addEventListener('click', addTaskRow);
+    staffEl.addEventListener('change', () => {
+      refreshTaskOptions();
+    });
+
+    // Start with one row by default
+    refreshTaskOptions();
+    addTaskRow();
+
+    function collectPayload(){
+      const date = document.getElementById('date').value;
+      const staff = document.getElementById('staff').value;
+      const submitted_at = new Date().toISOString();
+      const items = [...tasksEl.children].map((row, idx) => {
+        const sr = idx + 1;
+        const task = row.querySelector('[data-task]').value.trim();
+        const explanation = row.querySelector('[data-explanation]').value.trim();
+        const time_taken = row.querySelector('[data-time]').value.trim();
+        return { sr_no: Number(sr), task, explanation, time_taken };
+      }).filter(x => x.task);
+
+      const total_minutes = recalcTotals();
+      const total_time_label = formatTotalTime(total_minutes);
+      const task_count = items.length;
+      const taskLines = items.map(({ sr_no, task, time_taken, explanation }) => {
+        const parts = [`${sr_no}. ${task}`, time_taken ? `(${time_taken})` : ''];
+        if (explanation) parts.push(`- ${explanation}`);
+        return parts.filter(Boolean).join(' ');
+      });
+      const tasks_summary = taskLines.join('\n');
+      const cliq_message = [
+        `HR EOD Update — ${date}`,
+        `Staff: ${staff}`,
+        `Total Time: ${total_time_label}`,
+        `Tasks (${task_count}):`,
+        tasks_summary || 'No tasks listed.'
+      ].join('\n');
+
+      return {
+        date,
+        staff,
+        submitted_at,
+        total_minutes,
+        total_time_label,
+        task_count,
+        tasks_summary,
+        cliq_message,
+        items
+      };
+    }
+
+    function buildSheetRow(payload){
+      return {
+        Date: payload.date || '',
+        Staff: payload.staff || '',
+        Task_Count: String(payload.task_count ?? 0),
+        Tasks_Summary: payload.tasks_summary || ''
+      };
+    }
+
+    function hideToasts(){
+      okEl.style.display = 'none';
+      badEl.style.display = 'none';
+      if (toastTimeout) clearTimeout(toastTimeout);
+    }
+
+    function showToast(el, duration = 3200){
+      hideToasts();
+      el.style.display = 'block';
+      toastTimeout = setTimeout(() => el.style.display = 'none', duration);
+    }
+
+    function setLoading(state){
+      if (state){
+        loadingEl.style.display = 'flex';
+        submitBtn.disabled = true;
+        submitBtn.dataset.originalText = submitBtn.dataset.originalText || submitBtn.textContent;
+        submitBtn.textContent = 'Submitting...';
+      } else {
+        loadingEl.style.display = 'none';
+        submitBtn.disabled = false;
+        if (submitBtn.dataset.originalText){ submitBtn.textContent = submitBtn.dataset.originalText; }
+      }
+    }
+
+    document.getElementById('eodForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideToasts();
+
+      document.querySelectorAll('[data-time]').forEach(inp => {
+        inp.value = normalizeTimeValue(inp.value);
+      });
+      recalcTotals();
+
+      // Basic checks
+      if (!staffEl.value){ badEl.textContent = 'Please select staff.'; showToast(badEl); return; }
+      if (tasksEl.children.length === 0){ badEl.textContent = 'Add at least one task.'; showToast(badEl); return; }
+
+      // Validate HH:MM for each row
+      const badTime = [...document.querySelectorAll('[data-time]')].some(inp => !/^\d{1,2}:[0-5]\d$/.test((inp.value||'').trim()));
+      if (badTime){ badEl.textContent = 'Use time format HH:MM (e.g., 01:30).'; showToast(badEl); return; }
+      const availableTasks = getAvailableTasks();
+      let invalidTask = false;
+      const normalizedTasks = availableTasks.map(t => t.toLowerCase());
+      document.querySelectorAll('[data-task]').forEach(inp => {
+        if (invalidTask) return;
+        const v = (inp.value||'').trim();
+        if (!v){
+          invalidTask = true;
+          return;
+        }
+        const idx = normalizedTasks.indexOf(v.toLowerCase());
+        if (idx === -1){
+          invalidTask = true;
+        } else {
+          inp.value = availableTasks[idx];
+        }
+      });
+      if (invalidTask){
+        badEl.textContent = 'Please choose a task from the list for every row.';
+        showToast(badEl);
+        return;
+      }
+
+      const confirmed = window.confirm('This will be posted on the Zoho Cliq group and cannot be undone. Proceed?');
+      if (!confirmed) return;
+
+      const payload = collectPayload();
+
+      try {
+        setLoading(true);
+        // Using no-cors to avoid browser CORS issues; Flow will still receive the JSON.
+        const response = await fetch(ZOHO_FLOW_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok){
+          throw new Error(`Webhook responded with ${response.status}`);
+        }
+        setLoading(false);
+        showToast(okEl);
+        // Optional: clear rows after submit
+        // tasksEl.innerHTML = ''; addTaskRow(); recalcTotals();
+      } catch (err) {
+        console.error(err);
+        badEl.textContent = 'Could not submit. Please check your network or webhook URL.';
+        setLoading(false);
+        showToast(badEl);
+      }
+    });
+
+    // Recalculate totals on time edits
+    document.addEventListener('input', (e) => {
+      if (e.target.matches('[data-time]')) recalcTotals();
+    });
+    document.addEventListener('focusout', (e) => {
+      if (e.target.matches('[data-time]')){
+        const formatted = normalizeTimeValue(e.target.value);
+        e.target.value = formatted;
+        recalcTotals();
+      }
+    }, true);
+  </script>
+</body>
+</html>

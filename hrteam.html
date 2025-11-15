@@ -6,6 +6,7 @@
   <title>HR EOD Task Form</title>
   <link href="https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     @font-face {
       font-family: "Denton Bold";
@@ -205,6 +206,15 @@
       flex-direction: column;
       gap: 14px;
     }
+    .helper-text {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 8px 0 0;
+      line-height: 1.4;
+    }
+    .helper-text strong {
+      color: var(--ink);
+    }
     .task-row {
       border-radius: 18px;
       padding: clamp(16px, 3vw, 20px);
@@ -212,20 +222,31 @@
       border: 1px solid var(--ring);
       box-shadow: var(--shadow-task);
       transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .task-row-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--ring);
+      padding-bottom: 8px;
+    }
+    .task-row-title {
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      font-size: 13px;
+      text-transform: uppercase;
     }
     .task-grid {
       display: grid;
-      grid-template-columns: 1fr 200px;
+      grid-template-columns: minmax(280px, 2fr) minmax(160px, 1fr);
       gap: 14px;
       align-items: start;
     }
     .exp-wrap { grid-column: 1 / -1; }
-    .task-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      justify-content: flex-end;
-    }
     button {
       appearance: none;
       border: none;
@@ -271,6 +292,19 @@
     }
     .btn-danger:hover {
       filter: brightness(1.02);
+    }
+    .btn-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .btn-icon i {
+      pointer-events: none;
     }
     .submit-wrap {
       display: flex;
@@ -328,17 +362,44 @@
       min-width: 250px;
       background: var(--toast);
       color: #fff;
-      padding: 13px 18px;
-      border-radius: 14px;
+      padding: 14px 18px;
+      border-radius: 16px;
       box-shadow: 0 16px 30px rgba(0,0,0,0.18);
       display: none;
       z-index: 1100;
       font-size: 14px;
       letter-spacing: 0.01em;
-      text-transform: uppercase;
+      text-transform: none;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
     }
     .toast.error {
       background: var(--toast-error);
+    }
+    .toast-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .toast-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .toast-body strong {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .toast.error .toast-icon {
+      background: rgba(0,0,0,0.25);
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
@@ -351,7 +412,6 @@
       .row { grid-template-columns: 1fr; gap: 14px; }
       .task-grid { grid-template-columns: 1fr; gap: 12px; }
       .exp-wrap { grid-column: 1; }
-      .task-actions { justify-content: flex-start; }
       .submit-wrap { justify-content: stretch; }
       .submit-wrap .btn { width: 100%; }
       .toast { inset: auto 16px 16px 16px; min-width: auto; text-align: center; }
@@ -365,7 +425,6 @@
       .btn-ghost { width: 100%; }
       .totals { width: 100%; }
       .tasks { gap: 12px; }
-      .task-actions { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -376,8 +435,8 @@
         <img src="https://www.finnovate.in/assets/images/logo.svg" alt="Finnovate logo" />
       </div>
       <label class="theme-toggle" for="themeToggle">
-        <span class="theme-label">Dark mode</span>
-        <input type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-label" id="themeToggleLabel">Dark mode</span>
+        <input type="checkbox" id="themeToggle" role="switch" aria-labelledby="themeToggleLabel" aria-checked="false">
         <span class="toggle-track">
           <span class="toggle-thumb"></span>
         </span>
@@ -411,6 +470,9 @@
             <button type="button" class="btn-ghost" id="addTaskBtn">+ Add Task</button>
           </div>
         </div>
+        <p class="helper-text" id="taskHelper">
+          <strong>Reminder:</strong> choose a task from the dropdown list for every row, record the time spent in HH:MM, and add a short explanation so the update is clear.
+        </p>
 
         <div class="tasks" id="tasks"></div>
 
@@ -418,8 +480,20 @@
           <button type="submit" class="btn" id="submitBtn">Submit EOD</button>
         </div>
 
-        <div id="ok" class="toast" role="status" aria-live="polite">Submitted. We’ll also notify the Cliq group.</div>
-        <div id="bad" class="toast error" role="status" aria-live="assertive">Could not submit. Please try again or contact admin.</div>
+        <div id="ok" class="toast" role="status" aria-live="polite">
+          <span class="toast-icon" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+          <div class="toast-body">
+            <strong>Update shared</strong>
+            <span>Submitted. We’ll also notify the Cliq group.</span>
+          </div>
+        </div>
+        <div id="bad" class="toast error" role="status" aria-live="assertive">
+          <span class="toast-icon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          <div class="toast-body">
+            <strong>Submission failed</strong>
+            <span>Could not submit. Please try again or contact admin.</span>
+          </div>
+        </div>
       </form>
       <div id="loading" class="loading-overlay" role="alert" aria-live="assertive" aria-busy="true">
         <div class="spinner"></div>
@@ -474,9 +548,17 @@
 
     const THEME_STORAGE_KEY = 'hrteam-theme';
 
+    function updateThemeToggleA11y(){
+      if (!themeToggle) return;
+      themeToggle.setAttribute('aria-checked', themeToggle.checked ? 'true' : 'false');
+    }
+
     function applyTheme(mode){
       document.body.classList.toggle('dark-mode', mode === 'dark');
-      if (themeToggle) themeToggle.checked = mode === 'dark';
+      if (themeToggle){
+        themeToggle.checked = mode === 'dark';
+        updateThemeToggleA11y();
+      }
     }
 
     (function initTheme(){
@@ -494,6 +576,7 @@
           applyTheme(mode);
           try { localStorage.setItem(THEME_STORAGE_KEY, mode); } catch (err) {}
         });
+        updateThemeToggleA11y();
       }
     })();
 
@@ -577,14 +660,42 @@
       const wrap = document.createElement('div');
       wrap.className = 'task-row';
 
+      const header = document.createElement('div');
+      header.className = 'task-row-head';
+      const labelId = `task-label-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+      const title = document.createElement('span');
+      title.className = 'task-row-title';
+      title.setAttribute('data-task-label','');
+      title.id = labelId;
+      title.textContent = `${ordinal(index+1)} Task`;
+
+      const remove = document.createElement('button');
+      remove.type='button';
+      remove.className='btn-danger btn-icon';
+      remove.setAttribute('aria-label','Remove task row');
+      remove.title = 'Remove task';
+      remove.innerHTML = '<i class="fa-solid fa-trash"></i>';
+      remove.addEventListener('click', () => { wrap.remove(); renumberRows(); recalcTotals(); });
+
+      header.appendChild(title);
+      header.appendChild(remove);
+
       const grid = document.createElement('div');
       grid.className = 'task-grid';
 
-      // Task + Explanation
-      const mid = document.createElement('div');
-      const taskLabel = document.createElement('label'); taskLabel.textContent = `${ordinal(index+1)} Task`; taskLabel.setAttribute('data-task-label','');
+      // Task selection
+      const taskWrap = document.createElement('div');
       const taskInput = buildTaskInput();
-      mid.appendChild(taskLabel); mid.appendChild(taskInput);
+      const taskSelectId = `${labelId}-input`;
+      taskInput.id = taskSelectId;
+      const taskLabel = document.createElement('label');
+      taskLabel.textContent = 'Choose from the list';
+      taskLabel.id = `${taskSelectId}-label`;
+      taskLabel.setAttribute('for', taskSelectId);
+      taskInput.setAttribute('aria-labelledby', `${labelId} ${taskLabel.id}`);
+      taskInput.setAttribute('aria-describedby', 'taskHelper');
+      taskWrap.appendChild(taskLabel);
+      taskWrap.appendChild(taskInput);
 
       // Time taken
       const timeWrap = document.createElement('div');
@@ -598,16 +709,12 @@
       const expArea = document.createElement('textarea'); expArea.placeholder='Add notes / what was done'; expArea.setAttribute('data-explanation','');
       expWrap.appendChild(expLabel2); expWrap.appendChild(expArea);
 
-      grid.appendChild(mid);
+      grid.appendChild(taskWrap);
       grid.appendChild(timeWrap);
       grid.appendChild(expWrap);
 
-      const actions = document.createElement('div'); actions.className='task-actions';
-      const remove = document.createElement('button'); remove.type='button'; remove.className='btn-danger'; remove.textContent='Remove';
-      remove.addEventListener('click', () => { wrap.remove(); renumberRows(); recalcTotals(); });
-      actions.appendChild(remove);
-
-      wrap.appendChild(grid); wrap.appendChild(actions);
+      wrap.appendChild(header);
+      wrap.appendChild(grid);
       return wrap;
     }
 
@@ -715,13 +822,26 @@
         if (explanation) parts.push(`- ${explanation}`);
         return parts.filter(Boolean).join(' ');
       });
-      const tasks_summary = taskLines.join('\n');
+      const formatted_date = (() => {
+        if (!date) return '';
+        const parts = date.split('-');
+        if (parts.length !== 3) return date;
+        const [year, month, day] = parts;
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const monthIndex = Number(month) - 1;
+        const monthLabel = monthNames[monthIndex] || month;
+        return `${day}-${monthLabel}-${year}`;
+      })();
+      const tasks_summary = taskLines.map(line => `- ${line}`).join('\n');
       const cliq_message = [
-        `HR EOD Update — ${date}`,
-        `Staff: ${staff}`,
+        `HR Task Update By: *${staff}*``,
+        
+        `,
+        `Date: ${formatted_date || date}`,
         `Total Time: ${total_time_label}`,
+        '',
         `Tasks (${task_count}):`,
-        tasks_summary || 'No tasks listed.'
+        tasks_summary || '- No tasks listed.'
       ].join('\n');
 
       return {
@@ -732,6 +852,7 @@
         total_time_label,
         task_count,
         tasks_summary,
+        formatted_date,
         cliq_message,
         items
       };
@@ -768,6 +889,49 @@
         loadingEl.style.display = 'none';
         submitBtn.disabled = false;
         if (submitBtn.dataset.originalText){ submitBtn.textContent = submitBtn.dataset.originalText; }
+      }
+    }
+
+    function buildFormBody(payload){
+      const params = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value === undefined || value === null){
+          params.append(key, '');
+        } else if (typeof value === 'object'){
+          params.append(key, JSON.stringify(value));
+        } else {
+          params.append(key, String(value));
+        }
+      });
+      return params.toString();
+    }
+
+    async function sendPayloadToZoho(payload){
+      const jsonBody = JSON.stringify(payload);
+      // First try a proper CORS request so Zoho Flow can parse JSON/Form payloads.
+      try {
+        const response = await fetch(ZOHO_FLOW_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: jsonBody,
+          mode: 'cors',
+          credentials: 'omit'
+        });
+        if (!response.ok){
+          throw new Error(`Webhook responded with ${response.status}`);
+        }
+        return true;
+      } catch (err) {
+        console.warn('Zoho Flow JSON post failed, falling back to simple form post (no-cors).', err);
+        // Fallback ensures submission still goes through even without CORS support.
+        const formBody = buildFormBody(payload);
+        await fetch(ZOHO_FLOW_WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: formBody
+        });
+        return false;
       }
     }
 
@@ -810,22 +974,21 @@
         return;
       }
 
-      const confirmed = window.confirm('This will be posted on the Zoho Cliq group and cannot be undone. Proceed?');
-      if (!confirmed) return;
-
       const payload = collectPayload();
+      const previewMessage = [
+        'You are about to post this update to Zoho Cliq:',
+        `Staff: ${payload.staff}`,
+        `Date: ${payload.formatted_date || payload.date}`,
+        `Tasks: ${payload.task_count}`,
+        '',
+        'Send update now?'
+      ].join('\n');
+      const confirmed = window.confirm(previewMessage);
+      if (!confirmed) return;
 
       try {
         setLoading(true);
-        // Using no-cors to avoid browser CORS issues; Flow will still receive the JSON.
-        const response = await fetch(ZOHO_FLOW_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!response.ok){
-          throw new Error(`Webhook responded with ${response.status}`);
-        }
+        await sendPayloadToZoho(payload);
         setLoading(false);
         showToast(okEl);
         // Optional: clear rows after submit

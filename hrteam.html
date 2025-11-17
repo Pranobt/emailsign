@@ -313,7 +313,11 @@
     .submit-wrap {
       display: flex;
       justify-content: flex-end;
+      gap: 12px;
       margin-top: 22px;
+    }
+    .add-task-bottom {
+      display: none;
     }
     .bar {
       display: flex;
@@ -340,6 +344,10 @@
       font-weight: 600;
       letter-spacing: 0.03em;
       text-transform: uppercase;
+    }
+    .totals-bottom {
+      display: none;
+      margin-top: 12px;
     }
     .loading-overlay {
       position: fixed;
@@ -415,8 +423,12 @@
       .row { grid-template-columns: 1fr; gap: 14px; }
       .task-grid { grid-template-columns: 1fr; gap: 12px; }
       .exp-wrap { grid-column: 1; }
-      .submit-wrap { justify-content: stretch; }
-      .submit-wrap .btn { width: 100%; }
+      .bar { display: none; }
+      .submit-wrap { justify-content: stretch; flex-direction: column; align-items: stretch; }
+      .submit-wrap .btn,
+      .submit-wrap .btn-ghost { width: 100%; }
+      .add-task-bottom { display: block; }
+      .totals-bottom { display: block; }
       .toast { inset: auto 16px 16px 16px; min-width: auto; text-align: center; }
     }
     @media (max-width: 480px) {
@@ -474,14 +486,16 @@
           </div>
         </div>
         <p class="helper-text" id="taskHelper">
-          <strong>Reminder:</strong> choose a task from the dropdown list for every row, record the time spent in HH:MM, and add a short explanation so the update is clear.
+          <strong>Note:</strong> choose a task from the dropdown list for every row, record the time spent in minutes.
         </p>
 
         <div class="tasks" id="tasks"></div>
 
         <div class="submit-wrap">
+          <button type="button" class="btn-ghost add-task-bottom" id="addTaskBtnBottom">+ Add Task</button>
           <button type="submit" class="btn" id="submitBtn">Submit EOD</button>
         </div>
+        <div class="totals totals-bottom" id="totalsBottom">Total time: 0 hrs 0 mins</div>
 
         <div id="ok" class="toast" role="status" aria-live="polite">
           <span class="toast-icon" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
@@ -542,6 +556,7 @@
     const tasksEl = document.getElementById('tasks');
     const staffEl = document.getElementById('staff');
     const totalsEl = document.getElementById('totals');
+    const totalsBottomEl = document.getElementById('totalsBottom');
     const okEl = document.getElementById('ok');
     const badEl = document.getElementById('bad');
     const submitBtn = document.getElementById('submitBtn');
@@ -702,8 +717,8 @@
 
       // Time taken
       const timeWrap = document.createElement('div');
-      const timeLabel = document.createElement('label'); timeLabel.textContent = 'Time taken (HH:MM)'; timeLabel.classList.add('required-label');
-      const time = document.createElement('input'); time.type='text'; time.placeholder='e.g. 01:30'; time.pattern='^\\d{1,2}:[0-5]\\d$'; time.required=true; time.setAttribute('data-time','');
+      const timeLabel = document.createElement('label'); timeLabel.textContent = 'Time taken (in mins)'; timeLabel.classList.add('required-label');
+      const time = document.createElement('input'); time.type='text'; time.placeholder='e.g. 30'; time.pattern='^\\d{1,2}:[0-5]\\d$'; time.required=true; time.setAttribute('data-time','');
       timeWrap.appendChild(timeLabel); timeWrap.appendChild(time);
 
       const expWrap = document.createElement('div');
@@ -774,7 +789,9 @@
     }
 
     function updateTotalsDisplay(totalMins){
-      totalsEl.textContent = `Total time: ${formatTotalTime(totalMins)}`;
+      const text = `Total time: ${formatTotalTime(totalMins)}`;
+      totalsEl.textContent = text;
+      if (totalsBottomEl) totalsBottomEl.textContent = text;
     }
 
     function recalcTotals(){
@@ -797,6 +814,8 @@
     }
 
     document.getElementById('addTaskBtn').addEventListener('click', addTaskRow);
+    const addTaskBtnBottom = document.getElementById('addTaskBtnBottom');
+    if (addTaskBtnBottom){ addTaskBtnBottom.addEventListener('click', addTaskRow); }
     staffEl.addEventListener('change', () => {
       refreshTaskOptions();
     });

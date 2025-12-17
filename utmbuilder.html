@@ -1,85 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UTM Builder</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fc;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: left;
-            width: 400px;
-        }
-        h2 { margin-bottom: 20px; color: #222; font-weight: 600; font-family: 'Inter', sans-serif; }
-        label { font-weight: 600; font-family: 'Inter', sans-serif; }
-        .required::after { content: " *"; color: red; }
-        select, input {
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .button {
-            font-family: 'Inter', sans-serif;
-            background-color: #009356;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-        }
-        .button:hover { background-color: #0e8c6b; }
-        #output {
-            font-family: 'Inter', sans-serif;
-            margin-top: 20px;
-            padding: 10px;
-            background: #eef2f5;
-            border-radius: 8px;
-            font-size: 14px;
-            word-break: break-all;
-        }
-        .copy-text-btn {
-            font-family: 'Inter', sans-serif;
-            margin-top: 10px;
-            background-color: #f5f6f7;
-            color: #52525b;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTM Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --brand: #009356;
+      --brand-600: #057a4a;
+      --danger: #ef4444;
+      --ring: rgba(0,147,86,0.25);
+      --chip: #eef7f3;
+      --code: #0f172a;
+      --code-bg: #f1f5f9;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(120deg, #f6f8fb 0%, #eef3f7 100%);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .wrap { width: 100%; max-width: 980px; }
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .title { font-weight: 700; letter-spacing: -0.02em; margin: 0; font-size: 22px; }
+    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+    .card-header { padding: 18px 18px 0 18px; }
+    .grid {
+      display: grid; gap: 14px; padding: 18px; grid-template-columns: 1fr; 
+    }
+    @media (min-width: 880px){
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .grid.full { grid-template-columns: 1fr; }
+    }
+    label { font-size: 13px; font-weight: 600; display:block; margin: 0 0 6px; }
+    .required::after { content: " *"; color: var(--danger); }
+    input, select, button, textarea {
+      font: inherit; color: inherit;
+    }
+    .field { display:flex; flex-direction: column; }
+    .help { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .row { display:flex; gap: 10px; }
+
+    input[type="text"], select {
+      width: 100%; padding: 12px 12px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff;
+      outline: none; transition: box-shadow .2s, border-color .2s;
+    }
+    input[type="text"]:focus, select:focus {
+      border-color: var(--brand); box-shadow: 0 0 0 4px var(--ring);
+    }
+    input[disabled], select[disabled] { background:#f3f4f6; color:#9ca3af; }
+
+    .chip-select { display:flex; gap:8px; flex-wrap:wrap; }
+    .chip {
+      padding: 6px 10px; border-radius: 999px; border: 1px solid #c7e7da; background: var(--chip); cursor: pointer; font-size: 12px;
+    }
+    .chip[aria-pressed="true"] { background: #dff4ea; border-color: #7bd3b0; }
+
+    .actions { display:flex; gap: 10px; padding: 0 18px 18px; flex-wrap: wrap; }
+    .btn {
+      appearance: none; border: none; border-radius: 10px; padding: 12px 16px;
+      background: var(--brand); color: #fff; font-weight: 600; cursor: pointer;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:hover { background: var(--brand-600); }
+    .btn.secondary { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
+
+    .output {
+      padding: 18px; border-top: 1px dashed #e5e7eb; background: #fafcff;
+    }
+    .code {
+      width: 100%;
+      overflow: auto;
+      /* Allow wrapping of long URLs */
+      white-space: normal;
+      overflow-wrap: anywhere; /* modern, best-effort wrapping */
+      word-break: break-word;  /* fallback */
+      background: var(--code-bg);
+      color: var(--code);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+    }
+    .pill {
+      display:inline-flex; align-items:center; gap:8px; background:#f0fdf4; border:1px solid #bbf7d0; color:#166534; padding:6px 10px; border-radius:999px; font-size:12px;
+    }
+    .footer-note { font-size: 12px; color: var(--muted); padding: 0 18px 18px; }
+    .error { color: var(--danger); font-size: 12px; margin-top: 6px; display:none; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>UTM Builder</h2>
-        <label class="required">Origin</label>
-        <select id="origin" onchange="updateFields()" required>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1 class="title">UTM Builder</h1>
+        <p class="subtitle">Clean, consistent links for campaigns, referrals, and events.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="pill" id="pill-origin" style="display:none;">Origin: <strong id="pill-origin-text"></strong></span>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label class="required" for="origin">Origin</label>
+          <select id="origin" required>
             <option value="">Select Origin</option>
             <option value="Database">Database</option>
             <option value="Digital Marketing">Digital Marketing</option>
@@ -89,146 +137,324 @@
             <option value="PR">PR</option>
             <option value="Direct Lead">Direct Lead</option>
             <option value="Events">Events</option>
-        </select>
-
-        <div id="source-container">
-            <label class="required">Source</label>
-            <input type="text" id="source" placeholder="Select origin first" disabled>
-        </div>
-        <div id="medium-container">
-            <label class="required">Medium</label>
-            <input type="text" id="medium" placeholder="Select origin first" disabled>
+          </select>
+          <div class="help">This decides how Source & Medium behave.</div>
         </div>
 
-        <label class="required">Campaign</label>
-        <input type="text" id="campaign" placeholder="Enter campaign name" required>
+        <div class="field" id="source-container">
+          <label class="required" for="source">Source</label>
+          <input type="text" id="source" placeholder="Select origin first" disabled />
+          <div class="error" id="source-error">Please enter a source.</div>
+        </div>
 
-        <label class="required">Term</label>
-        <input type="text" id="term" placeholder="Enter term" required>
+        <div class="field" id="medium-container">
+          <label class="required" for="medium">Medium</label>
+          <input type="text" id="medium" placeholder="Select origin first" disabled />
+          <div class="error" id="medium-error">Please enter a medium.</div>
+        </div>
 
-        <label class="required">CTA/Content</label>
-        <input type="text" id="cta" placeholder="Enter CTA (e.g. landing page)" required>
+        <div class="field">
+          <label class="required" for="campaign">Campaign</label>
+          <input type="text" id="campaign" placeholder="e.g., rrw-2025-oct-kutch" />
+          <div class="help">Use kebab-case. No spaces.</div>
+        </div>
 
-        <label class="required">Link</label>
-        <select id="link" onchange="fillCustomLink()">
-            <option value="">Select or Enter Custom Link</option>
-            <option value="https://calendly.com/finnovate/financial-fitness-consultation">FinnFit Consultation - Calendly</option>
-            <option value="https://calendly.com/finnovate/fire-number-consultation">FIRE Consultation - Calendly</option>
-            <option value="https://calendly.com/finnovate/tax-planning">Tax Planning - Calendly</option>
+        <div class="field">
+          <label class="required" for="term">Term</label>
+          <input type="text" id="term" placeholder="Audience, placement, or keyword" />
+        </div>
+
+        <div class="field">
+          <label class="required" for="cta">CTA / Content</label>
+          <input type="text" id="cta" placeholder="e.g., book-call, finfit-score, carousel-1" />
+        </div>
+
+        <div class="field">
+          <label class="required" for="link">Destination Link</label>
+          <select id="link">
+            <option value="">Select a link or choose Custom</option>
+            <option value="https://calendly.com/finnovate/financial-fitness-consultation">FinnFit Consultation – Calendly</option>
+            <option value="https://calendly.com/finnovate/fire-number-consultation">FIRE Consultation – Calendly</option>
+            <option value="https://calendly.com/finnovate/tax-planning">Tax Planning – Calendly</option>
             <option value="https://plan.finnovate.in/finnfit">FinnFit Score</option>
+            <option value="https://www.finnovate.in/">Finnovate Homepage</option>
+            <option value="https://www.finnovate.in/about-us">Finnovate About Page</option>
+            <option value="https://www.finnovate.in/advisory">Finnovate Advisory Page</option>
+            <option value="https://www.finnovate.in/calculators">Finnovate Calculators Page</option>
+            <option value="https://www.finnovate.in/transact-page">Finnovate Products Page</option>
+            <option value="https://www.finnovate.in/contact-us">Finnovate Contact Page</option>
             <option value="https://insurance.finnovate.in">Insurance Landing Page</option>
-            <option value="custom">Custom</option>
-        </select>
-        <input type="text" id="custom-link" placeholder="Enter custom link" style="display:none;">
+            <option value="custom">Custom…</option>
+          </select>
+          <input type="text" id="custom-link" placeholder="Paste your URL (https://…)" style="display:none; margin-top:8px;" />
+          <div class="error" id="link-error">Please select or enter a valid URL.</div>
+        </div>
+      </div>
 
-        <button class="button" onclick="generateUTM()">Generate</button>
-        <div id="output"></div>
-        <button class="copy-text-btn" onclick="copyUTM()">Copy Text</button>
+      <div class="actions">
+        <button class="btn" id="btn-generate">Generate UTM</button>
+        <button class="btn secondary" id="btn-reset" type="button">Reset</button>
+      </div>
+
+      <div class="output" id="output-wrap" style="display:none;">
+        <div class="grid full">
+          <div class="field">
+            <label>UTM URL (live preview)</label>
+            <div id="output" class="code" title="Generated link will appear here"></div>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn" id="btn-copy">Copy URL</button>
+              <a class="btn secondary" id="btn-open" href="#" target="_blank" rel="noopener">Open in new tab</a>
+            </div>
+            <div class="help" id="regen-hint" style="display:none;">Inputs changed. Click “Generate UTM” again to refresh the link.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">We only add UTM parameters – your existing query string is preserved. All values are URL‑safe encoded.</div>
     </div>
+  </div>
 
-    <script>
-        // Configuration based on origin
-        const originConfig = {
-            "Database": {
-                source: { type: "input" },
-                medium: { type: "input" }
-            },
-            "Digital Marketing": {
-                source: { type: "select", options: ["Facebook", "LinkedIn", "YouTube", "Instagram","WhatsApp", "Emailer","Google Ads"] },
-                medium: { type: "input" }
-            },
-            "Client Referral": {
-                source: { type: "input" },
-                medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting"] }
-            },
-            "Partner Referral": {
-                source: { type: "input" },
-                medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting"] }
-            },
-            "Organic": {
-                source: { type: "select", options: ["Website"] },
-                medium: { type: "select", options: ["Social Media Post", "Video", "Search", "PR", "Blog", "Infographics", "Podcast", "Webinar", "Ebook", "Guest Posts", "Forum", "Community Engagement"] }
-            },
-            "PR": {
-                source: { type: "select", options: ["Print", "Digital", "TV"] },
-                medium: { type: "input" }
-            },
-            "Direct Lead": {
-                source: { type: "input" },
-                medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting", "Letter", "Email"] }
-            },
-            "Events": {
-                source: { type: "input" },
-                medium: { type: "select", options: ["RTM", "Organised Event", "Participated Event", "Webinar", "Workshop"] }
-            }
-        };
+  <script>
+    // ====== Config ======
+    const originConfig = {
+      "Database": { source: { type: "input" }, medium: { type: "input" } },
+      "Digital Marketing": { source: { type: "select", options: ["Facebook", "LinkedIn", "YouTube", "Instagram", "WhatsApp", "Emailer", "Google Ads"] }, medium: { type: "input" } },
+      "Client Referral": { source: { type: "input" }, medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting"] } },
+      "Partner Referral": { source: { type: "input" }, medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting"] } },
+      "Organic": { source: { type: "select", options: ["Website"] }, medium: { type: "select", options: ["Social Media Post", "Video", "Search", "PR", "Blog", "Homepage", "Calculator-Page", "Advisory-Page", "Track-Page", "Transact-Page", "About-Page", "Contact-Page", "Infographics", "Podcast-Page", "Webinar", "Ebook", "Guest Posts", "Forum", "Community Engagement"] } },
+      "PR": { source: { type: "select", options: ["Print", "Digital", "TV"] }, medium: { type: "input" } },
+      "Direct Lead": { source: { type: "input" }, medium: { type: "select", options: ["Call", "Online Meeting", "Offline Meeting", "Letter", "Email"] } },
+      "Events": { source: { type: "input" }, medium: { type: "select", options: ["RTM", "Organised Event", "Participated Event", "Webinar", "Workshop"] } }
+    };
 
-        function updateFields() {
-            const origin = document.getElementById("origin").value;
-            const sourceContainer = document.getElementById("source-container");
-            const mediumContainer = document.getElementById("medium-container");
+    const els = {
+      origin: document.getElementById('origin'),
+      sourceWrap: document.getElementById('source-container'),
+      mediumWrap: document.getElementById('medium-container'),
+      campaign: document.getElementById('campaign'),
+      term: document.getElementById('term'),
+      cta: document.getElementById('cta'),
+      link: document.getElementById('link'),
+      customLink: document.getElementById('custom-link'),
+      btnGenerate: document.getElementById('btn-generate'),
+      btnReset: document.getElementById('btn-reset'),
+      outputWrap: document.getElementById('output-wrap'),
+      output: document.getElementById('output'),
+      btnCopy: document.getElementById('btn-copy'),
+      btnOpen: document.getElementById('btn-open'),
+      pillOrigin: document.getElementById('pill-origin'),
+      pillOriginText: document.getElementById('pill-origin-text'),
+      linkError: document.getElementById('link-error'),
+      regenHint: document.getElementById('regen-hint')
+    };
 
-            sourceContainer.innerHTML = '<label class="required">Source</label>';
-            mediumContainer.innerHTML = '<label class="required">Medium</label>';
+    let lastSig = null;
 
-            const cfg = originConfig[origin];
-            if (cfg) {
-                // Source
-                if (cfg.source.type === "select") {
-                    let selectHTML = '<select id="source"><option value="">Select Source</option>';
-                    cfg.source.options.forEach(opt => selectHTML += `<option value="${opt}">${opt}</option>`);
-                    selectHTML += '</select>';
-                    sourceContainer.innerHTML += selectHTML;
-                } else {
-                    sourceContainer.innerHTML += '<input type="text" id="source" placeholder="Enter source">';
-                }
-                // Medium
-                if (cfg.medium.type === "select") {
-                    let selectMHTML = '<select id="medium"><option value="">Select Medium</option>';
-                    cfg.medium.options.forEach(opt => selectMHTML += `<option value="${opt}">${opt}</option>`);
-                    selectMHTML += '</select>';
-                    mediumContainer.innerHTML += selectMHTML;
-                } else {
-                    mediumContainer.innerHTML += '<input type="text" id="medium" placeholder="Enter medium">';
-                }
-            } else {
-                sourceContainer.innerHTML += '<input type="text" id="source" placeholder="Select origin first" disabled>';
-                mediumContainer.innerHTML += '<input type="text" id="medium" placeholder="Select origin first" disabled>';
-            }
+    // ====== Dynamic fields based on Origin ======
+    function updateFields(){
+      const origin = els.origin.value;
+      const cfg = originConfig[origin];
+      // Update pill
+      if(origin){ els.pillOrigin.style.display = 'inline-flex'; els.pillOriginText.textContent = origin; }
+      else { els.pillOrigin.style.display = 'none'; els.pillOriginText.textContent = ''; }
+
+      // Source container
+      els.sourceWrap.innerHTML = '<label class="required" for="source">Source</label>';
+      if(cfg){
+        if(cfg.source.type === 'select'){
+          const sel = document.createElement('select');
+          sel.id = 'source';
+          sel.innerHTML = '<option value="">Select Source</option>' + cfg.source.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+          els.sourceWrap.appendChild(sel);
+          els.sourceWrap.insertAdjacentHTML('beforeend', '<div class="help">Pick one from the list.</div><div class="error" id="source-error">Please choose a source.</div>');
+        } else {
+          els.sourceWrap.insertAdjacentHTML('beforeend', '<input type="text" id="source" placeholder="Enter source" />');
+          els.sourceWrap.insertAdjacentHTML('beforeend', '<div class="help">e.g., client-name, partner-name, fb-group.</div><div class="error" id="source-error">Please enter a source.</div>');
         }
+      } else {
+        els.sourceWrap.insertAdjacentHTML('beforeend', '<input type="text" id="source" placeholder="Select origin first" disabled />');
+      }
 
-        function fillCustomLink() {
-            const linkVal = document.getElementById("link").value;
-            const customInput = document.getElementById("custom-link");
-            if (linkVal === "custom") customInput.style.display = "block";
-            else { customInput.style.display = "none"; customInput.value = ""; }
+      // Medium container
+      els.mediumWrap.innerHTML = '<label class="required" for="medium">Medium</label>';
+      if(cfg){
+        if(cfg.medium.type === 'select'){
+          const selM = document.createElement('select');
+          selM.id = 'medium';
+          selM.innerHTML = '<option value="">Select Medium</option>' + cfg.medium.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+          els.mediumWrap.appendChild(selM);
+          els.mediumWrap.insertAdjacentHTML('beforeend', '<div class="help">Pick one from the list.</div><div class="error" id="medium-error">Please choose a medium.</div>');
+        } else {
+          els.mediumWrap.insertAdjacentHTML('beforeend', '<input type="text" id="medium" placeholder="Enter medium" />');
+          els.mediumWrap.insertAdjacentHTML('beforeend', '<div class="help">e.g., call, email, ad-set, reel, story.</div><div class="error" id="medium-error">Please enter a medium.</div>');
         }
+      } else {
+        els.mediumWrap.insertAdjacentHTML('beforeend', '<input type="text" id="medium" placeholder="Select origin first" disabled />');
+      }
+    }
 
-        function generateUTM() {
-            const origin = document.getElementById("origin").value;
-            const source = document.getElementById("source").value.trim();
-            const medium = document.getElementById("medium").value.trim();
-            const campaign = document.getElementById("campaign").value.trim();
-            const term = document.getElementById("term").value.trim();
-            const cta = document.getElementById("cta").value.trim();
-            let linkVal = document.getElementById("link").value;
-            let link = linkVal === "custom" ? document.getElementById("custom-link").value.trim() : linkVal;
+    els.origin.addEventListener('change', updateFields);
 
-            if (!origin || !source || !medium || !campaign || !term || !cta || !link) {
-                alert("Please fill in all required fields.");
-                return;
-            }
-            if (!link.startsWith("http")) { alert("Please enter a valid URL."); return; }
+    // Custom link toggle
+    els.link.addEventListener('change', ()=>{
+      const showCustom = els.link.value === 'custom';
+      els.customLink.style.display = showCustom ? 'block' : 'none';
+      if(!showCustom){ els.customLink.value = ''; }
+    });
 
-            const utmURL = `${link}?utm_origin=${encodeURIComponent(origin)}&utm_source=${encodeURIComponent(source)}&utm_medium=${encodeURIComponent(medium)}&utm_campaign=${encodeURIComponent(campaign)}&utm_term=${encodeURIComponent(term)}&utm_content=${encodeURIComponent(cta)}`;
-            document.getElementById("output").innerText = utmURL;
+    function getVal(id){ return (document.getElementById(id)?.value || '').trim(); }
+    function isURL(u){ try { new URL(u); return true; } catch(e){ return false; } }
+
+    function signature(){
+      const origin = els.origin.value || '';
+      const source = getVal('source');
+      const medium = getVal('medium');
+      const campaign = els.campaign.value.trim();
+      const term = els.term.value.trim();
+      const cta = els.cta.value.trim();
+      const linkVal = els.link.value;
+      const link = linkVal === 'custom' ? (els.customLink.value.trim()) : (linkVal || '');
+      return [origin, source, medium, campaign, term, cta, link].join('|');
+    }
+
+    function syncDirtyState(){
+      // If we haven't generated yet, keep copy disabled
+      const hasOutput = els.outputWrap.style.display !== 'none' && els.output.textContent.trim().length > 0;
+      const current = signature();
+      const dirty = !!lastSig && current !== lastSig;
+      if(hasOutput){
+        els.btnCopy.disabled = dirty;
+        els.regenHint.style.display = dirty ? 'block' : 'none';
+      } else {
+        els.btnCopy.disabled = true;
+        els.regenHint.style.display = 'none';
+      }
+    }
+
+    function withParams(base, params){
+      const url = new URL(base);
+      // Preserve existing query, then add UTM
+      Object.entries(params).forEach(([k,v])=> url.searchParams.set(k, v));
+      const out = url.toString();
+      // Ensure spaces are encoded as %20 (not +) to avoid visual plus signs
+      return out.replace(/\+/g, '%20');
+    }
+
+    function showError(id){ const el = document.getElementById(id); if(el){ el.style.display = 'block'; } }
+    function hideError(id){ const el = document.getElementById(id); if(el){ el.style.display = 'none'; } }
+
+    function validate(){
+      const origin = els.origin.value;
+      const source = getVal('source');
+      const medium = getVal('medium');
+      const campaign = els.campaign.value.trim();
+      const term = els.term.value.trim();
+      const cta = els.cta.value.trim();
+      let linkVal = els.link.value;
+      let link = linkVal === 'custom' ? els.customLink.value.trim() : linkVal;
+
+      let ok = true;
+      if(!origin) ok = false;
+      if(!source){ showError('source-error'); ok = false; } else hideError('source-error');
+      if(!medium){ showError('medium-error'); ok = false; } else hideError('medium-error');
+      if(!campaign) ok = false;
+      if(!term) ok = false;
+      if(!cta) ok = false;
+      if(!link || !link.startsWith('http') || !isURL(link)){ els.linkError.style.display = 'block'; ok = false; } else { els.linkError.style.display = 'none'; }
+      return ok ? { origin, source, medium, campaign, term, cta, link } : null;
+    }
+
+    function generate(){
+      const data = validate();
+      if(!data) return;
+      const params = {
+        utm_origin: data.origin,
+        utm_source: data.source,
+        utm_medium: data.medium,
+        utm_campaign: data.campaign,
+        utm_term: data.term,
+        utm_content: data.cta
+      };
+      const finalURL = withParams(data.link, params);
+      els.output.textContent = finalURL;
+      els.btnOpen.href = finalURL;
+      els.outputWrap.style.display = 'block';
+      lastSig = signature();
+      els.btnCopy.disabled = false;
+      els.regenHint.style.display = 'none';
+      // persist
+      try { localStorage.setItem('utm_builder_last', JSON.stringify(data)); } catch(e){}
+    }
+
+    // Buttons
+    els.btnGenerate.addEventListener('click', generate);
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') { e.preventDefault(); generate(); } });
+
+    els.btnCopy.addEventListener('click', ()=>{
+      if(els.btnCopy.disabled){
+        els.regenHint.style.display = 'block';
+        return;
+      }
+      const txt = els.output.textContent.trim();
+      if(!txt) return;
+      navigator.clipboard.writeText(txt).then(()=>{
+        els.btnCopy.textContent = 'Copied!';
+        setTimeout(()=> els.btnCopy.textContent = 'Copy URL', 1200);
+      });
+    });
+
+    els.btnReset.addEventListener('click', ()=>{
+      lastSig = null;
+      els.btnCopy.disabled = true;
+      els.regenHint.style.display = 'none';
+      // reset inputs
+      document.querySelectorAll('input[type="text"]').forEach(i=> i.value='');
+      ['origin','link'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value=''; });
+      els.customLink.style.display = 'none';
+      els.outputWrap.style.display = 'none';
+      els.linkError.style.display = 'none';
+      hideError('source-error');
+      hideError('medium-error');
+      updateFields();
+      els.origin.focus();
+    });
+
+    // Mark dirty on any field change/input
+    ['change','input'].forEach(evt => {
+      document.addEventListener(evt, (e)=>{
+        // Only react to our form controls
+        const ids = ['origin','campaign','term','cta','link','custom-link','source','medium'];
+        if(e.target && (ids.includes(e.target.id))){
+          syncDirtyState();
         }
+      });
+    });
 
-        function copyUTM() {
-            const output = document.getElementById("output").innerText;
-            if (!output) { alert("No URL to copy."); return; }
-            navigator.clipboard.writeText(output).then(() => alert("UTM link copied to clipboard."));
+    // Load last session (if any)
+    (function restore(){
+      try {
+        const raw = localStorage.getItem('utm_builder_last');
+        if(!raw) return;
+        const data = JSON.parse(raw);
+        if(data.origin){ els.origin.value = data.origin; updateFields(); }
+        if(data.source){ const s = document.getElementById('source'); if(s){ s.value = data.source; } }
+        if(data.medium){ const m = document.getElementById('medium'); if(m){ m.value = data.medium; } }
+        if(data.campaign) els.campaign.value = data.campaign;
+        if(data.term) els.term.value = data.term;
+        if(data.cta) els.cta.value = data.cta;
+        if(data.link){
+          // if saved link isn't one of the presets, push to custom
+          const preset = Array.from(els.link.options).some(o=> o.value === data.link);
+          if(preset){ els.link.value = data.link; }
+          else { els.link.value = 'custom'; els.customLink.style.display = 'block'; els.customLink.value = data.link; }
         }
-    </script>
+        if(data.origin){ els.pillOrigin.style.display = 'inline-flex'; els.pillOriginText.textContent = data.origin; }
+        els.btnCopy.disabled = true;
+        els.regenHint.style.display = 'none';
+      } catch(e){}
+    })();
+
+    syncDirtyState();
+  </script>
 </body>
 </html>

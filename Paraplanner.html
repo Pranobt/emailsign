@@ -545,20 +545,38 @@ function buildSubmissionRow(payload){
 
 /** Cliq message */
 function buildCliqMessage(payload){
+  const date = payload.date || format_ddMMyyyy(new Date());
+  const preparedBy = payload.preparedBy || "N/A";
+  const attendance = payload.attendance || "N/A";
+  const rms = payload.rms || [];
+
+  const totalRMs = rms.length;
+  const totalClients = rms.reduce((acc, rm) => acc + ((rm.clients || []).length), 0);
+
   const lines = [];
-  lines.push(`*Daily Task Update – ${payload.date || format_ddMMyyyy(new Date())}*`);
-  lines.push(`Prepared by: ${payload.preparedBy || "N/A"}`);
-  lines.push(`Attendance: ${payload.attendance || "N/A"}`);
+  lines.push(`*Daily Task – ${date}*`);
+  lines.push(`By ${preparedBy} | Att ${attendance} | RMs ${totalRMs} | Clients ${totalClients}`);
   lines.push("");
 
-  payload.rms.forEach((rm)=>{
-    lines.push(`*RM:* ${rm.rmName || "N/A"}  ·  *Total Clients:* ${rm.total_clients ?? 0}`);
-    if(!rm.clients || rm.clients.length===0){ lines.push("_No client entries_"); lines.push(""); return; }
-    rm.clients.forEach((c)=>{
-      lines.push(`${c.index}) *Client:* ${c.name || "N/A"}  ·  *Type:* ${c.type || "N/A"}`);
-      if(c.tasks?.length) lines.push(`   • *Tasks:* ${c.tasks.join(", ")}`);
-      if(c.areas?.length) lines.push(`   • *Area:* ${c.areas.join(", ")}`);
-      if(c.notes) lines.push(`   • *Notes:* ${c.notes}`);
+  rms.forEach((rm, rmIndex)=>{
+    const clients = rm.clients || [];
+    const rmName = rm.rmName || "N/A";
+    lines.push(`*${rmIndex+1}) ${rmName}* (${clients.length})`);
+
+    if(clients.length===0){
+      lines.push("   _No client entries_");
+      lines.push("");
+      return;
+    }
+
+    clients.forEach((c, idx)=>{
+      const tasks = (c.tasks || []).join(", ");
+      const areas = (c.areas || []).join(", ");
+      const parts = [];
+      if(tasks) parts.push(tasks);
+      if(areas) parts.push(areas);
+      const detail = parts.length ? ` – ${parts.join(" | ")}` : "";
+      lines.push(`   ${idx+1}. ${c.name || "N/A"} (${c.type || "N/A"})${detail}`);
     });
     lines.push("");
   });

@@ -1,0 +1,1240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Clinic Registration & Consent</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap');
+
+    :root{
+      --bg:#fbfaf7;
+      --card:#ffffff;
+      --ink:#1f2a37;
+      --muted:#586072;
+      --line:#e6e2da;
+      --accent:#f6c8b6;
+      --accent-2:#c7d8f9;
+      --focus:#5b7cff;
+      --ok:#15803d;
+      --bad:#dc2626;
+      --shadow:0 18px 40px rgba(31,42,55,.08);
+      --soft-shadow:0 8px 24px rgba(31,42,55,.08);
+      --radius:18px;
+      --max:980px;
+      font-family:"Manrope", "Segoe UI", sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(246,200,182,.5), transparent 40%),
+        radial-gradient(circle at 85% 15%, rgba(199,216,249,.5), transparent 42%),
+        var(--bg);
+      min-height:100vh;
+    }
+
+    .wrap{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:42px 22px 70px;
+    }
+
+    header{
+      margin-bottom:26px;
+    }
+
+    .hero{
+      display:grid;
+      gap:16px;
+      padding:28px 30px;
+      border-radius:24px;
+      background:linear-gradient(135deg,#fff7f2,#f6f8ff);
+      border:1px solid rgba(31,42,55,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .hero__pill{
+      font-size:11px;
+      letter-spacing:.28px;
+      text-transform:uppercase;
+      background:#fff;
+      border-radius:999px;
+      padding:6px 14px;
+      border:1px solid rgba(31,42,55,.1);
+      width:fit-content;
+      color:#4b5563;
+    }
+
+    .hero__text h1{
+      font-family:"Fraunces","Times New Roman",serif;
+      font-size:30px;
+      margin:6px 0 8px;
+      letter-spacing:.2px;
+    }
+
+    .hero__text p{
+      margin:0;
+      color:#4b5563;
+      font-size:16px;
+      line-height:1.55;
+    }
+
+    form{
+      display:grid;
+      gap:18px;
+    }
+
+    section{
+      border-radius:var(--radius);
+      background:var(--card);
+      padding:26px;
+      box-shadow:var(--soft-shadow);
+      border:1px solid rgba(31,42,55,.06);
+      animation:rise .5s ease both;
+    }
+
+    @keyframes rise{
+      from{ opacity:0; transform:translateY(10px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .form-header{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .form-header h2{
+      margin:0;
+      font-size:20px;
+      letter-spacing:-.3px;
+    }
+
+    .form-header p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .progress{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:#6b7280;
+      font-size:12px;
+    }
+
+    .progress__bar{
+      width:120px;
+      height:6px;
+      border-radius:999px;
+      background:#efece6;
+      overflow:hidden;
+    }
+
+    .progress__fill{
+      display:block;
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#f6c8b6,#c7d8f9);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-top:12px;
+    }
+
+    @media(min-width:720px){
+      .grid.two{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    }
+
+    @media(max-width:980px){
+      .wrap{
+        padding:36px 18px 60px;
+      }
+
+      .hero{
+        padding:24px;
+      }
+    }
+
+    @media(max-width:760px){
+      .hero__text h1{
+        font-size:26px;
+      }
+
+      section{
+        padding:22px;
+      }
+
+      .progress__bar{
+        width:90px;
+      }
+    }
+
+    .grid .full{
+      grid-column:1 / -1;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      margin-bottom:6px;
+      color:#1f2937;
+    }
+
+    .hint{
+      font-size:12px;
+      color:#6b7280;
+      margin-top:6px;
+    }
+
+    input, select, textarea{
+      width:100%;
+      border-radius:14px;
+      border:1px solid var(--line);
+      padding:12px 14px;
+      font-size:15px;
+      font-family:inherit;
+      background:#fff;
+      transition:border .2s,box-shadow .2s;
+    }
+
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--focus);
+      box-shadow:0 0 0 3px rgba(91,124,255,.18);
+      outline:none;
+    }
+
+    .input-with-prefix{
+      display:flex;
+      align-items:center;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    .input-with-prefix .prefix-input{
+      padding:12px 12px;
+      background:#f7f4ee;
+      font-size:14px;
+      color:#1f2937;
+      border:none;
+      border-right:1px solid var(--line);
+      width:76px;
+    }
+
+    .input-with-prefix input{
+      border:none;
+      border-radius:0;
+      padding:12px;
+      min-width:0;
+    }
+
+    .checkbox-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .checkbox-row input{
+      width:auto;
+      margin-top:4px;
+    }
+
+    .status-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .status-choice{
+      border-radius:16px;
+      border:1px solid var(--line);
+      padding:14px 16px;
+      display:flex;
+      gap:10px;
+      background:#fff;
+      transition:border .2s,box-shadow .2s;
+    }
+
+    .status-choice strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:4px;
+    }
+
+    .status-choice span{
+      font-size:13px;
+      color:#6b7280;
+      line-height:1.4;
+    }
+
+    .status-choice input{
+      width:auto;
+      margin-top:2px;
+    }
+
+    .status-choice:hover,
+    .status-choice:focus-within{
+      border-color:var(--focus);
+      box-shadow:0 6px 18px rgba(91,124,255,.15);
+    }
+
+    .choice{
+      flex:1 1 180px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px 14px;
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      background:#fff;
+      transition:border .2s,box-shadow .2s;
+    }
+
+    .choice input{
+      width:auto;
+      margin-top:2px;
+    }
+
+    .choice strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:4px;
+    }
+
+    .choice span{
+      font-size:13px;
+      color:#6b7280;
+      line-height:1.45;
+    }
+
+    .choice:hover,
+    .choice:focus-within{
+      border-color:var(--focus);
+      box-shadow:0 6px 18px rgba(91,124,255,.12);
+    }
+
+    .divider{
+      height:1px;
+      background:var(--line);
+      margin:20px 0;
+    }
+
+    .note{
+      border-radius:16px;
+      border:1px solid rgba(246,200,182,.5);
+      background:rgba(255,246,241,.8);
+      padding:14px;
+      font-size:13px;
+      color:#5b4b43;
+      line-height:1.5;
+    }
+
+    .week-hint{
+      font-size:12px;
+      margin-top:6px;
+      color:#475569;
+    }
+
+    .week-hint.bad{
+      color:#b91c1c;
+    }
+
+    .hint.bad{
+      color:#b91c1c;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    button{
+      border:0;
+      border-radius:14px;
+      padding:13px 20px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .2s,box-shadow .2s;
+    }
+
+    button:focus-visible{
+      outline:2px solid rgba(91,124,255,.5);
+      outline-offset:2px;
+    }
+
+    .primary{
+      background:#f6d9cf;
+      color:#1f2937;
+      flex:1 1 240px;
+      box-shadow:0 10px 20px rgba(31,42,55,.12);
+    }
+
+    .primary:hover{
+      transform:translateY(-1px);
+      background:#f2cfc3;
+    }
+
+    .ghost{
+      background:#fff;
+      border:1px solid rgba(31,42,55,.1);
+      color:#1f2937;
+    }
+
+    .status{
+      margin-top:14px;
+      font-size:13px;
+      padding:12px 15px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+    }
+
+    .status.ok{
+      border-color: rgba(21,128,61,.4);
+      background: rgba(22,163,74,.1);
+      color:#14532d;
+    }
+
+    .status.bad{
+      border-color: rgba(220,38,38,.35);
+      background: rgba(239,68,68,.12);
+      color:#7f1d1d;
+    }
+
+    .hidden{ display:none; }
+
+    .req{ color:var(--bad); font-weight:700; }
+
+    footer{
+      margin-top:18px;
+      font-size:13px;
+      color:#6b7280;
+      line-height:1.5;
+    }
+
+    .tiny{
+      font-size:12px;
+      color:#6b7280;
+    }
+
+    .input-error{
+      border-color:#dc2626 !important;
+      box-shadow:0 0 0 3px rgba(220,38,38,.12);
+    }
+
+    .error-list{
+      margin-top:10px;
+      font-size:13px;
+      color:#b91c1c;
+      line-height:1.4;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero__text">
+        <p class="hero__pill" id="heroPill">Clinic registration</p>
+        <h1 id="heroTitle">Patient intake form</h1>
+        <p id="flowMessage">Please share a few details to complete your registration.</p>
+      </div>
+    </header>
+
+    <!--
+      Integration notes:
+      - Replace ACTION_URL with your Zoho endpoint (Zoho Forms / Zoho CRM Webform / custom API).
+      - Keep field names stable so your implementation person can map easily.
+      - You can pass clinic/location via URL param, e.g. ?clinic=Andheri or ?clinic=Wadala (QR codes can embed this).
+    -->
+    <form id="onboardingForm" method="post" action="ACTION_URL">
+      <!-- Hidden metadata -->
+      <input type="hidden" id="sourceField" name="source" value="qr_or_whatsapp" />
+      <input type="hidden" id="clinicLocation" name="clinic_location" value="" />
+      <input type="hidden" id="timestamp" name="submitted_at" value="" />
+
+      <!-- STEP 1: PATIENT DETAILS -->
+      <section class="card" aria-labelledby="patientDetailsTitle">
+        <div class="form-header">
+          <div>
+            <h2 id="patientDetailsTitle">Step 1 · Your details</h2>
+            <p>We use this to create your patient intake record.</p>
+          </div>
+          <div class="tiny">Required fields marked <span class="req">*</span></div>
+        </div>
+
+        <div class="grid two">
+          <div class="full">
+            <label for="clinicDisplay">Clinic / Source</label>
+            <input id="clinicDisplay" name="clinic_display" type="text" readonly />
+          </div>
+
+          <div>
+            <label for="firstName">First name <span class="req">*</span></label>
+            <input id="firstName" name="first_name" type="text" placeholder="First name" autocomplete="given-name" required />
+          </div>
+
+          <div>
+            <label for="lastName">Last name <span class="req">*</span></label>
+            <input id="lastName" name="last_name" type="text" placeholder="Last name" autocomplete="family-name" required />
+          </div>
+
+          <div>
+            <label for="dob">Date of birth <span class="req">*</span></label>
+            <input id="dob" name="date_of_birth" type="date" required />
+          </div>
+
+          <div>
+            <label for="ageField">Age (auto)</label>
+            <input id="ageField" type="text" disabled />
+          </div>
+
+          <div>
+            <label for="phone">WhatsApp mobile number <span class="req">*</span></label>
+            <div class="input-with-prefix">
+              <input id="countryCode" class="prefix-input" name="country_code" type="tel" inputmode="tel"
+                value="+91" autocomplete="tel-country-code" required pattern="\\+\\d{1,4}" />
+              <input id="phone" name="whatsapp_number" type="tel" inputmode="numeric"
+                placeholder="10-digit number" autocomplete="tel" required maxlength="10" pattern="\d{10}" />
+            </div>
+            <div id="phoneError" class="error-list hidden" aria-live="assertive"></div>
+          </div>
+
+          <div>
+            <label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" placeholder="Enter your email ID" autocomplete="email" required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+            <div id="formErrors" class="error-list hidden" aria-live="assertive"></div>
+          </div>
+
+          <div>
+            <label for="pincode">Residential PIN code <span class="req">*</span></label>
+            <input id="pincode" name="pincode" type="text" inputmode="numeric" placeholder="6-digit PIN" maxlength="6" required />
+            <div id="pincodeError" class="error-list hidden" aria-live="assertive"></div>
+          </div>
+
+          <div>
+            <label for="localityCity">Locality, City <span class="req">*</span></label>
+            <input id="localityCity" name="locality_city" type="text" placeholder="e.g., Borivali, Mumbai" required />
+            <div id="localityHint" class="hint"></div>
+          </div>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <h3 style="font-size:15px;margin:0 0 8px;">Current status</h3>
+          <div class="status-grid" role="radiogroup" aria-label="Current Status">
+            <label class="status-choice">
+              <input type="radio" name="current_status" value="Pregnant" required />
+              <div>
+                <strong>Pregnant</strong>
+                <span>Receive pregnancy guidance tailored by week.</span>
+              </div>
+            </label>
+
+            <label class="status-choice">
+              <input type="radio" name="current_status" value="Delivered" required />
+              <div>
+                <strong>Delivered in last 3 months</strong>
+                <span>Postpartum guidance based on delivery date.</span>
+              </div>
+            </label>
+
+            <label class="status-choice">
+              <input type="radio" name="current_status" value="Not Pregnant" required />
+              <div>
+                <strong>Not pregnant</strong>
+                <span>General women’s health updates every quarter.</span>
+              </div>
+            </label>
+          </div>
+
+        <div id="deliveredBlock" class="grid two hidden" style="margin-top:12px;">
+          <div>
+            <label for="deliveryDate">Delivery date <span class="req">*</span></label>
+            <input id="deliveryDate" name="delivery_date" type="date" />
+            <div id="deliveryHint" class="hint" aria-live="polite"></div>
+          </div>
+          <div>
+            <label for="deliveryMonths">Months since delivery (auto)</label>
+            <input id="deliveryMonths" type="text" disabled />
+            <div id="deliveryNotice" class="hint hidden" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <!-- Pregnant only -->
+        <div id="pregnantBlock" class="grid two hidden" style="margin-top:12px;">
+          <div>
+            <label for="lmp">First day of last menstrual period (LMP) <span class="req">*</span></label>
+            <input id="lmp" name="lmp_date" type="date" />
+            <div class="hint">Required only if you selected “Pregnant”.</div>
+            <div id="weekDisplay" class="hint week-hint" aria-live="polite"></div>
+          </div>
+          <div>
+            <label for="pregnancyWeeks">Weeks (auto)</label>
+            <input id="pregnancyWeeks" type="text" disabled />
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:12px;">
+          <div id="contentFormat" class="note">
+            <strong>Content format:</strong> We will personalize updates based on your current status.
+          </div>
+        </div>
+
+      </section>
+
+      <!-- STEP 2: CONSENT -->
+      <section class="card" aria-labelledby="consentTitle">
+        <div class="form-header">
+          <div>
+            <h2 id="consentTitle">Step 2 · WhatsApp consent</h2>
+            <p>Your choice controls whether we send WhatsApp updates.</p>
+          </div>
+          <div class="progress" aria-hidden="true">
+            <span class="tiny">Step 2 of 2</span>
+            <div class="progress__bar">
+              <span class="progress__fill"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="row" role="radiogroup" aria-label="WhatsApp Consent">
+            <label class="choice">
+              <input type="radio" name="whatsapp_consent" value="Yes" required />
+              <div>
+                <strong>Yes, keep me informed</strong>
+                <span>I agree to receive WhatsApp updates about reminders and reproductive health.</span>
+              </div>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="whatsapp_consent" value="No" required />
+              <div>
+                <strong>No, thank you</strong>
+                <span>Please skip WhatsApp messages for now.</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="note">
+            <strong>Privacy note:</strong> Your number stays within the clinic team and will be used for appointment-related communication only.
+          </div>
+
+          <div id="consentStatus" class="status hidden" aria-live="polite"></div>
+
+          <div class="actions">
+            <button id="submitBtn" class="primary" type="submit">Submit</button>
+            <button id="resetBtn" class="ghost" type="button">Reset</button>
+          </div>
+
+          <footer>
+            By submitting, you confirm the details are correct. You can stop WhatsApp messages anytime by replying “STOP”.
+          </footer>
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <script>
+    // Minimal JS to keep the form simple + safe (no pregnancy content unless consent is YES)
+    const form = document.getElementById("onboardingForm");
+    const consentStatus = document.getElementById("consentStatus");
+    const clinicLocation = document.getElementById("clinicLocation");
+    const sourceField = document.getElementById("sourceField");
+    const clinicDisplay = document.getElementById("clinicDisplay");
+    const ts = document.getElementById("timestamp");
+
+    const pregnantBlock = document.getElementById("pregnantBlock");
+    const deliveredBlock = document.getElementById("deliveredBlock");
+    const lmp = document.getElementById("lmp");
+    const deliveryDate = document.getElementById("deliveryDate");
+    const deliveryMonths = document.getElementById("deliveryMonths");
+    const deliveryHint = document.getElementById("deliveryHint");
+    const deliveryNotice = document.getElementById("deliveryNotice");
+    const dobInput = document.getElementById("dob");
+    const ageInput = document.getElementById("ageField");
+    const clinicMap = {
+      yashada: "Yashada Hospital",
+      cloudnine: "Cloudnine Hospital"
+    };
+    let currentClinicParam = "";
+    let currentClinicDisplay = "";
+    const weekDisplay = document.getElementById("weekDisplay");
+    const pregnancyWeeksInput = document.getElementById("pregnancyWeeks");
+    const heroMessage = document.getElementById("flowMessage");
+    const heroTitle = document.getElementById("heroTitle");
+    const heroPill = document.getElementById("heroPill");
+    const contentFormat = document.getElementById("contentFormat");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const countryCodeInput = document.getElementById("countryCode");
+    const pincodeInput = document.getElementById("pincode");
+    const pincodeError = document.getElementById("pincodeError");
+    const localityCityInput = document.getElementById("localityCity");
+    const localityHint = document.getElementById("localityHint");
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput = document.getElementById("lastName");
+    const requiredFields = [
+      {element: firstNameInput, label: "First name"},
+      {element: lastNameInput, label: "Last name"},
+      {element: dobInput, label: "Date of birth"},
+      {element: countryCodeInput, label: "Country code"},
+      {element: phoneInput, label: "WhatsApp mobile number"},
+      {element: emailInput, label: "Email"},
+      {element: pincodeInput, label: "Residential PIN code"},
+      {element: localityCityInput, label: "Locality, City"}
+    ];
+    const formErrors = document.getElementById("formErrors");
+    const phoneError = document.getElementById("phoneError");
+
+    function getParam(name){
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) || "";
+    }
+
+    function getClinicDisplayName(param){
+      if(!param) return "";
+      const key = param.trim().toLowerCase();
+      return clinicMap[key] || param;
+    }
+
+    function updateHeroMessage(){
+      if(!heroMessage) return;
+      const isClinic = !!(currentClinicParam || currentClinicDisplay);
+      const clinicLabel = currentClinicDisplay || currentClinicParam || "";
+      if(heroPill){
+        heroPill.textContent = isClinic ? "Clinic registration" : "Consent";
+      }
+      if(heroTitle){
+        heroTitle.textContent = isClinic ? "Patient intake form" : "WhatsApp consent";
+      }
+      heroMessage.textContent = isClinic
+        ? `We welcome you to ${clinicLabel || "the clinic"}. Please share a few details to complete your intake.`
+        : "Please confirm if you'd like to receive WhatsApp updates.";
+    }
+
+    function applyClinicFromUrl(){
+      const clinicParam = getParam("clinic");
+      currentClinicParam = clinicParam || "";
+      currentClinicDisplay = getClinicDisplayName(clinicParam);
+      ts.value = new Date().toISOString();
+      const clinicValue = currentClinicDisplay || currentClinicParam || "";
+      clinicLocation.value = clinicValue;
+      if(clinicDisplay){
+        clinicDisplay.value = clinicValue || "WhatsApp";
+      }
+      if(sourceField){
+        sourceField.value = clinicValue ? "clinic" : "whatsapp";
+      }
+      updateHeroMessage();
+      if(countryCodeInput && !countryCodeInput.value){
+        countryCodeInput.value = "+91";
+      }
+    }
+
+    applyClinicFromUrl();
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+    const countryCodePattern = /^\+\d{1,4}$/;
+
+    function clearFieldErrors(){
+      requiredFields.forEach(field => field.element.classList.remove("input-error"));
+      formErrors.textContent = "";
+      formErrors.classList.add("hidden");
+      if(pincodeError){
+        pincodeError.textContent = "";
+        pincodeError.classList.add("hidden");
+      }
+      if(localityHint){
+        localityHint.textContent = "";
+      }
+      if(phoneError){
+        phoneError.textContent = "";
+        phoneError.classList.add("hidden");
+      }
+    }
+
+    function validateFields(){
+      clearFieldErrors();
+      const missing = [];
+      requiredFields.forEach(field => {
+        if(field.group && field.group.classList.contains("hidden")){
+          return;
+        }
+        const value = (field.element.value || "").trim();
+        if(!value){
+          missing.push(field.label);
+          field.element.classList.add("input-error");
+        }
+      });
+      if(missing.length){
+        formErrors.textContent = `Please complete: ${missing.join(", ")}`;
+        formErrors.classList.remove("hidden");
+        return false;
+      }
+      const emailValue = (emailInput.value || "").trim();
+      if(emailValue && !emailPattern.test(emailValue)){
+        emailInput.classList.add("input-error");
+        formErrors.textContent = "Please enter a valid email address.";
+        formErrors.classList.remove("hidden");
+        return false;
+      }
+      const countryCodeValue = (countryCodeInput.value || "").trim();
+      if(!countryCodePattern.test(countryCodeValue)){
+        countryCodeInput.classList.add("input-error");
+        formErrors.textContent = "Please enter a valid country code (e.g., +91).";
+        formErrors.classList.remove("hidden");
+        return false;
+      }
+      const phoneValue = (phoneInput.value || "").replace(/\D/g,"");
+      if(phoneValue.length !== 10){
+        phoneInput.classList.add("input-error");
+        if(phoneError){
+          phoneError.textContent = "Please enter a valid 10-digit WhatsApp mobile number.";
+          phoneError.classList.remove("hidden");
+        }
+        return false;
+      }
+      const pinValue = (pincodeInput.value || "").trim();
+      if(pinValue.length !== 6){
+        pincodeInput.classList.add("input-error");
+        if(pincodeError){
+          pincodeError.textContent = "Please enter a valid 6-digit PIN code.";
+          pincodeError.classList.remove("hidden");
+        }
+        return false;
+      }
+      if(deliveredBlock && !deliveredBlock.classList.contains("hidden")){
+        const monthsText = (deliveryMonths.value || "").replace(/\D/g,"");
+        const monthsValue = parseInt(monthsText || "0", 10);
+        if(monthsValue > 3){
+          if(deliveryNotice){
+            deliveryNotice.textContent = "More than 3 months. Please select Not pregnant.";
+            deliveryNotice.classList.remove("hidden");
+            deliveryNotice.classList.add("bad");
+          }
+          formErrors.textContent = "Delivery date exceeds 3 months. Please select Not pregnant.";
+          formErrors.classList.remove("hidden");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    requiredFields.forEach(field => {
+      field.element.addEventListener("input", () => {
+        field.element.classList.remove("input-error");
+        if(requiredFields.every(item => (item.element.value || "").trim())){
+          formErrors.classList.add("hidden");
+        }
+      });
+    });
+
+    emailInput.addEventListener("input", () => {
+      if(emailPattern.test((emailInput.value || "").trim())){
+        formErrors.classList.add("hidden");
+        emailInput.classList.remove("input-error");
+      }
+    });
+
+    pincodeInput.addEventListener("input", () => {
+      const digits = pincodeInput.value.replace(/\D/g,"").slice(0,6);
+      if(pincodeInput.value !== digits){
+        pincodeInput.value = digits;
+      }
+      if(digits.length === 6){
+        const isMumbaiPin = /^400/.test(digits);
+        if(isMumbaiPin){
+          if(localityHint){
+            localityHint.textContent = "Add your locality before the city, e.g., Borivali, Mumbai.";
+          }
+          if(pincodeError){
+            pincodeError.classList.add("hidden");
+          }
+        } else {
+          if(localityCityInput){
+            localityCityInput.value = "";
+          }
+          if(localityHint){
+            localityHint.textContent = "Please enter locality and city (e.g., Andheri, Mumbai).";
+          }
+        }
+      } else {
+        if(localityCityInput){
+          localityCityInput.value = "";
+        }
+        if(pincodeError){
+          pincodeError.classList.add("hidden");
+        }
+        if(localityHint){
+          localityHint.textContent = "";
+        }
+      }
+    });
+
+    phoneInput.addEventListener("input", () => {
+      const digits = phoneInput.value.replace(/\D/g,"").slice(0,10);
+      if(phoneInput.value !== digits){
+        phoneInput.value = digits;
+      }
+      if(digits.length === 10){
+        phoneInput.classList.remove("input-error");
+        if(phoneError){
+          phoneError.classList.add("hidden");
+        }
+      }
+    });
+
+    emailInput.addEventListener("blur", () => {
+      const emailValue = (emailInput.value || "").trim();
+      if(!emailValue){
+        return;
+      }
+      if(!emailPattern.test(emailValue)){
+        emailInput.classList.add("input-error");
+        formErrors.textContent = "Please enter a valid email address.";
+        formErrors.classList.remove("hidden");
+      } else {
+        emailInput.classList.remove("input-error");
+      }
+    });
+
+    phoneInput.addEventListener("blur", () => {
+      const phoneValue = (phoneInput.value || "").replace(/\D/g,"");
+      if(!phoneValue){
+        return;
+      }
+      if(phoneValue.length !== 10){
+        phoneInput.classList.add("input-error");
+        if(phoneError){
+          phoneError.textContent = "Please enter a valid 10-digit WhatsApp mobile number.";
+          phoneError.classList.remove("hidden");
+        }
+      } else {
+        phoneInput.classList.remove("input-error");
+        if(phoneError){
+          phoneError.classList.add("hidden");
+        }
+      }
+    });
+
+    countryCodeInput.addEventListener("input", () => {
+      const filtered = countryCodeInput.value.replace(/[^\d+]/g,"");
+      if(countryCodeInput.value !== filtered){
+        countryCodeInput.value = filtered;
+      }
+    });
+
+    countryCodeInput.addEventListener("blur", () => {
+      const code = (countryCodeInput.value || "").trim();
+      if(!code){
+        return;
+      }
+      if(!countryCodePattern.test(code)){
+        countryCodeInput.classList.add("input-error");
+        formErrors.textContent = "Please enter a valid country code (e.g., +91).";
+        formErrors.classList.remove("hidden");
+      } else {
+        countryCodeInput.classList.remove("input-error");
+      }
+    });
+
+
+
+    const maxLmpWeeks = 52;
+    const pregnancyWeeks = 40;
+
+    function updateLmpWeeks(){
+      if(!lmp.value){
+        weekDisplay.textContent = "";
+        weekDisplay.classList.remove("bad");
+        if(pregnancyWeeksInput){
+          pregnancyWeeksInput.value = "";
+        }
+        return;
+      }
+      const now = new Date();
+      const selected = new Date(lmp.value);
+      if(isNaN(selected)){
+        weekDisplay.textContent = "";
+        weekDisplay.classList.remove("bad");
+        if(pregnancyWeeksInput){
+          pregnancyWeeksInput.value = "";
+        }
+        return;
+      }
+      const diffDays = Math.floor((now - selected) / (1000*60*60*24));
+      if(diffDays < 0){
+        weekDisplay.textContent = "LMP cannot be in the future.";
+        weekDisplay.classList.add("bad");
+        if(pregnancyWeeksInput){
+          pregnancyWeeksInput.value = "";
+        }
+        return;
+      }
+      const weekCount = Math.floor(diffDays / 7) + 1;
+      if(weekCount > maxLmpWeeks){
+        weekDisplay.textContent = "We only accept LMP dates within the last 12 months.";
+        weekDisplay.classList.add("bad");
+        if(pregnancyWeeksInput){
+          pregnancyWeeksInput.value = "";
+        }
+        return;
+      }
+
+      weekDisplay.classList.remove("bad");
+      if(weekCount <= pregnancyWeeks){
+        weekDisplay.textContent = "";
+        if(pregnancyWeeksInput){
+          pregnancyWeeksInput.value = `${weekCount} weeks`;
+        }
+      } else {
+        const postpartumWeek = weekCount - pregnancyWeeks;
+        weekDisplay.textContent = "";
+        if(pregnancyWeeksInput){
+          pregnancyWeeksInput.value = `Postpartum wk ${postpartumWeek}`;
+        }
+      }
+    }
+
+    function updateDeliveryMonths(){
+      if(!deliveryDate.value){
+        deliveryMonths.value = "";
+        deliveryHint.textContent = "";
+        deliveryHint.classList.remove("week-hint","bad");
+        if(deliveryNotice){
+          deliveryNotice.textContent = "";
+          deliveryNotice.classList.add("hidden","bad");
+        }
+        return;
+      }
+      const now = new Date();
+      const delivered = new Date(deliveryDate.value);
+      if(isNaN(delivered) || delivered > now){
+        deliveryMonths.value = "";
+        deliveryHint.textContent = "Delivery date cannot be in the future.";
+        deliveryHint.classList.add("bad");
+        if(deliveryNotice){
+          deliveryNotice.textContent = "";
+          deliveryNotice.classList.add("hidden","bad");
+        }
+        return;
+      }
+      const months = Math.floor((now - delivered) / (1000*60*60*24*30.44));
+      deliveryMonths.value = `${months} months`;
+      if(months > 3){
+        if(deliveryNotice){
+          deliveryNotice.textContent = "More than 3 months. Please select Not pregnant.";
+          deliveryNotice.classList.remove("hidden");
+          deliveryNotice.classList.add("bad");
+        }
+      } else {
+        if(deliveryNotice){
+          deliveryNotice.textContent = "";
+          deliveryNotice.classList.add("hidden");
+          deliveryNotice.classList.remove("bad");
+        }
+        deliveryHint.textContent = "";
+        deliveryHint.classList.remove("bad");
+      }
+    }
+
+    function setConsentUI(val){
+      consentStatus.classList.remove("hidden","ok","bad");
+      if(val === "Yes"){
+        consentStatus.textContent = "Consent received. Thank you for sharing your details.";
+        consentStatus.classList.add("ok");
+      } else if(val === "No"){
+        consentStatus.textContent = "No problem. We will not send WhatsApp messages.";
+        consentStatus.classList.add("bad");
+      } else {
+        consentStatus.classList.add("hidden");
+      }
+    }
+
+    function calculateAge(dobValue){
+      const today = new Date();
+      const dob = new Date(dobValue);
+      if(isNaN(dob)) return -1;
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if(monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())){
+        age--;
+      }
+      return age;
+    }
+
+    function updateAgeDisplay(){
+      if(!dobInput.value){
+        if(ageInput){
+          ageInput.value = "";
+        }
+        return;
+      }
+      const age = calculateAge(dobInput.value);
+      if(ageInput){
+        ageInput.value = age >= 0 ? `${age}` : "";
+      }
+    }
+
+    function updateContentFormat(status){
+      if(!contentFormat) return;
+      if(status === "Pregnant"){
+        contentFormat.innerHTML = "<strong>Content format:</strong> Weekly pregnancy guidance and relevant curated video links.";
+      } else if(status === "Delivered"){
+        contentFormat.innerHTML = "<strong>Content format:</strong> Early postpartum guidance based on delivery date.";
+      } else if(status === "Not Pregnant"){
+        contentFormat.innerHTML = "<strong>Content format:</strong> Quarterly women’s health updates and preventive care reminders.";
+      } else {
+        contentFormat.innerHTML = "<strong>Content format:</strong> We will personalize updates based on your current status.";
+      }
+    }
+
+    // Consent change handler
+    form.addEventListener("change", (e) => {
+      if(e.target && e.target.name === "whatsapp_consent"){
+        setConsentUI(e.target.value);
+      }
+
+      if(e.target && e.target.name === "current_status"){
+        const status = e.target.value;
+        if(status === "Pregnant"){
+          pregnantBlock.classList.remove("hidden");
+          deliveredBlock.classList.add("hidden");
+          lmp.required = true;
+          deliveryDate.required = false;
+          deliveryDate.value = "";
+          deliveryMonths.value = "";
+          deliveryHint.textContent = "";
+        } else if(status === "Delivered"){
+          deliveredBlock.classList.remove("hidden");
+          pregnantBlock.classList.add("hidden");
+          deliveryDate.required = true;
+          lmp.required = false;
+          lmp.value = "";
+          updateLmpWeeks();
+        } else {
+          pregnantBlock.classList.add("hidden");
+          deliveredBlock.classList.add("hidden");
+          lmp.required = false;
+          deliveryDate.required = false;
+          lmp.value = "";
+          deliveryDate.value = "";
+          deliveryMonths.value = "";
+          deliveryHint.textContent = "";
+        }
+        updateContentFormat(status);
+      }
+    });
+
+    dobInput.addEventListener("change", updateAgeDisplay);
+    lmp.addEventListener("change", updateLmpWeeks);
+    deliveryDate.addEventListener("change", updateDeliveryMonths);
+    updateAgeDisplay();
+    updateLmpWeeks();
+    updateContentFormat();
+
+    // Reset
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      form.reset();
+      consentStatus.classList.add("hidden");
+      pregnantBlock.classList.add("hidden");
+      deliveredBlock.classList.add("hidden");
+      lmp.required = false;
+      deliveryDate.required = false;
+      applyClinicFromUrl();
+      updateAgeDisplay();
+      updateLmpWeeks();
+      updateContentFormat();
+      updateDeliveryMonths();
+      if(countryCodeInput){
+        countryCodeInput.value = "+91";
+      }
+      if(pincodeInput){
+        pincodeInput.value = "";
+      }
+      if(localityCityInput){
+        localityCityInput.value = "";
+      }
+      if(localityHint){
+        localityHint.textContent = "";
+      }
+      if(pincodeError){
+        pincodeError.classList.add("hidden");
+      }
+    });
+
+    // Basic phone clean-up (optional)
+    form.addEventListener("submit", (e) => {
+      const consent = (form.querySelector('input[name="whatsapp_consent"]:checked') || {}).value;
+      if(consent !== "Yes"){
+        e.preventDefault();
+        setConsentUI(consent || "");
+        return;
+      }
+
+      if(!validateFields()){
+        e.preventDefault();
+        return;
+      }
+
+      const phone = phoneInput;
+      const digits = (phone.value || "").replace(/\D/g,"");
+      if(digits.length !== 10){
+        e.preventDefault();
+        alert("Please enter a valid 10-digit WhatsApp mobile number.");
+        phone.classList.add("input-error");
+        if(phoneError){
+          phoneError.textContent = "Please enter a valid 10-digit WhatsApp mobile number.";
+          phoneError.classList.remove("hidden");
+        }
+        phone.focus();
+        return;
+      }
+      if(deliveredBlock && !deliveredBlock.classList.contains("hidden")){
+        const monthsText = (deliveryMonths.value || "").replace(/\D/g,"");
+        const monthsValue = parseInt(monthsText || "0", 10);
+        if(monthsValue > 3){
+          e.preventDefault();
+          if(deliveryNotice){
+            deliveryNotice.textContent = "More than 3 months. Please select Not pregnant.";
+            deliveryNotice.classList.remove("hidden");
+            deliveryNotice.classList.add("bad");
+          }
+          deliveryDate.classList.add("input-error");
+          return;
+        }
+      }
+      const code = (countryCodeInput.value || "+91").trim();
+      phone.value = `${code}${digits}`;
+      phone.classList.remove("input-error");
+
+    });
+  </script>
+</body>
+</html>

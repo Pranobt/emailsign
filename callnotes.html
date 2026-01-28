@@ -18,47 +18,84 @@ Copy the variant you prefer into its own file for use.
   <title>Lead Notes — Split‑Screen</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --green: #10a37f;
-      --green-dark: #0e8c6b;
-      --bg: #f0fdf9;
+      --accent: #0f766e;
+      --accent-dark: #0a5d56;
+      --accent-soft: #dcf8f1;
+      --bg: #f5f3ef;
       --card: #ffffff;
-      --text: #202123;
-      --muted: #6b7280;
+      --card-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 16px 34px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.05);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 242, 217, 0.9) 0%, rgba(255, 242, 217, 0) 40%),
+        radial-gradient(circle at 85% 15%, rgba(224, 242, 254, 0.9) 0%, rgba(224, 242, 254, 0) 45%),
+        linear-gradient(120deg, #f5f3ef 0%, #eef6f3 100%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 2rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, rgba(15, 118, 110, 0.08) 0 1px, transparent 1px 10px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
     }
     .wrapper {
       display: grid;
-      grid-template-columns: 1fr 320px;
+      grid-template-columns: 1fr 420px;
       gap: 32px;
       width: 100%;
-      max-width: 1000px;
+      max-width: 1200px;
+      position: relative;
+      z-index: 1;
     }
     /* CARD */
     .card {
       background: var(--card);
       border-radius: 16px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
       padding: 32px;
+      animation: rise 0.55s ease both;
     }
     h1 {
       margin: 0 0 24px;
-      font-size: 1.6rem;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      font-size: 1.8rem;
       font-weight: 600;
-      color: #222;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .version-pill {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
     }
     label, legend { font-weight: 600; display: block; margin-top: 16px; }
     .required::after { content: ' *'; color: red; }
@@ -68,15 +105,36 @@ Copy the variant you prefer into its own file for use.
     textarea,
     input[type=url] {
       width: 100%;
-      padding: 10px 12px;
+      padding: 11px 12px;
       margin-top: 8px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--border);
       border-radius: 8px;
       font-size: 14px;
+      background: var(--card-2);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    fieldset { border: none; padding: 0; margin: 0 0 20px; }
-    .radio { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-    .radio label { font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    textarea { resize: vertical; }
+    fieldset { border: none; padding: 0; margin: 0 0 18px; }
+    .question-block { box-shadow: none; }
+    .radio { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 8px; }
+    .radio label {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+    .radio .money-input { grid-column: 1 / -1; }
+    .radio label:hover {
+      border-color: rgba(15, 118, 110, 0.45);
+      transform: translateY(-1px);
+    }
+    input[type="radio"] { accent-color: var(--accent); }
     .btn, .copy-btn {
       border: none;
       font-family: inherit;
@@ -87,64 +145,80 @@ Copy the variant you prefer into its own file for use.
       border-radius: 10px;
       transition: background 0.2s;
     }
-    .btn { background: var(--green); color: #fff; margin-top: 32px; }
-    .btn:hover { background: var(--green-dark); }
-    .copy-btn { background: #f5f6f7; color: #52525b; margin-top: 12px; font-size: 14px; }
-    .copy-btn:hover { background: #e5e7eb; }
-    .copy-btn.copied { background: var(--green); color: #fff; }
+    .btn {
+      background: linear-gradient(135deg, var(--accent), #14b8a6);
+      color: #fff;
+      margin-top: 28px;
+      box-shadow: 0 14px 24px rgba(15, 118, 110, 0.22);
+    }
+    .btn:hover { background: linear-gradient(135deg, var(--accent-dark), #0d9488); }
+    .copy-btn { background: #f1f5f9; color: #334155; margin-top: 12px; font-size: 14px; }
+    .copy-btn:hover { background: #e2e8f0; }
+    .copy-btn.copied { background: var(--accent); color: #fff; }
     pre#output {
       margin-top: 28px;
       padding: 16px;
-      background: #eef2f5;
+      background: #f1f5f9;
       border-radius: 10px;
       font-size: 14px;
       white-space: pre-wrap;
       word-break: break-word;
+      border: 1px dashed var(--border);
     }
     .hidden { display: none; }
-    input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-visible, .copy-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    .btn:focus-visible,
+    .copy-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15);
+    }
 
-    /*  SIDEBAR NOTES  */
-    aside {
+    /*  SIDEBAR BOXES  */
+    aside.sidebar {
       position: sticky;
       top: 24px;
       align-self: start;
-      background: var(--card);
-      padding: 24px 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 14px rgba(0,0,0,.06);
-      overflow: auto;
-      max-height: calc(100vh - 48px);
+      display: grid;
+      gap: 16px;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      overflow: visible;
+      max-height: none;
     }
-    aside h2 { margin: 0 0 18px; font-size: 1.25rem; font-weight: 600; }
+    .side-card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      animation: rise 0.55s ease both;
+      font-size: 14px;
+    }
+    .side-card:nth-child(2) { animation-delay: 0.08s; }
+    .side-card:nth-child(3) { animation-delay: 0.16s; }
+    .side-card h2,
+    .side-card h3 {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
     .note {
       margin-bottom: 16px;
-      font-size: 13.5px;
       line-height: 1.4;
       color: var(--muted);
     }
     .note strong { color: var(--text); }
-    .sidebar-section {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid #d1d5db;
-      font-size: 13.5px;
-      color: var(--muted);
-    }
-    .sidebar-section strong {
-      display: block;
-      margin-bottom: 12px;
-      color: var(--text);
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    .sidebar-section ol {
+    .side-card ol {
       padding-left: 20px;
       margin: 0;
     }
-    .sidebar-section ol li {
-      margin-bottom: 8px;
-    }
+    .side-card ol li { margin-bottom: 8px; }
 
     /*  Custom textarea reveal  */
     #helpDetailsWrap { display: none; }
@@ -152,16 +226,16 @@ Copy the variant you prefer into its own file for use.
     /*  MOBILE  */
     @media (max-width: 880px) {
       .wrapper { grid-template-columns: 1fr; max-width: 620px; }
-      aside { position: static; max-height: none; margin-top: 24px; }
+      aside.sidebar { position: static; margin-top: 24px; }
     }
     /* Tooltip styling for info icon */
     .info-icon {
       display: inline-block;
       margin-left: 6px;
-      color: var(--green-dark);
+      color: var(--accent-dark);
       font-weight: 600;
       cursor: help;
-      border-bottom: 1px dotted var(--green-dark);
+      border-bottom: 1px dotted var(--accent-dark);
       font-size: 0.9em;
       position: relative;
     }
@@ -186,32 +260,47 @@ Copy the variant you prefer into its own file for use.
       pointer-events: none;
       transition: opacity 0.15s ease-in-out;
     }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <!-- =====================  FORM  ======================= -->
     <div class="card">
-      <h1>Lead Qualification <span style="font-size:0.9rem;font-weight:400;">v0.2</span></h1>
+      <h1>Lead Qualification <span class="version-pill">v0.3</span></h1>
       <form id="leadForm" novalidate>
-        <label class="required" for="callerName">Caller Name</label>
-        <input type="text" id="callerName" placeholder="e.g. Pranav Kumar, Vishal Kadganchi" required />
+        <fieldset class="question-block">
+          <legend class="required">Caller Name</legend>
+          <div class="radio">
+            <label><input type="radio" name="callerName" value="Pranav Kumar" required />Pranav Kumar</label>
+            <label><input type="radio" name="callerName" value="David Fernandes" />David Fernandes</label>
+            <label><input type="radio" name="callerName" value="Custom" />Custom name</label>
+          </div>
+          <div id="callerNameCustomWrap" class="hidden">
+            <input type="text" id="callerNameCustom" placeholder="Enter caller name" />
+          </div>
+        </fieldset>
 
-        <label class="required" for="helpWith">Lead Needs Help With</label>
-        <select id="helpWith" required>
-          <option value="" disabled selected>Select an option</option>
-          <option value="Financial Planning and Investment Advice">Financial Planning and Investment Advice</option>
-          <option value="Tax Planning">Tax Planning</option>
-          <option value="Portfolio Review">Portfolio Review</option>
-          <option value="Overall Investment Advice (Wealth Management)">Overall Investment Advice (Wealth Management)</option>
-          <option value="Other">Other (specify)</option>
-        </select>
-        <!-- Custom reply textarea -->
-        <div id="helpDetailsWrap">
-          <textarea id="helpDetails" rows="3" placeholder="Describe what the lead is looking for…"></textarea>
+        <div class="question-block">
+          <label class="required" for="helpWith">Lead Needs Help With</label>
+          <select id="helpWith" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="Financial Planning and Investment Advice">Financial Planning and Investment Advice</option>
+            <option value="Tax Planning">Tax Planning</option>
+            <option value="Portfolio Review">Portfolio Review</option>
+            <option value="Overall Investment Advice (Wealth Management)">Overall Investment Advice (Wealth Management)</option>
+            <option value="Other">Other (specify)</option>
+          </select>
+          <!-- Custom reply textarea -->
+          <div id="helpDetailsWrap">
+            <textarea id="helpDetails" rows="3" placeholder="Describe what the lead is looking for…"></textarea>
+          </div>
         </div>
 
-        <fieldset>
+        <fieldset class="question-block">
           <legend class="required">Annual Income</legend>
           <div class="radio">
             <label><input type="radio" name="income" value="Less than ₹15 L" required />Less than ₹15 L</label>
@@ -224,7 +313,7 @@ Copy the variant you prefer into its own file for use.
           </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset class="question-block">
           <legend class="required">Current Portfolio Size (Mutual Funds, Equity Stocks, and FD)</legend>
           <div class="radio">
             <label><input type="radio" name="portfolio" value="Less than ₹15 L" required />Less than ₹15 L</label>
@@ -237,14 +326,33 @@ Copy the variant you prefer into its own file for use.
           </div>
         </fieldset>
 
-        <label class="required" for="profession">Profession</label>
-        <input type="text" id="profession" placeholder="e.g. Doctor, Manager, CXO" required />
+        <div class="question-block">
+          <label class="required" for="profession">Profession</label>
+          <input type="text" id="profession" placeholder="e.g. Doctor, Manager, CXO" required />
+        </div>
 
-        <label for="linkedin">Lead's LinkedIn Profile URL <span class="info-icon" data-tooltip="Don’t ask the lead. First search LinkedIn or copy from CRM.">(i)</span></label>
-        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username" />
+        <div class="question-block">
+          <label for="linkedin">Lead's LinkedIn Profile URL <span class="info-icon" data-tooltip="Don’t ask the lead. First search LinkedIn or copy from CRM.">(i)</span></label>
+          <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username" />
+        </div>
 
-        <label class="required" for="pain">What is the problem you are facing right now that you want to solve as soon as possible?</label>
-        <textarea id="pain" rows="3" placeholder="e.g. Unsure how much to invest via SIP vs. goals" required></textarea>
+        <fieldset class="question-block">
+          <legend class="required">Is the lead a competitor?</legend>
+          <div class="radio">
+            <label><input type="radio" name="competitor" value="Yes" required />Yes</label>
+            <label><input type="radio" name="competitor" value="No" />No</label>
+            <label><input type="radio" name="competitor" value="Could not find" />Could not find</label>
+          </div>
+          <div id="competitorUrlWrap" class="hidden">
+            <label class="required" for="competitorUrl">If yes, enter the competitor URL to confirm</label>
+            <input type="url" id="competitorUrl" placeholder="https://competitor.com" />
+          </div>
+        </fieldset>
+
+        <div class="question-block">
+          <label class="required" for="pain">What is the problem you are facing right now that you want to solve as soon as possible?</label>
+          <textarea id="pain" rows="3" placeholder="e.g. Unsure how much to invest via SIP vs. goals" required></textarea>
+        </div>
 
         <button type="button" class="btn" id="generate">Generate CRM Notes</button>
       </form>
@@ -254,20 +362,22 @@ Copy the variant you prefer into its own file for use.
     </div>
 
     <!-- =====================  SIDEBAR  ===================== -->
-    <aside>
-      <h2>Caller Script</h2>
-      <p class="note"><strong>Overall script (before questions)</strong></p>
-      <ol class="note" style="padding-left:20px; margin:0 0 12px;">
-        <li>Good morning, I'm <strong><span id="callerNamePreview">[Your Name]</span></strong>, calling on behalf of Finnovate.</li>
-        <li>I'm following up on the form you filled on LinkedIn regarding your FIRE number / Retirement Planning.</li>
-        <li>Would you be available for a 1‑on‑1 consultation with our certified financial experts?</li>
-        <li>When can I schedule the meeting?</li>
-        <li>Great — I will schedule it for you.</li>
-        <li>I have just a few questions to pass on to the team so they can prepare well before the meet.</li>
-      </ol>
+    <aside class="sidebar">
+      <section class="side-card">
+        <h2>Caller Script</h2>
+        <p class="note"><strong>Overall script (before questions)</strong></p>
+        <ol class="note" style="padding-left:20px; margin:0 0 12px;">
+          <li>Good morning, I'm <strong><span id="callerNamePreview">[Your Name]</span></strong>, calling on behalf of Finnovate.</li>
+          <li>I'm following up on the form you filled on LinkedIn regarding your FIRE number / Retirement Planning.</li>
+          <li>Would you be available for a 1‑on‑1 consultation with our certified financial experts?</li>
+          <li>When can I schedule the meeting?</li>
+          <li>Great — I will schedule it for you.</li>
+          <li>I have just a few questions to pass on to the team so they can prepare well before the meet.</li>
+        </ol>
+      </section>
 
-      <div class="sidebar-section">
-        <strong>Questions to ask</strong>
+      <section class="side-card">
+        <h3>Questions to ask</h3>
         <ol>
           <li><strong>Lead Needs</strong>: "Please tell me what you need help with so we can serve you better."</li>
           <li><strong>Annual Income</strong>: "Which range best describes your annual household income? A ballpark is fine."</li>
@@ -275,16 +385,16 @@ Copy the variant you prefer into its own file for use.
           <li><strong>Profession</strong>: "Could you tell me your profession or role?"</li>
           <li><strong>Key Challenge</strong>: "What problem are you facing right now that you want to solve as soon as possible?"</li>
         </ol>
-      </div>
+      </section>
 
-      <div class="sidebar-section">
-        <strong>How to find LinkedIn URL (internal)</strong>
+      <section class="side-card">
+        <h3>How to find LinkedIn URL (internal)</h3>
         <ol>
           <li>First check if lead came from LinkedIn form – if yes, copy URL from CRM directly.</li>
           <li>Otherwise, use lead’s email / phone / city from Facebook form to search LinkedIn.</li>
           <li>Manually copy‑paste the profile URL into the form (not asked on call).</li>
         </ol>
-      </div>
+      </section>
     </aside>
   </div>
 
@@ -313,6 +423,10 @@ Copy the variant you prefer into its own file for use.
     const helpWithSel  = $('#helpWith');
     const helpDetailsW = $('#helpDetailsWrap');
     const helpDetails  = $('#helpDetails');
+    const competitorUrlWrap = $('#competitorUrlWrap');
+    const competitorUrlInput = $('#competitorUrl');
+    const callerNameCustomWrap = document.getElementById('callerNameCustomWrap');
+    const callerNameCustom = document.getElementById('callerNameCustom');
     const callerNamePreview = document.getElementById('callerNamePreview');
 
     // Show / hide custom number fields
@@ -362,16 +476,50 @@ Copy the variant you prefer into its own file for use.
       }
     });
 
-    // Mirror caller name into the sidebar script preview
-    $('#callerName').addEventListener('input', (e) => {
-      const v = e.target.value.trim();
-      callerNamePreview.textContent = v ? v : '[Your Name]';
+    // Show competitor URL when "Yes" selected
+    document.querySelectorAll('input[name="competitor"]').forEach(el => {
+      el.addEventListener('change', (e) => {
+        if (e.target.value === 'Yes') {
+          competitorUrlWrap.classList.remove('hidden');
+          competitorUrlInput.required = true;
+        } else {
+          competitorUrlWrap.classList.add('hidden');
+          competitorUrlInput.required = false;
+          competitorUrlInput.value = '';
+        }
+      });
     });
+
+    // Caller name selector + custom input
+    const updateCallerNamePreview = () => {
+      const selected = document.querySelector('input[name="callerName"]:checked');
+      const selectedVal = selected ? selected.value : '';
+      const custom = callerNameCustom.value.trim();
+      const name = selectedVal === 'Custom' ? custom : selectedVal;
+      callerNamePreview.textContent = name ? name : '[Your Name]';
+    };
+    document.querySelectorAll('input[name="callerName"]').forEach(el => {
+      el.addEventListener('change', (e) => {
+        if (e.target.value === 'Custom') {
+          callerNameCustomWrap.classList.remove('hidden');
+          callerNameCustom.required = true;
+        } else {
+          callerNameCustomWrap.classList.add('hidden');
+          callerNameCustom.required = false;
+          callerNameCustom.value = '';
+        }
+        updateCallerNamePreview();
+      });
+    });
+    callerNameCustom.addEventListener('input', updateCallerNamePreview);
     // Generate note
     $('#generate').addEventListener('click', () => {
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
-      const caller     = $('#callerName').value.trim() || 'Tele‑Caller';
+      const callerSelectedInput = document.querySelector('input[name="callerName"]:checked');
+      const callerSelected = callerSelectedInput ? callerSelectedInput.value : '';
+      const callerCustom = callerNameCustom.value.trim();
+      const caller = (callerSelected === 'Custom' ? callerCustom : callerSelected) || 'Tele‑Caller';
       let need         = helpWithSel.value;
       if (need === 'Other') need += ` — ${helpDetails.value.trim()}`;
       // const income     = form.elements['income'].value;
@@ -388,6 +536,8 @@ Copy the variant you prefer into its own file for use.
 
       const profession = $('#profession').value.trim();
       const linkedin = $('#linkedin').value.trim();
+      const competitor = form.elements['competitor'].value;
+      const competitorUrl = competitor === 'Yes' ? competitorUrlInput.value.trim() : '';
       // const timeline   = form.elements['timeline'].value;
       const pain       = $('#pain').value.trim();
       const timestamp  = new Date().toLocaleString('en-IN', { hour12: false });
@@ -395,7 +545,9 @@ Copy the variant you prefer into its own file for use.
       const note = `${caller} | ${timestamp}\n\n` +
         `Need      : ${need}\n` +
         `Profession: ${profession}\n` +
-        `LinkedIn  : ${linkedin}\n` +
+        (linkedin ? `LinkedIn  : ${linkedin}\n` : '') +
+        `Competitor: ${competitor}\n` +
+        (competitorUrl ? `Competitor URL: ${competitorUrl}\n` : '') +
         `Income    : ${income}\n` +
         `Portfolio : ${portfolio}\n\n` +
         `Key Challenge → ${pain}`;

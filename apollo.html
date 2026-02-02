@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finnovate: Financial Literacy RTM Proposal for Apollo Hospital</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        :root {
+            --ink: #1d2935;
+            --muted: #52606d;
+            --accent: #0b8457;
+            --accent-dark: #07543a;
+            --accent-soft: #e5f3ed;
+            --line: #d6e2e8;
+            --paper: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 0 32px;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            background: radial-gradient(circle at 12% 10%, rgba(11, 132, 87, 0.14), transparent 45%),
+                radial-gradient(circle at 90% 20%, rgba(14, 165, 233, 0.12), transparent 40%),
+                linear-gradient(140deg, #f7fbf9, #eef4f7);
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        body.is-exporting {
+            padding: 0;
+            background: #fff;
+        }
+
+        h1, h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 8mm;
+            background: var(--paper);
+            border-radius: 16px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        body.is-exporting .document {
+            padding: 8mm;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        body.is-exporting .download-area {
+            display: none;
+        }
+
+        .hero {
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0b6b43 0%, #0f9d58 55%, #11a35e 100%);
+            padding: 18px 18px 16px;
+            position: relative;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            right: -60px;
+            top: -80px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 70%);
+        }
+
+        .hero-top {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .logo-wrap {
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hero-meta {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 22px;
+            line-height: 1.2;
+            margin: 0;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 6px 0 0;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.25);
+            margin: 12px 0 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.88);
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .stat {
+            background: var(--accent-soft);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-dark);
+        }
+
+        .stat-label {
+            font-size: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .panel {
+            background: #f8fbfa;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .panel h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent-dark);
+            margin-bottom: 8px;
+        }
+
+        .panel-text {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 0 0 10px;
+        }
+
+        .featured {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent-dark);
+            margin: 0 0 6px;
+        }
+
+        .press-logos {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 6px 0;
+        }
+
+        .press-logos img {
+            height: 24px;
+            object-fit: contain;
+            filter: grayscale(1);
+            opacity: 0.75;
+        }
+
+        .app-panel {
+            display: grid;
+            gap: 10px;
+        }
+
+        .app-store-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-store-row img {
+            height: 34px;
+            object-fit: contain;
+        }
+
+        .app-text {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .app-screens {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 8px;
+        }
+
+        .app-screens img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+        }
+
+        .doctor-collage {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            display: block;
+        }
+
+        .clean-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 8px;
+        }
+
+        .clean-list li {
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: 5px;
+            flex: 0 0 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .commitment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .why-card {
+            background: var(--accent);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 12px;
+            line-height: 1.4;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            min-height: 140px;
+        }
+
+        .why-card p {
+            margin: 0;
+        }
+
+        .why-label {
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 8px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .panel,
+        .stats,
+        .grid-2,
+        .roadmap,
+        .quote,
+        .contact,
+        .why-grid {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .commitment-item {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .commitment-item strong {
+            display: block;
+            font-size: 12px;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .roadmap {
+            display: grid;
+            gap: 12px;
+        }
+
+        .timeline-panel {
+            background: #f3fbff;
+            border: 1px solid #cfdfe6;
+            border-radius: 18px;
+            padding: 14px 16px 18px;
+        }
+
+        .timeline-row {
+            grid-template-columns: repeat(3, 1fr);
+            position: relative;
+            padding-top: 18px;
+        }
+
+        .roadmap-stack {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .roadmap-stack::before {
+            display: none;
+        }
+
+        .timeline-row {
+            align-items: flex-start;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+            padding: 0 6px;
+            position: relative;
+        }
+
+        .step-marker {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            box-shadow: 0 6px 14px rgba(11, 132, 87, 0.2);
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+            aspect-ratio: 1 / 1;
+        }
+
+        .step-content {
+            display: grid;
+            gap: 4px;
+        }
+
+        .roadmap-stack .step {
+            align-items: flex-start;
+            text-align: left;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 10px 12px;
+            gap: 8px;
+        }
+
+        .roadmap-stack .step-marker {
+            width: 22px;
+            height: 22px;
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+            border: 1px solid #cfe7da;
+            box-shadow: none;
+        }
+
+        .roadmap-stack .step-content {
+            align-items: flex-start;
+        }
+
+        .step-title {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .quote {
+            background: linear-gradient(135deg, #f6fbf8, #fff6e8);
+            border: 1px solid #e8efe7;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 12px;
+        }
+
+        .quote strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .contact {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #0b6b43;
+            color: #fff;
+        }
+
+        .contact-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .contact-detail {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .contact-phone {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .download-area {
+            text-align: center;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 22px;
+            border-radius: 999px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(11, 132, 87, 0.25);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        @page {
+            size: A4;
+            margin: 8mm;
+        }
+
+        @media (max-width: 960px) {
+            body {
+                padding: 16px;
+            }
+
+            .page {
+                width: 100%;
+                border-radius: 12px;
+            }
+
+            .hero-top {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-2,
+            .commitment-grid,
+            .why-grid,
+            .timeline-row,
+            .roadmap-stack {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-row {
+                padding-top: 0;
+            }
+
+            .timeline-row::before {
+                display: none;
+            }
+
+            .timeline-row .step {
+                flex-direction: row;
+                text-align: left;
+                align-items: flex-start;
+            }
+
+            .timeline-row .step-content {
+                align-items: flex-start;
+            }
+
+            .contact {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        body.is-exporting .hero-top {
+            grid-template-columns: 120px 1fr;
+        }
+
+        body.is-exporting .stats {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        body.is-exporting .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        body.is-exporting .commitment-grid,
+        body.is-exporting .why-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        body.is-exporting .timeline-row {
+            grid-template-columns: repeat(3, 1fr);
+            padding-top: 18px;
+        }
+
+        body.is-exporting .timeline-row::before {
+            display: block;
+        }
+
+        body.is-exporting .roadmap-stack {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        body.is-exporting .contact {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: #fff;
+            }
+
+            .page {
+                width: auto;
+                min-height: auto;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .download-area {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="pdf-content" class="document">
+    <header class="hero">
+        <div class="hero-top">
+            <div class="logo-wrap">
+                <img class="logo" src="assets/logo1.png" alt="Finnovate logo" loading="eager">
+            </div>
+            <div>
+                <div class="hero-meta">Engagement Proposal</div>
+                <h1 class="hero-title">Financial Literacy RTM Proposal</h1>
+                <p class="hero-subtitle">Apollo Hospital</p>
+            </div>
+        </div>
+        <div class="hero-divider"></div>
+        <p class="intro">Finnovate supports doctors and medical professionals with structured financial planning, focused on long-term clarity and practical outcomes.</p>
+    </header>
+
+<section class="panel">
+        <h2>Backed by Doctors</h2>
+        <p class="panel-text">Doctors have been so impressed with our services; that some marquee names have invested not just in our service; but also by taking a stake in our business.</p>
+        <img class="doctor-collage" src="assets/home-banner-1.png" alt="Doctors who trust Finnovate" loading="lazy">
+    </section>
+<section class="panel">
+        <h2>Key Metrics</h2>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">3,800+</div>
+                <div class="stat-label">Clients served</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">93%</div>
+            <div class="stat-label">Doctors as clients</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">1100+ Cr</div>
+                <div class="stat-label">AUM managed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">Since 2007</div>
+                <div class="stat-label">Track record</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">35,000+</div>
+                <div class="stat-label">individuals empowered</div>
+            </div>
+        </div>
+    </section>
+
+     <section class="panel">
+        <h2>Our Past Collaboration So Far</h2>
+        <ul class="clean-list">
+           <li><span class="dot"></span><span>Engaged with leading medical associations such as the Association of Medical Consultants (AMC) with 10K members.</span></li>
+           <li><span class="dot"></span><span>Partnered with the Indian Dental Association as the financial partner to help members with financial fitness and literacy.</span></li>
+        </ul>
+    </section>
+
+
+    <section class="panel timeline-panel">
+        <h2>Objective</h2>
+        <p class="panel-text">This proposal is presented to explore a hospital-supported financial literacy initiative at Apollo Hospital, with small-group, peer-led sessions for doctors.</p>
+    </section>
+
+    <section class="panel">
+        <h2>What We Are Proposing</h2>
+        <ul class="clean-list">
+            <li><span class="dot"></span><span>Small, closed-group RTMs for doctors.</span></li>
+            <li><span class="dot"></span><span>Discussion-led sessions, not presentations.</span></li>
+            <li><span class="dot"></span><span>Practical topics relevant across career stages.</span></li>
+            <li><span class="dot"></span><span>No product promotion or selling.</span></li>
+        </ul>
+    </section>
+
+    <section class="panel">
+        <h2>Indicative Topics</h2>
+        <ul class="clean-list">
+            <li><span class="dot"></span><span>Tax planning basics and choosing the appropriate tax regime.</span></li>
+            <li><span class="dot"></span><span>Managing income, savings, and cash flows.</span></li>
+            <li><span class="dot"></span><span>Insurance planning for doctors and families.</span></li>
+            <li><span class="dot"></span><span>Long-term planning including children's education and retirement.</span></li>
+            <li><span class="dot"></span><span>Common financial pitfalls doctors face and how to avoid them.</span></li>
+        </ul>
+    </section>
+
+  
+
+  
+
+   
+    <section class="panel">
+        <h2>Why Partner with Finnovate?</h2>
+        <ul class="clean-list">
+            <li><span class="dot"></span><span><strong>Unbiased</strong> – advice is strictly outcome-focused with no product incentives.</span></li>
+            <li><span class="dot"></span><span><strong>Structured</strong> – a disciplined nine-step process based on the Six Pillars of Financial Fitness.</span></li>
+            <li><span class="dot"></span><span><strong>Holistic Perspective</strong> – we align goals, risks, investments, protection, taxes, and legacy planning for each doctor.</span></li>
+            <li><span class="dot"></span><span><strong>Personalized Advice</strong> – plans respect clinical schedules, family commitments, and unique priorities.</span></li>
+            <li><span class="dot"></span><span><strong>Quality & Research-Led</strong> – every recommendation is vetted by our Investment Advisory Committee.</span></li>
+            <li><span class="dot"></span><span><strong>Discipline & Accountability</strong> – implementation support and scheduled reviews keep goals on course.</span></li>
+        </ul>
+    </section>
+  
+
+   
+
+    <section class="panel">
+        <h2>Team Credentials</h2>
+        <ul class="clean-list">
+            <li><span class="dot"></span><span><strong>Founders</strong>: 45+ years of combined experience leading regulated advisory practices.</span></li>
+            <li><span class="dot"></span><span><strong>FinnFit Experts</strong>: CFP or NISM 10A/10B-certified professionals who craft doctor-specific financial roadmaps.</span></li>
+            <li><span class="dot"></span><span><strong>Portfolio Advisors</strong>: MBA/CFP/CFA qualified experts who ensure research-backed implementations.</span></li>
+            <li><span class="dot"></span><span><strong>Research Analysts</strong>: CFA, MBA, and NISM certified professionals providing research-backed recommendations across mutual funds and equities.</span></li>
+            <li><span class="dot"></span><span><strong>Hybrid Advisors</strong>: Experienced advisors blending online/offline engagement with cutting-edge technology.</span></li>
+        </ul>
+    </section>
+
+        <div class="panel">
+            <h2>Deliverables</h2>
+            <ul class="clean-list">
+                <li><span class="dot"></span><span>Co-created RTM agenda tailored to Apollo doctors.</span></li>
+                <li><span class="dot"></span><span>Small-group session facilitation with expert-led discussion.</span></li>
+                <li><span class="dot"></span><span>Summary of key takeaways and practical action points.</span></li>
+                <li><span class="dot"></span><span>Optional one-to-one follow-up slots for interested doctors.</span></li>
+            </ul>
+        </div>
+
+        <div class="panel">
+            <h2>Timeline</h2>
+            <div class="roadmap timeline-row">
+                <div class="step">
+                    <div class="step-marker">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Alignment</div>
+                        <div class="step-sub">Finalize topics, format, and participant groups.</div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-marker">2</div>
+                    <div class="step-content">
+                        <div class="step-title">RTM Session</div>
+                        <div class="step-sub">Facilitated discussion-led session for doctors.</div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-marker">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Follow-Up</div>
+                        <div class="step-sub">Share summary and schedule optional one-to-ones.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Optional One-to-One Sessions</h2>
+        <p class="panel-text">As an extension, doctors who wish to continue the discussion may opt for a complimentary one-to-one session (no obligation). This is completely optional.</p>
+    </section>
+
+    <section class="panel">
+        <h2>Next Steps</h2>
+        <ul class="clean-list">
+            <li><span class="dot"></span><span>Confirm if this would add value to your colleagues and the preferred session format.</span></li>
+            <li><span class="dot"></span><span>Share the preferred dates, timings, and an indicative group size.</span></li>
+            <li><span class="dot"></span><span>Avinash would coordinate the next steps and logistics.</span></li>
+        </ul>
+    </section>
+
+  
+
+ 
+  
+
+
+    <section class="panel">
+        <h2>Confidentiality & Data Privacy</h2>
+        <ul class="clean-list">
+            <li><span class="dot"></span><span>Hospital-grade confidentiality protocols aligned with institutional expectations.</span></li>
+            <li><span class="dot"></span><span>No sharing with third parties without explicit institutional consent.</span></li>
+            <li><span class="dot"></span><span>Audit-ready records and traceability for all engagement activities.</span></li>
+        </ul>
+    </section>
+
+
+      
+
+    <section class="panel">
+        <small class="featured">Featured in</small>
+        <div class="press-logos" aria-hidden="true">
+            <img src="https://learn.finnovate.in/_next/static/media/cnbc_logo.6c2d68ec.png" alt="CNBC">
+            <img src="https://learn.finnovate.in/_next/static/media/mint_logo.652f24a9.svg" alt="Mint">
+            <img src="https://learn.finnovate.in/_next/static/media/The_Times_of_India_Red_Logo.b38cca0a.jpg" alt="The Times of India">
+            <img src="https://learn.finnovate.in/_next/static/media/Business_Insider_Logo.3d8be252.png" alt="Business Insider">
+            <img src="https://learn.finnovate.in/_next/static/media/et-logo.9b674ce9.png" alt="The Economic Times">
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Finnovate Wealth App</h2>
+        <div class="app-panel">
+            <p class="app-text">Monitor your entire portfolio, even holdings outside Finnovate, and keep an eye on family investments wherever you are. Standout feature: import and track external accounts without opening them through Finnovate.</p>
+            <div class="app-store-row">
+                <a href="https://play.google.com/store/apps/details?id=com.finnovate.wealthtrack" target="_blank" rel="noreferrer">
+                    <img src="https://www.finnovate.in/assets/images/playstore.png" alt="Play Store">
+                </a>
+                <a href="https://apps.apple.com/in/app/finnovate-wealth-app/id6740236625" target="_blank" rel="noreferrer">
+                    <img src="https://www.finnovate.in/assets/images/appstore.png" alt="App Store">
+                </a>
+            </div>
+            <div class="app-screens">
+                <img src="https://www.finnovate.in/assets/images/1st.png" alt="App screen 1">
+                <img src="https://www.finnovate.in/assets/images/2nd.png" alt="App screen 2">
+                <img src="https://www.finnovate.in/assets/images/3rd.png" alt="App screen 3">
+            </div>
+        </div>
+    </section>
+    
+
+    <section class="contact">
+        <div>
+            <div class="contact-title">Contact Finnovate</div>
+            <div class="contact-detail">hello@finnovate.in | avinash.tiwari@finnovate.in</div>
+        </div>
+        <div class="contact-phone">+91 84509 16947</div>
+    </section>
+    </div>
+</div>
+
+<div class="download-area">
+    <button id="download-pdf" class="download-btn" type="button">Download PDF</button>
+</div>
+
+<script src="assets/html2pdf.bundle.min.js"></script>
+<script>
+    const downloadButton = document.getElementById('download-pdf');
+    const pdfContent = document.getElementById('pdf-content');
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.get('export') === '1') {
+        document.body.classList.add('is-exporting');
+    }
+
+    const waitForFonts = () => {
+        if (document.fonts && document.fonts.ready) {
+            return document.fonts.ready;
+        }
+        return Promise.resolve();
+    };
+
+    const waitForImages = () => {
+        const images = Array.from(pdfContent.querySelectorAll('img'));
+        return Promise.all(images.map((img) => {
+            if (img.complete && img.naturalWidth !== 0) {
+                return Promise.resolve();
+            }
+            return new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve;
+            });
+        }));
+    };
+
+    const setBusy = (isBusy) => {
+        downloadButton.disabled = isBusy;
+        downloadButton.textContent = isBusy ? 'Preparing PDF...' : 'Download PDF';
+    };
+
+    const tryServerDownload = async () => {
+        try {
+            const response = await fetch('/download-pdf?file=apollo.html');
+            if (!response.ok) {
+                return false;
+            }
+
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/pdf')) {
+                return false;
+            }
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Finnovate_Apollo_RTM_Proposal.pdf';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            return true;
+        } catch (error) {
+            console.warn('Server PDF download failed', error);
+            return false;
+        }
+    };
+
+    const pxPerMm = 96 / 25.4;
+    const a4Size = {
+        width: Math.round(210 * pxPerMm),
+        height: Math.round(297 * pxPerMm)
+    };
+
+    const applyExportSizing = () => {
+        const previous = {
+            width: pdfContent.style.width,
+            minHeight: pdfContent.style.minHeight,
+            height: pdfContent.style.height
+        };
+
+        pdfContent.style.width = `${a4Size.width}px`;
+        pdfContent.style.minHeight = `${a4Size.height}px`;
+        pdfContent.style.height = 'auto';
+
+        return () => {
+            pdfContent.style.width = previous.width;
+            pdfContent.style.minHeight = previous.minHeight;
+            pdfContent.style.height = previous.height;
+        };
+    };
+
+    downloadButton.addEventListener('click', async () => {
+        setBusy(true);
+        if (window.location.protocol.startsWith('http')) {
+            const downloaded = await tryServerDownload();
+            if (downloaded) {
+                setBusy(false);
+                return;
+            }
+        }
+
+        if (!window.html2pdf) {
+            alert('PDF generator is not available. Please use print to save as PDF.');
+            window.print();
+            setBusy(false);
+            return;
+        }
+
+        document.body.classList.add('is-exporting');
+        const restoreSizing = applyExportSizing();
+        await Promise.all([waitForFonts(), waitForImages()]);
+
+        const options = {
+            margin: [0, 0, 0, 0],
+            filename: 'Finnovate_Apollo_RTM_Proposal.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                scrollY: 0,
+                width: a4Size.width,
+                windowWidth: a4Size.width
+            },
+            jsPDF: { unit: 'px', format: [a4Size.width, a4Size.height], orientation: 'portrait' },
+            pagebreak: { mode: ['css', 'legacy'] }
+        };
+
+        try {
+            await html2pdf().set(options).from(pdfContent).save();
+        } catch (error) {
+            console.error('PDF generation failed', error);
+            alert('PDF download failed. Please use print to save as PDF.');
+            window.print();
+        } finally {
+            setBusy(false);
+            document.body.classList.remove('is-exporting');
+            restoreSizing();
+        }
+    });
+</script>
+
+</body>
+</html>

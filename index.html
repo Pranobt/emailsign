@@ -1,1510 +1,422 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<title> Email Signature</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-	<link rel="shortcut icon" type="image/png" href="https://www.finnovate.in/assets/images/favicon.png"><!-- Additional CSS Files -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Signature Copier</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="shortcut icon" type="image/png" href="https://www.finnovate.in/assets/images/favicon.png">
 
-	<style>
-		body {
-			background-color: #FAFAFA;
-		}
+    <style>
+        :root {
+            --bg: #eef3f1;
+            --panel: #ffffff;
+            --panel-border: rgba(16, 24, 40, 0.08);
+            --ink: #111827;
+            --muted: #6b7280;
+            --brand: #0c7c59;
+            --brand-dark: #0a6046;
+            --shadow: 0 20px 45px rgba(16, 24, 40, 0.14);
+        }
 
-		h1 {
-			text-align: center;
-			font-family: 'Inter', sans-serif;
-			margin-top: 20px;
-		}
+        * {
+            box-sizing: border-box;
+        }
 
-		#notAvailable {
-			text-align: center;
-			color: red;
-			font-size: 18px;
-			margin-top: 20px;
-			font-family: 'Inter', sans-serif;
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            background: radial-gradient(circle at top left, #e0f2eb 0%, #eef3f1 50%, #f5f6f7 100%);
+            min-height: 100vh;
+        }
 
-		}
-		table {
-			width: 800px;
-			margin: 0 auto;
-			border-collapse: collapse;
-			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-			border-radius: 10px;
-			background-color: #FFFFFF;
-			font-family: 'Inter', sans-serif;
-		}
-/* Add this style for the new button */
-.search-container button {
-    background-color: #CD201F;
-    color: #FFFFFF;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left: 10px; /* Adjust the margin as needed */
-}
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 28px 20px 40px;
+        }
 
-/* Add this style for the new button hover state */
-.search-container button:hover {
-    background-color: #7e1515;
-}
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            justify-content: center;
+            text-align: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
 
+        .hero img {
+            height: 56px;
+        }
 
-.modal {
+        .hero h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--panel);
+            border-radius: 18px;
+            border: 1px solid var(--panel-border);
+            box-shadow: var(--shadow);
+            padding: 22px;
+        }
+
+        .card h2 {
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .search-row {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #f4f7f6;
+            border: 1px solid transparent;
+        }
+
+        .search-row:focus-within {
+            border-color: rgba(12, 124, 89, 0.4);
+        }
+
+        .search-row input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .btn.primary {
+            background: var(--brand);
+            color: #ffffff;
+        }
+
+        .btn.primary:hover {
+            background: var(--brand-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn.outline {
+            background: #ffffff;
+            color: var(--brand);
+            border: 1px solid rgba(12, 124, 89, 0.4);
+        }
+
+        .btn.outline:hover {
+            background: rgba(12, 124, 89, 0.06);
+        }
+
+        .list-header {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .results {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .result-item {
+            border: 1px solid var(--panel-border);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .result-item:hover {
+            border-color: rgba(12, 124, 89, 0.4);
+            box-shadow: 0 10px 20px rgba(16, 24, 40, 0.1);
+        }
+
+        .result-item small {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .pagination {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .pagination button {
+            border: 1px solid var(--panel-border);
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .not-available {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #fff7ed;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #9a5b00;
+            font-size: 12px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-area {
+            margin-top: 16px;
+            border: 1px dashed rgba(17, 24, 39, 0.2);
+            border-radius: 14px;
+            background: #f9fafb;
+            padding: 14px;
+            min-height: 360px;
+        }
+
+        .preview-empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 90px 16px;
+            font-size: 14px;
+        }
+
+        #signatureFrame {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            background: #ffffff;
+            display: none;
+        }
+
+        .helper {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .modal {
             display: none;
             position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Add this style for the modal content */
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
             padding: 20px;
-            border-radius: 10px;
         }
 
-        /* Add this style for the close button */
+        .modal-content {
+            max-width: 960px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 14px;
+            position: relative;
+        }
+
+        .modal-content iframe {
+            width: 100%;
+            height: 520px;
+            border: none;
+            border-radius: 12px;
+        }
+
         .close {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 20px;
-            color: #333;
+            background: #ffffff;
+            border-radius: 999px;
+            border: 1px solid var(--panel-border);
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
             cursor: pointer;
         }
 
-		th,
-		td {
-			padding: 10px;
-			text-align: left;
-		}
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #111827;
+            color: #ffffff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            font-size: 13px;
+            z-index: 1100;
+        }
 
-		th {
-			background-color: #F8F8F8;
-			border-bottom: 2px solid #E6E6E6;
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-		}
+        @media (max-width: 960px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
 
-		tr:nth-child(even) {
-			background-color: #F5F5F5;
-		}
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 24px;
+            }
 
-		.search-container {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			margin: 30px;
-		}
-
-		.search-icon {
-			margin-right: 10px;
-			color: #0056b3;
-		}
-
-		.search-box {
-			padding: 10px;
-			border-radius: 30px;
-			border: none;
-			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-			width: 250px;
-			font-family: 'Inter', sans-serif;
-			font-size: 14px;
-			color: #6D7584;
-			padding: 10px;
-		}
-
-		button {
-			background-color: #0D6CCA;
-			color: #FFFFFF;
-			border: none;
-			padding: 10px 20px;
-			border-radius: 30px;
-			font-family: 'Inter', sans-serif;
-			font-size: 14px;
-			cursor: pointer;
-			transition: background-color 0.3s ease;
-		}
-
-		button:hover {
-			background-color: #064079;
-		}
-		.icon-container {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			margin-top: 10px;
-		}
-
-		.icon-container i {
-			font-size: 24px;
-			margin-right: 10px;
-			cursor: pointer;
-		}
-
-		.icon-container i.email {
-			color: #009356;
-		}
-
-		.icon-container i.whatsapp {
-			color: #009356;
-		}
-		.copy-link-button {
-			background-color: #FFFFFF;
-			color: #0D6CCA;
-			border: 2px solid #0D6CCA;
-			padding: 10px 20px;
-			border-radius: 30px;
-			font-family: 'Inter', sans-serif;
-			font-size: 14px;
-			cursor: pointer;
-			transition: background-color 0.3s ease, color 0.3s ease;
-			margin-left: 20px;
-		}
-
-		.copy-link-button:hover {
-			background-color: #0D6CCA;
-			color: #FFFFFF;
-		}
-	</style>
+            .modal-content iframe {
+                height: 340px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-	<div style="display: flex; justify-content: center; margin-top: 30px;">
-		<img src="https://www.finnovate.in/assets/images/logo.svg" alt="Logo" style="height: 62px;">
-	</div>
-	<h1>Email Signature</h1>
-	<div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-		<input type="text" id="searchInput" placeholder="Search names..." class="search-box" onkeyup="filterTable()">
-        <button onclick="openTutorialModal()">Watch Tutorial</button>
+    <div class="page">
+        <header class="hero">
+            <img src="https://www.finnovate.in/assets/images/logo.svg" alt="Finnovate">
+            <div>
+                <h1>Email Signature Copier</h1>
+                <p>Search your name, preview the signature, and copy it directly into Gmail.</p>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="card">
+                <h2>Find your signature</h2>
+                <p>Type your name and choose from the list.</p>
+
+                <div class="search-row">
+                    <span>🔍</span>
+                    <input id="signatureSearch" list="signatureNames" placeholder="Start typing your name...">
+                    <datalist id="signatureNames"></datalist>
+                </div>
+
+                <div class="actions">
+                    <button class="btn outline" id="tutorialButton" type="button">Watch tutorial</button>
+                    <button class="btn primary" id="loadSignature" type="button">Load signature</button>
+                </div>
+
+                <div class="list-header">
+                    <span>Available signatures</span>
+                    <span id="resultsCount"></span>
+                </div>
+                <div class="results" id="signatureResults" role="list"></div>
+                <div class="pagination">
+                    <button type="button" id="prevPage">Prev</button>
+                    <span id="pageStatus">Page 1 of 1</span>
+                    <button type="button" id="nextPage">Next</button>
+                </div>
+                <div id="notAvailable" class="not-available" style="display: none;">
+                    Not available. Share your photo with Ruchita to get your email signature designed.
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="preview-header">
+                    <div>
+                        <h2>Signature preview</h2>
+                        <p id="previewName">Select a name to load the signature.</p>
+                    </div>
+                    <button class="btn primary" id="copySignature" type="button" disabled>Copy signature</button>
+                </div>
+
+                <div class="preview-area">
+                    <div class="preview-empty" id="previewEmpty">No signature loaded yet.</div>
+                    <iframe id="signatureFrame" title="Signature preview" sandbox="allow-same-origin"></iframe>
+                </div>
+
+                <div class="helper">
+                    After copying, open Gmail Settings -> Signature and paste. If the button fails, click inside the preview and press Ctrl/Cmd+C.
+                </div>
+            </section>
+        </main>
     </div>
 
-	<div id="tutorialModal" class="modal">
+    <div id="tutorialModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeTutorialModal()">&times;</span>
-            <!-- Embedded YouTube video iframe -->
-            <iframe width="960" height="540" src="https://www.youtube.com/embed/w0oJPw2eWdc" frameborder="0"
-                allowfullscreen></iframe>
+            <button class="close" id="closeTutorial" type="button">&times;</button>
+            <iframe src="https://www.youtube.com/embed/w0oJPw2eWdc" allowfullscreen></iframe>
         </div>
     </div>
-	<table>
-		<thead>
-			<tr>
-				<th>Sr No.</th>
-				<th>Name</th>
-				<th>Link</th>
-			</tr>
-		</thead>
-		<tbody>
 
-			<tr>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-				<tr></tr>
-					<td>112</td>
-					<td>Rajvi Gori</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/RajviG.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
+    <script src="data.js" defer></script>
 
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>111</td>
-					<td>Nimisha Gaonkar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NimishaG.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>110</td>
-					<td>Rashi Panchal</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/RashiP.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>109</td>
-					<td>Riya Jain</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/RiyaJ.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>108</td>
-					<td>David Fernandes</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/DavidF.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>107</td>
-					<td>Satvik Yadav</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/SatvikYadav.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>106</td>
-					<td>Swapnil Kansara</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/SwapnilKansara.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>105</td>
-					<td>Dimple Jagwani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/DimpleJ.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>104</td>
-					<td>Milind Jain</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/MilindJain.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>103</td>
-					<td>Aastha Tiwari</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AasthaT.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>102</td>
-					<td>Renu Agarwal</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/RenuA.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>101</td>
-					<td>Sangeeta Singh</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/SangeetaS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>100</td>
-					<td>Nikita Fichadiya</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NikitaF.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>99</td>
-					<td>Mansi Gangani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/MansiG.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>98</td>
-					<td>Pavan Dhake</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PavanD.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>97</td>
-					<td>Neel Oza</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NeelO.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>96</td>
-					<td>Aakanksha Padwal</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AakankshaP.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>95</td>
-					<td>Vishwajit Shinde</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/VishwajeetS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>94</td>
-					<td>Rushikesh Shivgan</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/RushikeshS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>93</td>
-					<td>Prajwal Rathod</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PrajwalR.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>92</td>
-					<td>Gaurav Khode</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/GauravK.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>91</td>
-					<td> Siddhesh Kulkarni</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/SiddheshK.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>90</td>
-					<td>Mayuri Verma</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/MayuriV.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>89</td>
-					<td>Amber Varani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AmberV.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>88</td>
-					<td>Manmesh Mhaske</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/ManmeshM.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-<tr>
-
-				<tr></tr>
-					<td>87</td>
-					<td>Akash Kharat</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AkashK.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-		<tr>
-
-				<tr></tr>
-					<td>86</td>
-					<td>Prem Madhani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PremM.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-		<tr>
-
-				<tr></tr>
-					<td>85</td>
-					<td>Ajay Chariya</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AjayC.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>84</td>
-					<td>Mayur Vyas</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/MayurV.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>83</td>
-					<td>Pratik  Thakkar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PratikT.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>82</td>
-					<td>Hussain Jariwala</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/HussainJ.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>81</td>
-					<td>Naveen Singh</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NaveenS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>80</td>
-					<td>Shalin Bhavsar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/ShalinB.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>79</td>
-					<td>Neel Oza</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NeelO.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>78</td>
-					<td>Tushar Parmar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/TusharP.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>77</td>
-					<td>Nishant Shah</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NishantS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>76</td>
-					<td>Faiyaz Shaikh</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/FaiyazS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>75</td>
-					<td>Pranav Shah</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PranavS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>74</td>
-					<td>Kainaz Tata</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/KainazT.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>73</td>
-					<td>Vibha Vashistha</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/VibhaV.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>72</td>
-					<td>Akshata Pednekar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AkshataP.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-
-			<tr>
-
-				<tr></tr>
-					<td>71</td>
-					<td>Naushad Mirza</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/NaushadM.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>70</td>
-					<td>Anas Ansari</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/AnasA.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-			
-			<tr>
-
-				<tr></tr>
-					<td>69</td>
-					<td>Pragati Churi</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PragatiC.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-			
-
-
-			<tr>
-
-				<tr></tr>
-					<td>68</td>
-					<td>Krunal Parmar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/KrunalP.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>67</td>
-					<td>Jinal Shah</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/JinalS.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>66</td>
-					<td>Priyanka Malviya</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PriyankaM.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-			<tr>
-
-				<tr></tr>
-					<td>65</td>
-					<td>Deepti Baria</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/DeeptiB.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>64</td>
-					<td>Varsha Mendon</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/VarshaM.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>63</td>
-					<td>Apurva Patil</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/ApurvaP.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr>
-
-				<tr></tr>
-					<td>62</td>
-					<td>Deepak Gaikwad</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/DeepakG.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-			<tr>
-
-				<tr></tr>
-					<td>61</td>
-					<td>Sushant Bandewar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/SushantB.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-	
-				<tr>
-
-			<tr></tr>
-			<td>60</td>
-			<td>Ajay Jadeja</td>
-			<td><button><a href="https://pranobt.github.io/emailsign/Ajaysingh.html" target="_blank"
-						rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-						here</a></button>
-
-
-
-		<tr>
-
-			<tr></tr>
-				<td>59</td>
-				<td>Omkar Kandalekar</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/OmkarKandalekar.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>58</td>
-				<td>Sanjeeta Chawla</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/35.Sanjeeta.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>57</td>
-				<td>Ritesh Pant</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/RiteshPant.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>56</td>
-				<td>Jayant Furia</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/JayantFuria.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>55</td>
-				<td>Priyanshi Maheta</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/PriyanshiMaheta.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>54</td>
-				<td>Drishti Bellani</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/DrishtiBellani.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-			
-			
-			<tr>
-				<td>53</td>
-				<td>Jenabbanu Luhar</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/JenabbanuLuhar.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>52</td>
-				<td>Malcom Lobo</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/MalcomLobo.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>51</td>
-				<td>Gaurav Bharadia</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/GauravBharadia.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>50</td>
-				<td>Shubham Jain</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Shubhamjain.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>49</td>
-				<td>Rohit Sahajwani</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Rohitsahajwani.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-
-			<tr>
-				<td>48</td>
-				<td>Dipanwita Saha</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Dipanwitasaha.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>47</td>
-				<td>Pramiti Rawat</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Pramitirawat.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>46</td>
-				<td>Niranjan Kulkarni</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Niranjankulkarni.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-			<tr>
-				<td>45</td>
-				<td>Soumya Roy</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Soumyaroy.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>44</td>
-				<td>Nikhil Mokashi</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Nikhilmokashi.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>43</td>
-				<td>Rutuja Jadhav</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Rutujajadhav.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>42</td>
-				<td>Shruti Jha</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Shrutijha.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-
-			<tr>
-				<td>41</td>
-				<td>Sunil Jadhav</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/SunilJadhav.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-
-			<tr>
-				<td>40</td>
-				<td>Unnati Kadam</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/unnatikadam.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-			</tr>
-			<tr>
-				<td>39</td>
-				<td>Amit Lad</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Amitlad.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-			</tr>
-			<tr>
-				<td>38</td>
-				<td>Akshay Jadhav</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Akshayjadhav.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-			</tr>
-			<tr>
-				<td>37</td>
-				<td>Satyashree Kejriwal</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/SatyashreeKejriwal.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-			</tr>
-			<tr>
-				<td>36</td>
-				<td>Preshita Jadhav</td>
-				<td><button><a href="https://pranobt.github.io/emailsign/Preshitajadhav.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-			</tr>
-			
-			<tr>
-				<td>35</td>
-				<td>Jay Jain</td>
-				<td>
-					<button><a href="https://pranobt.github.io/emailsign/45.Jay.html" target="_blank"
-							rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-							here</a></button>
-				</td>
-			</tr>
-			<td>34</td>
-			<td>Sakshi Gupta</td>
-			<td><button><a href="https://pranobt.github.io/emailsign/44.Sakshi.html" target="_blank"
-						rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-						here</a></button>
-				</tr>
-				
-
-				<tr>
-					<td>33</td>
-					<td>Rushab Dugad</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/43.Rushab.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button>
-				</tr>
-				<tr>
-					<td>32</td>
-					<td>Sagar Maheshwari</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/42.Sagar.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>31</td>
-					<td>Gaurav Haldankar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/GauravHaldankar.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>30</td>
-					<td>Jibin Thomas</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/40.Jibin.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>29</td>
-					<td>Meet Vaghela</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/38.Meet.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>28</td>
-					<td>Ruchita Suryavanshi</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/37.Ruchita.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>27</td>
-					<td>Priyanka Kelkar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/36.Priyanka.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>26</td>
-					<td>Sanjeeta Chawla</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/35.Sanjeetav2.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>25</td>
-					<td>Tarun Agarwal</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/34.Tarunv2.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>24</td>
-					<td>Tanmay Gadre</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/33.Tanmayv2.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-			
-		
-				<tr>
-					<td>23</td>
-					<td>Siddhesh Pathar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/31.Siddhesh.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>22</td>
-					<td>Avinash Tiwari</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/23.Avinash.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>21</td>
-					<td>Ajinkya Jadhav</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/26.Ajinkya.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>20</td>
-					<td>Gosal Sangole</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/27.Gosal.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>19</td>
-					<td>Piyush Seth</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/28.piyush.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>18</td>
-					<td>Rekha Mohnot</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/2.Rekha.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>17</td>
-					<td>Jignesh Gajjar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/1.Jignesh.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>16</td>
-					<td>Neha Sanghrajka</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/3.Neha.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>15</td>
-					<td>Nagma Sheikh</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/22.nagma.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>14</td>
-					<td>Vandana Manwani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/19.Vandana.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>13</td>
-					<td>Reetesh Jaisinghani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/17.Reetesh.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>12</td>
-					<td>Anchal Kaushal</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/20.Anchal.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>11</td>
-					<td>Bhavin Patel</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/16.Bhavin.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>10</td>
-					<td>Naveen Singh</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/15.Naveen.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>9</td>
-					<td>Nehal Mota</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/14.Nehal.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>8</td>
-					<td>Rahul Meher</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/12.Rahul.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>7</td>
-					<td>Sushil Asrani</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/7.Sushil.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>6</td>
-					<td>Artish More</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/6.Artish.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td>Pranob Thachanthara</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/4.PranobThachanthara.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>Pradnya Patil</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/Pradnyapatil.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				
-				<tr>
-					<td>3</td>
-					<td>Chintan Dudhela</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/49.Chintan.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>Gaurav Prasad</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/47.GauravPrasad.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>Pravin Mayekar</td>
-					<td><button><a href="https://pranobt.github.io/emailsign/PravinMayekar.html" target="_blank"
-								rel="noopener noreferrer" style="color: #ffffff; text-decoration: none;">Click
-								here</a></button></td>
-				</tr>
-				<tr>
-					
-				</tr>
-		</tbody>	
-	</table>
-	<div id="notAvailable" class="not-available" style="display: none;">
-		Not Available. 
-		<br>Share your photo with Ruchita to get your email signature designed.
-	</div>
-
-</body>
-
-</html>
-
-<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const searchBox = document.querySelector('.search-box');
-			const tableRows = document.querySelectorAll('tbody tr');
-			const notAvailableMessage = document.getElementById('notAvailable');
-			const emailIcon = document.querySelector('.icon-container .email');
-			const whatsappIcon = document.querySelector('.icon-container .whatsapp');
-
-			searchBox.addEventListener('input', function () {
-				const searchTerm = searchBox.value.trim().toLowerCase();
-
-				// Hide the "Not Available" message by default
-				notAvailableMessage.style.display = 'none';
-
-				tableRows.forEach(row => {
-					const name = row.children[1].textContent.toLowerCase();
-					const link = row.children[2].querySelector('a').textContent.toLowerCase();
-
-					if (name.includes(searchTerm) || link.includes(searchTerm)) {
-						row.style.display = '';
-					} else {
-						row.style.display = 'none';
-					}
-				});
-
-				// Show "Not Available" message if no results found
-				const visibleRows = Array.from(tableRows).filter(row => row.style.display !== 'none');
-				if (visibleRows.length === 0) {
-					notAvailableMessage.style.display = 'block';
-				}
-			});
-
-			// Email icon functionality
-			emailIcon.addEventListener('click', function () {
-				window.location.href = 'mailto:pranob.thachanthara@finnovate.in?subject=Requesting Email Signature&body=Requesting Email Signature for me. I am attaching my photo.';
-			});
-
-			// WhatsApp icon functionality
-			whatsappIcon.addEventListener('click', function () {
-				window.open('https://api.whatsapp.com/send?phone=+918369625478&text=Requesting Email Signature for me. I am attaching my photo.');
-			});
-		});
-	
-	function copyLink(link) {
-		// Create a temporary input element to copy the link to the clipboard
-		const tempInput = document.createElement('input');
-		tempInput.value = link;
-		document.body.appendChild(tempInput);
-		tempInput.select();
-		document.execCommand('copy');
-		document.body.removeChild(tempInput);
-
-		// Display a toast notification
-		const toast = document.createElement('div');
-		toast.textContent = 'Link copied to clipboard!';
-		toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background-color: #333; color: #fff; padding: 10px 20px; border-radius: 5px; font-family: "Inter", sans-serif;';
-		document.body.appendChild(toast);
-		setTimeout(() => {
-			document.body.removeChild(toast);
-		}, 2000);
-	}
-
- // Function to open the modal
-        function openTutorialModal() {
-            var modal = document.getElementById('tutorialModal');
-            modal.style.display = 'block';
-        }
-
-        // Function to close the modal
-        function closeTutorialModal() {
-            var modal = document.getElementById('tutorialModal');
-            modal.style.display = 'none';
-        }
-
-        // Close the modal if the user clicks outside of it
-        window.onclick = function (event) {
-            var modal = document.getElementById('tutorialModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-</script>
-
-<script>
-	function filterTable() {
-		// Get the value of the input field
-		let input = document.getElementById('searchInput');
-		let filter = input.value.toLowerCase();
-		let table = document.querySelector('table tbody');
-		let tr = table.getElementsByTagName('tr');
-	
-		// Loop through all table rows and hide those that don't match the search query
-		for (let i = 0; i < tr.length; i++) {
-			let tdName = tr[i].getElementsByTagName('td')[1]; // Assuming the name is in the second column
-			if (tdName) {
-				let textValue = tdName.textContent || tdName.innerText;
-				if (textValue.toLowerCase().indexOf(filter) > -1) {
-					tr[i].style.display = "";
-				} else {
-					tr[i].style.display = "none";
-				}
-			}
-		}
-	}
-	</script>
-	
-
+    <script src="app.js" defer></script>
 </body>
 
 </html>

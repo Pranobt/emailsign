@@ -115,7 +115,7 @@
 
     button {
       border: 1px solid transparent;
-      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      background: linear-gradient(180deg, #009356 0%, #007a49 100%);
       color: #ffffff;
       padding: 10px 16px;
       border-radius: 10px;
@@ -151,7 +151,7 @@
       padding: 10px 8px;
       border-bottom: 1px solid var(--line);
       text-align: left;
-      vertical-align: top;
+      vertical-align: middle;
     }
 
     th {
@@ -298,6 +298,25 @@
       gap: 8px;
     }
 
+    .submit-bar {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .controls .icon-btn {
+      width: 44px;
+      height: 44px;
+    }
+
+    .actions .secondary {
+      background: #eef2f7;
+      border: 1px solid #d6dee8;
+      color: var(--text);
+      box-shadow: none;
+    }
+
     @media (max-width: 720px) {
       body {
         padding: 12px;
@@ -405,8 +424,8 @@
         <button id="addRow" class="icon-btn" title="Add block" aria-label="Add block">
           <i class="fa-solid fa-plus"></i>
         </button>
+        <button id="undoDelete" class="secondary">Undo</button>
         <button id="reset" class="secondary">Reset</button>
-        <button id="submit">Submit to Zoho Flow</button>
         <span class="muted">Total duration updates automatically based on each block.</span>
         <span class="status" id="status"></span>
       </div>
@@ -430,6 +449,10 @@
     </div>
 
     <div class="note" id="summary">Total scheduled: 0h 0m</div>
+    <div class="submit-bar">
+      <button id="viewSummary" class="secondary">View Cliq Message</button>
+      <button id="submit">Submit to Zoho Flow</button>
+    </div>
   </div>
 
   <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
@@ -452,6 +475,7 @@
     const summaryEl = document.getElementById("summary");
     const resetBtn = document.getElementById("reset");
     const addRowBtn = document.getElementById("addRow");
+    const undoDeleteBtn = document.getElementById("undoDelete");
     const submitBtn = document.getElementById("submit");
     const statusEl = document.getElementById("status");
     const endTimeEl = document.getElementById("endTime");
@@ -461,6 +485,7 @@
     const modalBody = document.getElementById("modalBody");
     const modalCancel = document.getElementById("modalCancel");
     const modalConfirm = document.getElementById("modalConfirm");
+    const viewSummaryBtn = document.getElementById("viewSummary");
 
     const WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.262d73321ec4cf092dc34d6310e3dee8.f22019fbcce0c6084f92ac9de2262976&isdebug=false";
     let currentBlockIndex = 0;
@@ -468,6 +493,7 @@
     let suppressEndTimeConfirm = false;
     let isAdjustingBlocks = false;
     let modalActive = false;
+    let lastDeletedBlock = null;
 
     function parseTimeToMinutes(timeStr) {
       if (!timeStr) return null;
@@ -503,6 +529,31 @@
       const row = buildRow(rowsEl.querySelectorAll("tr").length, startMins, defaultMinutes);
       rowsEl.appendChild(row);
       wireRow(row, rowsEl.querySelectorAll("tr").length - 1);
+    }
+
+    function restoreDeletedBlock() {
+      if (!lastDeletedBlock) return false;
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      const insertIndex = Math.min(lastDeletedBlock.index, rows.length);
+      const startMins = insertIndex === 0
+        ? (parseTimeToMinutes(startTimeEl.value) ?? 540)
+        : (parseTimeToMinutes(rows[insertIndex - 1].querySelector(".end").value) ?? 540);
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
+      const row = buildRow(insertIndex, startMins, defaultMinutes);
+      if (rows[insertIndex]) {
+        rowsEl.insertBefore(row, rows[insertIndex]);
+      } else {
+        rowsEl.appendChild(row);
+      }
+      row.querySelector(".add-hours").value = lastDeletedBlock.addHours;
+      row.querySelector(".add-mins").value = lastDeletedBlock.addMins;
+      row.querySelector("textarea").value = lastDeletedBlock.task;
+      wireRow(row, insertIndex);
+      lastDeletedBlock = null;
+      recalcFrom(insertIndex);
+      applyBlockVisibility();
+      persistState();
+      return true;
     }
 
     function ensureBlocksForEndTime() {
@@ -547,11 +598,10 @@
       const addMins = defaultMinutes % 60;
 
       tr.innerHTML = `
-        <td data-label="Block">Block ${index + 1}</td>
+        <td data-label="Task">Task ${index + 1}</td>
         <td data-label="Start">
           <div class="time-cell">
             <input type="time" class="start" value="${minutesToTime(startMins)}" />
-            <span class="muted">Auto from prior end</span>
           </div>
         </td>
         <td data-label="Add Hours">
@@ -563,7 +613,6 @@
         <td data-label="End">
           <div class="time-cell">
             <input type="time" class="end" value="${minutesToTime(startMins + defaultMinutes)}" />
-            <span class="muted">Auto update</span>
           </div>
         </td>
         <td class="task" data-label="Tasks / Deliverables">
@@ -709,7 +758,7 @@
         }
       }
       rows.forEach((row, i) => {
-        row.querySelector("td").textContent = `Block ${i + 1}`;
+        row.querySelector("td").textContent = `Task ${i + 1}`;
         row.dataset.index = i;
       });
       if (mainEndMins !== null) {
@@ -769,20 +818,85 @@
         input.addEventListener("input", async () => {
           const rows = Array.from(rowsEl.querySelectorAll("tr"));
           const lastIndex = rows.length - 1;
+          const startMins = parseTimeToMinutes(row.querySelector(".start").value) ?? 0;
+          const addHours = parseInt(row.querySelector(".add-hours").value, 10) || 0;
+          const addMins = parseInt(row.querySelector(".add-mins").value, 10) || 0;
+          const proposedEnd = startMins + addHours * 60 + addMins;
+          const mainEndMins = parseTimeToMinutes(endTimeEl.value);
+          if (mainEndMins !== null && proposedEnd > mainEndMins && !suppressEndTimeConfirm) {
+            const ok = await openModal({
+              title: "Extend End Time?",
+              message: "This block exceeds the main End Time. Update End Time to fit?",
+              confirmText: "Update",
+              cancelText: "Keep",
+              showCancel: true
+            });
+            if (!ok) {
+              suppressEndTimeConfirm = true;
+              const prevHours = row.dataset.prevHours ?? row.querySelector(".add-hours").value;
+              const prevMins = row.dataset.prevMins ?? row.querySelector(".add-mins").value;
+              row.querySelector(".add-hours").value = prevHours;
+              row.querySelector(".add-mins").value = prevMins;
+              recalcFrom(index);
+              suppressEndTimeConfirm = false;
+              return;
+            }
+            endTimeManual = true;
+            endTimeEl.value = minutesToTime(proposedEnd);
+            ensureBlocksForEndTime();
+          }
           recalcFrom(index);
           if (index === lastIndex && !endTimeManual && !suppressEndTimeConfirm) {
-            // no-op: end time is fixed by main input
+            // no-op: main end time controlled by input
           }
           maybeRevealNext();
         });
       });
 
       row.querySelector(".start").addEventListener("input", () => recalcFrom(index));
+      row.querySelector(".end").addEventListener("focus", () => {
+        row.dataset.prevEnd = row.querySelector(".end").value;
+      });
+      row.querySelector(".end").addEventListener("input", async () => {
+        const startMins = parseTimeToMinutes(row.querySelector(".start").value) ?? 0;
+        let endMins = parseTimeToMinutes(row.querySelector(".end").value) ?? startMins;
+        const mainEndMins = parseTimeToMinutes(endTimeEl.value);
+        if (mainEndMins !== null && endMins > mainEndMins && !suppressEndTimeConfirm) {
+          const ok = await openModal({
+            title: "Extend End Time?",
+            message: "This block exceeds the main End Time. Update End Time to fit?",
+            confirmText: "Update",
+            cancelText: "Keep",
+            showCancel: true
+          });
+          if (!ok) {
+            suppressEndTimeConfirm = true;
+            const prevEnd = row.dataset.prevEnd ?? row.querySelector(".end").value;
+            row.querySelector(".end").value = prevEnd;
+            recalcFrom(index);
+            suppressEndTimeConfirm = false;
+            return;
+          }
+          endTimeManual = true;
+          endTimeEl.value = minutesToTime(endMins);
+          ensureBlocksForEndTime();
+        }
+        const duration = ((endMins - startMins) + 1440) % 1440;
+        row.querySelector(".add-hours").value = Math.floor(duration / 60);
+        row.querySelector(".add-mins").value = duration % 60;
+        recalcFrom(index);
+      });
       row.querySelector("textarea").addEventListener("input", () => {
         persistState();
         maybeRevealNext();
       });
       row.querySelector(".delete-row").addEventListener("click", () => {
+        lastDeletedBlock = {
+          index: parseInt(row.dataset.index, 10) || index,
+          addHours: row.querySelector(".add-hours").value,
+          addMins: row.querySelector(".add-mins").value,
+          task: row.querySelector("textarea").value
+        };
         row.remove();
         const rows = Array.from(rowsEl.querySelectorAll("tr"));
         if (currentBlockIndex >= rows.length) {
@@ -790,8 +904,6 @@
         }
         endTimeManual = false;
         recalcFrom(0);
-        const lastEnd = rowsEl.querySelector("tr:last-child .end");
-        if (lastEnd) endTimeEl.value = lastEnd.value;
         applyBlockVisibility();
         persistState();
       });
@@ -837,6 +949,11 @@
         input.value = addMins;
       });
       ensureBlocksForEndTime();
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      if (rows.length) {
+        currentBlockIndex = rows.length - 1;
+        applyBlockVisibility();
+      }
       recalcFrom(0);
       if (!endTimeManual) {
         const lastEnd = rowsEl.querySelector("tr:last-child .end");
@@ -881,14 +998,14 @@
       const mins = payload.totalMinutes % 60;
       const dayLabel = payload.dayType === "half" ? "Half Day" : "Full Day";
       const header = `Task Summary (${dayLabel})`;
-      const meta = `Employee: ${payload.employeeName || "-"} | Date: ${payload.workDate || "-"} | ${payload.startTime || "-"} - ${payload.endTime || "-"}`;
+      const meta = `Employee: ${payload.employeeName || "-"}\nDate: ${payload.workDate || "-"}\nTime: ${payload.startTime || "-"} - ${payload.endTime || "-"}`;
       const total = `Total: ${hours}h ${mins}m`;
       const blockLines = payload.blocks.map((b) => {
         const timeRange = `${b.start || "-"} - ${b.end || "-"}`;
         const taskText = b.task || "-";
-        return `Block ${b.block}: ${timeRange} | ${taskText}`;
+        return `Task ${b.block}: ${timeRange}\n${taskText}`;
       });
-      return [header, meta, total, ...blockLines].join("\\n");
+      return [header, meta, total, "", ...blockLines].join("\\n");
     }
 
     function applyNameFromUrl() {
@@ -923,16 +1040,62 @@
       persistState();
     });
     addRowBtn.addEventListener("click", () => {
+      if (restoreDeletedBlock()) return;
       const rows = Array.from(rowsEl.querySelectorAll("tr"));
       const lastEnd = rows.length
         ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? 0
         : (parseTimeToMinutes(startTimeEl.value) ?? 540);
-      addBlockRow(lastEnd);
-      currentBlockIndex = rowsEl.querySelectorAll("tr").length - 1;
-      endTimeManual = false;
-      recalcFrom(0);
-      applyBlockVisibility();
-      persistState();
+      const mainEnd = parseTimeToMinutes(endTimeEl.value);
+      if (mainEnd !== null && lastEnd < mainEnd) {
+        addBlockRow(lastEnd);
+        currentBlockIndex = rowsEl.querySelectorAll("tr").length - 1;
+        recalcFrom(0);
+        applyBlockVisibility();
+        persistState();
+        return;
+      }
+      openModal({
+        title: "Extend End Time",
+        message: "To add more tasks, update the End Time first.",
+        confirmText: "OK",
+        showCancel: false
+      }).then(() => {
+        endTimeEl.focus();
+      });
+    });
+    undoDeleteBtn.addEventListener("click", () => {
+      if (restoreDeletedBlock()) return;
+      openModal({
+        title: "Nothing to Undo",
+        message: "No deleted block to restore.",
+        confirmText: "OK",
+        showCancel: false
+      });
+    });
+    viewSummaryBtn.addEventListener("click", async () => {
+      const payload = {
+        employeeName: document.getElementById("employeeName").value.trim(),
+        workDate: document.getElementById("workDate").value,
+        dayType: dayTypeEl.value,
+        startTime: startTimeEl.value,
+        endTime: endTimeEl.value,
+        totalMinutes: totalScheduledMinutes(),
+        blocks: Array.from(rowsEl.querySelectorAll("tr")).map((row, i) => ({
+          block: i + 1,
+          start: row.querySelector(".start").value,
+          addHours: row.querySelector(".add-hours").value,
+          addMinutes: row.querySelector(".add-mins").value,
+          end: row.querySelector(".end").value,
+          task: row.querySelector("textarea").value.trim(),
+        })),
+      };
+      const msg = buildSummaryText(payload);
+      await openModal({
+        title: "Cliq Message Preview",
+        message: msg,
+        confirmText: "OK",
+        showCancel: false
+      });
     });
     resetBtn.addEventListener("click", () => {
       document.getElementById("employeeName").value = "";

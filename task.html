@@ -398,7 +398,7 @@
         </label>
         <label>
           Default Task minutes
-          <input id="defaultMinutes" type="number" min="15" step="15" value="120" />
+          <input id="defaultMinutes" type="number" min="15" step="15" value="60" />
         </label>
       </div>
       <div class="actions">
@@ -467,6 +467,7 @@
     let endTimeManual = false;
     let suppressEndTimeConfirm = false;
     let isAdjustingBlocks = false;
+    let modalActive = false;
 
     function parseTimeToMinutes(timeStr) {
       if (!timeStr) return null;
@@ -487,21 +488,18 @@
     }
 
     function getRequiredMinutes() {
-      const workDate = document.getElementById("workDate").value;
       if (dayTypeEl.value === "half") return 300;
-      const isSaturday = workDate ? new Date(workDate).getDay() === 6 : false;
-      return isSaturday ? 480 : 540;
+      return 540;
     }
 
     function setAutoEndTime() {
-      if (endTimeManual) return;
       const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
       const requiredMinutes = getRequiredMinutes();
       endTimeEl.value = minutesToTime(startMins + requiredMinutes);
     }
 
     function addBlockRow(startMins) {
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
       const row = buildRow(rowsEl.querySelectorAll("tr").length, startMins, defaultMinutes);
       rowsEl.appendChild(row);
       wireRow(row, rowsEl.querySelectorAll("tr").length - 1);
@@ -511,7 +509,7 @@
       const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
       const endMins = parseTimeToMinutes(endTimeEl.value);
       if (endMins === null) return;
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
       if (defaultMinutes <= 0) return;
 
       const duration = ((endMins - startMins) + 1440) % 1440;
@@ -616,14 +614,14 @@
         document.getElementById("workDate").value = state.workDate || todayISO();
         dayTypeEl.value = state.dayType || "full";
         startTimeEl.value = state.startTime || "09:00";
-        defaultMinutesEl.value = state.defaultMinutes || 120;
+        defaultMinutesEl.value = state.defaultMinutes || 60;
 
         rowsEl.innerHTML = "";
         const blocks = Array.isArray(state.blocks) ? state.blocks : [];
         if (blocks.length) {
           blocks.forEach((block, i) => {
             const startMins = parseTimeToMinutes(block.start) ?? 0;
-            const row = buildRow(i, startMins, parseInt(defaultMinutesEl.value, 10) || 120);
+            const row = buildRow(i, startMins, parseInt(defaultMinutesEl.value, 10) || 60);
             rowsEl.appendChild(row);
             row.querySelector(".start").value = block.start || row.querySelector(".start").value;
             row.querySelector(".add-hours").value = block.addHours ?? 0;
@@ -650,11 +648,13 @@
 
     function totalScheduledMinutes() {
       let total = 0;
-      document.querySelectorAll(".add-hours").forEach((el, i) => {
-        const minsEl = document.querySelectorAll(".add-mins")[i];
-        const hours = parseInt(el.value, 10) || 0;
-        const mins = parseInt(minsEl.value, 10) || 0;
-        total += hours * 60 + mins;
+      rowsEl.querySelectorAll("tr").forEach((row) => {
+        const start = parseTimeToMinutes(row.querySelector(".start").value);
+        const end = parseTimeToMinutes(row.querySelector(".end").value);
+        if (start !== null && end !== null) {
+          const duration = ((end - start) + 1440) % 1440;
+          total += duration;
+        }
       });
       return total;
     }
@@ -666,13 +666,13 @@
       const requiredMinutes = getRequiredMinutes();
       const targetLabel = dayTypeEl.value === "half"
         ? "Minimum 5h (Half Day)"
-        : (requiredMinutes === 480 ? "8h (Saturday)" : "9h");
+        : "Minimum 9h";
       summaryEl.textContent = `Total scheduled: ${h}h ${m}m`;
       if (dayTypeEl.value === "half") {
         if (total < requiredMinutes) {
           summaryEl.textContent += ` (Target: ${targetLabel})`;
         }
-      } else if (total !== requiredMinutes) {
+      } else if (total < requiredMinutes) {
         summaryEl.textContent += ` (Target: ${targetLabel})`;
       }
     }
@@ -680,7 +680,7 @@
     function recalcFrom(rowIndex) {
       const rows = Array.from(rowsEl.querySelectorAll("tr"));
       const mainEndMins = parseTimeToMinutes(endTimeEl.value);
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
       const defaultHours = Math.floor(defaultMinutes / 60);
       const defaultMins = defaultMinutes % 60;
       for (let i = rowIndex; i < rows.length; i++) {
@@ -695,11 +695,13 @@
         const addMins = parseInt(row.querySelector(".add-mins").value, 10) || 0;
         const startMins = parseTimeToMinutes(startInput.value) ?? 0;
         let endMins = startMins + addHours * 60 + addMins;
-        const isLast = i === rows.length - 1;
-        if (mainEndMins !== null && endMins > mainEndMins && (endTimeManual || !isLast)) {
+        if (mainEndMins !== null && endMins > mainEndMins) {
           endMins = mainEndMins;
         }
         endInput.value = minutesToTime(endMins);
+        const actualDuration = ((endMins - startMins) + 1440) % 1440;
+        row.querySelector(".add-hours").value = Math.floor(actualDuration / 60);
+        row.querySelector(".add-mins").value = actualDuration % 60;
 
         if (i + 1 < rows.length) {
           const nextStart = rows[i + 1].querySelector(".start");
@@ -715,7 +717,7 @@
           ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? mainEndMins
           : null;
         if (lastEnd !== null && lastEnd < mainEndMins) {
-          const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+          const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
           let nextStart = lastEnd;
           while (nextStart < mainEndMins) {
             addBlockRow(nextStart);
@@ -767,33 +769,9 @@
         input.addEventListener("input", async () => {
           const rows = Array.from(rowsEl.querySelectorAll("tr"));
           const lastIndex = rows.length - 1;
-          const oldEnd = endTimeEl.value;
           recalcFrom(index);
           if (index === lastIndex && !endTimeManual && !suppressEndTimeConfirm) {
-            const lastEnd = rows[rows.length - 1].querySelector(".end").value;
-            if (lastEnd !== oldEnd) {
-              const ok = await openModal({
-                title: "Update End Time?",
-                message: "Last block changed the end time. Update the main End Time?",
-                confirmText: "Update",
-                cancelText: "Keep",
-                showCancel: true
-              });
-              if (!ok) {
-                suppressEndTimeConfirm = true;
-                const prevHours = row.dataset.prevHours ?? row.querySelector(".add-hours").value;
-                const prevMins = row.dataset.prevMins ?? row.querySelector(".add-mins").value;
-                row.querySelector(".add-hours").value = prevHours;
-                row.querySelector(".add-mins").value = prevMins;
-                recalcFrom(index);
-                suppressEndTimeConfirm = false;
-                return;
-              }
-              endTimeEl.value = lastEnd;
-            }
-          } else if (!endTimeManual && rows.length) {
-            const lastEnd = rows[rows.length - 1].querySelector(".end").value;
-            endTimeEl.value = lastEnd;
+            // no-op: end time is fixed by main input
           }
           maybeRevealNext();
         });
@@ -830,7 +808,7 @@
     function generateRows() {
       rowsEl.innerHTML = "";
       const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
       const durationMinutes = getDurationMinutes();
       const blockCount = Math.max(1, Math.ceil(durationMinutes / defaultMinutes));
       let currentStart = startMins;
@@ -843,15 +821,13 @@
       }
       currentBlockIndex = 0;
       endTimeManual = false;
-      const lastEnd = rowsEl.querySelector("tr:last-child .end");
-      if (lastEnd) endTimeEl.value = lastEnd.value;
       updateSummary();
       persistState();
       applyBlockVisibility();
     }
 
     function applyDefaultMinutesToAll() {
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
       const addHours = Math.floor(defaultMinutes / 60);
       const addMins = defaultMinutes % 60;
       rowsEl.querySelectorAll(".add-hours").forEach((input) => {
@@ -871,6 +847,8 @@
 
     function openModal({ title, message, confirmText = "OK", cancelText = "Cancel", showCancel = true }) {
       return new Promise((resolve) => {
+        if (modalActive) return resolve(false);
+        modalActive = true;
         modalTitle.textContent = title || "Notice";
         modalBody.textContent = message || "";
         modalConfirm.textContent = confirmText;
@@ -884,6 +862,7 @@
           modalBackdrop.setAttribute("aria-hidden", "true");
           modalConfirm.onclick = null;
           modalCancel.onclick = null;
+          modalActive = false;
         };
 
         modalConfirm.onclick = () => {
@@ -912,19 +891,25 @@
       return [header, meta, total, ...blockLines].join("\\n");
     }
 
+    function applyNameFromUrl() {
+      const nameParam = new URLSearchParams(window.location.search).get("name");
+      if (nameParam) {
+        document.getElementById("employeeName").value = decodeURIComponent(nameParam);
+        persistState();
+      }
+    }
+
     document.getElementById("employeeName").addEventListener("input", persistState);
     document.getElementById("workDate").addEventListener("change", () => {
       updateSummary();
       endTimeManual = false;
-      const lastEnd = rowsEl.querySelector("tr:last-child .end");
-      if (lastEnd) endTimeEl.value = lastEnd.value;
       persistState();
     });
     dayTypeEl.addEventListener("change", () => {
       updateSummary();
       endTimeManual = false;
-      const lastEnd = rowsEl.querySelector("tr:last-child .end");
-      if (lastEnd) endTimeEl.value = lastEnd.value;
+      setAutoEndTime();
+      ensureBlocksForEndTime();
       persistState();
     });
     startTimeEl.addEventListener("input", generateRows);
@@ -946,8 +931,6 @@
       currentBlockIndex = rowsEl.querySelectorAll("tr").length - 1;
       endTimeManual = false;
       recalcFrom(0);
-      const lastEndInput = rowsEl.querySelector("tr:last-child .end");
-      if (lastEndInput) endTimeEl.value = lastEndInput.value;
       applyBlockVisibility();
       persistState();
     });
@@ -955,7 +938,7 @@
       document.getElementById("employeeName").value = "";
       document.getElementById("workDate").value = todayISO();
       startTimeEl.value = "09:00";
-      defaultMinutesEl.value = 120;
+      defaultMinutesEl.value = 60;
       generateRows();
       persistState();
     });
@@ -995,10 +978,10 @@
           });
           return;
         }
-      } else if (total !== requiredMinutes) {
-        const targetLabel = requiredMinutes === 480 ? "8h (Saturday)" : "9h";
+      } else if (total < requiredMinutes) {
+        const targetLabel = "9h";
         statusEl.classList.add("error");
-        statusEl.textContent = `Total must be exactly ${targetLabel}. Current: ${Math.floor(total / 60)}h ${total % 60}m.`;
+        statusEl.textContent = `Total must be at least ${targetLabel}. Current: ${Math.floor(total / 60)}h ${total % 60}m.`;
         await openModal({
           title: "Hours Required",
           message: statusEl.textContent,
@@ -1054,7 +1037,11 @@
 
     if (!restoreState()) {
       document.getElementById("workDate").value = todayISO();
+      setAutoEndTime();
       generateRows();
+      applyNameFromUrl();
+    } else {
+      applyNameFromUrl();
     }
   </script>
 </body>

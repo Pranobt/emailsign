@@ -58,13 +58,75 @@
       margin: 0;
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.5;
     }
 
     .controls {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      grid-template-columns: 1fr;
       gap: 12px;
       margin-top: 10px;
+    }
+
+    .pill-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .inline-controls {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .inline-field {
+      min-width: 220px;
+    }
+
+    .button-row {
+      display: inline-flex;
+      gap: 12px;
+      align-items: flex-end;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .button-row .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 10px;
+    }
+
+    .button-row .secondary {
+      min-height: 40px;
+    }
+
+    .inline-field input {
+      min-height: 40px;
     }
 
     label {
@@ -74,6 +136,11 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .pill-row label {
+      margin-bottom: 0;
     }
 
     input[type="text"],
@@ -121,6 +188,10 @@
       border-radius: 10px;
       font-weight: 600;
       cursor: pointer;
+      line-height: 1.2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     button.secondary {
@@ -251,7 +322,7 @@
     }
 
     .icon-btn i {
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .modal-backdrop {
@@ -306,8 +377,8 @@
     }
 
     .controls .icon-btn {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
     }
 
     .actions .secondary {
@@ -315,6 +386,31 @@
       border: 1px solid #d6dee8;
       color: var(--text);
       box-shadow: none;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .pill.active {
+      border-color: #007a49;
+      background: #e9f8f0;
+      color: #005a35;
+      box-shadow: 0 6px 14px rgba(0, 122, 73, 0.15);
     }
 
     @media (max-width: 720px) {
@@ -344,6 +440,15 @@
         text-align: left;
       }
 
+      .inline-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
       table, thead, tbody, tr, td, th {
         display: block;
         width: 100%;
@@ -354,16 +459,53 @@
       }
 
       tr {
+        display: flex;
+        flex-wrap: wrap;
         padding: 12px 10px;
         border-bottom: 1px solid var(--line);
         border-radius: 12px;
         background: #ffffff;
         margin-bottom: 10px;
+        position: relative;
       }
 
       td {
         border: none;
         padding: 8px 0;
+      }
+
+      td.start-cell,
+      td.end-cell,
+      td.hours-cell,
+      td.mins-cell {
+        flex: 0 0 49%;
+      }
+
+      td.start-cell,
+      td.hours-cell {
+        margin-right: 2%;
+      }
+
+      td.task-cell,
+      td.remove-cell,
+      td.task-label-cell {
+        flex: 0 0 100%;
+      }
+
+      td.task-label-cell { order: 0; }
+      td.start-cell { order: 1; }
+      td.end-cell { order: 2; }
+      td.hours-cell { order: 3; }
+      td.mins-cell { order: 4; }
+      td.task-cell { order: 5; }
+      td.remove-cell { order: 6; }
+
+      td.remove-cell {
+        position: absolute;
+        top: 12px;
+        right: 10px;
+        width: auto;
+        margin: 0;
       }
 
       td::before {
@@ -392,40 +534,61 @@
       <h1>Task Submission Tracker</h1>
       <p>Plan and log a 9-hour day. Set a start time, add minutes and hours per block, and write tasks.</p>
       <div class="controls">
-        <label>
-          Employee Name
-          <input id="employeeName" type="text" placeholder="e.g., Priya Shah" />
-        </label>
-        <label>
-          Date
-          <input id="workDate" type="date" />
-        </label>
-        <label>
-          Day Type
-          <select id="dayType">
-            <option value="full" selected>Full Day</option>
-            <option value="half">Half Day</option>
-          </select>
-        </label>
-        <label>
-          Start Time
-          <input id="startTime" type="time" value="09:00" />
-        </label>
-        <label>
-          End Time (Auto)
-          <input id="endTime" type="time" />
-        </label>
-        <label>
-          Default Task minutes
-          <input id="defaultMinutes" type="number" min="15" step="15" value="60" />
-        </label>
+        <div class="pill-row">
+          <div id="deptSection">
+            <label>Department</label>
+            <div id="deptPills" class="pill-group" role="radiogroup" aria-label="Department"></div>
+          </div>
+          <div id="nameSection">
+            <label>Name</label>
+            <div id="namePills" class="pill-group" role="radiogroup" aria-label="Name"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <label>
+            Date
+            <input id="workDate" type="date" />
+          </label>
+          <label>
+            Start Time
+            <input id="startTime" type="time" value="09:00" />
+          </label>
+          <label>
+            End Time (Auto)
+            <input id="endTime" type="time" />
+          </label>
+          <label>
+            Day Type
+            <select id="dayType">
+              <option value="full" selected>Full Day</option>
+              <option value="half">Half Day</option>
+            </select>
+          </label>
+        </div>
+        <div class="inline-controls">
+          <label class="inline-field">
+            Default Task minutes
+            <input id="defaultMinutes" type="number" min="15" step="15" value="60" />
+          </label>
+          <div class="button-row">
+            <div class="btn-col">
+              <span class="btn-label">Undo</span>
+              <button id="undoDelete" class="icon-btn" title="Undo delete" aria-label="Undo delete">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+            </div>
+            <div class="btn-col">
+              <span class="btn-label">Reset</span>
+              <button id="reset" class="secondary">Reset</button>
+            </div>
+            <div class="btn-col">
+              <span class="btn-label">Add</span>
+              <button id="addRow" class="secondary">Add</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="actions">
-        <button id="addRow" class="icon-btn" title="Add block" aria-label="Add block">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-        <button id="undoDelete" class="secondary">Undo</button>
-        <button id="reset" class="secondary">Reset</button>
         <span class="muted">Total duration updates automatically based on each block.</span>
         <span class="status" id="status"></span>
       </div>
@@ -449,9 +612,16 @@
     </div>
 
     <div class="note" id="summary">Total scheduled: 0h 0m</div>
+    <div class="note">If any task block is missing, start typing in the last task box.</div>
     <div class="submit-bar">
-      <button id="viewSummary" class="secondary">View Message</button>
-      <button id="submit">Submit to Zoho Flow</button>
+      <button id="viewSummary" class="secondary">
+        <i class="fa-regular fa-eye"></i>
+        View Message
+      </button>
+      <button id="submit">
+        <i class="fa-solid fa-paper-plane"></i>
+        Submit to Zoho Flow
+      </button>
     </div>
   </div>
 
@@ -486,6 +656,10 @@
     const modalCancel = document.getElementById("modalCancel");
     const modalConfirm = document.getElementById("modalConfirm");
     const viewSummaryBtn = document.getElementById("viewSummary");
+    const deptPillsEl = document.getElementById("deptPills");
+    const deptSectionEl = document.getElementById("deptSection");
+    const nameSectionEl = document.getElementById("nameSection");
+    const namePillsEl = document.getElementById("namePills");
 
     const WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.262d73321ec4cf092dc34d6310e3dee8.f22019fbcce0c6084f92ac9de2262976&isdebug=false";
     let currentBlockIndex = 0;
@@ -494,6 +668,47 @@
     let isAdjustingBlocks = false;
     let modalActive = false;
     let lastDeletedBlock = null;
+    const departmentMap = {
+      "Information Technology": [
+        "Shalin Bhavsar",
+        "Pranav Shah",
+        "Anoj Tambe",
+        "Gunjan Rusia",
+        "Thakur Prasad"
+      ],
+      "Operations": [
+        "Pravin Mayekar",
+        "Rahul Meher",
+        "Nagma Sheikh",
+        "Amit Lad",
+        "Akshay Jadhav"
+      ],
+      "Research": [
+        "Riya Jain",
+        "Rushabh Dugad",
+        "Humaid Khot",
+        "Yash Asrani",
+        "Vinjal Rao",
+        "Ria Ignatious"
+      ],
+      "Equity": [
+        "Gaurav Haldankar",
+        "Milind Jain",
+        "Jinal Shah"
+      ],
+      "Direct Reportees": [
+        "Pranob Thachanthara",
+        "Rajvi Gori",
+        "Chintan Dudhela",
+        "Sagar Maheshwari",
+        "Jignesh Gajjar",
+        "Jayant Furia",
+        "Vandana Manwani"
+      ]
+    };
+    const departments = Object.keys(departmentMap);
+    let selectedDept = "";
+    let selectedName = "";
 
     function parseTimeToMinutes(timeStr) {
       if (!timeStr) return null;
@@ -511,6 +726,14 @@
 
     function todayISO() {
       return new Date().toISOString().slice(0, 10);
+    }
+
+    function formatDateLong(iso) {
+      if (!iso || !iso.includes("-")) return iso || "-";
+      const [y, m, d] = iso.split("-");
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[parseInt(m, 10) - 1] || m;
+      return `${d} ${month} ${y}`;
     }
 
     function getRequiredMinutes() {
@@ -598,27 +821,27 @@
       const addMins = defaultMinutes % 60;
 
       tr.innerHTML = `
-        <td data-label="Task">Task ${index + 1}</td>
-        <td data-label="Start">
+        <td data-label="Task" class="task-label-cell">Task ${index + 1}</td>
+        <td data-label="Start" class="start-cell">
           <div class="time-cell">
             <input type="time" class="start" value="${minutesToTime(startMins)}" />
           </div>
         </td>
-        <td data-label="Add Hours">
+        <td data-label="Add Hours" class="hours-cell">
           <input type="number" class="add-hours" min="0" max="8" value="${addHours}" />
         </td>
-        <td data-label="Add Minutes">
+        <td data-label="Add Minutes" class="mins-cell">
           <input type="number" class="add-mins" min="0" max="59" step="15" value="${addMins}" />
         </td>
-        <td data-label="End">
+        <td data-label="End" class="end-cell">
           <div class="time-cell">
             <input type="time" class="end" value="${minutesToTime(startMins + defaultMinutes)}" />
           </div>
         </td>
-        <td class="task" data-label="Tasks / Deliverables">
+        <td class="task task-cell" data-label="Tasks / Deliverables">
           <textarea placeholder="What did you do in this block?"></textarea>
         </td>
-        <td data-label="Remove">
+        <td data-label="Remove" class="remove-cell">
           <button class="delete-btn delete-row" type="button" title="Delete block" aria-label="Delete block">
             <i class="fa-solid fa-trash"></i>
           </button>
@@ -632,7 +855,8 @@
       return {
         currentBlockIndex,
         endTimeManual,
-        employeeName: document.getElementById("employeeName").value,
+        department: selectedDept,
+        employeeName: selectedName,
         workDate: document.getElementById("workDate").value,
         dayType: dayTypeEl.value,
         startTime: startTimeEl.value,
@@ -659,7 +883,8 @@
         const state = JSON.parse(raw);
         currentBlockIndex = typeof state.currentBlockIndex === "number" ? state.currentBlockIndex : 0;
         endTimeManual = Boolean(state.endTimeManual);
-        document.getElementById("employeeName").value = state.employeeName || "";
+        selectedDept = state.department || "";
+        selectedName = state.employeeName || "";
         document.getElementById("workDate").value = state.workDate || todayISO();
         dayTypeEl.value = state.dayType || "full";
         startTimeEl.value = state.startTime || "09:00";
@@ -689,6 +914,7 @@
           endTimeEl.value = state.endTime;
         }
         applyBlockVisibility();
+        updateRemoveButtons();
         return true;
       } catch (e) {
         return false;
@@ -761,6 +987,7 @@
         row.querySelector("td").textContent = `Task ${i + 1}`;
         row.dataset.index = i;
       });
+      trimZeroDurationTail();
       if (mainEndMins !== null) {
         const lastEnd = rows.length
           ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? mainEndMins
@@ -788,7 +1015,23 @@
         isAdjustingBlocks = false;
       }
       updateSummary();
+      updateRemoveButtons();
       persistState();
+    }
+
+    function trimZeroDurationTail() {
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      if (rows.length <= 1) return;
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const row = rows[i];
+        const start = parseTimeToMinutes(row.querySelector(".start").value);
+        const end = parseTimeToMinutes(row.querySelector(".end").value);
+        if (start !== null && end !== null && start === end) {
+          row.remove();
+        } else {
+          break;
+        }
+      }
     }
 
     function applyBlockVisibility() {
@@ -797,6 +1040,18 @@
 
       rows.forEach((row, i) => {
         row.classList.toggle("hidden-row", i > currentBlockIndex);
+      });
+    }
+
+    function updateRemoveButtons() {
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      rows.forEach((row, i) => {
+        const btn = row.querySelector(".delete-row");
+        if (!btn) return;
+        const isLast = i === rows.length - 1;
+        btn.disabled = !isLast;
+        btn.style.opacity = isLast ? "1" : "0.4";
+        btn.style.cursor = isLast ? "pointer" : "not-allowed";
       });
     }
 
@@ -922,7 +1177,7 @@
       const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
       const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
       const durationMinutes = getDurationMinutes();
-      const blockCount = Math.max(1, Math.ceil(durationMinutes / defaultMinutes));
+      const blockCount = durationMinutes <= 0 ? 0 : Math.ceil(durationMinutes / defaultMinutes);
       let currentStart = startMins;
 
       for (let i = 0; i < blockCount; i++) {
@@ -934,6 +1189,7 @@
       currentBlockIndex = 0;
       endTimeManual = false;
       updateSummary();
+      updateRemoveButtons();
       persistState();
       applyBlockVisibility();
     }
@@ -959,15 +1215,20 @@
         const lastEnd = rowsEl.querySelector("tr:last-child .end");
         if (lastEnd) endTimeEl.value = lastEnd.value;
       }
+      updateRemoveButtons();
       persistState();
     }
 
-    function openModal({ title, message, confirmText = "OK", cancelText = "Cancel", showCancel = true }) {
+    function openModal({ title, message, confirmText = "OK", cancelText = "Cancel", showCancel = true, html = false }) {
       return new Promise((resolve) => {
         if (modalActive) return resolve(false);
         modalActive = true;
         modalTitle.textContent = title || "Notice";
-        modalBody.textContent = message || "";
+        if (html) {
+          modalBody.innerHTML = message || "";
+        } else {
+          modalBody.textContent = message || "";
+        }
         modalConfirm.textContent = confirmText;
         modalCancel.textContent = cancelText;
         modalCancel.style.display = showCancel ? "inline-flex" : "none";
@@ -1002,7 +1263,8 @@
         const [y, m, d] = iso.split("-");
         return `${d}-${m}-${y}`;
       };
-      const header = `${payload.employeeName || "-"} Task Summary for ${formatDate(payload.workDate)}`;
+      const dateSource = payload.workDateISO || payload.workDate;
+      const header = `*${payload.employeeName || "-"}* Task Summary for ${formatDate(dateSource)}`;
       const meta = `Time : ${payload.startTime || "-"} - ${payload.endTime || "-"} (${hours}h ${mins}m)`;
       const blockLines = payload.blocks.map((b, idx) => {
         const startTime = `${b.start || "-"}`;
@@ -1010,7 +1272,7 @@
         return `${idx + 1}) ${startTime}\n   ${taskText}`;
       });
       const spacedBlocks = blockLines.flatMap((line, i) => (i === 0 ? [line] : ["", line]));
-      return [header, meta, "", "Tasks:", ...spacedBlocks].join("\n");
+      return [header, meta, "", "*Tasks:*", ...spacedBlocks].join("\n");
     }
 
     function buildSheetsPayload(payload) {
@@ -1018,12 +1280,54 @@
         .map((b) => `Task ${b.block}: ${b.task || "-"}`)
         .join(" | ");
       return {
-        Date: payload.workDate || "",
+        Date: payload.workDate ? payload.workDate.split("-").reverse().join("-") : "",
         Name: payload.employeeName || "",
+        Department: payload.department || "",
         "Tasks Count": payload.blocks.length,
         Day: payload.dayType === "half" ? "Half Day" : "Full Day",
         "Tasks (all in one cell)": tasksText
       };
+    }
+
+    function renderDeptPills() {
+      deptPillsEl.innerHTML = "";
+      departments.forEach((dept) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `pill${selectedDept === dept ? " active" : ""}`;
+        btn.textContent = dept;
+        btn.setAttribute("role", "radio");
+        btn.setAttribute("aria-checked", selectedDept === dept ? "true" : "false");
+        btn.addEventListener("click", () => {
+          selectedDept = dept;
+          if (!departmentMap[selectedDept].includes(selectedName)) {
+            selectedName = "";
+          }
+          persistState();
+          renderDeptPills();
+          renderNamePills();
+        });
+        deptPillsEl.appendChild(btn);
+      });
+    }
+
+    function renderNamePills() {
+      namePillsEl.innerHTML = "";
+      const names = departmentMap[selectedDept] || [];
+      names.forEach((name) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `pill${selectedName === name ? " active" : ""}`;
+        btn.textContent = name;
+        btn.setAttribute("role", "radio");
+        btn.setAttribute("aria-checked", selectedName === name ? "true" : "false");
+        btn.addEventListener("click", () => {
+          selectedName = name;
+          persistState();
+          renderNamePills();
+        });
+        namePillsEl.appendChild(btn);
+      });
     }
 
     async function postViaFetch(payload) {
@@ -1047,15 +1351,38 @@
       return true;
     }
 
+    function getDeptParam() {
+      const deptParam = new URLSearchParams(window.location.search).get("dept");
+      if (!deptParam) return "";
+      const decoded = decodeURIComponent(deptParam).trim();
+      const normalized = decoded.toLowerCase();
+      if (normalized === "it") return "Information Technology";
+      if (departments.includes(decoded)) return decoded;
+      const match = departments.find((d) => d.toLowerCase() === normalized);
+      return match || "";
+    }
+
     function applyNameFromUrl() {
       const nameParam = new URLSearchParams(window.location.search).get("name");
       if (nameParam) {
-        document.getElementById("employeeName").value = decodeURIComponent(nameParam);
-        persistState();
+        selectedName = decodeURIComponent(nameParam);
+        const dept = departments.find((d) => (departmentMap[d] || []).includes(selectedName));
+        if (dept) selectedDept = dept;
       }
     }
 
-    document.getElementById("employeeName").addEventListener("input", persistState);
+    function applyDeptFromUrl() {
+      const decoded = getDeptParam();
+      if (decoded) {
+        selectedDept = decoded;
+        if (!departmentMap[selectedDept].includes(selectedName)) {
+          selectedName = "";
+        }
+        if (deptSectionEl) deptSectionEl.style.display = "none";
+        if (nameSectionEl) nameSectionEl.style.display = "block";
+      }
+    }
+
     document.getElementById("workDate").addEventListener("change", () => {
       updateSummary();
       endTimeManual = false;
@@ -1113,7 +1440,7 @@
     });
     viewSummaryBtn.addEventListener("click", async () => {
       const payload = {
-        employeeName: document.getElementById("employeeName").value.trim(),
+        employeeName: selectedName,
         workDate: document.getElementById("workDate").value,
         dayType: dayTypeEl.value,
         startTime: startTimeEl.value,
@@ -1129,19 +1456,24 @@
         })),
       };
       const msg = buildSummaryText(payload);
+      const htmlMsg = msg
+        .replace(/\*(.*?)\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
       await openModal({
         title: "Cliq Message Preview",
-        message: msg,
+        message: htmlMsg,
         confirmText: "OK",
-        showCancel: false
+        showCancel: false,
+        html: true
       });
     });
     resetBtn.addEventListener("click", () => {
-      document.getElementById("employeeName").value = "";
+      selectedName = "";
       document.getElementById("workDate").value = todayISO();
       startTimeEl.value = "09:00";
       defaultMinutesEl.value = 60;
       generateRows();
+      renderNamePills();
       persistState();
     });
 
@@ -1193,7 +1525,7 @@
         return;
       }
 
-      const confirmMessage = `Submit tasks for ${workDate || "this date"} with total ${Math.floor(total / 60)}h ${total % 60}m?`;
+      const confirmMessage = `You are about to submit ${Math.floor(total / 60)}h ${total % 60}m for ${formatDateLong(workDate)} which can't be undone.`;
       const confirmed = await openModal({
         title: "Confirm Submit",
         message: confirmMessage,
@@ -1204,9 +1536,13 @@
       if (!confirmed) return;
 
       statusEl.textContent = "Submitting...";
+      const workDateISO = document.getElementById("workDate").value;
+      const workDateDisplay = workDateISO ? workDateISO.split("-").reverse().join("-") : "";
       const payload = {
-        employeeName: document.getElementById("employeeName").value.trim(),
-        workDate,
+        employeeName: selectedName,
+        department: selectedDept,
+        workDate: workDateDisplay,
+        workDateISO,
         dayType: dayTypeEl.value,
         startTime: startTimeEl.value,
         endTime: endTimeEl.value,
@@ -1241,8 +1577,19 @@
       setAutoEndTime();
       generateRows();
       applyNameFromUrl();
+      applyDeptFromUrl();
+      if (!selectedDept) {
+        selectedDept = departments[0] || "";
+      }
+      renderDeptPills();
+      renderNamePills();
+      persistState();
     } else {
       applyNameFromUrl();
+      applyDeptFromUrl();
+      renderDeptPills();
+      renderNamePills();
+      persistState();
     }
   </script>
 </body>

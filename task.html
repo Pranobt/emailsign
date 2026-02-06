@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Submission Tracker (9-Hour Breakdown)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --accent: #009356;
+      --accent-2: #3bcf84;
+      --text: #0e1a2b;
+      --muted: #5b6b82;
+      --line: #e2e8f0;
+      --warn: #c98a1b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(900px 520px at 10% 0%, #eef3ff, #f5f7fb 60%);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .wrap {
+      width: min(1100px, 100%);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 25px 60px rgba(20, 30, 60, 0.12);
+    }
+
+    header {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: 0.2px;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    input[type="number"] {
+      text-align: center;
+      min-width: 70px;
+      padding: 10px 12px;
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .table-wrap {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #ffffff;
+    }
+
+    thead {
+      background: #f3f6fb;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    td.task {
+      width: 100%;
+      min-width: 240px;
+    }
+
+    textarea {
+      min-height: 48px;
+      resize: vertical;
+    }
+
+    .time-cell {
+      display: grid;
+      gap: 6px;
+      min-width: 120px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--warn);
+    }
+
+    .status {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .status.error {
+      color: #b42318;
+    }
+
+    .status.success {
+      color: #067647;
+    }
+
+    .hidden-row {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transform: translateY(-6px);
+      transition: max-height 300ms ease, opacity 300ms ease, transform 300ms ease;
+    }
+
+    tr {
+      transition: max-height 300ms ease, opacity 300ms ease, transform 300ms ease;
+    }
+
+    tr:not(.hidden-row) {
+      max-height: 900px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delete-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .delete-btn i {
+      color: #d92d20;
+      font-size: 14px;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .icon-btn i {
+      font-size: 14px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      width: min(420px, 100%);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+      padding: 16px 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .modal-body {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 12px;
+      }
+
+      .wrap {
+        padding: 16px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .actions button {
+        width: 100%;
+      }
+
+      .muted, .status {
+        width: 100%;
+        text-align: left;
+      }
+
+      table, thead, tbody, tr, td, th {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        padding: 12px 10px;
+        border-bottom: 1px solid var(--line);
+        border-radius: 12px;
+        background: #ffffff;
+        margin-bottom: 10px;
+      }
+
+      td {
+        border: none;
+        padding: 8px 0;
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 4px;
+      }
+
+      .time-cell {
+        min-width: 100px;
+      }
+
+      textarea {
+        min-height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Task Submission Tracker</h1>
+      <p>Plan and log a 9-hour day. Set a start time, add minutes and hours per block, and write tasks.</p>
+      <div class="controls">
+        <label>
+          Employee Name
+          <input id="employeeName" type="text" placeholder="e.g., Priya Shah" />
+        </label>
+        <label>
+          Date
+          <input id="workDate" type="date" />
+        </label>
+        <label>
+          Day Type
+          <select id="dayType">
+            <option value="full" selected>Full Day</option>
+            <option value="half">Half Day</option>
+          </select>
+        </label>
+        <label>
+          Start Time
+          <input id="startTime" type="time" value="09:00" />
+        </label>
+        <label>
+          End Time (Auto)
+          <input id="endTime" type="time" />
+        </label>
+        <label>
+          Default Task minutes
+          <input id="defaultMinutes" type="number" min="15" step="15" value="120" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="addRow" class="icon-btn" title="Add block" aria-label="Add block">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+        <button id="reset" class="secondary">Reset</button>
+        <button id="submit">Submit to Zoho Flow</button>
+        <span class="muted">Total duration updates automatically based on each block.</span>
+        <span class="status" id="status"></span>
+      </div>
+    </header>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Block</th>
+            <th>Start</th>
+            <th>Add Hours</th>
+            <th>Add Minutes</th>
+            <th>End</th>
+            <th>Tasks / Deliverables</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <div class="note" id="summary">Total scheduled: 0h 0m</div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle">Notice</h2>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions">
+        <button id="modalCancel" class="secondary">Cancel</button>
+        <button id="modalConfirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const rowsEl = document.getElementById("rows");
+    const startTimeEl = document.getElementById("startTime");
+    const defaultMinutesEl = document.getElementById("defaultMinutes");
+    const summaryEl = document.getElementById("summary");
+    const resetBtn = document.getElementById("reset");
+    const addRowBtn = document.getElementById("addRow");
+    const submitBtn = document.getElementById("submit");
+    const statusEl = document.getElementById("status");
+    const endTimeEl = document.getElementById("endTime");
+    const dayTypeEl = document.getElementById("dayType");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+    const modalCancel = document.getElementById("modalCancel");
+    const modalConfirm = document.getElementById("modalConfirm");
+
+    const WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.262d73321ec4cf092dc34d6310e3dee8.f22019fbcce0c6084f92ac9de2262976&isdebug=false";
+    let currentBlockIndex = 0;
+    let endTimeManual = false;
+    let suppressEndTimeConfirm = false;
+    let isAdjustingBlocks = false;
+
+    function parseTimeToMinutes(timeStr) {
+      if (!timeStr) return null;
+      const [hh, mm] = timeStr.split(":").map(Number);
+      if (Number.isNaN(hh) || Number.isNaN(mm)) return null;
+      return hh * 60 + mm;
+    }
+
+    function minutesToTime(mins) {
+      const safe = ((mins % 1440) + 1440) % 1440;
+      const h = Math.floor(safe / 60).toString().padStart(2, "0");
+      const m = Math.floor(safe % 60).toString().padStart(2, "0");
+      return `${h}:${m}`;
+    }
+
+    function todayISO() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function getRequiredMinutes() {
+      const workDate = document.getElementById("workDate").value;
+      if (dayTypeEl.value === "half") return 300;
+      const isSaturday = workDate ? new Date(workDate).getDay() === 6 : false;
+      return isSaturday ? 480 : 540;
+    }
+
+    function setAutoEndTime() {
+      if (endTimeManual) return;
+      const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
+      const requiredMinutes = getRequiredMinutes();
+      endTimeEl.value = minutesToTime(startMins + requiredMinutes);
+    }
+
+    function addBlockRow(startMins) {
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const row = buildRow(rowsEl.querySelectorAll("tr").length, startMins, defaultMinutes);
+      rowsEl.appendChild(row);
+      wireRow(row, rowsEl.querySelectorAll("tr").length - 1);
+    }
+
+    function ensureBlocksForEndTime() {
+      const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
+      const endMins = parseTimeToMinutes(endTimeEl.value);
+      if (endMins === null) return;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      if (defaultMinutes <= 0) return;
+
+      const duration = ((endMins - startMins) + 1440) % 1440;
+      const effectiveDuration = duration === 0 ? getRequiredMinutes() : duration;
+      const neededBlocks = Math.max(1, Math.ceil(effectiveDuration / defaultMinutes));
+      const currentBlocks = rowsEl.querySelectorAll("tr").length;
+
+      if (neededBlocks > currentBlocks) {
+        let lastEnd = currentBlocks
+          ? parseTimeToMinutes(rowsEl.querySelectorAll("tr")[currentBlocks - 1].querySelector(".end").value) ?? startMins
+          : startMins;
+        for (let i = currentBlocks; i < neededBlocks; i++) {
+          addBlockRow(lastEnd);
+          lastEnd += defaultMinutes;
+        }
+      }
+      if (neededBlocks < currentBlocks) {
+        const rows = Array.from(rowsEl.querySelectorAll("tr"));
+        for (let i = rows.length - 1; i >= neededBlocks; i--) {
+          rows[i].remove();
+        }
+        if (currentBlockIndex >= neededBlocks) {
+          currentBlockIndex = Math.max(0, neededBlocks - 1);
+        }
+      }
+      recalcFrom(0);
+      applyBlockVisibility();
+      persistState();
+    }
+
+    function buildRow(index, startMins, defaultMinutes) {
+      const tr = document.createElement("tr");
+      tr.dataset.index = index;
+      const addHours = Math.floor(defaultMinutes / 60);
+      const addMins = defaultMinutes % 60;
+
+      tr.innerHTML = `
+        <td data-label="Block">Block ${index + 1}</td>
+        <td data-label="Start">
+          <div class="time-cell">
+            <input type="time" class="start" value="${minutesToTime(startMins)}" />
+            <span class="muted">Auto from prior end</span>
+          </div>
+        </td>
+        <td data-label="Add Hours">
+          <input type="number" class="add-hours" min="0" max="8" value="${addHours}" />
+        </td>
+        <td data-label="Add Minutes">
+          <input type="number" class="add-mins" min="0" max="59" step="15" value="${addMins}" />
+        </td>
+        <td data-label="End">
+          <div class="time-cell">
+            <input type="time" class="end" value="${minutesToTime(startMins + defaultMinutes)}" />
+            <span class="muted">Auto update</span>
+          </div>
+        </td>
+        <td class="task" data-label="Tasks / Deliverables">
+          <textarea placeholder="What did you do in this block?"></textarea>
+        </td>
+        <td data-label="Remove">
+          <button class="delete-btn delete-row" type="button" title="Delete block" aria-label="Delete block">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      `;
+
+      return tr;
+    }
+
+    function serializeState() {
+      return {
+        currentBlockIndex,
+        endTimeManual,
+        employeeName: document.getElementById("employeeName").value,
+        workDate: document.getElementById("workDate").value,
+        dayType: dayTypeEl.value,
+        startTime: startTimeEl.value,
+        defaultMinutes: defaultMinutesEl.value,
+        endTime: endTimeEl.value,
+        blocks: Array.from(rowsEl.querySelectorAll("tr")).map((row) => ({
+          start: row.querySelector(".start").value,
+          addHours: row.querySelector(".add-hours").value,
+          addMinutes: row.querySelector(".add-mins").value,
+          end: row.querySelector(".end").value,
+          task: row.querySelector("textarea").value,
+        })),
+      };
+    }
+
+    function persistState() {
+      localStorage.setItem("taskTrackerState", JSON.stringify(serializeState()));
+    }
+
+    function restoreState() {
+      const raw = localStorage.getItem("taskTrackerState");
+      if (!raw) return false;
+      try {
+        const state = JSON.parse(raw);
+        currentBlockIndex = typeof state.currentBlockIndex === "number" ? state.currentBlockIndex : 0;
+        endTimeManual = Boolean(state.endTimeManual);
+        document.getElementById("employeeName").value = state.employeeName || "";
+        document.getElementById("workDate").value = state.workDate || todayISO();
+        dayTypeEl.value = state.dayType || "full";
+        startTimeEl.value = state.startTime || "09:00";
+        defaultMinutesEl.value = state.defaultMinutes || 120;
+
+        rowsEl.innerHTML = "";
+        const blocks = Array.isArray(state.blocks) ? state.blocks : [];
+        if (blocks.length) {
+          blocks.forEach((block, i) => {
+            const startMins = parseTimeToMinutes(block.start) ?? 0;
+            const row = buildRow(i, startMins, parseInt(defaultMinutesEl.value, 10) || 120);
+            rowsEl.appendChild(row);
+            row.querySelector(".start").value = block.start || row.querySelector(".start").value;
+            row.querySelector(".add-hours").value = block.addHours ?? 0;
+            row.querySelector(".add-mins").value = block.addMinutes ?? 0;
+            row.querySelector(".end").value = block.end || row.querySelector(".end").value;
+            row.querySelector("textarea").value = block.task || "";
+            wireRow(row, i);
+          });
+          recalcFrom(0);
+        } else {
+          generateRows();
+        }
+        if (!state.endTime) {
+          setAutoEndTime();
+        } else {
+          endTimeEl.value = state.endTime;
+        }
+        applyBlockVisibility();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function totalScheduledMinutes() {
+      let total = 0;
+      document.querySelectorAll(".add-hours").forEach((el, i) => {
+        const minsEl = document.querySelectorAll(".add-mins")[i];
+        const hours = parseInt(el.value, 10) || 0;
+        const mins = parseInt(minsEl.value, 10) || 0;
+        total += hours * 60 + mins;
+      });
+      return total;
+    }
+
+    function updateSummary() {
+      const total = totalScheduledMinutes();
+      const h = Math.floor(total / 60);
+      const m = total % 60;
+      const requiredMinutes = getRequiredMinutes();
+      const targetLabel = dayTypeEl.value === "half"
+        ? "Minimum 5h (Half Day)"
+        : (requiredMinutes === 480 ? "8h (Saturday)" : "9h");
+      summaryEl.textContent = `Total scheduled: ${h}h ${m}m`;
+      if (dayTypeEl.value === "half") {
+        if (total < requiredMinutes) {
+          summaryEl.textContent += ` (Target: ${targetLabel})`;
+        }
+      } else if (total !== requiredMinutes) {
+        summaryEl.textContent += ` (Target: ${targetLabel})`;
+      }
+    }
+
+    function recalcFrom(rowIndex) {
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      const mainEndMins = parseTimeToMinutes(endTimeEl.value);
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const defaultHours = Math.floor(defaultMinutes / 60);
+      const defaultMins = defaultMinutes % 60;
+      for (let i = rowIndex; i < rows.length; i++) {
+        const row = rows[i];
+        const startInput = row.querySelector(".start");
+        const endInput = row.querySelector(".end");
+        if (i > rowIndex) {
+          row.querySelector(".add-hours").value = defaultHours;
+          row.querySelector(".add-mins").value = defaultMins;
+        }
+        const addHours = parseInt(row.querySelector(".add-hours").value, 10) || 0;
+        const addMins = parseInt(row.querySelector(".add-mins").value, 10) || 0;
+        const startMins = parseTimeToMinutes(startInput.value) ?? 0;
+        let endMins = startMins + addHours * 60 + addMins;
+        const isLast = i === rows.length - 1;
+        if (mainEndMins !== null && endMins > mainEndMins && (endTimeManual || !isLast)) {
+          endMins = mainEndMins;
+        }
+        endInput.value = minutesToTime(endMins);
+
+        if (i + 1 < rows.length) {
+          const nextStart = rows[i + 1].querySelector(".start");
+          nextStart.value = minutesToTime(endMins);
+        }
+      }
+      rows.forEach((row, i) => {
+        row.querySelector("td").textContent = `Block ${i + 1}`;
+        row.dataset.index = i;
+      });
+      if (mainEndMins !== null) {
+        const lastEnd = rows.length
+          ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? mainEndMins
+          : null;
+        if (lastEnd !== null && lastEnd < mainEndMins) {
+          const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+          let nextStart = lastEnd;
+          while (nextStart < mainEndMins) {
+            addBlockRow(nextStart);
+            nextStart += defaultMinutes;
+          }
+          recalcFrom(0);
+          return;
+        }
+      }
+      const total = totalScheduledMinutes();
+      const requiredMinutes = getRequiredMinutes();
+      if (total > requiredMinutes) {
+        currentBlockIndex = rows.length - 1;
+        applyBlockVisibility();
+      }
+      if (endTimeManual && !isAdjustingBlocks) {
+        isAdjustingBlocks = true;
+        ensureBlocksForEndTime();
+        isAdjustingBlocks = false;
+      }
+      updateSummary();
+      persistState();
+    }
+
+    function applyBlockVisibility() {
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      if (!rows.length) return;
+
+      rows.forEach((row, i) => {
+        row.classList.toggle("hidden-row", i > currentBlockIndex);
+      });
+    }
+
+    function wireRow(row, index) {
+      const maybeRevealNext = () => {
+        const rows = Array.from(rowsEl.querySelectorAll("tr"));
+        if (index === currentBlockIndex && index + 1 < rows.length) {
+          currentBlockIndex = index + 1;
+          applyBlockVisibility();
+          persistState();
+        }
+      };
+
+      row.querySelectorAll(".add-hours, .add-mins").forEach((input) => {
+        input.addEventListener("focus", () => {
+          row.dataset.prevHours = row.querySelector(".add-hours").value;
+          row.dataset.prevMins = row.querySelector(".add-mins").value;
+        });
+        input.addEventListener("input", async () => {
+          const rows = Array.from(rowsEl.querySelectorAll("tr"));
+          const lastIndex = rows.length - 1;
+          const oldEnd = endTimeEl.value;
+          recalcFrom(index);
+          if (index === lastIndex && !endTimeManual && !suppressEndTimeConfirm) {
+            const lastEnd = rows[rows.length - 1].querySelector(".end").value;
+            if (lastEnd !== oldEnd) {
+              const ok = await openModal({
+                title: "Update End Time?",
+                message: "Last block changed the end time. Update the main End Time?",
+                confirmText: "Update",
+                cancelText: "Keep",
+                showCancel: true
+              });
+              if (!ok) {
+                suppressEndTimeConfirm = true;
+                const prevHours = row.dataset.prevHours ?? row.querySelector(".add-hours").value;
+                const prevMins = row.dataset.prevMins ?? row.querySelector(".add-mins").value;
+                row.querySelector(".add-hours").value = prevHours;
+                row.querySelector(".add-mins").value = prevMins;
+                recalcFrom(index);
+                suppressEndTimeConfirm = false;
+                return;
+              }
+              endTimeEl.value = lastEnd;
+            }
+          } else if (!endTimeManual && rows.length) {
+            const lastEnd = rows[rows.length - 1].querySelector(".end").value;
+            endTimeEl.value = lastEnd;
+          }
+          maybeRevealNext();
+        });
+      });
+
+      row.querySelector(".start").addEventListener("input", () => recalcFrom(index));
+      row.querySelector("textarea").addEventListener("input", () => {
+        persistState();
+        maybeRevealNext();
+      });
+      row.querySelector(".delete-row").addEventListener("click", () => {
+        row.remove();
+        const rows = Array.from(rowsEl.querySelectorAll("tr"));
+        if (currentBlockIndex >= rows.length) {
+          currentBlockIndex = Math.max(0, rows.length - 1);
+        }
+        endTimeManual = false;
+        recalcFrom(0);
+        const lastEnd = rowsEl.querySelector("tr:last-child .end");
+        if (lastEnd) endTimeEl.value = lastEnd.value;
+        applyBlockVisibility();
+        persistState();
+      });
+    }
+
+    function getDurationMinutes() {
+      const startMins = parseTimeToMinutes(startTimeEl.value);
+      const endMins = parseTimeToMinutes(endTimeEl.value);
+      if (startMins === null || endMins === null) return getRequiredMinutes();
+      const duration = ((endMins - startMins) + 1440) % 1440;
+      return duration === 0 ? getRequiredMinutes() : duration;
+    }
+
+    function generateRows() {
+      rowsEl.innerHTML = "";
+      const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const durationMinutes = getDurationMinutes();
+      const blockCount = Math.max(1, Math.ceil(durationMinutes / defaultMinutes));
+      let currentStart = startMins;
+
+      for (let i = 0; i < blockCount; i++) {
+        const row = buildRow(i, currentStart, defaultMinutes);
+        rowsEl.appendChild(row);
+        wireRow(row, i);
+        currentStart += defaultMinutes;
+      }
+      currentBlockIndex = 0;
+      endTimeManual = false;
+      const lastEnd = rowsEl.querySelector("tr:last-child .end");
+      if (lastEnd) endTimeEl.value = lastEnd.value;
+      updateSummary();
+      persistState();
+      applyBlockVisibility();
+    }
+
+    function applyDefaultMinutesToAll() {
+      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 120;
+      const addHours = Math.floor(defaultMinutes / 60);
+      const addMins = defaultMinutes % 60;
+      rowsEl.querySelectorAll(".add-hours").forEach((input) => {
+        input.value = addHours;
+      });
+      rowsEl.querySelectorAll(".add-mins").forEach((input) => {
+        input.value = addMins;
+      });
+      ensureBlocksForEndTime();
+      recalcFrom(0);
+      if (!endTimeManual) {
+        const lastEnd = rowsEl.querySelector("tr:last-child .end");
+        if (lastEnd) endTimeEl.value = lastEnd.value;
+      }
+      persistState();
+    }
+
+    function openModal({ title, message, confirmText = "OK", cancelText = "Cancel", showCancel = true }) {
+      return new Promise((resolve) => {
+        modalTitle.textContent = title || "Notice";
+        modalBody.textContent = message || "";
+        modalConfirm.textContent = confirmText;
+        modalCancel.textContent = cancelText;
+        modalCancel.style.display = showCancel ? "inline-flex" : "none";
+        modalBackdrop.classList.add("active");
+        modalBackdrop.setAttribute("aria-hidden", "false");
+
+        const cleanup = () => {
+          modalBackdrop.classList.remove("active");
+          modalBackdrop.setAttribute("aria-hidden", "true");
+          modalConfirm.onclick = null;
+          modalCancel.onclick = null;
+        };
+
+        modalConfirm.onclick = () => {
+          cleanup();
+          resolve(true);
+        };
+        modalCancel.onclick = () => {
+          cleanup();
+          resolve(false);
+        };
+      });
+    }
+
+    function buildSummaryText(payload) {
+      const hours = Math.floor(payload.totalMinutes / 60);
+      const mins = payload.totalMinutes % 60;
+      const dayLabel = payload.dayType === "half" ? "Half Day" : "Full Day";
+      const header = `Task Summary (${dayLabel})`;
+      const meta = `Employee: ${payload.employeeName || "-"} | Date: ${payload.workDate || "-"} | ${payload.startTime || "-"} - ${payload.endTime || "-"}`;
+      const total = `Total: ${hours}h ${mins}m`;
+      const blockLines = payload.blocks.map((b) => {
+        const timeRange = `${b.start || "-"} - ${b.end || "-"}`;
+        const taskText = b.task || "-";
+        return `Block ${b.block}: ${timeRange} | ${taskText}`;
+      });
+      return [header, meta, total, ...blockLines].join("\\n");
+    }
+
+    document.getElementById("employeeName").addEventListener("input", persistState);
+    document.getElementById("workDate").addEventListener("change", () => {
+      updateSummary();
+      endTimeManual = false;
+      const lastEnd = rowsEl.querySelector("tr:last-child .end");
+      if (lastEnd) endTimeEl.value = lastEnd.value;
+      persistState();
+    });
+    dayTypeEl.addEventListener("change", () => {
+      updateSummary();
+      endTimeManual = false;
+      const lastEnd = rowsEl.querySelector("tr:last-child .end");
+      if (lastEnd) endTimeEl.value = lastEnd.value;
+      persistState();
+    });
+    startTimeEl.addEventListener("input", generateRows);
+    defaultMinutesEl.addEventListener("input", () => {
+      applyDefaultMinutesToAll();
+      setAutoEndTime();
+    });
+    endTimeEl.addEventListener("input", () => {
+      endTimeManual = true;
+      ensureBlocksForEndTime();
+      persistState();
+    });
+    addRowBtn.addEventListener("click", () => {
+      const rows = Array.from(rowsEl.querySelectorAll("tr"));
+      const lastEnd = rows.length
+        ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? 0
+        : (parseTimeToMinutes(startTimeEl.value) ?? 540);
+      addBlockRow(lastEnd);
+      currentBlockIndex = rowsEl.querySelectorAll("tr").length - 1;
+      endTimeManual = false;
+      recalcFrom(0);
+      const lastEndInput = rowsEl.querySelector("tr:last-child .end");
+      if (lastEndInput) endTimeEl.value = lastEndInput.value;
+      applyBlockVisibility();
+      persistState();
+    });
+    resetBtn.addEventListener("click", () => {
+      document.getElementById("employeeName").value = "";
+      document.getElementById("workDate").value = todayISO();
+      startTimeEl.value = "09:00";
+      defaultMinutesEl.value = 120;
+      generateRows();
+      persistState();
+    });
+
+    submitBtn.addEventListener("click", async () => {
+      statusEl.className = "status";
+      statusEl.textContent = "";
+
+      const workDate = document.getElementById("workDate").value;
+      const total = totalScheduledMinutes();
+      const requiredMinutes = getRequiredMinutes();
+
+      const allTasksFilled = Array.from(rowsEl.querySelectorAll("textarea")).every(
+        (t) => t.value.trim().length > 0
+      );
+      if (!allTasksFilled) {
+        statusEl.classList.add("error");
+        statusEl.textContent = "Please fill in tasks for every block before submitting.";
+        await openModal({
+          title: "Missing Tasks",
+          message: statusEl.textContent,
+          confirmText: "OK",
+          showCancel: false
+        });
+        return;
+      }
+
+      if (dayTypeEl.value === "half") {
+        if (total < requiredMinutes) {
+          statusEl.classList.add("error");
+          statusEl.textContent = `Half Day requires at least 5h. Current: ${Math.floor(total / 60)}h ${total % 60}m.`;
+          await openModal({
+            title: "Hours Required",
+            message: statusEl.textContent,
+            confirmText: "OK",
+            showCancel: false
+          });
+          return;
+        }
+      } else if (total !== requiredMinutes) {
+        const targetLabel = requiredMinutes === 480 ? "8h (Saturday)" : "9h";
+        statusEl.classList.add("error");
+        statusEl.textContent = `Total must be exactly ${targetLabel}. Current: ${Math.floor(total / 60)}h ${total % 60}m.`;
+        await openModal({
+          title: "Hours Required",
+          message: statusEl.textContent,
+          confirmText: "OK",
+          showCancel: false
+        });
+        return;
+      }
+
+      const confirmMessage = `Submit tasks for ${workDate || "this date"} with total ${Math.floor(total / 60)}h ${total % 60}m?`;
+      const confirmed = await openModal({
+        title: "Confirm Submit",
+        message: confirmMessage,
+        confirmText: "Submit",
+        cancelText: "Cancel",
+        showCancel: true
+      });
+      if (!confirmed) return;
+
+      statusEl.textContent = "Submitting...";
+      const payload = {
+        employeeName: document.getElementById("employeeName").value.trim(),
+        workDate,
+        dayType: dayTypeEl.value,
+        startTime: startTimeEl.value,
+        endTime: endTimeEl.value,
+        totalMinutes: totalScheduledMinutes(),
+        blocks: Array.from(rowsEl.querySelectorAll("tr")).map((row, i) => ({
+          block: i + 1,
+          start: row.querySelector(".start").value,
+          addHours: row.querySelector(".add-hours").value,
+          addMinutes: row.querySelector(".add-mins").value,
+          end: row.querySelector(".end").value,
+          task: row.querySelector("textarea").value.trim(),
+        })),
+      };
+      payload.summaryText = buildSummaryText(payload);
+
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        statusEl.classList.add(res.ok ? "success" : "error");
+        statusEl.textContent = res.ok ? "Submitted successfully." : `Submit failed (${res.status}).`;
+      } catch (err) {
+        statusEl.classList.add("error");
+        statusEl.textContent = "Submit failed (network error).";
+      }
+      persistState();
+    });
+
+    if (!restoreState()) {
+      document.getElementById("workDate").value = todayISO();
+      generateRows();
+    }
+  </script>
+</body>
+</html>

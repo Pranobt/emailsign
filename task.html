@@ -450,7 +450,7 @@
 
     <div class="note" id="summary">Total scheduled: 0h 0m</div>
     <div class="submit-bar">
-      <button id="viewSummary" class="secondary">View Cliq Message</button>
+      <button id="viewSummary" class="secondary">View Message</button>
       <button id="submit">Submit to Zoho Flow</button>
     </div>
   </div>
@@ -997,15 +997,54 @@
       const hours = Math.floor(payload.totalMinutes / 60);
       const mins = payload.totalMinutes % 60;
       const dayLabel = payload.dayType === "half" ? "Half Day" : "Full Day";
-      const header = `Task Summary (${dayLabel})`;
-      const meta = `Employee: ${payload.employeeName || "-"}\nDate: ${payload.workDate || "-"}\nTime: ${payload.startTime || "-"} - ${payload.endTime || "-"}`;
-      const total = `Total: ${hours}h ${mins}m`;
-      const blockLines = payload.blocks.map((b) => {
-        const timeRange = `${b.start || "-"} - ${b.end || "-"}`;
+      const formatDate = (iso) => {
+        if (!iso || !iso.includes("-")) return iso || "-";
+        const [y, m, d] = iso.split("-");
+        return `${d}-${m}-${y}`;
+      };
+      const header = `${payload.employeeName || "-"} Task Summary for ${formatDate(payload.workDate)}`;
+      const meta = `Time : ${payload.startTime || "-"} - ${payload.endTime || "-"} (${hours}h ${mins}m)`;
+      const blockLines = payload.blocks.map((b, idx) => {
+        const startTime = `${b.start || "-"}`;
         const taskText = b.task || "-";
-        return `Task ${b.block}: ${timeRange}\n${taskText}`;
+        return `${idx + 1}) ${startTime}\n   ${taskText}`;
       });
-      return [header, meta, total, "", ...blockLines].join("\\n");
+      const spacedBlocks = blockLines.flatMap((line, i) => (i === 0 ? [line] : ["", line]));
+      return [header, meta, "", "Tasks:", ...spacedBlocks].join("\n");
+    }
+
+    function buildSheetsPayload(payload) {
+      const tasksText = payload.blocks
+        .map((b) => `Task ${b.block}: ${b.task || "-"}`)
+        .join(" | ");
+      return {
+        Date: payload.workDate || "",
+        Name: payload.employeeName || "",
+        "Tasks Count": payload.blocks.length,
+        Day: payload.dayType === "half" ? "Half Day" : "Full Day",
+        "Tasks (all in one cell)": tasksText
+      };
+    }
+
+    async function postViaFetch(payload) {
+      const params = new URLSearchParams();
+      Object.keys(payload).forEach((key) => {
+        const val = payload[key];
+        if (typeof val === "object") {
+          params.append(key, JSON.stringify(val));
+        } else {
+          params.append(key, val == null ? "" : String(val));
+        }
+      });
+
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: params.toString(),
+        keepalive: true,
+      });
+      return true;
     }
 
     function applyNameFromUrl() {
@@ -1182,15 +1221,14 @@
         })),
       };
       payload.summaryText = buildSummaryText(payload);
+      payload.sheetsPayload = buildSheetsPayload(payload);
 
       try {
-        const res = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        statusEl.classList.add(res.ok ? "success" : "error");
-        statusEl.textContent = res.ok ? "Submitted successfully." : `Submit failed (${res.status}).`;
+        const ok = await postViaFetch(payload);
+        statusEl.classList.add(ok ? "success" : "error");
+        statusEl.textContent = ok
+          ? "Submitted successfully."
+          : "Submit failed (browser blocked request).";
       } catch (err) {
         statusEl.classList.add("error");
         statusEl.textContent = "Submit failed (network error).";

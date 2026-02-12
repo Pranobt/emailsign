@@ -515,6 +515,23 @@
       min-height: 68px;
     }
 
+    .meta-field.has-error > label {
+      color: #af2c2c;
+    }
+
+    .meta-field.has-error input,
+    .meta-field.has-error select,
+    .meta-field.has-error textarea {
+      border-color: #d64b4b;
+      box-shadow: 0 0 0 2px rgba(214, 75, 75, 0.12);
+    }
+
+    .field-error {
+      color: #b12f2f;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
     .pending-meta input[type="number"],
     .extra-meta input[type="number"] {
       text-align: center;
@@ -536,6 +553,49 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       background: var(--surface);
+    }
+
+    .sync-meta {
+      font-size: 11px;
+      color: #5d7f73;
+      padding: 0 4px;
+    }
+
+    .sod-buckets {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .bucket-chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f3faf7;
+      color: #336252;
+      font-size: 11px;
+      padding: 3px 10px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .task-section-title {
+      font-size: 12px;
+      color: #4f6f64;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      margin: 4px 0 2px;
+    }
+
+    .progress-hint {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #56766a;
+      border-top: 1px dashed var(--line);
+      padding-top: 6px;
     }
 
     .status {
@@ -666,6 +726,7 @@
           <input id="workDate" type="date" />
         </label>
         <div id="sodSourceHint" class="sod-source">Carryover source: -</div>
+        <div id="syncMetaLine" class="sync-meta">Sync: Not run</div>
       </div>
     </section>
 
@@ -703,6 +764,7 @@
             <button id="addTaskBtn" class="secondary" type="button"><i class="fa-solid fa-plus"></i>Add Task</button>
           </div>
           <div class="muted" style="margin-top:6px;">Priority can be Low, Medium, or High.</div>
+          <div id="sodBuckets" class="sod-buckets"></div>
         </div>
 
         <div class="panel-list-area">
@@ -712,6 +774,8 @@
         <div class="panel-actions">
           <div id="sodStatus" class="status"></div>
           <div class="action-row">
+            <button id="syncCarryoverBtn" type="button" class="secondary"><i class="fa-solid fa-rotate"></i>Sync Now</button>
+            <button id="copySummaryLinkBtn" type="button" class="secondary"><i class="fa-solid fa-link"></i>Copy Summary Link</button>
             <button id="submitSodBtn" type="button"><i class="fa-solid fa-paper-plane"></i>Submit Start of Day</button>
           </div>
         </div>
@@ -801,6 +865,10 @@
     const sodStatusEl = document.getElementById("sodStatus");
     const sodTasksEl = document.getElementById("sodTasks");
     const sodSourceHintEl = document.getElementById("sodSourceHint");
+    const syncMetaLineEl = document.getElementById("syncMetaLine");
+    const sodBucketsEl = document.getElementById("sodBuckets");
+    const syncCarryoverBtn = document.getElementById("syncCarryoverBtn");
+    const copySummaryLinkBtn = document.getElementById("copySummaryLinkBtn");
 
     const addExtraBtn = document.getElementById("addExtraBtn");
     const submitEodBtn = document.getElementById("submitEodBtn");
@@ -823,6 +891,17 @@
       const mm = String(dt.getMonth() + 1).padStart(2, "0");
       const dd = String(dt.getDate()).padStart(2, "0");
       return `${yy}-${mm}-${dd}`;
+    }
+
+    function createRequestId() {
+      return `req-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+
+    function formatDateTime(ts) {
+      if (!ts) return "-";
+      const d = new Date(ts);
+      if (Number.isNaN(d.getTime())) return "-";
+      return d.toLocaleString();
     }
 
     function createTaskId() {
@@ -862,6 +941,7 @@
         workDate: todayISO(),
         startDraftByDate: {},
         startSourceByDate: {},
+        syncMetaByDate: {},
         sodByDate: {},
         eodSubmittedByDate: {},
         eodDraftByDate: {},
@@ -881,6 +961,7 @@
           workDate: parsed.workDate || todayISO(),
           startDraftByDate: parsed.startDraftByDate || {},
           startSourceByDate: parsed.startSourceByDate || {},
+          syncMetaByDate: parsed.syncMetaByDate || {},
           sodByDate: parsed.sodByDate || {},
           eodSubmittedByDate: parsed.eodSubmittedByDate || {},
           eodDraftByDate: parsed.eodDraftByDate || {},
@@ -912,7 +993,8 @@
           priority: normalizePriority(t.priority),
           source: "carryover",
           lastCompletion: Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : null,
-          lastNote: t.lastNote || ""
+          lastNote: t.lastNote || "",
+          carryoverOrigin: String(t.carryoverOrigin || state.carryoverSourceByDate[dateKey] || "local-storage")
         }));
         if (carry.length) {
           state.startSourceByDate[dateKey] = state.carryoverSourceByDate[dateKey] === "google-sheets"
@@ -958,6 +1040,9 @@
           const selector = `[data-editor-id="${esc(editorId)}"][data-field="${esc(field)}"]`;
           const el = document.querySelector(selector);
           if (!el) return;
+          if (typeof el.scrollIntoView === "function") {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
           el.focus({ preventScroll: false });
           if (typeof el.select === "function" && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) {
             el.select();
@@ -989,7 +1074,8 @@
           priority: normalizePriority(t.priority),
           source: "carryover",
           lastCompletion: Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : null,
-          lastNote: String(t.lastNote || "").trim()
+          lastNote: String(t.lastNote || "").trim(),
+          carryoverOrigin: String(t.carryoverOrigin || "local-storage")
         });
       });
 
@@ -1002,7 +1088,8 @@
           priority: normalizePriority(t.priority),
           source: isCarryoverTask(t) ? "carryover" : "sod",
           lastCompletion: isCarryoverTask(t) ? getCarryoverLastCompletion(t) : null,
-          lastNote: isCarryoverTask(t) ? String(t.lastNote || "").trim() : ""
+          lastNote: isCarryoverTask(t) ? String(t.lastNote || "").trim() : "",
+          carryoverOrigin: isCarryoverTask(t) ? String(t.carryoverOrigin || "local-storage") : ""
         });
       });
 
@@ -1015,11 +1102,15 @@
           selectedTaskIds: {},
           updatesByTaskId: {},
           extras: [],
-          activeEditorId: ""
+          activeEditorId: "",
+          fieldErrors: {}
         };
       }
       if (typeof state.eodDraftByDate[dateKey].activeEditorId !== "string") {
         state.eodDraftByDate[dateKey].activeEditorId = "";
+      }
+      if (!state.eodDraftByDate[dateKey].fieldErrors || typeof state.eodDraftByDate[dateKey].fieldErrors !== "object") {
+        state.eodDraftByDate[dateKey].fieldErrors = {};
       }
       return state.eodDraftByDate[dateKey];
     }
@@ -1141,9 +1232,35 @@
           priority: normalizePriority(t.priority),
           source: "carryover",
           lastCompletion: t.lastCompletion,
-          lastNote: t.lastNote
+          lastNote: t.lastNote,
+          carryoverOrigin: "google-sheets"
         }))
         .filter((t) => t.title.length > 0);
+    }
+
+    async function fetchCarryoverWithRetry(payload, maxAttempts = 2) {
+      let lastError = null;
+      for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+        try {
+          const result = await callApiJsonp("getCarryover", payload, 12000 + (attempt - 1) * 5000);
+          if (!result || result.ok === false) {
+            throw new Error(result && result.message ? result.message : "Carryover fetch rejected.");
+          }
+          return { result, attempts: attempt };
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      throw lastError || new Error("Carryover sync failed.");
+    }
+
+    function setSyncMeta(dateKey, meta) {
+      state.syncMetaByDate[dateKey] = {
+        at: new Date().toISOString(),
+        status: meta.status || "idle",
+        attempts: Number(meta.attempts || 0),
+        message: String(meta.message || "")
+      };
     }
 
     async function syncCarryoverFromSheets(dateKey, force = false) {
@@ -1151,12 +1268,13 @@
       if (!force && state.carryoverSyncedByDate[dateKey]) return;
       if (Array.isArray(state.sodByDate[dateKey]) && state.sodByDate[dateKey].length) {
         state.carryoverSyncedByDate[dateKey] = true;
+        setSyncMeta(dateKey, { status: "skipped", message: "Skipped (SOD already submitted for this date)." });
         saveState();
         return;
       }
 
       try {
-        const result = await callApiJsonp("getCarryover", {
+        const { result, attempts } = await fetchCarryoverWithRetry({
           workDate: dateKey,
           department: identity.dept,
           employeeName: identity.name,
@@ -1164,15 +1282,12 @@
           clientVersion: CLIENT_VERSION
         });
 
-        if (!result || result.ok === false) {
-          throw new Error(result && result.message ? result.message : "Carryover fetch rejected.");
-        }
-
         const carryoverTasks = normalizeCarryoverPayload(result);
         state.carryoverByDate[dateKey] = carryoverTasks;
         state.carryoverSourceByDate[dateKey] = "google-sheets";
         mergeCarryoverIntoStartDraft(dateKey, carryoverTasks);
         state.startSourceByDate[dateKey] = "google-sheets";
+        setSyncMeta(dateKey, { status: "success", attempts, message: `Synced ${carryoverTasks.length} carryover task(s) from Google Sheets.` });
 
         state.carryoverSyncedByDate[dateKey] = true;
         saveState();
@@ -1182,8 +1297,11 @@
           if (!state.startSourceByDate[dateKey]) {
             state.startSourceByDate[dateKey] = "local-storage";
           }
-          saveState();
+          setSyncMeta(dateKey, { status: "fallback", message: "Using local carryover fallback." });
+        } else {
+          setSyncMeta(dateKey, { status: "error", message: String(err && err.message ? err.message : err) });
         }
+        saveState();
         setStatus(sodStatusEl, "Could not pull carryover from Google Sheets. Showing local carryover fallback.", "info");
       }
     }
@@ -1209,10 +1327,38 @@
       sodSourceHintEl.textContent = "Carryover source: Local storage";
     }
 
+    function renderSyncMeta() {
+      const dateKey = workDateEl.value;
+      const meta = state.syncMetaByDate[dateKey];
+      if (!meta) {
+        syncMetaLineEl.textContent = "Sync: Not run";
+        return;
+      }
+      const label = meta.status === "success" ? "Success"
+        : meta.status === "fallback" ? "Fallback"
+        : meta.status === "error" ? "Failed"
+        : meta.status === "skipped" ? "Skipped"
+        : "Info";
+      const tries = meta.attempts ? ` | Attempts: ${meta.attempts}` : "";
+      syncMetaLineEl.textContent = `Sync: ${label} | ${formatDateTime(meta.at)}${tries}${meta.message ? ` | ${meta.message}` : ""}`;
+    }
+
     function renderStartTasks() {
       const dateKey = workDateEl.value;
       const tasks = getOrCreateStartDraft(dateKey);
       sodTasksEl.innerHTML = "";
+      const carryoverTasks = tasks.filter((t) => isCarryoverTask(t));
+      const newTasks = tasks.filter((t) => !isCarryoverTask(t));
+      sodBucketsEl.innerHTML = "";
+      const carryChip = document.createElement("span");
+      carryChip.className = "bucket-chip";
+      carryChip.textContent = `Carryover ${carryoverTasks.length}`;
+      const newChip = document.createElement("span");
+      newChip.className = "bucket-chip";
+      newChip.textContent = `New ${newTasks.length}`;
+      sodBucketsEl.appendChild(carryChip);
+      sodBucketsEl.appendChild(newChip);
+
       if (!tasks.length) {
         const empty = document.createElement("div");
         empty.className = "empty";
@@ -1221,7 +1367,20 @@
         return;
       }
 
-      tasks.forEach((task, index) => {
+      let srIndex = 0;
+      const renderSection = (titleText, list) => {
+        if (!list.length) return;
+        const section = document.createElement("div");
+        section.className = "task-section-title";
+        section.textContent = titleText;
+        sodTasksEl.appendChild(section);
+        list.forEach((task) => {
+          srIndex += 1;
+          renderTask(task, srIndex);
+        });
+      };
+
+      const renderTask = (task, index) => {
         const isCarryover = isCarryoverTask(task);
         const prevCompletion = getCarryoverLastCompletion(task);
         const row = document.createElement("div");
@@ -1234,7 +1393,7 @@
         titleWrap.className = "task-title-wrap";
         const sr = document.createElement("span");
         sr.className = "sr-badge";
-        sr.textContent = `#${String(index + 1).padStart(2, "0")}`;
+        sr.textContent = `#${String(index).padStart(2, "0")}`;
         const title = document.createElement("div");
         title.className = "task-title";
         title.textContent = task.title;
@@ -1255,6 +1414,12 @@
           lockedChip.className = "meta-chip locked";
           lockedChip.innerHTML = "<i class=\"fa-solid fa-lock\"></i> Locked Carryover";
           right.appendChild(lockedChip);
+          const originChip = document.createElement("span");
+          originChip.className = "meta-chip";
+          originChip.textContent = String(task.carryoverOrigin || "").toLowerCase() === "google-sheets"
+            ? "From Google Sheets"
+            : "From Local";
+          right.appendChild(originChip);
         }
         if (prevCompletion !== null) {
           const prevChip = document.createElement("span");
@@ -1283,7 +1448,32 @@
         row.appendChild(head);
 
         sodTasksEl.appendChild(row);
-      });
+      };
+
+      renderSection("Locked Carryover", carryoverTasks);
+      renderSection("New Tasks Added Today", newTasks);
+    }
+
+    function getFieldError(eodDraft, editorId, field) {
+      return eodDraft.fieldErrors
+        && eodDraft.fieldErrors[editorId]
+        && eodDraft.fieldErrors[editorId][field]
+        ? String(eodDraft.fieldErrors[editorId][field])
+        : "";
+    }
+
+    function clearFieldError(eodDraft, editorId, field) {
+      if (!eodDraft.fieldErrors || !eodDraft.fieldErrors[editorId]) return;
+      delete eodDraft.fieldErrors[editorId][field];
+      if (!Object.keys(eodDraft.fieldErrors[editorId]).length) {
+        delete eodDraft.fieldErrors[editorId];
+      }
+    }
+
+    function setFieldError(eodDraft, editorId, field, message) {
+      if (!eodDraft.fieldErrors) eodDraft.fieldErrors = {};
+      if (!eodDraft.fieldErrors[editorId]) eodDraft.fieldErrors[editorId] = {};
+      eodDraft.fieldErrors[editorId][field] = String(message || "");
     }
 
     function renderEodTasks() {
@@ -1335,6 +1525,7 @@
         const editorId = `pending:${task.taskId}`;
         const row = document.createElement("div");
         row.className = "pending-row";
+        const allowedCompletion = getAllowedCompletionOptions(task);
 
         const head = document.createElement("div");
         head.className = "pending-row-head";
@@ -1362,13 +1553,18 @@
         head.appendChild(sel);
         head.appendChild(pri);
         row.appendChild(head);
+        if (isCarryoverTask(task) && getCarryoverLastCompletion(task) !== null) {
+          const hint = document.createElement("div");
+          hint.className = "progress-hint";
+          hint.textContent = `Prev ${getCarryoverLastCompletion(task)}% | Allowed now: ${allowedCompletion.join(", ")}%`;
+          row.appendChild(hint);
+        }
 
         const meta = document.createElement("div");
         meta.className = "pending-meta";
         meta.style.display = checkbox.checked && activeEditorId === editorId ? "grid" : "none";
 
         const percent = document.createElement("select");
-        const allowedCompletion = getAllowedCompletionOptions(task);
         percent.innerHTML = buildCompletionOptionsMarkup(allowedCompletion);
 
         const spentHours = document.createElement("input");
@@ -1410,24 +1606,48 @@
 
         const percentField = document.createElement("div");
         percentField.className = "meta-field";
+        const percentError = getFieldError(eodDraft, editorId, "completionPercent");
+        if (percentError) percentField.classList.add("has-error");
         const percentLabel = document.createElement("label");
         percentLabel.textContent = "Completion %";
         percentField.appendChild(percentLabel);
         percentField.appendChild(percent);
+        if (percentError) {
+          const error = document.createElement("div");
+          error.className = "field-error";
+          error.textContent = percentError;
+          percentField.appendChild(error);
+        }
 
         const hoursField = document.createElement("div");
         hoursField.className = "meta-field";
+        const hoursError = getFieldError(eodDraft, editorId, "spentHours");
+        if (hoursError) hoursField.classList.add("has-error");
         const hoursLabel = document.createElement("label");
         hoursLabel.textContent = "Hours";
         hoursField.appendChild(hoursLabel);
         hoursField.appendChild(spentHours);
+        if (hoursError) {
+          const error = document.createElement("div");
+          error.className = "field-error";
+          error.textContent = hoursError;
+          hoursField.appendChild(error);
+        }
 
         const minsField = document.createElement("div");
         minsField.className = "meta-field";
+        const minsError = getFieldError(eodDraft, editorId, "spentMinutes");
+        if (minsError) minsField.classList.add("has-error");
         const minsLabel = document.createElement("label");
         minsLabel.textContent = "Minutes";
         minsField.appendChild(minsLabel);
         minsField.appendChild(spentMinutes);
+        if (minsError) {
+          const error = document.createElement("div");
+          error.className = "field-error";
+          error.textContent = minsError;
+          minsField.appendChild(error);
+        }
 
         const noteField = document.createElement("div");
         noteField.className = "meta-field note-field";
@@ -1482,6 +1702,7 @@
             eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
           }
           eodDraft.updatesByTaskId[task.taskId].completionPercent = value;
+          clearFieldError(eodDraft, editorId, "completionPercent");
           saveState();
           updateSummaryCards();
         });
@@ -1491,6 +1712,7 @@
             eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
           }
           eodDraft.updatesByTaskId[task.taskId].spentHours = spentHours.value;
+          clearFieldError(eodDraft, editorId, "spentHours");
           saveState();
           updateSummaryCards();
         });
@@ -1500,6 +1722,7 @@
             eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
           }
           eodDraft.updatesByTaskId[task.taskId].spentMinutes = spentMinutes.value;
+          clearFieldError(eodDraft, editorId, "spentMinutes");
           saveState();
           updateSummaryCards();
         });
@@ -1591,24 +1814,48 @@
 
         const percentField = document.createElement("div");
         percentField.className = "meta-field";
+        const percentError = getFieldError(eodDraft, editorId, "completionPercent");
+        if (percentError) percentField.classList.add("has-error");
         const percentLabel = document.createElement("label");
         percentLabel.textContent = "Completion %";
         percentField.appendChild(percentLabel);
         percentField.appendChild(percent);
+        if (percentError) {
+          const error = document.createElement("div");
+          error.className = "field-error";
+          error.textContent = percentError;
+          percentField.appendChild(error);
+        }
 
         const hoursField = document.createElement("div");
         hoursField.className = "meta-field";
+        const hoursError = getFieldError(eodDraft, editorId, "spentHours");
+        if (hoursError) hoursField.classList.add("has-error");
         const hoursLabel = document.createElement("label");
         hoursLabel.textContent = "Hours";
         hoursField.appendChild(hoursLabel);
         hoursField.appendChild(spentHours);
+        if (hoursError) {
+          const error = document.createElement("div");
+          error.className = "field-error";
+          error.textContent = hoursError;
+          hoursField.appendChild(error);
+        }
 
         const minsField = document.createElement("div");
         minsField.className = "meta-field";
+        const minsError = getFieldError(eodDraft, editorId, "spentMinutes");
+        if (minsError) minsField.classList.add("has-error");
         const minsLabel = document.createElement("label");
         minsLabel.textContent = "Minutes";
         minsField.appendChild(minsLabel);
         minsField.appendChild(spentMinutes);
+        if (minsError) {
+          const error = document.createElement("div");
+          error.className = "field-error";
+          error.textContent = minsError;
+          minsField.appendChild(error);
+        }
 
         const noteField = document.createElement("div");
         noteField.className = "meta-field note-field";
@@ -1640,18 +1887,21 @@
         percent.addEventListener("input", () => {
           extra.completionPercent = percent.value;
           eodDraft.activeEditorId = editorId;
+          clearFieldError(eodDraft, editorId, "completionPercent");
           saveState();
           updateSummaryCards();
         });
         spentHours.addEventListener("input", () => {
           extra.spentHours = spentHours.value;
           eodDraft.activeEditorId = editorId;
+          clearFieldError(eodDraft, editorId, "spentHours");
           saveState();
           updateSummaryCards();
         });
         spentMinutes.addEventListener("input", () => {
           extra.spentMinutes = spentMinutes.value;
           eodDraft.activeEditorId = editorId;
+          clearFieldError(eodDraft, editorId, "spentMinutes");
           saveState();
           updateSummaryCards();
         });
@@ -1667,6 +1917,7 @@
 
     function renderAll() {
       renderSodSourceHint();
+      renderSyncMeta();
       renderStartTasks();
       renderEodTasks();
       updateSummaryCards();
@@ -1706,7 +1957,8 @@
           priority: normalizePriority(t.priority),
           source: isCarryoverTask(t) ? "carryover" : "sod",
           lastCompletion: getCarryoverLastCompletion(t),
-          lastNote: (t.lastNote || "").trim()
+          lastNote: (t.lastNote || "").trim(),
+          carryoverOrigin: isCarryoverTask(t) ? String(t.carryoverOrigin || "local-storage") : ""
         }))
         .filter((t) => t.title.length > 0);
       const tasks = tasksForState.map((t) => ({
@@ -1725,6 +1977,8 @@
       try {
         const payload = {
           stage: "SOD",
+          requestId: createRequestId(),
+          payloadVersion: "v2",
           submittedAt: new Date().toISOString(),
           workDate: dateKey,
           department: identity.dept,
@@ -1940,10 +2194,12 @@
       const dateKey = workDateEl.value;
       const pending = getPendingTasksForDate(dateKey);
       const eodDraft = getOrCreateEodDraft(dateKey);
+      eodDraft.fieldErrors = {};
 
       const precheck = validateEodBeforeSubmit(pending, eodDraft);
       if (!precheck.ok) {
         eodDraft.activeEditorId = precheck.editorId;
+        setFieldError(eodDraft, precheck.editorId, precheck.field, precheck.message);
         saveState();
         renderEodTasks();
         focusEditorField(precheck.editorId, precheck.field);
@@ -2001,14 +2257,28 @@
           (sum, u) => sum + ((u.spentHours || 0) * 60) + (u.spentMinutes || 0),
           0
         );
+        const completed100Count = updates.filter((u) => u.completionPercent === 100).length;
+        const carryForwardCount = updates.filter((u) => u.completionPercent < 100).length;
+        const extraCount = updates.filter((u) => u.isExtra).length;
+        const dailySummary = {
+          plannedCount: pending.length,
+          submittedCount: updates.length,
+          completed100Count,
+          carryForwardCount,
+          extraCount,
+          totalSpentMinutes
+        };
         const payload = {
           stage: "EOD",
+          requestId: createRequestId(),
+          payloadVersion: "v2",
           submittedAt: new Date().toISOString(),
           workDate: dateKey,
           department: identity.dept,
           employeeName: identity.name,
           accessCode: identity.code,
           totalSpentMinutes,
+          dailySummary,
           updates,
           clientVersion: CLIENT_VERSION
         };
@@ -2028,7 +2298,8 @@
             source: "carryover",
             carryFrom: dateKey,
             lastCompletion: u.completionPercent,
-            lastNote: u.note
+            lastNote: u.note,
+            carryoverOrigin: "local-storage"
           }));
 
         if (incomplete.length) {
@@ -2046,7 +2317,7 @@
         delete state.carryoverByDate[dateKey];
         delete state.carryoverSourceByDate[dateKey];
 
-        state.eodDraftByDate[dateKey] = { selectedTaskIds: {}, updatesByTaskId: {}, extras: [], activeEditorId: "" };
+        state.eodDraftByDate[dateKey] = { selectedTaskIds: {}, updatesByTaskId: {}, extras: [], activeEditorId: "", fieldErrors: {} };
         state.workDate = nextDate;
         workDateEl.value = nextDate;
         getOrCreateEodDraft(nextDate);
@@ -2127,6 +2398,53 @@
 
       submitSodBtn.addEventListener("click", handleSodSubmit);
       submitEodBtn.addEventListener("click", handleEodSubmit);
+      syncCarryoverBtn.addEventListener("click", async () => {
+        const dateKey = workDateEl.value;
+        syncCarryoverBtn.disabled = true;
+        setStatus(sodStatusEl, "Syncing carryover from Google Sheets...", "info");
+        try {
+          state.carryoverSyncedByDate[dateKey] = false;
+          await syncCarryoverFromSheets(dateKey, true);
+          const status = state.syncMetaByDate[dateKey] && state.syncMetaByDate[dateKey].status;
+          if (status === "success") {
+            setStatus(sodStatusEl, "Carryover sync complete.", "success");
+          } else if (status === "fallback") {
+            setStatus(sodStatusEl, "Google sync failed. Using local fallback.", "info");
+          } else if (status === "error") {
+            setStatus(sodStatusEl, "Carryover sync failed.", "error");
+          }
+          renderAll();
+        } catch (err) {
+          setStatus(sodStatusEl, `Carryover sync failed: ${err.message}`, "error");
+        } finally {
+          syncCarryoverBtn.disabled = false;
+        }
+      });
+      copySummaryLinkBtn.addEventListener("click", async () => {
+        const params = new URLSearchParams({
+          dept: identity.dept,
+          name: identity.name,
+          code: identity.code,
+          date: workDateEl.value,
+          view: "summary"
+        });
+        const link = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(link);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = link;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+          setStatus(sodStatusEl, "Summary link copied.", "success");
+        } catch (err) {
+          setStatus(sodStatusEl, "Could not copy summary link.", "error");
+        }
+      });
 
       addExtraBtn.addEventListener("click", () => {
         const dateKey = workDateEl.value;

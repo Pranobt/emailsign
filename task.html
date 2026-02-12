@@ -63,26 +63,27 @@
       overflow: hidden;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 16px;
-      padding: 20px 22px;
+    .header-main {
+      display: grid;
+      grid-template-columns: minmax(460px, 1.55fr) minmax(220px, 260px) minmax(360px, 420px);
+      align-items: end;
+      gap: 12px;
+      padding: 18px 20px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%);
-      flex-wrap: wrap;
+      background: linear-gradient(180deg, #ffffff 0%, #f6fcf9 100%);
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .header-identity {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      gap: 14px;
+      min-width: 0;
     }
 
     .brand-logo {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       border: 1px solid var(--line);
       background: #fff;
@@ -91,43 +92,92 @@
       box-shadow: 0 6px 14px rgba(17, 78, 55, 0.12);
     }
 
-    .title h1 {
+    .title-kicker {
+      font-size: 12px;
+      color: #4f7064;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
       margin: 0;
-      font-size: clamp(22px, 3vw, 32px);
-      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .title-name {
+      margin: 0;
       font-family: var(--font-heading);
       font-weight: 700;
+      letter-spacing: 0.01em;
+      font-size: clamp(30px, 3.2vw, 44px);
+      line-height: 1.05;
+      word-break: normal;
+      overflow-wrap: normal;
+      white-space: nowrap;
+      font-size: clamp(24px, 2.4vw, 40px);
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
-    .title p {
-      margin: 6px 0 0;
-      font-size: 14px;
+    .title-dept {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 15px;
       color: var(--muted);
+      line-height: 1.3;
     }
 
-    .identity {
+    .title {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .header-date-status {
       display: grid;
       gap: 8px;
-      min-width: 260px;
-    }
-
-    .identity-line {
-      font-size: 14px;
-      font-weight: 600;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: var(--surface);
+      min-width: 0;
+      padding: 0 10px;
+      border-left: 1px solid var(--line);
     }
 
     .date-input {
       display: grid;
       gap: 6px;
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--muted);
-      width: 220px;
+      color: #55756a;
+      width: 100%;
+      max-width: none;
+    }
+
+    .date-input input[type="date"] {
+      border-radius: 11px;
+      border-color: #bfded0;
+      background: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 12px;
+      min-height: 42px;
+    }
+
+    .header-actions {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 8px;
+      justify-self: end;
+      justify-content: end;
+      align-items: center;
+    }
+
+    .header-actions .secondary {
+      min-height: 42px;
+      padding: 9px 12px;
+    }
+
+    .header-actions .sync-meta {
+      grid-column: 1 / -1;
+      margin-top: 2px;
+      text-align: right;
     }
 
     input[type="date"],
@@ -397,6 +447,9 @@
       border-color: #bfe2cf;
       color: #14583b;
       font-weight: 600;
+      min-width: 30px;
+      text-align: center;
+      padding: 3px 8px;
     }
 
     .action-row {
@@ -546,19 +599,20 @@
 
     .sod-source {
       margin-top: 0;
-      font-size: 12px;
-      color: #557b6d;
+      font-size: 11px;
+      color: #4b6d61;
       letter-spacing: 0.01em;
-      padding: 6px 10px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--surface);
+      padding: 6px 8px;
+      border: 1px solid #d5e8de;
+      border-radius: 8px;
+      background: #fcfffd;
     }
 
     .sync-meta {
       font-size: 11px;
-      color: #5d7f73;
-      padding: 0 4px;
+      color: #4f7165;
+      padding: 0 2px;
+      line-height: 1.4;
     }
 
     .sod-buckets {
@@ -677,6 +731,26 @@
     }
 
     @media (max-width: 980px) {
+      .header-main {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .header-date-status {
+        border: none;
+        padding: 0;
+      }
+
+      .header-actions {
+        justify-self: start;
+        justify-content: start;
+        grid-template-columns: 1fr;
+      }
+
+      .title-kicker {
+        white-space: normal;
+      }
+
       .top-cards {
         grid-template-columns: 1fr;
       }
@@ -711,21 +785,25 @@
   </div>
 
   <main id="app" class="container" hidden>
-    <section class="topbar">
-      <div class="title">
-        <div class="brand">
-          <img src="./fonts/Finnovate-logo-F.png" alt="Finnovate" class="brand-logo" />
-          <h1><i class="fa-solid fa-list-check"></i>Daily Task Tracker</h1>
+    <section class="header-main">
+      <div class="header-identity">
+        <img src="./fonts/Finnovate-logo-F.png" alt="Finnovate" class="brand-logo" />
+        <div class="title">
+          <p class="title-kicker">Daily Task Submission For</p>
+          <h1 id="nameLine" class="title-name">-</h1>
+          <p id="deptLine" class="title-dept">Department: -</p>
         </div>
-        <p>Submit planned tasks in the morning and completion updates at end of day.</p>
       </div>
-      <div class="identity">
-        <div id="nameLine" class="identity-line"><i class="fa-regular fa-user"></i>Name: -</div>
+      <div class="header-date-status">
         <label class="date-input">
           Date
           <input id="workDate" type="date" />
         </label>
         <div id="sodSourceHint" class="sod-source">Carryover source: -</div>
+      </div>
+      <div class="header-actions">
+        <button id="syncCarryoverBtn" type="button" class="secondary"><i class="fa-solid fa-rotate"></i>Sync Now</button>
+        <button id="copySummaryLinkBtn" type="button" class="secondary"><i class="fa-solid fa-link"></i>Copy Summary Link</button>
         <div id="syncMetaLine" class="sync-meta">Sync: Not run</div>
       </div>
     </section>
@@ -774,8 +852,6 @@
         <div class="panel-actions">
           <div id="sodStatus" class="status"></div>
           <div class="action-row">
-            <button id="syncCarryoverBtn" type="button" class="secondary"><i class="fa-solid fa-rotate"></i>Sync Now</button>
-            <button id="copySummaryLinkBtn" type="button" class="secondary"><i class="fa-solid fa-link"></i>Copy Summary Link</button>
             <button id="submitSodBtn" type="button"><i class="fa-solid fa-paper-plane"></i>Submit Start of Day</button>
           </div>
         </div>
@@ -853,6 +929,7 @@
     const blockedEl = document.getElementById("blocked");
     const blockedMsgEl = document.getElementById("blockedMsg");
     const nameLineEl = document.getElementById("nameLine");
+    const deptLineEl = document.getElementById("deptLine");
     const workDateEl = document.getElementById("workDate");
     const startCountCardEl = document.getElementById("startCountCard");
     const hoursSplitCardEl = document.getElementById("hoursSplitCard");
@@ -887,6 +964,16 @@
       const [y, m, d] = (isoDate || todayISO()).split("-").map(Number);
       const dt = new Date(y, (m || 1) - 1, d || 1);
       dt.setDate(dt.getDate() + 1);
+      const yy = String(dt.getFullYear());
+      const mm = String(dt.getMonth() + 1).padStart(2, "0");
+      const dd = String(dt.getDate()).padStart(2, "0");
+      return `${yy}-${mm}-${dd}`;
+    }
+
+    function previousDateISO(isoDate) {
+      const [y, m, d] = (isoDate || todayISO()).split("-").map(Number);
+      const dt = new Date(y, (m || 1) - 1, d || 1);
+      dt.setDate(dt.getDate() - 1);
       const yy = String(dt.getFullYear());
       const mm = String(dt.getMonth() + 1).padStart(2, "0");
       const dd = String(dt.getDate()).padStart(2, "0");
@@ -1096,6 +1183,64 @@
       state.startDraftByDate[dateKey] = Array.from(byKey.values()).filter((t) => t.title.length > 0);
     }
 
+    function hydrateCarryoverFromUnsubmittedSod(dateKey) {
+      const prevDate = previousDateISO(dateKey);
+      const prevSod = Array.isArray(state.sodByDate[prevDate]) ? state.sodByDate[prevDate] : [];
+      const prevDraft = Array.isArray(state.startDraftByDate[prevDate]) ? state.startDraftByDate[prevDate] : [];
+      const prevTasks = prevSod.length ? prevSod : prevDraft;
+      if (!prevTasks.length) return false;
+      if (state.eodSubmittedByDate[prevDate]) return false;
+
+      const fallbackTasks = prevTasks
+        .map((t) => ({
+          taskId: t.taskId || createTaskId(),
+          title: String(t.title || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: "carryover",
+          carryFrom: prevDate,
+          lastCompletion: Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : 0,
+          lastNote: String(t.lastNote || "").trim() || "Auto carryover (previous day EOD not submitted).",
+          carryoverOrigin: "auto-unsubmitted-eod"
+        }))
+        .filter((t) => t.title.length > 0);
+
+      if (!fallbackTasks.length) return false;
+
+      const existing = Array.isArray(state.carryoverByDate[dateKey]) ? state.carryoverByDate[dateKey] : [];
+      const map = new Map();
+      const keyOf = (t) => {
+        const id = String(t && t.taskId || "").trim();
+        const title = String(t && t.title || "").trim().toLowerCase();
+        return id ? `id:${id}` : `title:${title}`;
+      };
+
+      existing.forEach((t) => map.set(keyOf(t), { ...t }));
+      fallbackTasks.forEach((t) => {
+        const k = keyOf(t);
+        if (!map.has(k)) {
+          map.set(k, t);
+          return;
+        }
+        const current = map.get(k) || {};
+        const curProgress = Number.isFinite(Number(current.lastCompletion)) ? Number(current.lastCompletion) : 0;
+        const nextProgress = Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : 0;
+        if (nextProgress > curProgress) {
+          map.set(k, { ...current, ...t });
+        }
+      });
+
+      const merged = Array.from(map.values()).filter((t) => String(t.title || "").trim().length > 0);
+      state.carryoverByDate[dateKey] = merged;
+      if (!state.carryoverSourceByDate[dateKey]) {
+        state.carryoverSourceByDate[dateKey] = "local-storage";
+      }
+      if (!state.startSourceByDate[dateKey]) {
+        state.startSourceByDate[dateKey] = "local-storage";
+      }
+      mergeCarryoverIntoStartDraft(dateKey, fallbackTasks);
+      return true;
+    }
+
     function getOrCreateEodDraft(dateKey) {
       if (!state.eodDraftByDate[dateKey]) {
         state.eodDraftByDate[dateKey] = {
@@ -1283,21 +1428,47 @@
         });
 
         const carryoverTasks = normalizeCarryoverPayload(result);
-        state.carryoverByDate[dateKey] = carryoverTasks;
-        state.carryoverSourceByDate[dateKey] = "google-sheets";
-        mergeCarryoverIntoStartDraft(dateKey, carryoverTasks);
-        state.startSourceByDate[dateKey] = "google-sheets";
-        setSyncMeta(dateKey, { status: "success", attempts, message: `Synced ${carryoverTasks.length} carryover task(s) from Google Sheets.` });
+        if (carryoverTasks.length) {
+          state.carryoverByDate[dateKey] = carryoverTasks;
+          state.carryoverSourceByDate[dateKey] = "google-sheets";
+          mergeCarryoverIntoStartDraft(dateKey, carryoverTasks);
+          state.startSourceByDate[dateKey] = "google-sheets";
+          setSyncMeta(dateKey, { status: "success", attempts, message: `Synced ${carryoverTasks.length} carryover task(s) from Google Sheets.` });
+        } else {
+          state.carryoverByDate[dateKey] = [];
+          delete state.carryoverSourceByDate[dateKey];
+          const usedFallback = hydrateCarryoverFromUnsubmittedSod(dateKey);
+          if (usedFallback) {
+            state.carryoverSourceByDate[dateKey] = "local-storage";
+            state.startSourceByDate[dateKey] = "local-storage";
+            setSyncMeta(dateKey, {
+              status: "fallback",
+              attempts,
+              message: "Google Sheets returned no carryover. Using previous day SOD because EOD was not submitted."
+            });
+          } else {
+            if (!state.startSourceByDate[dateKey]) {
+              state.startSourceByDate[dateKey] = "new";
+            }
+            setSyncMeta(dateKey, { status: "success", attempts, message: "No carryover tasks found." });
+          }
+        }
 
         state.carryoverSyncedByDate[dateKey] = true;
         saveState();
       } catch (err) {
+        const usedFallback = hydrateCarryoverFromUnsubmittedSod(dateKey);
         if (Array.isArray(state.carryoverByDate[dateKey]) && state.carryoverByDate[dateKey].length) {
           state.carryoverSourceByDate[dateKey] = "local-storage";
           if (!state.startSourceByDate[dateKey]) {
             state.startSourceByDate[dateKey] = "local-storage";
           }
-          setSyncMeta(dateKey, { status: "fallback", message: "Using local carryover fallback." });
+          setSyncMeta(dateKey, {
+            status: "fallback",
+            message: usedFallback
+              ? "Using previous day SOD because EOD was not submitted."
+              : "Using local carryover fallback."
+          });
         } else {
           setSyncMeta(dateKey, { status: "error", message: String(err && err.message ? err.message : err) });
         }
@@ -1412,14 +1583,10 @@
         if (isCarryover) {
           const lockedChip = document.createElement("span");
           lockedChip.className = "meta-chip locked";
-          lockedChip.innerHTML = "<i class=\"fa-solid fa-lock\"></i> Locked Carryover";
+          lockedChip.title = "Locked carryover task";
+          lockedChip.setAttribute("aria-label", "Locked carryover task");
+          lockedChip.innerHTML = "<i class=\"fa-solid fa-lock\"></i>";
           right.appendChild(lockedChip);
-          const originChip = document.createElement("span");
-          originChip.className = "meta-chip";
-          originChip.textContent = String(task.carryoverOrigin || "").toLowerCase() === "google-sheets"
-            ? "From Google Sheets"
-            : "From Local";
-          right.appendChild(originChip);
         }
         if (prevCompletion !== null) {
           const prevChip = document.createElement("span");
@@ -2381,6 +2548,7 @@
         state.workDate = workDateEl.value;
         getOrCreateStartDraft(workDateEl.value);
         getOrCreateEodDraft(workDateEl.value);
+        hydrateCarryoverFromUnsubmittedSod(workDateEl.value);
         await syncCarryoverFromSheets(workDateEl.value, false);
         saveState();
         setStatus(sodStatusEl, "", "");
@@ -2470,7 +2638,8 @@
       const ok = await validateAccessOrBlock();
       if (!ok) return;
 
-      nameLineEl.textContent = `Name: ${identity.name} | Department: ${identity.dept}`;
+      nameLineEl.textContent = identity.name;
+      deptLineEl.textContent = `Department: ${identity.dept}`;
       state = loadState();
       if (!state.workDate) {
         state.workDate = todayISO();
@@ -2479,6 +2648,7 @@
 
       getOrCreateStartDraft(workDateEl.value);
       getOrCreateEodDraft(workDateEl.value);
+      hydrateCarryoverFromUnsubmittedSod(workDateEl.value);
       await syncCarryoverFromSheets(workDateEl.value, false);
 
       wireEvents();

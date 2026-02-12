@@ -973,6 +973,42 @@
       return getOrCreateStartDraft(dateKey);
     }
 
+    function mergeCarryoverIntoStartDraft(dateKey, carryoverTasks) {
+      const existing = Array.isArray(state.startDraftByDate[dateKey]) ? state.startDraftByDate[dateKey] : [];
+      const byKey = new Map();
+      const taskKey = (t) => {
+        const id = String(t && t.taskId || "").trim();
+        const title = String(t && t.title || "").trim().toLowerCase();
+        return id ? `id:${id}` : `title:${title}`;
+      };
+
+      carryoverTasks.forEach((t) => {
+        byKey.set(taskKey(t), {
+          taskId: t.taskId || createTaskId(),
+          title: (t.title || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: "carryover",
+          lastCompletion: Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : null,
+          lastNote: String(t.lastNote || "").trim()
+        });
+      });
+
+      existing.forEach((t) => {
+        const key = taskKey(t);
+        if (byKey.has(key)) return;
+        byKey.set(key, {
+          taskId: t.taskId || createTaskId(),
+          title: (t.title || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: isCarryoverTask(t) ? "carryover" : "sod",
+          lastCompletion: isCarryoverTask(t) ? getCarryoverLastCompletion(t) : null,
+          lastNote: isCarryoverTask(t) ? String(t.lastNote || "").trim() : ""
+        });
+      });
+
+      state.startDraftByDate[dateKey] = Array.from(byKey.values()).filter((t) => t.title.length > 0);
+    }
+
     function getOrCreateEodDraft(dateKey) {
       if (!state.eodDraftByDate[dateKey]) {
         state.eodDraftByDate[dateKey] = {
@@ -1135,13 +1171,8 @@
         const carryoverTasks = normalizeCarryoverPayload(result);
         state.carryoverByDate[dateKey] = carryoverTasks;
         state.carryoverSourceByDate[dateKey] = "google-sheets";
-
-        const currentDraft = Array.isArray(state.startDraftByDate[dateKey]) ? state.startDraftByDate[dateKey] : [];
-        const hasUserDraft = currentDraft.some((t) => t.source !== "carryover");
-        if (!hasUserDraft) {
-          state.startDraftByDate[dateKey] = carryoverTasks.map((t) => ({ ...t }));
-          state.startSourceByDate[dateKey] = "google-sheets";
-        }
+        mergeCarryoverIntoStartDraft(dateKey, carryoverTasks);
+        state.startSourceByDate[dateKey] = "google-sheets";
 
         state.carryoverSyncedByDate[dateKey] = true;
         saveState();
@@ -2004,7 +2035,7 @@
           state.carryoverByDate[nextDate] = incomplete;
           state.carryoverSourceByDate[nextDate] = "local-storage";
           state.startSourceByDate[nextDate] = "local-storage";
-          state.startDraftByDate[nextDate] = incomplete.map((t) => ({ ...t }));
+          mergeCarryoverIntoStartDraft(nextDate, incomplete);
         } else if (Array.isArray(state.carryoverByDate[nextDate])) {
           delete state.carryoverByDate[nextDate];
           delete state.carryoverSourceByDate[nextDate];

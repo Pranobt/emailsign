@@ -3,249 +3,523 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Task Submission Tracker (9-Hour Breakdown)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Daily Task Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <style>
+    @font-face {
+      font-family: "Denton";
+      src: url("./fonts/denton/Denton-Bold.woff2") format("woff2"),
+           url("./fonts/denton/Denton-Bold.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "InterLocal";
+      src: url("./fonts/inter/inter-variablefont_slntwght-webfont.woff2") format("woff2"),
+           url("./fonts/inter/inter-variablefont_slntwght-webfont.woff") format("woff");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
-      --bg: #f5f7fb;
+      --font-heading: "Denton", "Georgia", serif;
+      --font-body: "InterLocal", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --bg: #eef7f3;
       --card: #ffffff;
-      --accent: #009356;
-      --accent-2: #3bcf84;
-      --text: #0e1a2b;
-      --muted: #5b6b82;
-      --line: #e2e8f0;
-      --warn: #c98a1b;
+      --surface: #f6fcf9;
+      --surface-2: #edf9f3;
+      --text: #113029;
+      --muted: #4d6d63;
+      --line: #d3e8dd;
+      --line-2: #bedfd0;
+      --brand: #0d8f5f;
+      --brand-dark: #076845;
+      --brand-soft: #e6f7ef;
+      --danger: #c43333;
+      --ok: #0f8a55;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(900px 520px at 10% 0%, #eef3ff, #f5f7fb 60%);
+      font-family: var(--font-body);
+      background: radial-gradient(1000px 500px at 8% 0%, #d9f1e4, var(--bg) 55%);
       color: var(--text);
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
+      padding: 20px;
     }
 
-    .wrap {
-      width: min(1100px, 100%);
+    .container {
+      width: min(1200px, 100%);
+      margin: 0 auto;
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 22px;
-      box-shadow: 0 25px 60px rgba(20, 30, 60, 0.12);
+      border-radius: 18px;
+      box-shadow: 0 26px 70px rgba(9, 30, 56, 0.15);
+      overflow: hidden;
     }
 
-    header {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: clamp(22px, 3vw, 34px);
-      letter-spacing: 0.2px;
-    }
-
-    header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .pill-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 0;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .inline-controls {
+    .topbar {
       display: flex;
+      justify-content: space-between;
       align-items: flex-end;
       gap: 16px;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%);
       flex-wrap: wrap;
     }
 
-    .inline-field {
-      min-width: 220px;
-    }
-
-    .button-row {
-      display: inline-flex;
-      gap: 12px;
-      align-items: flex-end;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-
-    .btn-col {
+    .brand {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      gap: 10px;
     }
 
-    .btn-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      object-fit: contain;
+      padding: 4px;
+      box-shadow: 0 6px 14px rgba(17, 78, 55, 0.12);
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 32px);
+      letter-spacing: 0.01em;
+      font-family: var(--font-heading);
+      font-weight: 700;
+    }
+
+    .title p {
+      margin: 6px 0 0;
+      font-size: 14px;
       color: var(--muted);
-      line-height: 1.2;
     }
 
-    .button-row .icon-btn {
-      width: 40px;
-      height: 40px;
-      padding: 0;
+    .identity {
+      display: grid;
+      gap: 8px;
+      min-width: 260px;
+    }
+
+    .identity-line {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 10px;
       border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
     }
 
-    .button-row .secondary {
-      min-height: 40px;
-    }
-
-    .inline-field input {
-      min-height: 40px;
-    }
-
-    label {
+    .date-input {
       display: grid;
       gap: 6px;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--muted);
-      line-height: 1.2;
+      width: 220px;
     }
 
-    .pill-row label {
-      margin-bottom: 0;
-    }
-
-    input[type="text"],
     input[type="date"],
-    input[type="time"],
+    input[type="text"],
     input[type="number"],
-    textarea,
-    select {
+    select,
+    textarea {
       width: 100%;
       border: 1px solid var(--line);
-      background: #ffffff;
-      color: var(--text);
-      padding: 10px 12px;
       border-radius: 10px;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    input[type="number"] {
-      text-align: center;
-      min-width: 70px;
       padding: 10px 12px;
-      appearance: textfield;
-      -moz-appearance: textfield;
+      font: inherit;
+      color: var(--text);
+      background: #ffffff;
+      font-size: 15px;
+      line-height: 1.3;
     }
 
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
+    textarea {
+      min-height: 70px;
+      resize: vertical;
     }
 
-    .actions {
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 560px;
+      background: linear-gradient(180deg, #f6fcf8 0%, #ebf7f1 100%);
+    }
+
+    .top-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8fdf9 0%, #f1faf4 100%);
+    }
+
+    .stat-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 12px;
+      box-shadow: 0 10px 20px rgba(12, 70, 48, 0.08);
+      display: grid;
+      gap: 6px;
+    }
+
+    .stat-title {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
       align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .stat-title i {
+      color: var(--brand-dark);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-family: var(--font-heading);
+      line-height: 1;
+    }
+
+    .stat-sub {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel {
+      padding: 0;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fcf9 100%);
+    }
+
+    .panel + .panel {
+      border-left: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f3faf6 100%);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 18px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 18px 0;
+    }
+
+    .panel-title i {
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      border: 1px solid #bde7d4;
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .panel p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 0 18px;
+    }
+
+    .panel-input-area {
+      padding: 0 18px;
+    }
+
+    .panel-list-area {
+      padding: 0 18px;
+      min-height: 0;
+    }
+
+    .panel-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 4;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, #f2fbf6 100%);
+      backdrop-filter: blur(4px);
+      padding: 12px 18px 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      max-height: 480px;
+      overflow: auto;
+      padding-right: 3px;
+      padding-bottom: 8px;
+    }
+
+    .task-row,
+    .pending-row,
+    .extra-row {
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      box-shadow: 0 10px 20px rgba(18, 35, 61, 0.08);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      animation: cardIn 220ms ease both;
+    }
+
+    .task-row:hover,
+    .pending-row:hover,
+    .extra-row:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 26px rgba(13, 92, 64, 0.15);
+      border-color: #9dd0ba;
+    }
+
+    .task-row-head,
+    .pending-row-head,
+    .extra-row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .task-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .task-tags {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .sr-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      border: 1px solid #b7dfcd;
+      color: #116445;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      flex: 0 0 auto;
+    }
+
+    .priority {
+      font-size: 11px;
+      border: 1px solid #d2deec;
+      border-radius: 999px;
+      padding: 3px 9px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .priority.low {
+      background: #eef9f2;
+      border-color: #cbe9d6;
+      color: #246b45;
+    }
+
+    .priority.medium {
+      background: #fff7eb;
+      border-color: #f2ddb7;
+      color: #855b1a;
+    }
+
+    .priority.high {
+      background: #fff0f1;
+      border-color: #f0c7cb;
+      color: #9a2f39;
+    }
+
+    .meta-chip {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      background: #f3faf6;
+      color: #26624a;
+      white-space: nowrap;
+    }
+
+    .meta-chip.prev {
+      background: #f1fbf5;
+      border-color: #c6e7d5;
+      color: #1f6a49;
+    }
+
+    .meta-chip.locked {
+      background: #e9f7ef;
+      border-color: #bfe2cf;
+      color: #14583b;
+      font-weight: 600;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     button {
       border: 1px solid transparent;
-      background: linear-gradient(180deg, #009356 0%, #007a49 100%);
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 10px;
+      background: linear-gradient(180deg, var(--brand), var(--brand-dark));
+      color: #fff;
+      border-radius: 11px;
+      padding: 10px 14px;
       font-weight: 600;
       cursor: pointer;
+      font: inherit;
       line-height: 1.2;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+    }
+
+    button i {
+      margin-right: 6px;
+      font-size: 13px;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(8, 108, 68, 0.22);
+      filter: saturate(1.02);
     }
 
     button.secondary {
-      background: transparent;
+      background: #eff8f3;
       color: var(--text);
       border-color: var(--line);
     }
 
-    .table-wrap {
-      margin-top: 18px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
+    button.secondary:hover:not(:disabled) {
+      box-shadow: 0 8px 18px rgba(22, 90, 62, 0.17);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      background: #ffffff;
+    button.danger {
+      background: #fff;
+      color: var(--danger);
+      border-color: #efc6c6;
     }
 
-    thead {
-      background: #f3f6fb;
+    .icon-danger {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }
 
-    th, td {
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: middle;
+    .icon-danger i {
+      margin: 0;
+      font-size: 13px;
     }
 
-    th {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
-    td.task {
-      width: 100%;
-      min-width: 240px;
+    .inline {
+      display: grid;
+      grid-template-columns: 1fr 110px auto;
+      gap: 8px;
+      align-items: center;
     }
 
-    textarea {
-      min-height: 48px;
-      resize: vertical;
+    .pending-select {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .time-cell {
+    .pending-select input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+
+    .pending-meta,
+    .extra-meta {
+      display: grid;
+      grid-template-columns: 130px 92px 92px 1fr;
+      gap: 8px;
+      align-items: start;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+    }
+
+    .meta-field {
       display: grid;
       gap: 6px;
-      min-width: 120px;
+      min-width: 0;
+    }
+
+    .meta-field > label {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .meta-field.note-field textarea {
+      min-height: 68px;
+    }
+
+    .pending-meta input[type="number"],
+    .extra-meta input[type="number"] {
+      text-align: center;
+      padding: 9px 10px;
+      font-weight: 600;
     }
 
     .muted {
@@ -253,1344 +527,1618 @@
       font-size: 12px;
     }
 
-    .note {
-      margin-top: 12px;
+    .sod-source {
+      margin-top: 0;
       font-size: 12px;
-      color: var(--warn);
+      color: #557b6d;
+      letter-spacing: 0.01em;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
     }
 
     .status {
-      margin-left: auto;
-      font-size: 12px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--ok); }
+    .status.info { color: #1d4f91; }
+
+    .empty {
+      border: 1px dashed #cbd7e7;
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--surface);
       color: var(--muted);
-    }
-
-    .status.error {
-      color: #b42318;
-    }
-
-    .status.success {
-      color: #067647;
-    }
-
-    .hidden-row {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transform: translateY(-6px);
-      transition: max-height 300ms ease, opacity 300ms ease, transform 300ms ease;
-    }
-
-    tr {
-      transition: max-height 300ms ease, opacity 300ms ease, transform 300ms ease;
-    }
-
-    tr:not(.hidden-row) {
-      max-height: 900px;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .delete-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--line);
-      background: #ffffff;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .delete-btn i {
-      color: #d92d20;
-      font-size: 14px;
-    }
-
-    .icon-btn {
-      border: 1px solid var(--line);
-      background: #ffffff;
-      color: var(--text);
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .icon-btn i {
       font-size: 13px;
     }
 
-    .modal-backdrop {
+    .blocked {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.45);
+      background: rgba(8, 16, 28, 0.75);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      z-index: 1000;
+      z-index: 999;
+      padding: 16px;
     }
 
-    .modal-backdrop.active {
-      display: flex;
-    }
+    .blocked.active { display: flex; }
 
-    .modal {
-      width: min(420px, 100%);
-      background: #ffffff;
-      border: 1px solid var(--line);
+    .blocked-card {
+      width: min(520px, 100%);
+      background: #fff;
       border-radius: 14px;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
-      padding: 16px 18px;
-      display: grid;
-      gap: 12px;
+      border: 1px solid #e8d1d1;
+      padding: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     }
 
-    .modal-header h2 {
+    .blocked-card h3 {
+      margin: 0 0 8px;
+      color: #9b1c1c;
+    }
+
+    .blocked-card p {
       margin: 0;
-      font-size: 16px;
-    }
-
-    .modal-body {
-      color: var(--text);
-      font-size: 14px;
+      color: #5c2020;
       line-height: 1.5;
-      white-space: pre-line;
+      font-size: 14px;
     }
 
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
+    .title h1 i,
+    .identity-line i {
+      color: #1f7552;
+      margin-right: 6px;
     }
 
-    .submit-bar {
-      margin-top: 16px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #5cae89;
+      box-shadow: 0 0 0 3px rgba(31, 144, 95, 0.18);
     }
 
-    .controls .icon-btn {
-      width: 40px;
-      height: 40px;
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .actions .secondary {
-      background: #eef2f7;
-      border: 1px solid #d6dee8;
-      color: var(--text);
-      box-shadow: none;
-    }
-
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .pill {
-      border: 1px solid var(--line);
-      background: #ffffff;
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      user-select: none;
-    }
-
-    .pill.active {
-      border-color: #007a49;
-      background: #e9f8f0;
-      color: #005a35;
-      box-shadow: 0 6px 14px rgba(0, 122, 73, 0.15);
-    }
-
-    @media (max-width: 720px) {
-      body {
-        padding: 12px;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
       }
+    }
 
-      .wrap {
-        padding: 16px;
-      }
-
-      .controls {
+    @media (max-width: 980px) {
+      .top-cards {
         grid-template-columns: 1fr;
       }
 
-      .actions {
-        flex-direction: column;
-        align-items: stretch;
+      .split {
+        grid-template-columns: 1fr;
       }
 
-      .actions button {
-        width: 100%;
+      .panel + .panel {
+        border-left: none;
+        border-top: 1px solid var(--line);
       }
 
-      .muted, .status {
-        width: 100%;
-        text-align: left;
+      .panel-actions {
+        position: static;
       }
 
-      .inline-controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .button-row {
-        flex-direction: column;
-      }
-
-      table, thead, tbody, tr, td, th {
-        display: block;
-        width: 100%;
-      }
-
-      thead {
-        display: none;
-      }
-
-      tr {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 12px 10px;
-        border-bottom: 1px solid var(--line);
-        border-radius: 12px;
-        background: #ffffff;
-        margin-bottom: 10px;
-        position: relative;
-      }
-
-      td {
-        border: none;
-        padding: 8px 0;
-      }
-
-      td.start-cell,
-      td.end-cell,
-      td.hours-cell,
-      td.mins-cell {
-        flex: 0 0 49%;
-      }
-
-      td.start-cell,
-      td.hours-cell {
-        margin-right: 2%;
-      }
-
-      td.task-cell,
-      td.remove-cell,
-      td.task-label-cell {
-        flex: 0 0 100%;
-      }
-
-      td.task-label-cell { order: 0; }
-      td.start-cell { order: 1; }
-      td.end-cell { order: 2; }
-      td.hours-cell { order: 3; }
-      td.mins-cell { order: 4; }
-      td.task-cell { order: 5; }
-      td.remove-cell { order: 6; }
-
-      td.remove-cell {
-        position: absolute;
-        top: 12px;
-        right: 10px;
-        width: auto;
-        margin: 0;
-      }
-
-      td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 11px;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 4px;
-      }
-
-      .time-cell {
-        min-width: 100px;
-      }
-
-      textarea {
-        min-height: 80px;
+      .pending-meta,
+      .extra-meta,
+      .inline {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Task Submission Tracker</h1>
-      <p>Plan and log a 9-hour day. Set a start time, add minutes and hours per block, and write tasks.</p>
-      <div class="controls">
-        <div class="pill-row">
-          <div id="deptSection">
-            <label>Department</label>
-            <div id="deptPills" class="pill-group" role="radiogroup" aria-label="Department"></div>
-          </div>
-          <div id="nameSection">
-            <label>Name</label>
-            <div id="namePills" class="pill-group" role="radiogroup" aria-label="Name"></div>
-          </div>
+  <div id="blocked" class="blocked" aria-hidden="true">
+    <div class="blocked-card">
+      <h3>Invalid access link</h3>
+      <p id="blockedMsg">This page requires valid URL parameters: department, name, and access code.</p>
+    </div>
+  </div>
+
+  <main id="app" class="container" hidden>
+    <section class="topbar">
+      <div class="title">
+        <div class="brand">
+          <img src="./fonts/Finnovate-logo-F.png" alt="Finnovate" class="brand-logo" />
+          <h1><i class="fa-solid fa-list-check"></i>Daily Task Tracker</h1>
         </div>
-        <div class="grid-2">
-          <label>
-            Date
-            <input id="workDate" type="date" />
-          </label>
-          <label>
-            Start Time
-            <input id="startTime" type="time" value="09:00" />
-          </label>
-          <label>
-            End Time (Auto)
-            <input id="endTime" type="time" />
-          </label>
-          <label>
-            Day Type
-            <select id="dayType">
-              <option value="full" selected>Full Day</option>
-              <option value="half">Half Day</option>
+        <p>Submit planned tasks in the morning and completion updates at end of day.</p>
+      </div>
+      <div class="identity">
+        <div id="nameLine" class="identity-line"><i class="fa-regular fa-user"></i>Name: -</div>
+        <label class="date-input">
+          Date
+          <input id="workDate" type="date" />
+        </label>
+        <div id="sodSourceHint" class="sod-source">Carryover source: -</div>
+      </div>
+    </section>
+
+    <section class="top-cards">
+      <article class="stat-card">
+        <div class="stat-title"><i class="fa-solid fa-sun"></i>Start Of Day</div>
+        <div id="startCountCard" class="stat-value">0</div>
+        <div class="stat-sub">Planned tasks</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-title"><i class="fa-regular fa-clock"></i>Total Hours Split</div>
+        <div id="hoursSplitCard" class="stat-value">0h 0m</div>
+        <div class="stat-sub">Dedicated time on selected completed tasks</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-title"><i class="fa-solid fa-moon"></i>End Of Day</div>
+        <div id="endCountCard" class="stat-value">0</div>
+        <div class="stat-sub">Tasks selected for completion update</div>
+      </article>
+    </section>
+
+    <section class="split">
+      <section class="panel" aria-label="Start of Day">
+        <h2 class="panel-title"><i class="fa-solid fa-sun"></i>Start of Day</h2>
+        <p>Add the pending task list for today, then submit.</p>
+
+        <div class="panel-input-area">
+          <div class="inline">
+            <input id="newTaskTitle" type="text" placeholder="Add task title" />
+            <select id="newTaskPriority" aria-label="Task Priority">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
             </select>
-          </label>
+            <button id="addTaskBtn" class="secondary" type="button"><i class="fa-solid fa-plus"></i>Add Task</button>
+          </div>
+          <div class="muted" style="margin-top:6px;">Priority can be Low, Medium, or High.</div>
         </div>
-        <div class="inline-controls">
-          <label class="inline-field">
-            Default Task minutes
-            <input id="defaultMinutes" type="number" min="15" step="15" value="60" />
-          </label>
-          <div class="button-row">
-            <div class="btn-col">
-              <span class="btn-label">Undo</span>
-              <button id="undoDelete" class="icon-btn" title="Undo delete" aria-label="Undo delete">
-                <i class="fa-solid fa-rotate-left"></i>
-              </button>
-            </div>
-            <div class="btn-col">
-              <span class="btn-label">Reset</span>
-              <button id="reset" class="secondary">Reset</button>
-            </div>
-            <div class="btn-col">
-              <span class="btn-label">Add</span>
-              <button id="addRow" class="secondary">Add</button>
-            </div>
+
+        <div class="panel-list-area">
+          <div id="sodTasks" class="task-list"></div>
+        </div>
+
+        <div class="panel-actions">
+          <div id="sodStatus" class="status"></div>
+          <div class="action-row">
+            <button id="submitSodBtn" type="button"><i class="fa-solid fa-paper-plane"></i>Submit Start of Day</button>
           </div>
         </div>
-      </div>
-      <div class="actions">
-        <span class="muted">Total duration updates automatically based on each block.</span>
-        <span class="status" id="status"></span>
-      </div>
-    </header>
+      </section>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Block</th>
-            <th>Start</th>
-            <th>Add Hours</th>
-            <th>Add Minutes</th>
-            <th>End</th>
-            <th>Tasks / Deliverables</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
+      <section class="panel" aria-label="End of Day">
+        <h2 class="panel-title"><i class="fa-solid fa-moon"></i>End of Day</h2>
+        <p>Select pending tasks, add completion %, and mention dedicated hours/minutes. You can also add extra tasks.</p>
 
-    <div class="note" id="summary">Total scheduled: 0h 0m</div>
-    <div class="note">If any task block is missing, start typing in the last task box.</div>
-    <div class="submit-bar">
-      <button id="viewSummary" class="secondary">
-        <i class="fa-regular fa-eye"></i>
-        View Message
-      </button>
-      <button id="submit">
-        <i class="fa-solid fa-paper-plane"></i>
-        Submit to Zoho Flow
-      </button>
-    </div>
-  </div>
+        <div class="panel-input-area">
+          <div class="action-row">
+            <button id="addExtraBtn" type="button" class="secondary"><i class="fa-solid fa-list-plus"></i>Add Extra Task</button>
+          </div>
+        </div>
 
-  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-header">
-        <h2 id="modalTitle">Notice</h2>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-      <div class="modal-actions">
-        <button id="modalCancel" class="secondary">Cancel</button>
-        <button id="modalConfirm">OK</button>
-      </div>
-    </div>
-  </div>
+        <div class="panel-list-area">
+          <div id="eodTasks" class="task-list"></div>
+        </div>
+
+        <div class="panel-actions">
+          <div id="eodStatus" class="status"></div>
+          <div class="action-row">
+            <button id="submitEodBtn" type="button"><i class="fa-solid fa-flag-checkered"></i>Submit End of Day</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
 
   <script>
-    const rowsEl = document.getElementById("rows");
-    const startTimeEl = document.getElementById("startTime");
-    const defaultMinutesEl = document.getElementById("defaultMinutes");
-    const summaryEl = document.getElementById("summary");
-    const resetBtn = document.getElementById("reset");
-    const addRowBtn = document.getElementById("addRow");
-    const undoDeleteBtn = document.getElementById("undoDelete");
-    const submitBtn = document.getElementById("submit");
-    const statusEl = document.getElementById("status");
-    const endTimeEl = document.getElementById("endTime");
-    const dayTypeEl = document.getElementById("dayType");
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalBody = document.getElementById("modalBody");
-    const modalCancel = document.getElementById("modalCancel");
-    const modalConfirm = document.getElementById("modalConfirm");
-    const viewSummaryBtn = document.getElementById("viewSummary");
-    const deptPillsEl = document.getElementById("deptPills");
-    const deptSectionEl = document.getElementById("deptSection");
-    const nameSectionEl = document.getElementById("nameSection");
-    const namePillsEl = document.getElementById("namePills");
-
-    const WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.262d73321ec4cf092dc34d6310e3dee8.f22019fbcce0c6084f92ac9de2262976&isdebug=false";
-    let currentBlockIndex = 0;
-    let endTimeManual = false;
-    let suppressEndTimeConfirm = false;
-    let isAdjustingBlocks = false;
-    let modalActive = false;
-    let lastDeletedBlock = null;
-    const departmentMap = {
-      "Information Technology": [
-        "Shalin Bhavsar",
-        "Pranav Shah",
-        "Anoj Tambe",
-        "Gunjan Rusia",
-        "Thakur Prasad"
-      ],
-      "Operations": [
-        "Pravin Mayekar",
-        "Rahul Meher",
-        "Nagma Sheikh",
-        "Amit Lad",
-        "Akshay Jadhav"
-      ],
-      "Research": [
-        "Riya Jain",
-        "Rushabh Dugad",
-        "Humaid Khot",
-        "Yash Asrani",
-        "Vinjal Rao",
-        "Ria Ignatious"
-      ],
-      "Equity": [
-        "Gaurav Haldankar",
-        "Milind Jain",
-        "Jinal Shah"
-      ],
-      "Direct Reportees": [
-        "Pranob Thachanthara",
-        "Rajvi Gori",
-        "Chintan Dudhela",
-        "Sagar Maheshwari",
-        "Jignesh Gajjar",
-        "Jayant Furia",
-        "Vandana Manwani"
-      ]
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGiugBUVbg9zp4r6QYSqHveJotVgYo0Rg9iGef7sovksfiupICN2LlBbiqSoVAqxAcFg/exec";
+    const ZOHO_FLOW_WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.262d73321ec4cf092dc34d6310e3dee8.f22019fbcce0c6084f92ac9de2262976&isdebug=false";
+    const STORAGE_PREFIX = "dailyTaskTrackerV4";
+    const CLIENT_VERSION = "task-ui-v4";
+    const USER_DIRECTORY = {
+      "Information Technology": {
+        "Shalin Bhavsar": "IT-SB-7391",
+        "Pranav Shah": "IT-PS-1842",
+        "Anoj Tambe": "IT-AT-5627",
+        "Gunjan Rusia": "IT-GR-9034",
+        "Thakur Prasad": "IT-TP-4478"
+      },
+      Operations: {
+        "Pravin Mayekar": "OP-PM-2749",
+        "Rahul Meher": "OP-RM-6183",
+        "Nagma Sheikh": "OP-NS-8501",
+        "Amit Lad": "OP-AL-3926",
+        "Akshay Jadhav": "OP-AJ-7754"
+      },
+      Research: {
+        "Riya Jain": "RS-RJ-5318",
+        "Rushabh Dugad": "RS-RD-9620",
+        "Humaid Khot": "RS-HK-4175",
+        "Yash Asrani": "RS-YA-2864",
+        "Vinjal Rao": "RS-VR-6412",
+        "Ria Ignatious": "RS-RI-8097"
+      },
+      Equity: {
+        "Gaurav Haldankar": "EQ-GH-1539",
+        "Milind Jain": "EQ-MJ-7204",
+        "Jinal Shah": "EQ-JS-4981"
+      },
+      "Direct Reportees": {
+        "Pranob Thachanthara": "DR-PT-3328",
+        "Rajvi Gori": "DR-RG-6815",
+        "Chintan Dudhela": "DR-CD-9043",
+        "Sagar Maheshwari": "DR-SM-2576",
+        "Jignesh Gajjar": "DR-JG-5462",
+        "Jayant Furia": "DR-JF-1198",
+        "Vandana Manwani": "DR-VM-8730"
+      }
     };
-    const departments = Object.keys(departmentMap);
-    let selectedDept = "";
-    let selectedName = "";
 
-    function parseTimeToMinutes(timeStr) {
-      if (!timeStr) return null;
-      const [hh, mm] = timeStr.split(":").map(Number);
-      if (Number.isNaN(hh) || Number.isNaN(mm)) return null;
-      return hh * 60 + mm;
-    }
+    const appEl = document.getElementById("app");
+    const blockedEl = document.getElementById("blocked");
+    const blockedMsgEl = document.getElementById("blockedMsg");
+    const nameLineEl = document.getElementById("nameLine");
+    const workDateEl = document.getElementById("workDate");
+    const startCountCardEl = document.getElementById("startCountCard");
+    const hoursSplitCardEl = document.getElementById("hoursSplitCard");
+    const endCountCardEl = document.getElementById("endCountCard");
 
-    function minutesToTime(mins) {
-      const safe = ((mins % 1440) + 1440) % 1440;
-      const h = Math.floor(safe / 60).toString().padStart(2, "0");
-      const m = Math.floor(safe % 60).toString().padStart(2, "0");
-      return `${h}:${m}`;
-    }
+    const newTaskTitleEl = document.getElementById("newTaskTitle");
+    const newTaskPriorityEl = document.getElementById("newTaskPriority");
+    const addTaskBtn = document.getElementById("addTaskBtn");
+    const submitSodBtn = document.getElementById("submitSodBtn");
+    const sodStatusEl = document.getElementById("sodStatus");
+    const sodTasksEl = document.getElementById("sodTasks");
+    const sodSourceHintEl = document.getElementById("sodSourceHint");
+
+    const addExtraBtn = document.getElementById("addExtraBtn");
+    const submitEodBtn = document.getElementById("submitEodBtn");
+    const eodStatusEl = document.getElementById("eodStatus");
+    const eodTasksEl = document.getElementById("eodTasks");
+    const COMPLETION_OPTIONS = [10, 25, 50, 75, 90, 100];
+
+    let identity = null;
+    let state = null;
 
     function todayISO() {
       return new Date().toISOString().slice(0, 10);
     }
 
-    function formatDateLong(iso) {
-      if (!iso || !iso.includes("-")) return iso || "-";
-      const [y, m, d] = iso.split("-");
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const month = monthNames[parseInt(m, 10) - 1] || m;
-      return `${d} ${month} ${y}`;
+    function nextDateISO(isoDate) {
+      const [y, m, d] = (isoDate || todayISO()).split("-").map(Number);
+      const dt = new Date(y, (m || 1) - 1, d || 1);
+      dt.setDate(dt.getDate() + 1);
+      const yy = String(dt.getFullYear());
+      const mm = String(dt.getMonth() + 1).padStart(2, "0");
+      const dd = String(dt.getDate()).padStart(2, "0");
+      return `${yy}-${mm}-${dd}`;
     }
 
-    function getRequiredMinutes() {
-      if (dayTypeEl.value === "half") return 300;
-      return 540;
-    }
-
-    function setAutoEndTime() {
-      const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
-      const requiredMinutes = getRequiredMinutes();
-      endTimeEl.value = minutesToTime(startMins + requiredMinutes);
-    }
-
-    function addBlockRow(startMins) {
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-      const row = buildRow(rowsEl.querySelectorAll("tr").length, startMins, defaultMinutes);
-      rowsEl.appendChild(row);
-      wireRow(row, rowsEl.querySelectorAll("tr").length - 1);
-    }
-
-    function restoreDeletedBlock() {
-      if (!lastDeletedBlock) return false;
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      const insertIndex = Math.min(lastDeletedBlock.index, rows.length);
-      const startMins = insertIndex === 0
-        ? (parseTimeToMinutes(startTimeEl.value) ?? 540)
-        : (parseTimeToMinutes(rows[insertIndex - 1].querySelector(".end").value) ?? 540);
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-      const row = buildRow(insertIndex, startMins, defaultMinutes);
-      if (rows[insertIndex]) {
-        rowsEl.insertBefore(row, rows[insertIndex]);
-      } else {
-        rowsEl.appendChild(row);
+    function createTaskId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
       }
-      row.querySelector(".add-hours").value = lastDeletedBlock.addHours;
-      row.querySelector(".add-mins").value = lastDeletedBlock.addMins;
-      row.querySelector("textarea").value = lastDeletedBlock.task;
-      wireRow(row, insertIndex);
-      lastDeletedBlock = null;
-      recalcFrom(insertIndex);
-      applyBlockVisibility();
-      persistState();
-      return true;
+      return `task-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
     }
 
-    function ensureBlocksForEndTime() {
-      const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
-      const endMins = parseTimeToMinutes(endTimeEl.value);
-      if (endMins === null) return;
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-      if (defaultMinutes <= 0) return;
-
-      const duration = ((endMins - startMins) + 1440) % 1440;
-      const effectiveDuration = duration === 0 ? getRequiredMinutes() : duration;
-      const neededBlocks = Math.max(1, Math.ceil(effectiveDuration / defaultMinutes));
-      const currentBlocks = rowsEl.querySelectorAll("tr").length;
-
-      if (neededBlocks > currentBlocks) {
-        let lastEnd = currentBlocks
-          ? parseTimeToMinutes(rowsEl.querySelectorAll("tr")[currentBlocks - 1].querySelector(".end").value) ?? startMins
-          : startMins;
-        for (let i = currentBlocks; i < neededBlocks; i++) {
-          addBlockRow(lastEnd);
-          lastEnd += defaultMinutes;
-        }
-      }
-      if (neededBlocks < currentBlocks) {
-        const rows = Array.from(rowsEl.querySelectorAll("tr"));
-        for (let i = rows.length - 1; i >= neededBlocks; i--) {
-          rows[i].remove();
-        }
-        if (currentBlockIndex >= neededBlocks) {
-          currentBlockIndex = Math.max(0, neededBlocks - 1);
-        }
-      }
-      recalcFrom(0);
-      applyBlockVisibility();
-      persistState();
+    function normalizePriority(raw) {
+      const v = (raw || "").trim().toLowerCase();
+      if (v === "low") return "Low";
+      if (v === "high") return "High";
+      return "Medium";
     }
 
-    function buildRow(index, startMins, defaultMinutes) {
-      const tr = document.createElement("tr");
-      tr.dataset.index = index;
-      const addHours = Math.floor(defaultMinutes / 60);
-      const addMins = defaultMinutes % 60;
-
-      tr.innerHTML = `
-        <td data-label="Task" class="task-label-cell">Task ${index + 1}</td>
-        <td data-label="Start" class="start-cell">
-          <div class="time-cell">
-            <input type="time" class="start" value="${minutesToTime(startMins)}" />
-          </div>
-        </td>
-        <td data-label="Add Hours" class="hours-cell">
-          <input type="number" class="add-hours" min="0" max="8" value="${addHours}" />
-        </td>
-        <td data-label="Add Minutes" class="mins-cell">
-          <input type="number" class="add-mins" min="0" max="59" step="15" value="${addMins}" />
-        </td>
-        <td data-label="End" class="end-cell">
-          <div class="time-cell">
-            <input type="time" class="end" value="${minutesToTime(startMins + defaultMinutes)}" />
-          </div>
-        </td>
-        <td class="task task-cell" data-label="Tasks / Deliverables">
-          <textarea placeholder="What did you do in this block?"></textarea>
-        </td>
-        <td data-label="Remove" class="remove-cell">
-          <button class="delete-btn delete-row" type="button" title="Delete block" aria-label="Delete block">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </td>
-      `;
-
-      return tr;
+    function priorityClass(priority) {
+      const p = normalizePriority(priority).toLowerCase();
+      return p === "low" || p === "high" ? p : "medium";
     }
 
-    function serializeState() {
+    function getAccessParams() {
+      const params = new URLSearchParams(window.location.search);
       return {
-        currentBlockIndex,
-        endTimeManual,
-        department: selectedDept,
-        employeeName: selectedName,
-        workDate: document.getElementById("workDate").value,
-        dayType: dayTypeEl.value,
-        startTime: startTimeEl.value,
-        defaultMinutes: defaultMinutesEl.value,
-        endTime: endTimeEl.value,
-        blocks: Array.from(rowsEl.querySelectorAll("tr")).map((row) => ({
-          start: row.querySelector(".start").value,
-          addHours: row.querySelector(".add-hours").value,
-          addMinutes: row.querySelector(".add-mins").value,
-          end: row.querySelector(".end").value,
-          task: row.querySelector("textarea").value,
-        })),
+        dept: (params.get("dept") || "").trim(),
+        name: (params.get("name") || "").trim(),
+        code: (params.get("code") || "").trim(),
       };
     }
 
-    function persistState() {
-      localStorage.setItem("taskTrackerState", JSON.stringify(serializeState()));
+    function getStorageKey() {
+      return `${STORAGE_PREFIX}:${identity.dept}:${identity.name}`;
     }
 
-    function restoreState() {
-      const raw = localStorage.getItem("taskTrackerState");
-      if (!raw) return false;
+    function defaultState() {
+      return {
+        workDate: todayISO(),
+        startDraftByDate: {},
+        startSourceByDate: {},
+        sodByDate: {},
+        eodSubmittedByDate: {},
+        eodDraftByDate: {},
+        carryoverByDate: {},
+        carryoverSourceByDate: {},
+        carryoverSyncedByDate: {}
+      };
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(getStorageKey());
+      if (!raw) return defaultState();
       try {
-        const state = JSON.parse(raw);
-        currentBlockIndex = typeof state.currentBlockIndex === "number" ? state.currentBlockIndex : 0;
-        endTimeManual = Boolean(state.endTimeManual);
-        selectedDept = state.department || "";
-        selectedName = state.employeeName || "";
-        document.getElementById("workDate").value = state.workDate || todayISO();
-        dayTypeEl.value = state.dayType || "full";
-        startTimeEl.value = state.startTime || "09:00";
-        defaultMinutesEl.value = state.defaultMinutes || 60;
-
-        rowsEl.innerHTML = "";
-        const blocks = Array.isArray(state.blocks) ? state.blocks : [];
-        if (blocks.length) {
-          blocks.forEach((block, i) => {
-            const startMins = parseTimeToMinutes(block.start) ?? 0;
-            const row = buildRow(i, startMins, parseInt(defaultMinutesEl.value, 10) || 60);
-            rowsEl.appendChild(row);
-            row.querySelector(".start").value = block.start || row.querySelector(".start").value;
-            row.querySelector(".add-hours").value = block.addHours ?? 0;
-            row.querySelector(".add-mins").value = block.addMinutes ?? 0;
-            row.querySelector(".end").value = block.end || row.querySelector(".end").value;
-            row.querySelector("textarea").value = block.task || "";
-            wireRow(row, i);
-          });
-          recalcFrom(0);
-        } else {
-          generateRows();
-        }
-        if (!state.endTime) {
-          setAutoEndTime();
-        } else {
-          endTimeEl.value = state.endTime;
-        }
-        applyBlockVisibility();
-        updateRemoveButtons();
-        return true;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return defaultState();
+        return {
+          workDate: parsed.workDate || todayISO(),
+          startDraftByDate: parsed.startDraftByDate || {},
+          startSourceByDate: parsed.startSourceByDate || {},
+          sodByDate: parsed.sodByDate || {},
+          eodSubmittedByDate: parsed.eodSubmittedByDate || {},
+          eodDraftByDate: parsed.eodDraftByDate || {},
+          carryoverByDate: parsed.carryoverByDate || {},
+          carryoverSourceByDate: parsed.carryoverSourceByDate || {},
+          carryoverSyncedByDate: parsed.carryoverSyncedByDate || {}
+        };
       } catch (e) {
-        return false;
+        return defaultState();
       }
     }
 
-    function totalScheduledMinutes() {
-      let total = 0;
-      rowsEl.querySelectorAll("tr").forEach((row) => {
-        const start = parseTimeToMinutes(row.querySelector(".start").value);
-        const end = parseTimeToMinutes(row.querySelector(".end").value);
-        if (start !== null && end !== null) {
-          const duration = ((end - start) + 1440) % 1440;
-          total += duration;
-        }
-      });
-      return total;
+    function saveState() {
+      localStorage.setItem(getStorageKey(), JSON.stringify(state));
     }
 
-    function updateSummary() {
-      const total = totalScheduledMinutes();
-      const h = Math.floor(total / 60);
-      const m = total % 60;
-      const requiredMinutes = getRequiredMinutes();
-      const targetLabel = dayTypeEl.value === "half"
-        ? "Minimum 5h (Half Day)"
-        : "Minimum 9h";
-      summaryEl.textContent = `Total scheduled: ${h}h ${m}m`;
-      if (dayTypeEl.value === "half") {
-        if (total < requiredMinutes) {
-          summaryEl.textContent += ` (Target: ${targetLabel})`;
-        }
-      } else if (total < requiredMinutes) {
-        summaryEl.textContent += ` (Target: ${targetLabel})`;
-      }
+    function setStatus(el, message, type) {
+      el.className = "status";
+      if (type) el.classList.add(type);
+      el.textContent = message || "";
     }
 
-    function recalcFrom(rowIndex) {
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      const mainEndMins = parseTimeToMinutes(endTimeEl.value);
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-      const defaultHours = Math.floor(defaultMinutes / 60);
-      const defaultMins = defaultMinutes % 60;
-      for (let i = rowIndex; i < rows.length; i++) {
-        const row = rows[i];
-        const startInput = row.querySelector(".start");
-        const endInput = row.querySelector(".end");
-        if (i > rowIndex) {
-          row.querySelector(".add-hours").value = defaultHours;
-          row.querySelector(".add-mins").value = defaultMins;
-        }
-        const addHours = parseInt(row.querySelector(".add-hours").value, 10) || 0;
-        const addMins = parseInt(row.querySelector(".add-mins").value, 10) || 0;
-        const startMins = parseTimeToMinutes(startInput.value) ?? 0;
-        let endMins = startMins + addHours * 60 + addMins;
-        if (mainEndMins !== null && endMins > mainEndMins) {
-          endMins = mainEndMins;
-        }
-        endInput.value = minutesToTime(endMins);
-        const actualDuration = ((endMins - startMins) + 1440) % 1440;
-        row.querySelector(".add-hours").value = Math.floor(actualDuration / 60);
-        row.querySelector(".add-mins").value = actualDuration % 60;
-
-        if (i + 1 < rows.length) {
-          const nextStart = rows[i + 1].querySelector(".start");
-          nextStart.value = minutesToTime(endMins);
+    function getOrCreateStartDraft(dateKey) {
+      if (!state.startDraftByDate[dateKey]) {
+        const carry = Array.isArray(state.carryoverByDate[dateKey]) ? state.carryoverByDate[dateKey] : [];
+        state.startDraftByDate[dateKey] = carry.map((t) => ({
+          taskId: t.taskId || createTaskId(),
+          title: t.title || "",
+          priority: normalizePriority(t.priority),
+          source: "carryover",
+          lastCompletion: Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : null,
+          lastNote: t.lastNote || ""
+        }));
+        if (carry.length) {
+          state.startSourceByDate[dateKey] = state.carryoverSourceByDate[dateKey] === "google-sheets"
+            ? "google-sheets"
+            : "local-storage";
+        } else if (!state.startSourceByDate[dateKey]) {
+          state.startSourceByDate[dateKey] = "new";
         }
       }
-      rows.forEach((row, i) => {
-        row.querySelector("td").textContent = `Task ${i + 1}`;
-        row.dataset.index = i;
-      });
-      trimZeroDurationTail();
-      if (mainEndMins !== null) {
-        const lastEnd = rows.length
-          ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? mainEndMins
-          : null;
-        if (lastEnd !== null && lastEnd < mainEndMins) {
-          const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-          let nextStart = lastEnd;
-          while (nextStart < mainEndMins) {
-            addBlockRow(nextStart);
-            nextStart += defaultMinutes;
+      return state.startDraftByDate[dateKey];
+    }
+
+    function getCarryoverLastCompletion(task) {
+      const n = Number(task && task.lastCompletion);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function isCarryoverTask(task) {
+      return task && task.source === "carryover";
+    }
+
+    function getAllowedCompletionOptions(task) {
+      const prev = getCarryoverLastCompletion(task);
+      if (!isCarryoverTask(task) || prev === null) return [...COMPLETION_OPTIONS];
+      const filtered = COMPLETION_OPTIONS.filter((v) => v > prev);
+      if (filtered.length) return filtered;
+      return [100];
+    }
+
+    function buildCompletionOptionsMarkup(values) {
+      return [
+        "<option value=\"\">Select</option>",
+        ...values.map((v) => `<option value=\"${v}\">${v}</option>`)
+      ].join("");
+    }
+
+    function focusEditorField(editorId, field) {
+      window.requestAnimationFrame(() => {
+        setTimeout(() => {
+          const esc = (v) => (window.CSS && typeof CSS.escape === "function")
+            ? CSS.escape(v)
+            : String(v).replace(/["\\]/g, "\\$&");
+          const selector = `[data-editor-id="${esc(editorId)}"][data-field="${esc(field)}"]`;
+          const el = document.querySelector(selector);
+          if (!el) return;
+          el.focus({ preventScroll: false });
+          if (typeof el.select === "function" && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) {
+            el.select();
           }
-          recalcFrom(0);
-          return;
-        }
-      }
-      const total = totalScheduledMinutes();
-      const requiredMinutes = getRequiredMinutes();
-      if (total > requiredMinutes) {
-        currentBlockIndex = rows.length - 1;
-        applyBlockVisibility();
-      }
-      if (endTimeManual && !isAdjustingBlocks) {
-        isAdjustingBlocks = true;
-        ensureBlocksForEndTime();
-        isAdjustingBlocks = false;
-      }
-      updateSummary();
-      updateRemoveButtons();
-      persistState();
-    }
-
-    function trimZeroDurationTail() {
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      if (rows.length <= 1) return;
-      for (let i = rows.length - 1; i >= 0; i--) {
-        const row = rows[i];
-        const start = parseTimeToMinutes(row.querySelector(".start").value);
-        const end = parseTimeToMinutes(row.querySelector(".end").value);
-        if (start !== null && end !== null && start === end) {
-          row.remove();
-        } else {
-          break;
-        }
-      }
-    }
-
-    function applyBlockVisibility() {
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      if (!rows.length) return;
-
-      rows.forEach((row, i) => {
-        row.classList.toggle("hidden-row", i > currentBlockIndex);
+        }, 0);
       });
     }
 
-    function updateRemoveButtons() {
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      rows.forEach((row, i) => {
-        const btn = row.querySelector(".delete-row");
-        if (!btn) return;
-        const isLast = i === rows.length - 1;
-        btn.disabled = !isLast;
-        btn.style.opacity = isLast ? "1" : "0.4";
-        btn.style.cursor = isLast ? "pointer" : "not-allowed";
-      });
+    function getPendingTasksForDate(dateKey) {
+      if (state.eodSubmittedByDate[dateKey]) return [];
+      const submitted = Array.isArray(state.sodByDate[dateKey]) ? state.sodByDate[dateKey] : [];
+      if (submitted.length) return submitted;
+      return getOrCreateStartDraft(dateKey);
     }
 
-    function wireRow(row, index) {
-      const maybeRevealNext = () => {
-        const rows = Array.from(rowsEl.querySelectorAll("tr"));
-        if (index === currentBlockIndex && index + 1 < rows.length) {
-          currentBlockIndex = index + 1;
-          applyBlockVisibility();
-          persistState();
-        }
-      };
-
-      row.querySelectorAll(".add-hours, .add-mins").forEach((input) => {
-        input.addEventListener("focus", () => {
-          row.dataset.prevHours = row.querySelector(".add-hours").value;
-          row.dataset.prevMins = row.querySelector(".add-mins").value;
-        });
-        input.addEventListener("input", async () => {
-          const rows = Array.from(rowsEl.querySelectorAll("tr"));
-          const lastIndex = rows.length - 1;
-          const startMins = parseTimeToMinutes(row.querySelector(".start").value) ?? 0;
-          const addHours = parseInt(row.querySelector(".add-hours").value, 10) || 0;
-          const addMins = parseInt(row.querySelector(".add-mins").value, 10) || 0;
-          const proposedEnd = startMins + addHours * 60 + addMins;
-          const mainEndMins = parseTimeToMinutes(endTimeEl.value);
-          if (mainEndMins !== null && proposedEnd > mainEndMins && !suppressEndTimeConfirm) {
-            const ok = await openModal({
-              title: "Extend End Time?",
-              message: "This block exceeds the main End Time. Update End Time to fit?",
-              confirmText: "Update",
-              cancelText: "Keep",
-              showCancel: true
-            });
-            if (!ok) {
-              suppressEndTimeConfirm = true;
-              const prevHours = row.dataset.prevHours ?? row.querySelector(".add-hours").value;
-              const prevMins = row.dataset.prevMins ?? row.querySelector(".add-mins").value;
-              row.querySelector(".add-hours").value = prevHours;
-              row.querySelector(".add-mins").value = prevMins;
-              recalcFrom(index);
-              suppressEndTimeConfirm = false;
-              return;
-            }
-            endTimeManual = true;
-            endTimeEl.value = minutesToTime(proposedEnd);
-            ensureBlocksForEndTime();
-          }
-          recalcFrom(index);
-          if (index === lastIndex && !endTimeManual && !suppressEndTimeConfirm) {
-            // no-op: main end time controlled by input
-          }
-          maybeRevealNext();
-        });
-      });
-
-      row.querySelector(".start").addEventListener("input", () => recalcFrom(index));
-      row.querySelector(".end").addEventListener("focus", () => {
-        row.dataset.prevEnd = row.querySelector(".end").value;
-      });
-      row.querySelector(".end").addEventListener("input", async () => {
-        const startMins = parseTimeToMinutes(row.querySelector(".start").value) ?? 0;
-        let endMins = parseTimeToMinutes(row.querySelector(".end").value) ?? startMins;
-        const mainEndMins = parseTimeToMinutes(endTimeEl.value);
-        if (mainEndMins !== null && endMins > mainEndMins && !suppressEndTimeConfirm) {
-          const ok = await openModal({
-            title: "Extend End Time?",
-            message: "This block exceeds the main End Time. Update End Time to fit?",
-            confirmText: "Update",
-            cancelText: "Keep",
-            showCancel: true
-          });
-          if (!ok) {
-            suppressEndTimeConfirm = true;
-            const prevEnd = row.dataset.prevEnd ?? row.querySelector(".end").value;
-            row.querySelector(".end").value = prevEnd;
-            recalcFrom(index);
-            suppressEndTimeConfirm = false;
-            return;
-          }
-          endTimeManual = true;
-          endTimeEl.value = minutesToTime(endMins);
-          ensureBlocksForEndTime();
-        }
-        const duration = ((endMins - startMins) + 1440) % 1440;
-        row.querySelector(".add-hours").value = Math.floor(duration / 60);
-        row.querySelector(".add-mins").value = duration % 60;
-        recalcFrom(index);
-      });
-      row.querySelector("textarea").addEventListener("input", () => {
-        persistState();
-        maybeRevealNext();
-      });
-      row.querySelector(".delete-row").addEventListener("click", () => {
-        lastDeletedBlock = {
-          index: parseInt(row.dataset.index, 10) || index,
-          addHours: row.querySelector(".add-hours").value,
-          addMins: row.querySelector(".add-mins").value,
-          task: row.querySelector("textarea").value
+    function getOrCreateEodDraft(dateKey) {
+      if (!state.eodDraftByDate[dateKey]) {
+        state.eodDraftByDate[dateKey] = {
+          selectedTaskIds: {},
+          updatesByTaskId: {},
+          extras: [],
+          activeEditorId: ""
         };
-        row.remove();
-        const rows = Array.from(rowsEl.querySelectorAll("tr"));
-        if (currentBlockIndex >= rows.length) {
-          currentBlockIndex = Math.max(0, rows.length - 1);
-        }
-        endTimeManual = false;
-        recalcFrom(0);
-        applyBlockVisibility();
-        persistState();
-      });
-    }
-
-    function getDurationMinutes() {
-      const startMins = parseTimeToMinutes(startTimeEl.value);
-      const endMins = parseTimeToMinutes(endTimeEl.value);
-      if (startMins === null || endMins === null) return getRequiredMinutes();
-      const duration = ((endMins - startMins) + 1440) % 1440;
-      return duration === 0 ? getRequiredMinutes() : duration;
-    }
-
-    function generateRows() {
-      rowsEl.innerHTML = "";
-      const startMins = parseTimeToMinutes(startTimeEl.value) ?? 540;
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-      const durationMinutes = getDurationMinutes();
-      const blockCount = durationMinutes <= 0 ? 0 : Math.ceil(durationMinutes / defaultMinutes);
-      let currentStart = startMins;
-
-      for (let i = 0; i < blockCount; i++) {
-        const row = buildRow(i, currentStart, defaultMinutes);
-        rowsEl.appendChild(row);
-        wireRow(row, i);
-        currentStart += defaultMinutes;
       }
-      currentBlockIndex = 0;
-      endTimeManual = false;
-      updateSummary();
-      updateRemoveButtons();
-      persistState();
-      applyBlockVisibility();
-    }
-
-    function applyDefaultMinutesToAll() {
-      const defaultMinutes = parseInt(defaultMinutesEl.value, 10) || 60;
-      const addHours = Math.floor(defaultMinutes / 60);
-      const addMins = defaultMinutes % 60;
-      rowsEl.querySelectorAll(".add-hours").forEach((input) => {
-        input.value = addHours;
-      });
-      rowsEl.querySelectorAll(".add-mins").forEach((input) => {
-        input.value = addMins;
-      });
-      ensureBlocksForEndTime();
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      if (rows.length) {
-        currentBlockIndex = rows.length - 1;
-        applyBlockVisibility();
+      if (typeof state.eodDraftByDate[dateKey].activeEditorId !== "string") {
+        state.eodDraftByDate[dateKey].activeEditorId = "";
       }
-      recalcFrom(0);
-      if (!endTimeManual) {
-        const lastEnd = rowsEl.querySelector("tr:last-child .end");
-        if (lastEnd) endTimeEl.value = lastEnd.value;
-      }
-      updateRemoveButtons();
-      persistState();
+      return state.eodDraftByDate[dateKey];
     }
 
-    function openModal({ title, message, confirmText = "OK", cancelText = "Cancel", showCancel = true, html = false }) {
-      return new Promise((resolve) => {
-        if (modalActive) return resolve(false);
-        modalActive = true;
-        modalTitle.textContent = title || "Notice";
-        if (html) {
-          modalBody.innerHTML = message || "";
-        } else {
-          modalBody.textContent = message || "";
-        }
-        modalConfirm.textContent = confirmText;
-        modalCancel.textContent = cancelText;
-        modalCancel.style.display = showCancel ? "inline-flex" : "none";
-        modalBackdrop.classList.add("active");
-        modalBackdrop.setAttribute("aria-hidden", "false");
-
-        const cleanup = () => {
-          modalBackdrop.classList.remove("active");
-          modalBackdrop.setAttribute("aria-hidden", "true");
-          modalConfirm.onclick = null;
-          modalCancel.onclick = null;
-          modalActive = false;
-        };
-
-        modalConfirm.onclick = () => {
-          cleanup();
-          resolve(true);
-        };
-        modalCancel.onclick = () => {
-          cleanup();
-          resolve(false);
-        };
-      });
+    function showBlocked(message) {
+      blockedMsgEl.textContent = message;
+      blockedEl.classList.add("active");
+      blockedEl.setAttribute("aria-hidden", "false");
+      appEl.hidden = true;
+      submitSodBtn.disabled = true;
+      submitEodBtn.disabled = true;
     }
 
-    function buildSummaryText(payload) {
-      const hours = Math.floor(payload.totalMinutes / 60);
-      const mins = payload.totalMinutes % 60;
-      const dayLabel = payload.dayType === "half" ? "Half Day" : "Full Day";
-      const formatDate = (iso) => {
-        if (!iso || !iso.includes("-")) return iso || "-";
-        const [y, m, d] = iso.split("-");
-        return `${d}-${m}-${y}`;
-      };
-      const dateSource = payload.workDateISO || payload.workDate;
-      const header = `*${payload.employeeName || "-"}* Task Summary for ${formatDate(dateSource)}`;
-      const meta = `Time : ${payload.startTime || "-"} - ${payload.endTime || "-"} (${hours}h ${mins}m)`;
-      const blockLines = payload.blocks.map((b, idx) => {
-        const startTime = `${b.start || "-"}`;
-        const taskText = b.task || "-";
-        return `${idx + 1}) ${startTime}\n   ${taskText}`;
-      });
-      const spacedBlocks = blockLines.flatMap((line, i) => (i === 0 ? [line] : ["", line]));
-      return [header, meta, "", "*Tasks:*", ...spacedBlocks].join("\n");
-    }
-
-    function buildSheetsPayload(payload) {
-      const tasksText = payload.blocks
-        .map((b) => `Task ${b.block}: ${b.task || "-"}`)
-        .join(" | ");
-      return {
-        Date: payload.workDate ? payload.workDate.split("-").reverse().join("-") : "",
-        Name: payload.employeeName || "",
-        Department: payload.department || "",
-        "Tasks Count": payload.blocks.length,
-        Day: payload.dayType === "half" ? "Half Day" : "Full Day",
-        "Tasks (all in one cell)": tasksText
-      };
-    }
-
-    function renderDeptPills() {
-      deptPillsEl.innerHTML = "";
-      departments.forEach((dept) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = `pill${selectedDept === dept ? " active" : ""}`;
-        btn.textContent = dept;
-        btn.setAttribute("role", "radio");
-        btn.setAttribute("aria-checked", selectedDept === dept ? "true" : "false");
-        btn.addEventListener("click", () => {
-          selectedDept = dept;
-          if (!departmentMap[selectedDept].includes(selectedName)) {
-            selectedName = "";
-          }
-          persistState();
-          renderDeptPills();
-          renderNamePills();
-        });
-        deptPillsEl.appendChild(btn);
-      });
-    }
-
-    function renderNamePills() {
-      namePillsEl.innerHTML = "";
-      const names = departmentMap[selectedDept] || [];
-      names.forEach((name) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = `pill${selectedName === name ? " active" : ""}`;
-        btn.textContent = name;
-        btn.setAttribute("role", "radio");
-        btn.setAttribute("aria-checked", selectedName === name ? "true" : "false");
-        btn.addEventListener("click", () => {
-          selectedName = name;
-          persistState();
-          renderNamePills();
-        });
-        namePillsEl.appendChild(btn);
-      });
-    }
-
-    async function postViaFetch(payload) {
+    function toFormEncoded(payload) {
       const params = new URLSearchParams();
       Object.keys(payload).forEach((key) => {
         const val = payload[key];
-        if (typeof val === "object") {
+        if (val == null) {
+          params.append(key, "");
+        } else if (typeof val === "object") {
           params.append(key, JSON.stringify(val));
         } else {
+          params.append(key, String(val));
+        }
+      });
+      return params.toString();
+    }
+
+    function isCorsLikeNetworkError(err) {
+      const msg = String(err && err.message ? err.message : err).toLowerCase();
+      return msg.includes("networkerror")
+        || msg.includes("failed to fetch")
+        || msg.includes("load failed")
+        || msg.includes("cors");
+    }
+
+    async function callApi(action, payload, options = {}) {
+      const allowNoCorsFallback = options.allowNoCorsFallback !== false;
+      const body = { action, ...payload };
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const text = await response.text();
+        let data = {};
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch (e) {
+          data = { raw: text };
+        }
+        if (!response.ok) {
+          throw new Error(data.message || `HTTP ${response.status}`);
+        }
+        return data;
+      } catch (err) {
+        if (!allowNoCorsFallback || !isCorsLikeNetworkError(err)) throw err;
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: toFormEncoded(body),
+          keepalive: true
+        });
+        return { ok: true, transport: "no-cors" };
+      }
+    }
+
+    function callApiJsonp(action, payload, timeoutMs = 12000) {
+      return new Promise((resolve, reject) => {
+        const callbackName = `jsonp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const params = new URLSearchParams({ action, callback: callbackName });
+        Object.entries(payload || {}).forEach(([key, val]) => {
           params.append(key, val == null ? "" : String(val));
+        });
+        const src = `${APPS_SCRIPT_URL}?${params.toString()}`;
+        const script = document.createElement("script");
+        let settled = false;
+        const cleanup = () => {
+          if (script.parentNode) script.parentNode.removeChild(script);
+          delete window[callbackName];
+        };
+        const timer = setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          reject(new Error("Carryover request timed out."));
+        }, timeoutMs);
+
+        window[callbackName] = (data) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          cleanup();
+          resolve(data || {});
+        };
+        script.onerror = () => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          cleanup();
+          reject(new Error("Could not load Apps Script JSONP response."));
+        };
+        script.src = src;
+        script.async = true;
+        document.head.appendChild(script);
+      });
+    }
+
+    function normalizeCarryoverPayload(result) {
+      const raw = Array.isArray(result && result.tasks) ? result.tasks
+        : Array.isArray(result && result.carryoverTasks) ? result.carryoverTasks
+        : [];
+      return raw
+        .map((t) => ({
+          taskId: t.taskId || createTaskId(),
+          title: (t.title || t.task || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: "carryover",
+          lastCompletion: t.lastCompletion,
+          lastNote: t.lastNote
+        }))
+        .filter((t) => t.title.length > 0);
+    }
+
+    async function syncCarryoverFromSheets(dateKey, force = false) {
+      if (!identity || !dateKey) return;
+      if (!force && state.carryoverSyncedByDate[dateKey]) return;
+      if (Array.isArray(state.sodByDate[dateKey]) && state.sodByDate[dateKey].length) {
+        state.carryoverSyncedByDate[dateKey] = true;
+        saveState();
+        return;
+      }
+
+      try {
+        const result = await callApiJsonp("getCarryover", {
+          workDate: dateKey,
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          clientVersion: CLIENT_VERSION
+        });
+
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Carryover fetch rejected.");
+        }
+
+        const carryoverTasks = normalizeCarryoverPayload(result);
+        state.carryoverByDate[dateKey] = carryoverTasks;
+        state.carryoverSourceByDate[dateKey] = "google-sheets";
+
+        const currentDraft = Array.isArray(state.startDraftByDate[dateKey]) ? state.startDraftByDate[dateKey] : [];
+        const hasUserDraft = currentDraft.some((t) => t.source !== "carryover");
+        if (!hasUserDraft) {
+          state.startDraftByDate[dateKey] = carryoverTasks.map((t) => ({ ...t }));
+          state.startSourceByDate[dateKey] = "google-sheets";
+        }
+
+        state.carryoverSyncedByDate[dateKey] = true;
+        saveState();
+      } catch (err) {
+        if (Array.isArray(state.carryoverByDate[dateKey]) && state.carryoverByDate[dateKey].length) {
+          state.carryoverSourceByDate[dateKey] = "local-storage";
+          if (!state.startSourceByDate[dateKey]) {
+            state.startSourceByDate[dateKey] = "local-storage";
+          }
+          saveState();
+        }
+        setStatus(sodStatusEl, "Could not pull carryover from Google Sheets. Showing local carryover fallback.", "info");
+      }
+    }
+
+    function renderSodSourceHint() {
+      const dateKey = workDateEl.value;
+      const submitted = Array.isArray(state.sodByDate[dateKey]) ? state.sodByDate[dateKey] : [];
+      const draft = getOrCreateStartDraft(dateKey);
+      const source = state.startSourceByDate[dateKey] || "new";
+
+      if (submitted.length) {
+        sodSourceHintEl.textContent = "Carryover source: Local storage";
+        return;
+      }
+      if (!draft.length && source === "new") {
+        sodSourceHintEl.textContent = "Carryover source: Not loaded yet";
+        return;
+      }
+      if (source === "google-sheets") {
+        sodSourceHintEl.textContent = "Carryover source: Google Sheets";
+        return;
+      }
+      sodSourceHintEl.textContent = "Carryover source: Local storage";
+    }
+
+    function renderStartTasks() {
+      const dateKey = workDateEl.value;
+      const tasks = getOrCreateStartDraft(dateKey);
+      sodTasksEl.innerHTML = "";
+      if (!tasks.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No tasks yet. Add your first task above.";
+        sodTasksEl.appendChild(empty);
+        return;
+      }
+
+      tasks.forEach((task, index) => {
+        const isCarryover = isCarryoverTask(task);
+        const prevCompletion = getCarryoverLastCompletion(task);
+        const row = document.createElement("div");
+        row.className = "task-row";
+
+        const head = document.createElement("div");
+        head.className = "task-row-head";
+
+        const titleWrap = document.createElement("div");
+        titleWrap.className = "task-title-wrap";
+        const sr = document.createElement("span");
+        sr.className = "sr-badge";
+        sr.textContent = `#${String(index + 1).padStart(2, "0")}`;
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = task.title;
+        titleWrap.appendChild(sr);
+        titleWrap.appendChild(title);
+
+        const right = document.createElement("div");
+        right.className = "task-tags";
+
+        const priority = document.createElement("span");
+        const normalizedPriority = normalizePriority(task.priority);
+        priority.className = `priority ${priorityClass(normalizedPriority)}`;
+        priority.textContent = normalizedPriority;
+
+        right.appendChild(priority);
+        if (isCarryover) {
+          const lockedChip = document.createElement("span");
+          lockedChip.className = "meta-chip locked";
+          lockedChip.innerHTML = "<i class=\"fa-solid fa-lock\"></i> Locked Carryover";
+          right.appendChild(lockedChip);
+        }
+        if (prevCompletion !== null) {
+          const prevChip = document.createElement("span");
+          prevChip.className = "meta-chip prev";
+          prevChip.textContent = `Prev: ${prevCompletion}%`;
+          right.appendChild(prevChip);
+        }
+        if (!isCarryover) {
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "danger icon-danger";
+          remove.title = "Remove task";
+          remove.setAttribute("aria-label", "Remove task");
+          remove.innerHTML = "<i class=\"fa-solid fa-trash\"></i>";
+          remove.addEventListener("click", () => {
+            tasks.splice(index, 1);
+            saveState();
+            renderStartTasks();
+            renderEodTasks();
+            updateSummaryCards();
+          });
+          right.appendChild(remove);
+        }
+        head.appendChild(titleWrap);
+        head.appendChild(right);
+        row.appendChild(head);
+
+        sodTasksEl.appendChild(row);
+      });
+    }
+
+    function renderEodTasks() {
+      const dateKey = workDateEl.value;
+      const pending = getPendingTasksForDate(dateKey);
+      const eodDraft = getOrCreateEodDraft(dateKey);
+      (eodDraft.extras || []).forEach((extra) => {
+        if (!extra.taskId) extra.taskId = createTaskId();
+      });
+
+      const validEditorIds = new Set([
+        ...pending.map((t) => `pending:${t.taskId}`),
+        ...(eodDraft.extras || []).map((e) => `extra:${e.taskId}`)
+      ]);
+
+      let activeEditorId = eodDraft.activeEditorId || "";
+      if (activeEditorId && !validEditorIds.has(activeEditorId)) {
+        activeEditorId = "";
+      }
+
+      if (!activeEditorId) {
+        const firstSelectedPending = pending.find((t) => eodDraft.selectedTaskIds[t.taskId]);
+        if (firstSelectedPending) {
+          activeEditorId = `pending:${firstSelectedPending.taskId}`;
+        } else if (pending.length) {
+          const first = pending[0];
+          eodDraft.selectedTaskIds[first.taskId] = true;
+          if (!eodDraft.updatesByTaskId[first.taskId]) {
+            eodDraft.updatesByTaskId[first.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+          }
+          activeEditorId = `pending:${first.taskId}`;
+        } else if ((eodDraft.extras || []).length) {
+          activeEditorId = `extra:${eodDraft.extras[0].taskId}`;
+        }
+        eodDraft.activeEditorId = activeEditorId;
+        saveState();
+      }
+
+      eodTasksEl.innerHTML = "";
+
+      if (!pending.length && !eodDraft.extras.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No pending tasks. Submit Start of Day tasks first, or add an extra task.";
+        eodTasksEl.appendChild(empty);
+      }
+
+      pending.forEach((task) => {
+        const editorId = `pending:${task.taskId}`;
+        const row = document.createElement("div");
+        row.className = "pending-row";
+
+        const head = document.createElement("div");
+        head.className = "pending-row-head";
+
+        const sel = document.createElement("label");
+        sel.className = "pending-select";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = Boolean(eodDraft.selectedTaskIds[task.taskId]);
+        const sr = document.createElement("span");
+        sr.className = "sr-badge";
+        sr.textContent = `#${String(eodTasksEl.querySelectorAll(".pending-row").length + 1).padStart(2, "0")}`;
+        const title = document.createElement("span");
+        title.className = "task-title";
+        title.textContent = task.title;
+        sel.appendChild(checkbox);
+        sel.appendChild(sr);
+        sel.appendChild(title);
+
+        const pri = document.createElement("span");
+        const normalizedPriority = normalizePriority(task.priority);
+        pri.className = `priority ${priorityClass(normalizedPriority)}`;
+        pri.textContent = normalizedPriority;
+
+        head.appendChild(sel);
+        head.appendChild(pri);
+        row.appendChild(head);
+
+        const meta = document.createElement("div");
+        meta.className = "pending-meta";
+        meta.style.display = checkbox.checked && activeEditorId === editorId ? "grid" : "none";
+
+        const percent = document.createElement("select");
+        const allowedCompletion = getAllowedCompletionOptions(task);
+        percent.innerHTML = buildCompletionOptionsMarkup(allowedCompletion);
+
+        const spentHours = document.createElement("input");
+        spentHours.type = "number";
+        spentHours.min = "0";
+        spentHours.placeholder = "Hours";
+
+        const spentMinutes = document.createElement("input");
+        spentMinutes.type = "number";
+        spentMinutes.min = "0";
+        spentMinutes.max = "59";
+        spentMinutes.placeholder = "Minutes";
+
+        const note = document.createElement("textarea");
+        note.placeholder = "Optional progress note";
+
+        const existing = eodDraft.updatesByTaskId[task.taskId] || { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+        const existingCompletion = existing.completionPercent == null ? "" : String(existing.completionPercent);
+        const existingAllowed = existingCompletion !== "" && allowedCompletion.includes(Number(existingCompletion));
+        percent.value = existingAllowed ? existingCompletion : "";
+        if (existingCompletion !== "" && !existingAllowed && eodDraft.updatesByTaskId[task.taskId]) {
+          eodDraft.updatesByTaskId[task.taskId].completionPercent = "";
+        }
+        percent.dataset.editorId = editorId;
+        percent.dataset.field = "completionPercent";
+        if (isCarryoverTask(task) && getCarryoverLastCompletion(task) >= 100) {
+          percent.disabled = true;
+          percent.value = "100";
+        }
+        spentHours.value = existing.spentHours;
+        spentHours.dataset.editorId = editorId;
+        spentHours.dataset.field = "spentHours";
+        spentMinutes.value = existing.spentMinutes;
+        spentMinutes.dataset.editorId = editorId;
+        spentMinutes.dataset.field = "spentMinutes";
+        note.value = existing.note;
+        note.dataset.editorId = editorId;
+        note.dataset.field = "note";
+
+        const percentField = document.createElement("div");
+        percentField.className = "meta-field";
+        const percentLabel = document.createElement("label");
+        percentLabel.textContent = "Completion %";
+        percentField.appendChild(percentLabel);
+        percentField.appendChild(percent);
+
+        const hoursField = document.createElement("div");
+        hoursField.className = "meta-field";
+        const hoursLabel = document.createElement("label");
+        hoursLabel.textContent = "Hours";
+        hoursField.appendChild(hoursLabel);
+        hoursField.appendChild(spentHours);
+
+        const minsField = document.createElement("div");
+        minsField.className = "meta-field";
+        const minsLabel = document.createElement("label");
+        minsLabel.textContent = "Minutes";
+        minsField.appendChild(minsLabel);
+        minsField.appendChild(spentMinutes);
+
+        const noteField = document.createElement("div");
+        noteField.className = "meta-field note-field";
+        const noteLabel = document.createElement("label");
+        noteLabel.textContent = "Progress Note";
+        noteField.appendChild(noteLabel);
+        noteField.appendChild(note);
+
+        meta.appendChild(percentField);
+        meta.appendChild(hoursField);
+        meta.appendChild(minsField);
+        meta.appendChild(noteField);
+        row.appendChild(meta);
+        head.style.cursor = "pointer";
+        head.addEventListener("click", (event) => {
+          if (event.target.closest("input[type=\"checkbox\"]")) return;
+          if (!checkbox.checked) {
+            checkbox.checked = true;
+            eodDraft.selectedTaskIds[task.taskId] = true;
+            if (!eodDraft.updatesByTaskId[task.taskId]) {
+              eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+            }
+          }
+          eodDraft.activeEditorId = editorId;
+          saveState();
+          renderEodTasks();
+          updateSummaryCards();
+        });
+
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) {
+            eodDraft.selectedTaskIds[task.taskId] = true;
+            if (!eodDraft.updatesByTaskId[task.taskId]) {
+              eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+            }
+            eodDraft.activeEditorId = editorId;
+          } else {
+            delete eodDraft.selectedTaskIds[task.taskId];
+            delete eodDraft.updatesByTaskId[task.taskId];
+            if (eodDraft.activeEditorId === editorId) {
+              eodDraft.activeEditorId = "";
+            }
+          }
+          saveState();
+          renderEodTasks();
+          updateSummaryCards();
+        });
+
+        percent.addEventListener("input", () => {
+          const value = percent.value;
+          if (!eodDraft.updatesByTaskId[task.taskId]) {
+            eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+          }
+          eodDraft.updatesByTaskId[task.taskId].completionPercent = value;
+          saveState();
+          updateSummaryCards();
+        });
+
+        spentHours.addEventListener("input", () => {
+          if (!eodDraft.updatesByTaskId[task.taskId]) {
+            eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+          }
+          eodDraft.updatesByTaskId[task.taskId].spentHours = spentHours.value;
+          saveState();
+          updateSummaryCards();
+        });
+
+        spentMinutes.addEventListener("input", () => {
+          if (!eodDraft.updatesByTaskId[task.taskId]) {
+            eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+          }
+          eodDraft.updatesByTaskId[task.taskId].spentMinutes = spentMinutes.value;
+          saveState();
+          updateSummaryCards();
+        });
+
+        note.addEventListener("input", () => {
+          if (!eodDraft.updatesByTaskId[task.taskId]) {
+            eodDraft.updatesByTaskId[task.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", note: "" };
+          }
+          eodDraft.updatesByTaskId[task.taskId].note = note.value;
+          saveState();
+        });
+
+        eodTasksEl.appendChild(row);
+      });
+
+      eodDraft.extras.forEach((extra, index) => {
+        const extraId = extra.taskId || createTaskId();
+        extra.taskId = extraId;
+        const editorId = `extra:${extraId}`;
+        const row = document.createElement("div");
+        row.className = "extra-row";
+
+        const head = document.createElement("div");
+        head.className = "extra-row-head";
+        const titleWrap = document.createElement("div");
+        titleWrap.className = "task-title-wrap";
+        const sr = document.createElement("span");
+        sr.className = "sr-badge";
+        sr.textContent = `#${String(index + 1).padStart(2, "0")}`;
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = `Extra Task ${index + 1}`;
+        titleWrap.appendChild(sr);
+        titleWrap.appendChild(title);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "danger icon-danger";
+        remove.title = "Remove task";
+        remove.setAttribute("aria-label", "Remove task");
+        remove.innerHTML = "<i class=\"fa-solid fa-trash\"></i>";
+        remove.addEventListener("click", () => {
+          eodDraft.extras.splice(index, 1);
+          saveState();
+          renderEodTasks();
+          updateSummaryCards();
+        });
+
+        head.appendChild(titleWrap);
+        head.appendChild(remove);
+        row.appendChild(head);
+
+        const titleInput = document.createElement("input");
+        titleInput.type = "text";
+        titleInput.placeholder = "Extra task title";
+        titleInput.value = extra.title || "";
+
+        const meta = document.createElement("div");
+        meta.className = "extra-meta";
+        meta.style.display = activeEditorId === editorId ? "grid" : "none";
+        const percent = document.createElement("select");
+        percent.innerHTML = buildCompletionOptionsMarkup(COMPLETION_OPTIONS);
+        percent.value = extra.completionPercent == null ? "" : String(extra.completionPercent);
+        percent.dataset.editorId = editorId;
+        percent.dataset.field = "completionPercent";
+
+        const spentHours = document.createElement("input");
+        spentHours.type = "number";
+        spentHours.min = "0";
+        spentHours.placeholder = "Hours";
+        spentHours.value = extra.spentHours ?? "";
+        spentHours.dataset.editorId = editorId;
+        spentHours.dataset.field = "spentHours";
+
+        const spentMinutes = document.createElement("input");
+        spentMinutes.type = "number";
+        spentMinutes.min = "0";
+        spentMinutes.max = "59";
+        spentMinutes.placeholder = "Minutes";
+        spentMinutes.value = extra.spentMinutes ?? "";
+        spentMinutes.dataset.editorId = editorId;
+        spentMinutes.dataset.field = "spentMinutes";
+
+        const note = document.createElement("textarea");
+        note.placeholder = "Optional progress note";
+        note.value = extra.note || "";
+        note.dataset.editorId = editorId;
+        note.dataset.field = "note";
+
+        const percentField = document.createElement("div");
+        percentField.className = "meta-field";
+        const percentLabel = document.createElement("label");
+        percentLabel.textContent = "Completion %";
+        percentField.appendChild(percentLabel);
+        percentField.appendChild(percent);
+
+        const hoursField = document.createElement("div");
+        hoursField.className = "meta-field";
+        const hoursLabel = document.createElement("label");
+        hoursLabel.textContent = "Hours";
+        hoursField.appendChild(hoursLabel);
+        hoursField.appendChild(spentHours);
+
+        const minsField = document.createElement("div");
+        minsField.className = "meta-field";
+        const minsLabel = document.createElement("label");
+        minsLabel.textContent = "Minutes";
+        minsField.appendChild(minsLabel);
+        minsField.appendChild(spentMinutes);
+
+        const noteField = document.createElement("div");
+        noteField.className = "meta-field note-field";
+        const noteLabel = document.createElement("label");
+        noteLabel.textContent = "Progress Note";
+        noteField.appendChild(noteLabel);
+        noteField.appendChild(note);
+
+        meta.appendChild(percentField);
+        meta.appendChild(hoursField);
+        meta.appendChild(minsField);
+        meta.appendChild(noteField);
+        row.appendChild(titleInput);
+        row.appendChild(meta);
+        head.style.cursor = "pointer";
+        head.addEventListener("click", () => {
+          eodDraft.activeEditorId = editorId;
+          saveState();
+          renderEodTasks();
+          updateSummaryCards();
+        });
+
+        titleInput.addEventListener("input", () => {
+          extra.title = titleInput.value;
+          eodDraft.activeEditorId = editorId;
+          saveState();
+          updateSummaryCards();
+        });
+        percent.addEventListener("input", () => {
+          extra.completionPercent = percent.value;
+          eodDraft.activeEditorId = editorId;
+          saveState();
+          updateSummaryCards();
+        });
+        spentHours.addEventListener("input", () => {
+          extra.spentHours = spentHours.value;
+          eodDraft.activeEditorId = editorId;
+          saveState();
+          updateSummaryCards();
+        });
+        spentMinutes.addEventListener("input", () => {
+          extra.spentMinutes = spentMinutes.value;
+          eodDraft.activeEditorId = editorId;
+          saveState();
+          updateSummaryCards();
+        });
+        note.addEventListener("input", () => {
+          extra.note = note.value;
+          eodDraft.activeEditorId = editorId;
+          saveState();
+        });
+
+        eodTasksEl.appendChild(row);
+      });
+    }
+
+    function renderAll() {
+      renderSodSourceHint();
+      renderStartTasks();
+      renderEodTasks();
+      updateSummaryCards();
+    }
+
+    function addTaskToStartDraft() {
+      const dateKey = workDateEl.value;
+      const title = newTaskTitleEl.value.trim();
+      if (!title) {
+        setStatus(sodStatusEl, "Task title is required.", "error");
+        return;
+      }
+
+      const draft = getOrCreateStartDraft(dateKey);
+      draft.push({
+        taskId: createTaskId(),
+        title,
+        priority: normalizePriority(newTaskPriorityEl.value),
+        source: "sod"
+      });
+      state.startSourceByDate[dateKey] = "local-storage";
+
+      newTaskTitleEl.value = "";
+      newTaskPriorityEl.value = "Medium";
+      setStatus(sodStatusEl, "", "");
+      saveState();
+      renderAll();
+    }
+
+    async function handleSodSubmit() {
+      const dateKey = workDateEl.value;
+      const draftTasks = getOrCreateStartDraft(dateKey);
+      const tasksForState = draftTasks
+        .map((t) => ({
+          taskId: t.taskId || createTaskId(),
+          title: (t.title || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: isCarryoverTask(t) ? "carryover" : "sod",
+          lastCompletion: getCarryoverLastCompletion(t),
+          lastNote: (t.lastNote || "").trim()
+        }))
+        .filter((t) => t.title.length > 0);
+      const tasks = tasksForState.map((t) => ({
+        taskId: t.taskId,
+        title: t.title,
+        priority: t.priority
+      }));
+
+      if (!tasks.length) {
+        setStatus(sodStatusEl, "Add at least one task before Start-of-Day submit.", "error");
+        return;
+      }
+
+      setStatus(sodStatusEl, "Submitting Start-of-Day...", "");
+      submitSodBtn.disabled = true;
+      try {
+        const payload = {
+          stage: "SOD",
+          submittedAt: new Date().toISOString(),
+          workDate: dateKey,
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          tasks,
+          clientVersion: CLIENT_VERSION
+        };
+        const result = await callApi("submitSOD", payload);
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Start-of-Day submit rejected.");
+        }
+
+        state.sodByDate[dateKey] = tasksForState;
+        state.eodSubmittedByDate[dateKey] = false;
+        saveState();
+        const zoho = await sendZohoFlow("SOD", payload);
+        if (result.transport === "no-cors") {
+          if (!zoho.skipped && zoho.ok) {
+            setStatus(sodStatusEl, "Start-of-Day sent to Apps Script and Zoho Flow (request transport: no-cors).", "info");
+          } else if (zoho.skipped) {
+            setStatus(sodStatusEl, "Start-of-Day request sent. If sheet is not updated, check Apps Script deployment permissions.", "info");
+          } else {
+            setStatus(sodStatusEl, "Start-of-Day sent to Apps Script, but Zoho Flow webhook failed.", "info");
+          }
+        } else {
+          if (!zoho.skipped && zoho.ok) {
+            setStatus(sodStatusEl, "Start-of-Day submitted successfully (Apps Script + Zoho Flow).", "success");
+          } else if (zoho.skipped) {
+            setStatus(sodStatusEl, "Start-of-Day submitted successfully.", "success");
+          } else {
+            setStatus(sodStatusEl, "Start-of-Day submitted to Apps Script, but Zoho Flow webhook failed.", "info");
+          }
+        }
+        renderAll();
+      } catch (err) {
+        setStatus(sodStatusEl, `Start-of-Day submit failed: ${err.message}`, "error");
+      } finally {
+        submitSodBtn.disabled = false;
+      }
+    }
+
+    function parsePercent(value) {
+      const n = Number(value);
+      const allowed = new Set(COMPLETION_OPTIONS);
+      if (!Number.isFinite(n)) return null;
+      return allowed.has(n) ? n : null;
+    }
+
+    function parseHours(value) {
+      if (value == null || String(value).trim() === "") return 0;
+      const n = Number(value);
+      if (!Number.isFinite(n) || n < 0) return null;
+      return Math.floor(n);
+    }
+
+    function parseMinutes(value) {
+      if (value == null || String(value).trim() === "") return 0;
+      const n = Number(value);
+      if (!Number.isFinite(n) || n < 0 || n > 59) return null;
+      return Math.floor(n);
+    }
+
+    function formatMinutes(totalMinutes) {
+      const safe = Math.max(0, totalMinutes || 0);
+      const h = Math.floor(safe / 60);
+      const m = safe % 60;
+      return `${h}h ${m}m`;
+    }
+
+    function formatDateLabel(isoDate) {
+      if (!isoDate || !isoDate.includes("-")) return isoDate || "-";
+      const [y, m, d] = isoDate.split("-");
+      return `${d}-${m}-${y}`;
+    }
+
+    function buildCliqMessage(stage, payload) {
+      const header = `*${payload.employeeName || "-"}* ${stage === "EOD" ? "End of Day" : "Start of Day"} Update (${formatDateLabel(payload.workDate)})`;
+      const meta = `Dept: ${payload.department || "-"} | Date: ${payload.workDate || "-"}${stage === "EOD" ? ` | Total Time: ${formatMinutes(payload.totalSpentMinutes || 0)}` : ""}`;
+      const list = stage === "EOD"
+        ? (payload.updates || []).map((t, i) => {
+            const spent = `${t.spentHours || 0}h ${t.spentMinutes || 0}m`;
+            return `${i + 1}. ${t.title || "-"} [${t.priority || "Medium"}]\n   Completion: ${t.completionPercent}% | Spent: ${spent}${t.note ? `\n   Note: ${t.note}` : ""}`;
+          })
+        : (payload.tasks || []).map((t, i) => `${i + 1}. ${t.title || "-"} [${t.priority || "Medium"}]`);
+      return [header, meta, "", "*Tasks:*", ...list].join("\n");
+    }
+
+    async function sendZohoFlow(stage, payload) {
+      if (!ZOHO_FLOW_WEBHOOK_URL) return { skipped: true };
+      const cliqMessage = buildCliqMessage(stage, payload);
+      const flowPayload = {
+        stage,
+        employeeName: payload.employeeName,
+        department: payload.department,
+        workDate: payload.workDate,
+        accessCode: payload.accessCode,
+        taskCount: stage === "EOD" ? (payload.updates || []).length : (payload.tasks || []).length,
+        totalSpentMinutes: payload.totalSpentMinutes || 0,
+        cliq_message: cliqMessage,
+        payload_json: JSON.stringify(payload)
+      };
+
+      try {
+        await fetch(ZOHO_FLOW_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: toFormEncoded(flowPayload),
+          keepalive: true
+        });
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, message: String(err && err.message ? err.message : err) };
+      }
+    }
+
+    function updateSummaryCards() {
+      const dateKey = workDateEl.value;
+      const startTasks = getOrCreateStartDraft(dateKey);
+      const pending = getPendingTasksForDate(dateKey);
+      const eodDraft = getOrCreateEodDraft(dateKey);
+
+      let selectedCount = 0;
+      let totalSpent = 0;
+
+      pending.forEach((task) => {
+        if (!eodDraft.selectedTaskIds[task.taskId]) return;
+        selectedCount += 1;
+        const upd = eodDraft.updatesByTaskId[task.taskId] || {};
+        const h = parseHours(upd.spentHours);
+        const m = parseMinutes(upd.spentMinutes);
+        if (h !== null && m !== null) {
+          totalSpent += h * 60 + m;
         }
       });
 
-      await fetch(WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-        body: params.toString(),
-        keepalive: true,
+      (eodDraft.extras || []).forEach((extra) => {
+        if (!(extra.title || "").trim()) return;
+        selectedCount += 1;
+        const h = parseHours(extra.spentHours);
+        const m = parseMinutes(extra.spentMinutes);
+        if (h !== null && m !== null) {
+          totalSpent += h * 60 + m;
+        }
       });
+
+      startCountCardEl.textContent = String(startTasks.length);
+      endCountCardEl.textContent = String(selectedCount);
+      hoursSplitCardEl.textContent = formatMinutes(totalSpent);
+    }
+
+    function validateEodBeforeSubmit(pending, eodDraft) {
+      for (const task of pending) {
+        if (!eodDraft.selectedTaskIds[task.taskId]) continue;
+        const editorId = `pending:${task.taskId}`;
+        const update = eodDraft.updatesByTaskId[task.taskId] || {};
+        const allowed = getAllowedCompletionOptions(task);
+        const completion = parsePercent(update.completionPercent);
+        if (completion === null || !allowed.includes(completion)) {
+          return {
+            ok: false,
+            editorId,
+            field: "completionPercent",
+            message: "Choose a valid completion %. Carryover tasks must move strictly above previous completion."
+          };
+        }
+
+        const hRaw = update.spentHours;
+        const mRaw = update.spentMinutes;
+        const h = parseHours(hRaw);
+        const m = parseMinutes(mRaw);
+        if (h === null) {
+          return { ok: false, editorId, field: "spentHours", message: "Hours must be a valid number (0 or above)." };
+        }
+        if (m === null) {
+          return { ok: false, editorId, field: "spentMinutes", message: "Minutes must be between 0 and 59." };
+        }
+        const hasAnyTimeInput = String(hRaw ?? "").trim() !== "" || String(mRaw ?? "").trim() !== "";
+        if (!hasAnyTimeInput || (h === 0 && m === 0)) {
+          return { ok: false, editorId, field: "spentHours", message: "Dedicated time is required. Enter hours/minutes greater than zero." };
+        }
+      }
+
+      for (const extra of eodDraft.extras || []) {
+        const title = (extra.title || "").trim();
+        if (!title) continue;
+        const editorId = `extra:${extra.taskId}`;
+        const completion = parsePercent(extra.completionPercent);
+        if (completion === null) {
+          return { ok: false, editorId, field: "completionPercent", message: "Choose a valid completion % for extra tasks." };
+        }
+        const hRaw = extra.spentHours;
+        const mRaw = extra.spentMinutes;
+        const h = parseHours(hRaw);
+        const m = parseMinutes(mRaw);
+        if (h === null) {
+          return { ok: false, editorId, field: "spentHours", message: "Hours must be a valid number (0 or above)." };
+        }
+        if (m === null) {
+          return { ok: false, editorId, field: "spentMinutes", message: "Minutes must be between 0 and 59." };
+        }
+        const hasAnyTimeInput = String(hRaw ?? "").trim() !== "" || String(mRaw ?? "").trim() !== "";
+        if (!hasAnyTimeInput || (h === 0 && m === 0)) {
+          return { ok: false, editorId, field: "spentHours", message: "Dedicated time is required for extra tasks." };
+        }
+      }
+
+      return { ok: true };
+    }
+
+    async function handleEodSubmit() {
+      const dateKey = workDateEl.value;
+      const pending = getPendingTasksForDate(dateKey);
+      const eodDraft = getOrCreateEodDraft(dateKey);
+
+      const precheck = validateEodBeforeSubmit(pending, eodDraft);
+      if (!precheck.ok) {
+        eodDraft.activeEditorId = precheck.editorId;
+        saveState();
+        renderEodTasks();
+        focusEditorField(precheck.editorId, precheck.field);
+        setStatus(eodStatusEl, precheck.message, "error");
+        return;
+      }
+
+      const selectedUpdates = pending
+        .filter((t) => eodDraft.selectedTaskIds[t.taskId])
+        .map((t) => {
+          const update = eodDraft.updatesByTaskId[t.taskId] || {};
+          return {
+            taskId: t.taskId,
+            title: t.title,
+            completionPercent: parsePercent(update.completionPercent),
+            spentHours: parseHours(update.spentHours),
+            spentMinutes: parseMinutes(update.spentMinutes),
+            note: (update.note || "").trim(),
+            priority: normalizePriority(t.priority),
+            isExtra: false
+          };
+        });
+
+      const validExtras = (eodDraft.extras || [])
+        .map((e) => ({
+          taskId: e.taskId || createTaskId(),
+          title: (e.title || "").trim(),
+          completionPercent: parsePercent(e.completionPercent),
+          spentHours: parseHours(e.spentHours),
+          spentMinutes: parseMinutes(e.spentMinutes),
+          note: (e.note || "").trim(),
+          priority: normalizePriority(e.priority),
+          isExtra: true
+        }))
+        .filter((e) => e.title.length > 0);
+
+      const updates = [...selectedUpdates, ...validExtras];
+      if (!updates.length) {
+        setStatus(eodStatusEl, "Select at least one pending task or add an extra task.", "error");
+        return;
+      }
+
+      const hasInvalid = updates.some(
+        (u) => u.completionPercent === null || u.spentHours === null || u.spentMinutes === null
+      );
+      if (hasInvalid) {
+        setStatus(eodStatusEl, "Completion % and dedicated time must be valid for every submitted task.", "error");
+        return;
+      }
+
+      setStatus(eodStatusEl, "Submitting End-of-Day...", "");
+      submitEodBtn.disabled = true;
+      try {
+        const totalSpentMinutes = updates.reduce(
+          (sum, u) => sum + ((u.spentHours || 0) * 60) + (u.spentMinutes || 0),
+          0
+        );
+        const payload = {
+          stage: "EOD",
+          submittedAt: new Date().toISOString(),
+          workDate: dateKey,
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          totalSpentMinutes,
+          updates,
+          clientVersion: CLIENT_VERSION
+        };
+
+        const result = await callApi("submitEOD", payload);
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "End-of-Day submit rejected.");
+        }
+
+        const nextDate = nextDateISO(dateKey);
+        const incomplete = updates
+          .filter((u) => u.completionPercent < 100)
+          .map((u) => ({
+            taskId: u.taskId,
+            title: u.title,
+            priority: u.priority,
+            source: "carryover",
+            carryFrom: dateKey,
+            lastCompletion: u.completionPercent,
+            lastNote: u.note
+          }));
+
+        if (incomplete.length) {
+          state.carryoverByDate[nextDate] = incomplete;
+          state.carryoverSourceByDate[nextDate] = "local-storage";
+          state.startSourceByDate[nextDate] = "local-storage";
+          state.startDraftByDate[nextDate] = incomplete.map((t) => ({ ...t }));
+        } else if (Array.isArray(state.carryoverByDate[nextDate])) {
+          delete state.carryoverByDate[nextDate];
+          delete state.carryoverSourceByDate[nextDate];
+        }
+        state.eodSubmittedByDate[dateKey] = true;
+        state.carryoverSyncedByDate[nextDate] = false;
+        state.carryoverSyncedByDate[dateKey] = true;
+        delete state.carryoverByDate[dateKey];
+        delete state.carryoverSourceByDate[dateKey];
+
+        state.eodDraftByDate[dateKey] = { selectedTaskIds: {}, updatesByTaskId: {}, extras: [], activeEditorId: "" };
+        state.workDate = nextDate;
+        workDateEl.value = nextDate;
+        getOrCreateEodDraft(nextDate);
+        saveState();
+        const zoho = await sendZohoFlow("EOD", payload);
+        if (result.transport === "no-cors") {
+          if (!zoho.skipped && zoho.ok) {
+            setStatus(eodStatusEl, "End-of-Day sent to Apps Script and Zoho Flow (request transport: no-cors).", "info");
+          } else if (zoho.skipped) {
+            setStatus(eodStatusEl, "End-of-Day request sent. If sheet is not updated, check Apps Script deployment permissions.", "info");
+          } else {
+            setStatus(eodStatusEl, "End-of-Day sent to Apps Script, but Zoho Flow webhook failed.", "info");
+          }
+        } else {
+          if (!zoho.skipped && zoho.ok) {
+            setStatus(eodStatusEl, "End-of-Day submitted successfully (Apps Script + Zoho Flow).", "success");
+          } else if (zoho.skipped) {
+            setStatus(eodStatusEl, "End-of-Day submitted successfully.", "success");
+          } else {
+            setStatus(eodStatusEl, "End-of-Day submitted to Apps Script, but Zoho Flow webhook failed.", "info");
+          }
+        }
+        renderAll();
+      } catch (err) {
+        setStatus(eodStatusEl, `End-of-Day submit failed: ${err.message}`, "error");
+      } finally {
+        submitEodBtn.disabled = false;
+      }
+    }
+
+    async function validateAccessOrBlock() {
+      const params = getAccessParams();
+      if (!params.dept || !params.name || !params.code) {
+        showBlocked("Missing URL parameters. Please use a full link with dept, name, and code.");
+        return false;
+      }
+      const deptUsers = USER_DIRECTORY[params.dept];
+      if (!deptUsers) {
+        showBlocked("Invalid department in link.");
+        return false;
+      }
+      const expectedCode = deptUsers[params.name];
+      if (!expectedCode) {
+        showBlocked("Invalid name for this department.");
+        return false;
+      }
+      if (params.code !== expectedCode) {
+        showBlocked("Invalid access code.");
+        return false;
+      }
+      identity = {
+        dept: params.dept,
+        name: params.name,
+        code: params.code
+      };
       return true;
     }
 
-    function getDeptParam() {
-      const deptParam = new URLSearchParams(window.location.search).get("dept");
-      if (!deptParam) return "";
-      const decoded = decodeURIComponent(deptParam).trim();
-      const normalized = decoded.toLowerCase();
-      if (normalized === "it") return "Information Technology";
-      if (departments.includes(decoded)) return decoded;
-      const match = departments.find((d) => d.toLowerCase() === normalized);
-      return match || "";
-    }
+    function wireEvents() {
+      workDateEl.addEventListener("change", async () => {
+        state.workDate = workDateEl.value;
+        getOrCreateStartDraft(workDateEl.value);
+        getOrCreateEodDraft(workDateEl.value);
+        await syncCarryoverFromSheets(workDateEl.value, false);
+        saveState();
+        setStatus(sodStatusEl, "", "");
+        setStatus(eodStatusEl, "", "");
+        renderAll();
+      });
 
-    function applyNameFromUrl() {
-      const nameParam = new URLSearchParams(window.location.search).get("name");
-      if (nameParam) {
-        selectedName = decodeURIComponent(nameParam);
-        const dept = departments.find((d) => (departmentMap[d] || []).includes(selectedName));
-        if (dept) selectedDept = dept;
-      }
-    }
-
-    function applyDeptFromUrl() {
-      const decoded = getDeptParam();
-      if (decoded) {
-        selectedDept = decoded;
-        if (!departmentMap[selectedDept].includes(selectedName)) {
-          selectedName = "";
+      addTaskBtn.addEventListener("click", addTaskToStartDraft);
+      newTaskTitleEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addTaskToStartDraft();
         }
-        if (deptSectionEl) deptSectionEl.style.display = "none";
-        if (nameSectionEl) nameSectionEl.style.display = "block";
-      }
+      });
+
+      submitSodBtn.addEventListener("click", handleSodSubmit);
+      submitEodBtn.addEventListener("click", handleEodSubmit);
+
+      addExtraBtn.addEventListener("click", () => {
+        const dateKey = workDateEl.value;
+        const eodDraft = getOrCreateEodDraft(dateKey);
+        eodDraft.extras.push({
+          taskId: createTaskId(),
+          title: "",
+          completionPercent: "",
+          spentHours: "",
+          spentMinutes: "",
+          note: "",
+          priority: "Medium"
+        });
+        const last = eodDraft.extras[eodDraft.extras.length - 1];
+        eodDraft.activeEditorId = `extra:${last.taskId}`;
+        saveState();
+        renderEodTasks();
+        updateSummaryCards();
+      });
     }
 
-    document.getElementById("workDate").addEventListener("change", () => {
-      updateSummary();
-      endTimeManual = false;
-      persistState();
-    });
-    dayTypeEl.addEventListener("change", () => {
-      updateSummary();
-      endTimeManual = false;
-      setAutoEndTime();
-      ensureBlocksForEndTime();
-      persistState();
-    });
-    startTimeEl.addEventListener("input", generateRows);
-    defaultMinutesEl.addEventListener("input", () => {
-      applyDefaultMinutesToAll();
-      setAutoEndTime();
-    });
-    endTimeEl.addEventListener("input", () => {
-      endTimeManual = true;
-      ensureBlocksForEndTime();
-      persistState();
-    });
-    addRowBtn.addEventListener("click", () => {
-      if (restoreDeletedBlock()) return;
-      const rows = Array.from(rowsEl.querySelectorAll("tr"));
-      const lastEnd = rows.length
-        ? parseTimeToMinutes(rows[rows.length - 1].querySelector(".end").value) ?? 0
-        : (parseTimeToMinutes(startTimeEl.value) ?? 540);
-      const mainEnd = parseTimeToMinutes(endTimeEl.value);
-      if (mainEnd !== null && lastEnd < mainEnd) {
-        addBlockRow(lastEnd);
-        currentBlockIndex = rowsEl.querySelectorAll("tr").length - 1;
-        recalcFrom(0);
-        applyBlockVisibility();
-        persistState();
-        return;
+    async function init() {
+      const ok = await validateAccessOrBlock();
+      if (!ok) return;
+
+      nameLineEl.textContent = `Name: ${identity.name} | Department: ${identity.dept}`;
+      state = loadState();
+      if (!state.workDate) {
+        state.workDate = todayISO();
       }
-      openModal({
-        title: "Extend End Time",
-        message: "To add more tasks, update the End Time first.",
-        confirmText: "OK",
-        showCancel: false
-      }).then(() => {
-        endTimeEl.focus();
-      });
-    });
-    undoDeleteBtn.addEventListener("click", () => {
-      if (restoreDeletedBlock()) return;
-      openModal({
-        title: "Nothing to Undo",
-        message: "No deleted block to restore.",
-        confirmText: "OK",
-        showCancel: false
-      });
-    });
-    viewSummaryBtn.addEventListener("click", async () => {
-      const payload = {
-        employeeName: selectedName,
-        workDate: document.getElementById("workDate").value,
-        dayType: dayTypeEl.value,
-        startTime: startTimeEl.value,
-        endTime: endTimeEl.value,
-        totalMinutes: totalScheduledMinutes(),
-        blocks: Array.from(rowsEl.querySelectorAll("tr")).map((row, i) => ({
-          block: i + 1,
-          start: row.querySelector(".start").value,
-          addHours: row.querySelector(".add-hours").value,
-          addMinutes: row.querySelector(".add-mins").value,
-          end: row.querySelector(".end").value,
-          task: row.querySelector("textarea").value.trim(),
-        })),
-      };
-      const msg = buildSummaryText(payload);
-      const htmlMsg = msg
-        .replace(/\*(.*?)\*/g, "<strong>$1</strong>")
-        .replace(/\n/g, "<br>");
-      await openModal({
-        title: "Cliq Message Preview",
-        message: htmlMsg,
-        confirmText: "OK",
-        showCancel: false,
-        html: true
-      });
-    });
-    resetBtn.addEventListener("click", () => {
-      selectedName = "";
-      document.getElementById("workDate").value = todayISO();
-      startTimeEl.value = "09:00";
-      defaultMinutesEl.value = 60;
-      generateRows();
-      renderNamePills();
-      persistState();
-    });
+      workDateEl.value = state.workDate;
 
-    submitBtn.addEventListener("click", async () => {
-      statusEl.className = "status";
-      statusEl.textContent = "";
+      getOrCreateStartDraft(workDateEl.value);
+      getOrCreateEodDraft(workDateEl.value);
+      await syncCarryoverFromSheets(workDateEl.value, false);
 
-      const workDate = document.getElementById("workDate").value;
-      const total = totalScheduledMinutes();
-      const requiredMinutes = getRequiredMinutes();
-
-      const allTasksFilled = Array.from(rowsEl.querySelectorAll("textarea")).every(
-        (t) => t.value.trim().length > 0
-      );
-      if (!allTasksFilled) {
-        statusEl.classList.add("error");
-        statusEl.textContent = "Please fill in tasks for every block before submitting.";
-        await openModal({
-          title: "Missing Tasks",
-          message: statusEl.textContent,
-          confirmText: "OK",
-          showCancel: false
-        });
-        return;
-      }
-
-      if (dayTypeEl.value === "half") {
-        if (total < requiredMinutes) {
-          statusEl.classList.add("error");
-          statusEl.textContent = `Half Day requires at least 5h. Current: ${Math.floor(total / 60)}h ${total % 60}m.`;
-          await openModal({
-            title: "Hours Required",
-            message: statusEl.textContent,
-            confirmText: "OK",
-            showCancel: false
-          });
-          return;
-        }
-      } else if (total < requiredMinutes) {
-        const targetLabel = "9h";
-        statusEl.classList.add("error");
-        statusEl.textContent = `Total must be at least ${targetLabel}. Current: ${Math.floor(total / 60)}h ${total % 60}m.`;
-        await openModal({
-          title: "Hours Required",
-          message: statusEl.textContent,
-          confirmText: "OK",
-          showCancel: false
-        });
-        return;
-      }
-
-      const confirmMessage = `You are about to submit ${Math.floor(total / 60)}h ${total % 60}m for ${formatDateLong(workDate)} which can't be undone.`;
-      const confirmed = await openModal({
-        title: "Confirm Submit",
-        message: confirmMessage,
-        confirmText: "Submit",
-        cancelText: "Cancel",
-        showCancel: true
-      });
-      if (!confirmed) return;
-
-      statusEl.textContent = "Submitting...";
-      const workDateISO = document.getElementById("workDate").value;
-      const workDateDisplay = workDateISO ? workDateISO.split("-").reverse().join("-") : "";
-      const payload = {
-        employeeName: selectedName,
-        department: selectedDept,
-        workDate: workDateDisplay,
-        workDateISO,
-        dayType: dayTypeEl.value,
-        startTime: startTimeEl.value,
-        endTime: endTimeEl.value,
-        totalMinutes: totalScheduledMinutes(),
-        blocks: Array.from(rowsEl.querySelectorAll("tr")).map((row, i) => ({
-          block: i + 1,
-          start: row.querySelector(".start").value,
-          addHours: row.querySelector(".add-hours").value,
-          addMinutes: row.querySelector(".add-mins").value,
-          end: row.querySelector(".end").value,
-          task: row.querySelector("textarea").value.trim(),
-        })),
-      };
-      payload.summaryText = buildSummaryText(payload);
-      payload.sheetsPayload = buildSheetsPayload(payload);
-
-      try {
-        const ok = await postViaFetch(payload);
-        statusEl.classList.add(ok ? "success" : "error");
-        statusEl.textContent = ok
-          ? "Submitted successfully."
-          : "Submit failed (browser blocked request).";
-      } catch (err) {
-        statusEl.classList.add("error");
-        statusEl.textContent = "Submit failed (network error).";
-      }
-      persistState();
-    });
-
-    if (!restoreState()) {
-      document.getElementById("workDate").value = todayISO();
-      setAutoEndTime();
-      generateRows();
-      applyNameFromUrl();
-      applyDeptFromUrl();
-      if (!selectedDept) {
-        selectedDept = departments[0] || "";
-      }
-      renderDeptPills();
-      renderNamePills();
-      persistState();
-    } else {
-      applyNameFromUrl();
-      applyDeptFromUrl();
-      renderDeptPills();
-      renderNamePills();
-      persistState();
+      wireEvents();
+      renderAll();
+      saveState();
+      appEl.hidden = false;
     }
+
+    init();
   </script>
 </body>
 </html>

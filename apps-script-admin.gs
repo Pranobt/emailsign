@@ -150,7 +150,8 @@ function handleGetAssignments_(body) {
 
   const rows = readRowsAsObjects_(getSheet_(ADMIN_CONFIG.ASSIGNMENTS_SHEET));
   const tasks = rows.filter(function(r) {
-    return String(r.workDate || "") === workDate
+    const rowWorkDate = toIsoDate_(r.workDate);
+    return rowWorkDate === workDate
       && sameText_(r.department, department)
       && sameText_(r.employeeName, employeeName)
       && sameText_(r.status, "Assigned");

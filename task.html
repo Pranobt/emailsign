@@ -1366,14 +1366,40 @@
       state.startDraftByDate[dateKey] = Array.from(byKey.values()).filter((t) => String(t.title || "").trim().length > 0);
     }
 
+    function mergeAssignmentsIntoSubmittedSod(dateKey, assignmentTasks) {
+      const existing = Array.isArray(state.sodByDate[dateKey]) ? state.sodByDate[dateKey] : [];
+      if (!existing.length) return;
+
+      const byKey = new Map();
+      const keyOf = (t) => {
+        const id = String(t && t.taskId || "").trim();
+        const title = String(t && t.title || "").trim().toLowerCase();
+        return id ? `id:${id}` : `title:${title}`;
+      };
+
+      existing.forEach((t) => {
+        byKey.set(keyOf(t), { ...t });
+      });
+
+      assignmentTasks.forEach((t) => {
+        const k = keyOf(t);
+        if (byKey.has(k)) return;
+        byKey.set(k, {
+          taskId: t.taskId || createTaskId(),
+          title: String(t.title || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: "assigned",
+          assignedBy: String(t.assignedBy || "").trim(),
+          assignedAt: String(t.assignedAt || "").trim()
+        });
+      });
+
+      state.sodByDate[dateKey] = Array.from(byKey.values()).filter((t) => String(t.title || "").trim().length > 0);
+    }
+
     async function syncAssignmentsFromAdmin(dateKey, force = false) {
       if (!identity || !dateKey) return;
       if (!force && state.assignmentSyncedByDate[dateKey]) return;
-      if (Array.isArray(state.sodByDate[dateKey]) && state.sodByDate[dateKey].length) {
-        state.assignmentSyncedByDate[dateKey] = true;
-        saveState();
-        return;
-      }
 
       try {
         const result = await callApiJsonp("getAssignments", {
@@ -1401,6 +1427,7 @@
 
         state.assignmentByDate[dateKey] = assignments;
         if (assignments.length) {
+          mergeAssignmentsIntoSubmittedSod(dateKey, assignments);
           mergeAssignmentsIntoStartDraft(dateKey, assignments);
           state.startSourceByDate[dateKey] = state.startSourceByDate[dateKey] === "google-sheets"
             ? "google-sheets"

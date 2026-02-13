@@ -166,7 +166,7 @@
 
     .filters {
       display: grid;
-      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
       gap: 10px;
       padding: 14px 20px;
       border-bottom: 1px solid var(--line);
@@ -214,8 +214,63 @@
 
     .kpis {
       display: grid;
-      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      grid-template-columns: repeat(7, minmax(120px, 1fr));
       gap: 10px;
+    }
+
+    .assign-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(10, 45, 70, 0.08);
+      overflow: hidden;
+    }
+
+    .assign-grid {
+      padding: 12px 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .assign-actions {
+      padding: 10px 14px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .assign-list {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 0 14px 10px;
+    }
+
+    .assign-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f5fcf8;
+      color: #245d49;
+      padding: 5px 10px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .assign-pill button {
+      border: none;
+      background: transparent;
+      color: #9b3232;
+      padding: 0;
+      line-height: 1;
+      min-width: 16px;
+      box-shadow: none;
+      transform: none;
     }
 
     .kpi {
@@ -377,11 +432,15 @@
 
     @media (max-width: 1100px) {
       .kpis {
-        grid-template-columns: repeat(3, minmax(130px, 1fr));
+      grid-template-columns: repeat(3, minmax(130px, 1fr));
       }
 
       .filters {
         grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+
+      .assign-grid {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
       }
     }
 
@@ -400,6 +459,10 @@
       }
 
       .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .assign-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -434,6 +497,15 @@
     </header>
 
     <section class="filters">
+      <label class="field">Period
+        <select id="rangePreset">
+          <option value="today">Today</option>
+          <option value="last7">Last 7 Days</option>
+          <option value="current_month">Current Month</option>
+          <option value="last_month">Last Month</option>
+          <option value="custom_day">Custom Day</option>
+        </select>
+      </label>
       <label class="field">Work Date
         <input id="workDate" type="date" />
       </label>
@@ -457,6 +529,40 @@
 
     <section class="content">
       <section id="kpiGrid" class="kpis"></section>
+
+      <section class="assign-card">
+        <div class="table-head">
+          <h2 class="table-title"><i class="fa-solid fa-user-plus"></i>Assign Tasks</h2>
+          <div class="footer-note">Adds locked tasks into employee Start of Day</div>
+        </div>
+        <div class="assign-grid">
+          <label class="field">Assign Date
+            <input id="assignDate" type="date" />
+          </label>
+          <label class="field">Department
+            <select id="assignDepartment"></select>
+          </label>
+          <label class="field">Employee
+            <select id="assignEmployee"></select>
+          </label>
+          <label class="field">Task Title
+            <input id="assignTaskTitle" type="text" placeholder="Enter task title" />
+          </label>
+          <label class="field">Priority
+            <select id="assignPriority">
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Low">Low</option>
+            </select>
+          </label>
+        </div>
+        <div id="assignDraftList" class="assign-list"></div>
+        <div class="assign-actions">
+          <button id="addAssignTaskBtn" type="button"><i class="fa-solid fa-plus"></i>Add Task</button>
+          <button id="assignSubmitBtn" class="secondary" type="button"><i class="fa-solid fa-paper-plane"></i>Assign Tasks</button>
+          <div id="assignStatus" class="footer-note"></div>
+        </div>
+      </section>
 
       <div class="table-tabs" role="tablist" aria-label="Dashboard tables">
         <button class="tab-btn active" id="tabEmployee" data-tab="employee" type="button" role="tab" aria-selected="true">Employee Compliance</button>
@@ -484,6 +590,7 @@
     const adminIdentityEl = document.getElementById("adminIdentity");
     const generatedAtLineEl = document.getElementById("generatedAtLine");
     const statusLineEl = document.getElementById("statusLine");
+    const rangePresetEl = document.getElementById("rangePreset");
     const workDateEl = document.getElementById("workDate");
     const departmentFilterEl = document.getElementById("departmentFilter");
     const employeeFilterEl = document.getElementById("employeeFilter");
@@ -494,12 +601,22 @@
     const tableTitleEl = document.getElementById("tableTitle");
     const tableMetaEl = document.getElementById("tableMeta");
     const tableWrapEl = document.getElementById("tableWrap");
+    const assignDateEl = document.getElementById("assignDate");
+    const assignDepartmentEl = document.getElementById("assignDepartment");
+    const assignEmployeeEl = document.getElementById("assignEmployee");
+    const assignTaskTitleEl = document.getElementById("assignTaskTitle");
+    const assignPriorityEl = document.getElementById("assignPriority");
+    const addAssignTaskBtn = document.getElementById("addAssignTaskBtn");
+    const assignSubmitBtn = document.getElementById("assignSubmitBtn");
+    const assignDraftListEl = document.getElementById("assignDraftList");
+    const assignStatusEl = document.getElementById("assignStatus");
 
     const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
 
     let adminSession = null;
     let dashboardData = null;
     let activeTab = "employee";
+    let assignDraft = [];
 
     function todayISO() {
       return new Date().toISOString().slice(0, 10);
@@ -518,6 +635,15 @@
       statusLineEl.textContent = message || "";
     }
 
+    function setAssignStatus(message, type) {
+      assignStatusEl.textContent = message || "";
+      assignStatusEl.style.color = type === "error"
+        ? "var(--danger)"
+        : type === "success"
+          ? "var(--success)"
+          : "#55756a";
+    }
+
     function getParams() {
       const params = new URLSearchParams(window.location.search);
       return {
@@ -530,7 +656,13 @@
       if (!ts) return "-";
       const d = new Date(ts);
       if (Number.isNaN(d.getTime())) return "-";
-      return d.toLocaleString();
+      return d.toLocaleString(undefined, {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      });
     }
 
     function escapeHtml(value) {
@@ -595,11 +727,50 @@
       selectEl.innerHTML = html;
     }
 
+    function syncAssignEmployeeOptions() {
+      if (!dashboardData || !dashboardData.meta) return;
+      const allRows = Array.isArray(dashboardData.employeeCompliance) ? dashboardData.employeeCompliance : [];
+      const dept = assignDepartmentEl.value || "All";
+      const employees = Array.from(new Set(allRows
+        .filter((r) => dept === "All" || r.department === dept)
+        .map((r) => r.employeeName)))
+        .sort();
+
+      setSelectOptions(
+        assignEmployeeEl,
+        [{ value: "", label: "Select Employee" }].concat(employees.map((e) => ({ value: e, label: e }))),
+        employees.includes(assignEmployeeEl.value) ? assignEmployeeEl.value : ""
+      );
+    }
+
+    function renderAssignDraft() {
+      if (!assignDraft.length) {
+        assignDraftListEl.innerHTML = "";
+        return;
+      }
+      assignDraftListEl.innerHTML = assignDraft.map((t, idx) => `
+        <span class="assign-pill">
+          ${escapeHtml(t.title)} (${escapeHtml(t.priority)})
+          <button type="button" data-idx="${idx}" aria-label="Remove assigned draft task">&times;</button>
+        </span>
+      `).join("");
+
+      assignDraftListEl.querySelectorAll("button[data-idx]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.getAttribute("data-idx"));
+          if (!Number.isInteger(idx)) return;
+          assignDraft.splice(idx, 1);
+          renderAssignDraft();
+        });
+      });
+    }
+
     function renderKpis(kpis) {
       const cards = [
         { label: "Planned Tasks", value: Number(kpis.plannedTasks || 0), sub: "From SOD" },
-        { label: "EOD Submitted", value: Number(kpis.eodSubmittedCount || 0), sub: "Employees" },
-        { label: "EOD Missing", value: Number(kpis.eodMissingCount || 0), sub: "Employees" },
+        { label: "Tasks Submitted", value: Number(kpis.tasksSubmittedCount || 0), sub: "From EOD" },
+        { label: "EOD Entries", value: Number(kpis.eodSubmittedCount || 0), sub: `Across ${Number(kpis.periodDays || 1)} day(s)` },
+        { label: "EOD Missing", value: Number(kpis.eodMissingCount || 0), sub: "Employees with gap" },
         { label: "Carryover Open", value: Number(kpis.incompleteCarryoverCount || 0), sub: "Task backlog" },
         { label: "Completion Rate", value: `${Number(kpis.completionRate || 0).toFixed(1)}%`, sub: "EOD weighted" },
         { label: "Logged Hours", value: Number(kpis.totalLoggedHours || 0).toFixed(2), sub: "Total hours" }
@@ -612,6 +783,70 @@
           <span class="kpi-sub">${escapeHtml(c.sub)}</span>
         </article>
       `).join("");
+    }
+
+    function toNum(v, fallback = 0) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function normalizeEmployeeRows(rows) {
+      return (Array.isArray(rows) ? rows : []).map((r) => {
+        const sodDays = r.sodSubmittedDays != null
+          ? toNum(r.sodSubmittedDays, 0)
+          : (String(r.sodStatus || "").toLowerCase() === "submitted" ? 1 : 0);
+        const eodDays = r.eodSubmittedDays != null
+          ? toNum(r.eodSubmittedDays, 0)
+          : (String(r.eodStatus || "").toLowerCase() === "submitted" ? 1 : 0);
+        const eodMissingDays = r.eodMissingDays != null
+          ? toNum(r.eodMissingDays, 0)
+          : (String(r.eodStatus || "").toLowerCase() === "missing" ? 1 : 0);
+        const plannedTasks = r.plannedTasks != null ? toNum(r.plannedTasks, 0) : 0;
+        const tasksSubmitted = r.tasksSubmitted != null
+          ? toNum(r.tasksSubmitted, 0)
+          : toNum(r.updatedTasks, 0);
+        const assignedTasks = r.assignedTasks != null ? toNum(r.assignedTasks, 0) : 0;
+        const openCarryover = r.openCarryover != null ? toNum(r.openCarryover, 0) : 0;
+        return {
+          ...r,
+          sodSubmittedDays: sodDays,
+          eodSubmittedDays: eodDays,
+          eodMissingDays,
+          plannedTasks,
+          tasksSubmitted,
+          assignedTasks,
+          openCarryover
+        };
+      });
+    }
+
+    function normalizeDepartmentRows(rows) {
+      return (Array.isArray(rows) ? rows : []).map((r) => ({
+        ...r,
+        sodSubmittedDays: r.sodSubmittedDays != null ? toNum(r.sodSubmittedDays, 0) : toNum(r.sodSubmittedCount, 0),
+        eodSubmittedDays: r.eodSubmittedDays != null ? toNum(r.eodSubmittedDays, 0) : toNum(r.eodSubmittedCount, 0),
+        eodMissingDays: r.eodMissingDays != null ? toNum(r.eodMissingDays, 0) : toNum(r.eodMissingCount, 0),
+        plannedTasks: r.plannedTasks != null ? toNum(r.plannedTasks, 0) : 0,
+        tasksSubmitted: r.tasksSubmitted != null ? toNum(r.tasksSubmitted, 0) : 0,
+        assignedTasks: r.assignedTasks != null ? toNum(r.assignedTasks, 0) : 0,
+        carryoverOpenCount: r.carryoverOpenCount != null ? toNum(r.carryoverOpenCount, 0) : 0
+      }));
+    }
+
+    function normalizeKpis(kpis) {
+      const safe = kpis || {};
+      return {
+        plannedTasks: toNum(safe.plannedTasks, 0),
+        tasksSubmittedCount: safe.tasksSubmittedCount != null
+          ? toNum(safe.tasksSubmittedCount, 0)
+          : toNum(safe.updatedTasksCount, 0),
+        eodSubmittedCount: toNum(safe.eodSubmittedCount, 0),
+        eodMissingCount: toNum(safe.eodMissingCount, 0),
+        incompleteCarryoverCount: toNum(safe.incompleteCarryoverCount, 0),
+        completionRate: toNum(safe.completionRate, 0),
+        totalLoggedHours: toNum(safe.totalLoggedHours, 0),
+        periodDays: toNum(safe.periodDays, 1)
+      };
     }
 
     function statusPill(status) {
@@ -643,11 +878,13 @@
               <tr>
                 <th>Department</th>
                 <th>Employees</th>
-                <th>SOD Submitted</th>
-                <th>EOD Submitted</th>
-                <th>EOD Missing</th>
+                <th>SOD Days</th>
+                <th>EOD Days</th>
+                <th>EOD Missing Days</th>
+                <th>Planned</th>
+                <th>Submitted</th>
+                <th>Assigned</th>
                 <th>Carryover Open</th>
-                <th>Avg Completion %</th>
               </tr>
             </thead>
             <tbody>
@@ -655,11 +892,13 @@
                 <tr>
                   <td>${escapeHtml(r.department)}</td>
                   <td>${escapeHtml(r.employeeCount)}</td>
-                  <td>${escapeHtml(r.sodSubmittedCount)}</td>
-                  <td>${escapeHtml(r.eodSubmittedCount)}</td>
-                  <td>${escapeHtml(r.eodMissingCount)}</td>
+                  <td>${escapeHtml(r.sodSubmittedDays)}</td>
+                  <td>${escapeHtml(r.eodSubmittedDays)}</td>
+                  <td>${escapeHtml(r.eodMissingDays)}</td>
+                  <td>${escapeHtml(r.plannedTasks)}</td>
+                  <td>${escapeHtml(r.tasksSubmitted)}</td>
+                  <td>${escapeHtml(r.assignedTasks)}</td>
                   <td>${escapeHtml(r.carryoverOpenCount)}</td>
-                  <td>${escapeHtml(Number(r.avgCompletionPercent || 0).toFixed(1))}</td>
                 </tr>
               `).join("")}
             </tbody>
@@ -718,10 +957,12 @@
             <tr>
               <th>Employee</th>
               <th>Department</th>
-              <th>SOD</th>
-              <th>EOD</th>
+              <th>SOD Days</th>
+              <th>EOD Days</th>
+              <th>EOD Missing Days</th>
               <th>Planned Tasks</th>
-              <th>Updated Tasks</th>
+              <th>Tasks Submitted</th>
+              <th>Assigned Tasks</th>
               <th>Open Carryover</th>
               <th>Last Submission</th>
             </tr>
@@ -731,12 +972,14 @@
               <tr>
                 <td>${escapeHtml(r.employeeName)}</td>
                 <td>${escapeHtml(r.department)}</td>
-                <td>${statusPill(r.sodStatus)}</td>
-                <td>${statusPill(r.eodStatus)}</td>
+                <td>${escapeHtml(r.sodSubmittedDays)}</td>
+                <td>${escapeHtml(r.eodSubmittedDays)}</td>
+                <td>${escapeHtml(r.eodMissingDays)}</td>
                 <td>${escapeHtml(r.plannedTasks)}</td>
-                <td>${escapeHtml(r.updatedTasks)}</td>
+                <td>${escapeHtml(r.tasksSubmitted)}</td>
+                <td>${escapeHtml(r.assignedTasks)}</td>
                 <td>${statusPill(Number(r.openCarryover || 0) > 0 ? "open" : "none")}</td>
-                <td>${escapeHtml(r.lastSubmissionAt || "-")}</td>
+                <td>${escapeHtml(formatDateTime(r.lastSubmissionAt))}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -752,11 +995,13 @@
           columns: [
             { key: "department", label: "Department" },
             { key: "employeeCount", label: "Employees" },
-            { key: "sodSubmittedCount", label: "SOD Submitted" },
-            { key: "eodSubmittedCount", label: "EOD Submitted" },
-            { key: "eodMissingCount", label: "EOD Missing" },
+            { key: "sodSubmittedDays", label: "SOD Days" },
+            { key: "eodSubmittedDays", label: "EOD Days" },
+            { key: "eodMissingDays", label: "EOD Missing Days" },
+            { key: "plannedTasks", label: "Planned Tasks" },
+            { key: "tasksSubmitted", label: "Tasks Submitted" },
+            { key: "assignedTasks", label: "Assigned Tasks" },
             { key: "carryoverOpenCount", label: "Carryover Open" },
-            { key: "avgCompletionPercent", label: "Avg Completion %" }
           ]
         };
       }
@@ -778,12 +1023,14 @@
         columns: [
           { key: "employeeName", label: "Employee" },
           { key: "department", label: "Department" },
-          { key: "sodStatus", label: "SOD Status" },
-          { key: "eodStatus", label: "EOD Status" },
+          { key: "sodSubmittedDays", label: "SOD Days" },
+          { key: "eodSubmittedDays", label: "EOD Days" },
+          { key: "eodMissingDays", label: "EOD Missing Days" },
           { key: "plannedTasks", label: "Planned Tasks" },
-          { key: "updatedTasks", label: "Updated Tasks" },
+          { key: "tasksSubmitted", label: "Tasks Submitted" },
+          { key: "assignedTasks", label: "Assigned Tasks" },
           { key: "openCarryover", label: "Open Carryover" },
-          { key: "lastSubmissionAt", label: "Last Submission" }
+          { key: "_lastSubmissionDisplay", label: "Last Submission" }
         ]
       };
     }
@@ -804,6 +1051,7 @@
       }
 
       const filters = [
+        `range=${rangePresetEl.value || "today"}`,
         `workDate=${workDateEl.value || ""}`,
         `department=${departmentFilterEl.value || "All"}`,
         `employee=${employeeFilterEl.value || "All"}`,
@@ -814,7 +1062,11 @@
       lines.push(`# Filters: ${filters.join(" | ")}`);
       lines.push(columns.map((c) => csvEscape(c.label)).join(","));
       rows.forEach((row) => {
-        lines.push(columns.map((c) => csvEscape(row[c.key])).join(","));
+        const exportRow = Object.assign({}, row);
+        if (Object.prototype.hasOwnProperty.call(exportRow, "lastSubmissionAt")) {
+          exportRow._lastSubmissionDisplay = formatDateTime(exportRow.lastSubmissionAt);
+        }
+        lines.push(columns.map((c) => csvEscape(exportRow[c.key])).join(","));
       });
 
       const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
@@ -861,6 +1113,13 @@
         [{ value: "All", label: "All Employees" }, ...employees.map((e) => ({ value: e, label: e }))],
         employees.includes(currentEmployee) ? currentEmployee : "All"
       );
+
+      setSelectOptions(
+        assignDepartmentEl,
+        [{ value: "", label: "Select Department" }].concat(departments.map((d) => ({ value: d, label: d }))),
+        departments.includes(assignDepartmentEl.value) ? assignDepartmentEl.value : ""
+      );
+      syncAssignEmployeeOptions();
     }
 
     async function fetchDashboard() {
@@ -871,6 +1130,7 @@
         const payload = {
           admin: adminSession.admin,
           code: adminSession.code,
+          rangePreset: rangePresetEl.value || "today",
           workDate: workDateEl.value || todayISO(),
           department: departmentFilterEl.value || "All",
           employeeName: employeeFilterEl.value || "All",
@@ -883,9 +1143,9 @@
         }
 
         dashboardData = {
-          kpis: result.kpis || {},
-          departmentSummary: Array.isArray(result.departmentSummary) ? result.departmentSummary : [],
-          employeeCompliance: Array.isArray(result.employeeCompliance) ? result.employeeCompliance : [],
+          kpis: normalizeKpis(result.kpis || {}),
+          departmentSummary: normalizeDepartmentRows(result.departmentSummary),
+          employeeCompliance: normalizeEmployeeRows(result.employeeCompliance),
           carryoverAging: Array.isArray(result.carryoverAging) ? result.carryoverAging : [],
           meta: result.meta || {}
         };
@@ -893,7 +1153,10 @@
         populateFilters(dashboardData);
         renderKpis(dashboardData.kpis);
         renderTable();
-        generatedAtLineEl.textContent = `Last sync: ${formatDateTime(dashboardData.meta.generatedAt)}`;
+        const rangeMeta = dashboardData.meta && dashboardData.meta.filters
+          ? `${dashboardData.meta.filters.fromDate} to ${dashboardData.meta.filters.toDate}`
+          : "-";
+        generatedAtLineEl.textContent = `Last sync: ${formatDateTime(dashboardData.meta.generatedAt)} | Range: ${rangeMeta}`;
         setStatus("Dashboard updated.", "success");
       } catch (err) {
         setStatus(`Failed to load dashboard: ${err.message}`, "error");
@@ -935,10 +1198,74 @@
       }
     }
 
+    function applyRangePresetUi() {
+      const preset = rangePresetEl.value || "today";
+      workDateEl.disabled = preset !== "custom_day";
+    }
+
+    function addAssignTaskDraft() {
+      const title = (assignTaskTitleEl.value || "").trim();
+      if (!title) {
+        setAssignStatus("Task title is required.", "error");
+        return;
+      }
+      assignDraft.push({
+        taskId: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        title,
+        priority: assignPriorityEl.value || "Medium"
+      });
+      assignTaskTitleEl.value = "";
+      setAssignStatus("", "");
+      renderAssignDraft();
+    }
+
+    async function submitAssignments() {
+      const department = assignDepartmentEl.value || "";
+      const employeeName = assignEmployeeEl.value || "";
+      const workDate = assignDateEl.value || todayISO();
+      if (!department || !employeeName) {
+        setAssignStatus("Select department and employee.", "error");
+        return;
+      }
+      if (!assignDraft.length) {
+        setAssignStatus("Add at least one task to assign.", "error");
+        return;
+      }
+
+      assignSubmitBtn.disabled = true;
+      setAssignStatus("Assigning tasks...", "info");
+      try {
+        const result = await jsonp("assignTasks", {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          workDate,
+          department,
+          employeeName,
+          tasks: JSON.stringify(assignDraft),
+          clientVersion: CLIENT_VERSION
+        }, 15000);
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Assign request rejected.");
+        }
+        assignDraft = [];
+        renderAssignDraft();
+        setAssignStatus(`Assigned ${result.assignedCount || 0} task(s).`, "success");
+        await fetchDashboard();
+      } catch (err) {
+        setAssignStatus(`Assign failed: ${err.message}`, "error");
+      } finally {
+        assignSubmitBtn.disabled = false;
+      }
+    }
+
     function wireEvents() {
       refreshBtn.addEventListener("click", fetchDashboard);
       exportBtn.addEventListener("click", exportCsv);
 
+      rangePresetEl.addEventListener("change", () => {
+        applyRangePresetUi();
+        fetchDashboard();
+      });
       workDateEl.addEventListener("change", fetchDashboard);
       stageFilterEl.addEventListener("change", fetchDashboard);
       departmentFilterEl.addEventListener("change", async () => {
@@ -946,6 +1273,15 @@
         await fetchDashboard();
       });
       employeeFilterEl.addEventListener("change", fetchDashboard);
+      assignDepartmentEl.addEventListener("change", syncAssignEmployeeOptions);
+      addAssignTaskBtn.addEventListener("click", addAssignTaskDraft);
+      assignTaskTitleEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addAssignTaskDraft();
+        }
+      });
+      assignSubmitBtn.addEventListener("click", submitAssignments);
 
       tabButtons.forEach((btn) => {
         btn.addEventListener("click", () => applyTab(btn.dataset.tab));
@@ -954,6 +1290,8 @@
 
     async function init() {
       workDateEl.value = todayISO();
+      assignDateEl.value = todayISO();
+      applyRangePresetUi();
       const ok = await validateAdminAccess();
       if (!ok) return;
 

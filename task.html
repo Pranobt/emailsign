@@ -615,6 +615,41 @@
       line-height: 1.4;
     }
 
+    .toast-stack {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1200;
+      display: grid;
+      gap: 8px;
+      width: min(320px, calc(100vw - 24px));
+      pointer-events: none;
+    }
+
+    .toast {
+      border: 1px solid var(--line);
+      border-left-width: 4px;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 14px 28px rgba(9, 46, 63, 0.16);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--text);
+      animation: toastIn 180ms ease forwards;
+    }
+
+    .toast.success { border-left-color: var(--ok); }
+    .toast.error { border-left-color: var(--danger); }
+    .toast.info { border-left-color: #1d4f91; }
+
+    .toast.out {
+      animation: toastOut 160ms ease forwards;
+    }
+
+    .btn-loading i {
+      animation: spin 800ms linear infinite;
+    }
+
     .sod-buckets {
       display: flex;
       align-items: center;
@@ -720,6 +755,21 @@
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(8px); }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -859,7 +909,7 @@
 
       <section class="panel" aria-label="End of Day">
         <h2 class="panel-title"><i class="fa-solid fa-moon"></i>End of Day</h2>
-        <p>Select pending tasks, add completion %, and mention dedicated hours/minutes. You can also add extra tasks.</p>
+        <p>Select pending tasks, add completion %, and mention dedicated hours/minutes.</p>
 
         <div class="panel-input-area">
           <div class="action-row">
@@ -880,6 +930,7 @@
       </section>
     </section>
   </main>
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="false"></div>
 
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGiugBUVbg9zp4r6QYSqHveJotVgYo0Rg9iGef7sovksfiupICN2LlBbiqSoVAqxAcFg/exec";
@@ -934,6 +985,7 @@
     const startCountCardEl = document.getElementById("startCountCard");
     const hoursSplitCardEl = document.getElementById("hoursSplitCard");
     const endCountCardEl = document.getElementById("endCountCard");
+    const toastStackEl = document.getElementById("toastStack");
 
     const newTaskTitleEl = document.getElementById("newTaskTitle");
     const newTaskPriorityEl = document.getElementById("newTaskPriority");
@@ -1034,7 +1086,9 @@
         eodDraftByDate: {},
         carryoverByDate: {},
         carryoverSourceByDate: {},
-        carryoverSyncedByDate: {}
+        carryoverSyncedByDate: {},
+        assignmentByDate: {},
+        assignmentSyncedByDate: {}
       };
     }
 
@@ -1054,7 +1108,9 @@
           eodDraftByDate: parsed.eodDraftByDate || {},
           carryoverByDate: parsed.carryoverByDate || {},
           carryoverSourceByDate: parsed.carryoverSourceByDate || {},
-          carryoverSyncedByDate: parsed.carryoverSyncedByDate || {}
+          carryoverSyncedByDate: parsed.carryoverSyncedByDate || {},
+          assignmentByDate: parsed.assignmentByDate || {},
+          assignmentSyncedByDate: parsed.assignmentSyncedByDate || {}
         };
       } catch (e) {
         return defaultState();
@@ -1069,6 +1125,36 @@
       el.className = "status";
       if (type) el.classList.add(type);
       el.textContent = message || "";
+    }
+
+    function showToast(message, type = "info", durationMs = 2400) {
+      if (!toastStackEl) return;
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.textContent = String(message || "");
+      toastStackEl.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("out");
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 180);
+      }, durationMs);
+    }
+
+    function setButtonLoading(button, loading, loadingLabel, normalLabel) {
+      if (!button) return;
+      if (loading) {
+        if (!button.dataset.labelNormal) {
+          button.dataset.labelNormal = normalLabel || button.innerHTML;
+        }
+        button.disabled = true;
+        button.classList.add("btn-loading");
+        button.innerHTML = `<i class="fa-solid fa-spinner"></i>${loadingLabel || "Loading..."}`;
+        return;
+      }
+      button.disabled = false;
+      button.classList.remove("btn-loading");
+      button.innerHTML = normalLabel || button.dataset.labelNormal || button.innerHTML;
     }
 
     function getOrCreateStartDraft(dateKey) {
@@ -1101,6 +1187,14 @@
 
     function isCarryoverTask(task) {
       return task && task.source === "carryover";
+    }
+
+    function isAssignedTask(task) {
+      return task && task.source === "assigned";
+    }
+
+    function isLockedStartTask(task) {
+      return isCarryoverTask(task) || isAssignedTask(task);
     }
 
     function getAllowedCompletionOptions(task) {
@@ -1169,14 +1263,16 @@
       existing.forEach((t) => {
         const key = taskKey(t);
         if (byKey.has(key)) return;
+        const source = isCarryoverTask(t) ? "carryover" : (isAssignedTask(t) ? "assigned" : "sod");
         byKey.set(key, {
           taskId: t.taskId || createTaskId(),
           title: (t.title || "").trim(),
           priority: normalizePriority(t.priority),
-          source: isCarryoverTask(t) ? "carryover" : "sod",
+          source,
           lastCompletion: isCarryoverTask(t) ? getCarryoverLastCompletion(t) : null,
           lastNote: isCarryoverTask(t) ? String(t.lastNote || "").trim() : "",
-          carryoverOrigin: isCarryoverTask(t) ? String(t.carryoverOrigin || "local-storage") : ""
+          carryoverOrigin: isCarryoverTask(t) ? String(t.carryoverOrigin || "local-storage") : "",
+          assignedBy: isAssignedTask(t) ? String(t.assignedBy || "").trim() : ""
         });
       });
 
@@ -1239,6 +1335,82 @@
       }
       mergeCarryoverIntoStartDraft(dateKey, fallbackTasks);
       return true;
+    }
+
+    function mergeAssignmentsIntoStartDraft(dateKey, assignmentTasks) {
+      const existing = Array.isArray(state.startDraftByDate[dateKey]) ? state.startDraftByDate[dateKey] : [];
+      const byKey = new Map();
+      const keyOf = (t) => {
+        const id = String(t && t.taskId || "").trim();
+        const title = String(t && t.title || "").trim().toLowerCase();
+        return id ? `id:${id}` : `title:${title}`;
+      };
+
+      assignmentTasks.forEach((t) => {
+        byKey.set(keyOf(t), {
+          taskId: t.taskId || createTaskId(),
+          title: String(t.title || "").trim(),
+          priority: normalizePriority(t.priority),
+          source: "assigned",
+          assignedBy: String(t.assignedBy || "").trim(),
+          assignedAt: String(t.assignedAt || "").trim()
+        });
+      });
+
+      existing.forEach((t) => {
+        const key = keyOf(t);
+        if (byKey.has(key)) return;
+        byKey.set(key, { ...t });
+      });
+
+      state.startDraftByDate[dateKey] = Array.from(byKey.values()).filter((t) => String(t.title || "").trim().length > 0);
+    }
+
+    async function syncAssignmentsFromAdmin(dateKey, force = false) {
+      if (!identity || !dateKey) return;
+      if (!force && state.assignmentSyncedByDate[dateKey]) return;
+      if (Array.isArray(state.sodByDate[dateKey]) && state.sodByDate[dateKey].length) {
+        state.assignmentSyncedByDate[dateKey] = true;
+        saveState();
+        return;
+      }
+
+      try {
+        const result = await callApiJsonp("getAssignments", {
+          workDate: dateKey,
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          clientVersion: CLIENT_VERSION
+        }, 12000);
+
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Assignment fetch rejected.");
+        }
+
+        const assignments = ensureArray(result.tasks)
+          .map((t) => ({
+            taskId: t.taskId || createTaskId(),
+            title: String(t.title || "").trim(),
+            priority: normalizePriority(t.priority),
+            source: "assigned",
+            assignedBy: String(t.assignedBy || "").trim(),
+            assignedAt: String(t.assignedAt || "").trim()
+          }))
+          .filter((t) => t.title.length > 0);
+
+        state.assignmentByDate[dateKey] = assignments;
+        if (assignments.length) {
+          mergeAssignmentsIntoStartDraft(dateKey, assignments);
+          state.startSourceByDate[dateKey] = state.startSourceByDate[dateKey] === "google-sheets"
+            ? "google-sheets"
+            : "local-storage";
+        }
+        state.assignmentSyncedByDate[dateKey] = true;
+        saveState();
+      } catch (err) {
+        saveState();
+      }
     }
 
     function getOrCreateEodDraft(dateKey) {
@@ -1482,20 +1654,22 @@
       const submitted = Array.isArray(state.sodByDate[dateKey]) ? state.sodByDate[dateKey] : [];
       const draft = getOrCreateStartDraft(dateKey);
       const source = state.startSourceByDate[dateKey] || "new";
+      const assignedCount = Array.isArray(state.assignmentByDate[dateKey]) ? state.assignmentByDate[dateKey].length : 0;
+      const assignedPart = assignedCount ? ` | Admin assigned: ${assignedCount}` : "";
 
       if (submitted.length) {
-        sodSourceHintEl.textContent = "Carryover source: Local storage";
+        sodSourceHintEl.textContent = `Carryover source: Local storage${assignedPart}`;
         return;
       }
       if (!draft.length && source === "new") {
-        sodSourceHintEl.textContent = "Carryover source: Not loaded yet";
+        sodSourceHintEl.textContent = `Carryover source: Not loaded yet${assignedPart}`;
         return;
       }
       if (source === "google-sheets") {
-        sodSourceHintEl.textContent = "Carryover source: Google Sheets";
+        sodSourceHintEl.textContent = `Carryover source: Google Sheets${assignedPart}`;
         return;
       }
-      sodSourceHintEl.textContent = "Carryover source: Local storage";
+      sodSourceHintEl.textContent = `Carryover source: Local storage${assignedPart}`;
     }
 
     function renderSyncMeta() {
@@ -1518,9 +1692,14 @@
       const dateKey = workDateEl.value;
       const tasks = getOrCreateStartDraft(dateKey);
       sodTasksEl.innerHTML = "";
+      const assignedTasks = tasks.filter((t) => isAssignedTask(t));
       const carryoverTasks = tasks.filter((t) => isCarryoverTask(t));
-      const newTasks = tasks.filter((t) => !isCarryoverTask(t));
+      const newTasks = tasks.filter((t) => !isCarryoverTask(t) && !isAssignedTask(t));
       sodBucketsEl.innerHTML = "";
+      const assignedChip = document.createElement("span");
+      assignedChip.className = "bucket-chip";
+      assignedChip.textContent = `Assigned ${assignedTasks.length}`;
+      sodBucketsEl.appendChild(assignedChip);
       const carryChip = document.createElement("span");
       carryChip.className = "bucket-chip";
       carryChip.textContent = `Carryover ${carryoverTasks.length}`;
@@ -1553,6 +1732,7 @@
 
       const renderTask = (task, index) => {
         const isCarryover = isCarryoverTask(task);
+        const isAssigned = isAssignedTask(task);
         const prevCompletion = getCarryoverLastCompletion(task);
         const row = document.createElement("div");
         row.className = "task-row";
@@ -1580,13 +1760,19 @@
         priority.textContent = normalizedPriority;
 
         right.appendChild(priority);
-        if (isCarryover) {
+        if (isLockedStartTask(task)) {
           const lockedChip = document.createElement("span");
           lockedChip.className = "meta-chip locked";
-          lockedChip.title = "Locked carryover task";
-          lockedChip.setAttribute("aria-label", "Locked carryover task");
+          lockedChip.title = isAssigned ? "Locked assigned task" : "Locked carryover task";
+          lockedChip.setAttribute("aria-label", isAssigned ? "Locked assigned task" : "Locked carryover task");
           lockedChip.innerHTML = "<i class=\"fa-solid fa-lock\"></i>";
           right.appendChild(lockedChip);
+        }
+        if (isAssigned && task.assignedBy) {
+          const assignChip = document.createElement("span");
+          assignChip.className = "meta-chip";
+          assignChip.textContent = `Assigned by ${task.assignedBy}`;
+          right.appendChild(assignChip);
         }
         if (prevCompletion !== null) {
           const prevChip = document.createElement("span");
@@ -1594,7 +1780,7 @@
           prevChip.textContent = `Prev: ${prevCompletion}%`;
           right.appendChild(prevChip);
         }
-        if (!isCarryover) {
+        if (!isLockedStartTask(task)) {
           const remove = document.createElement("button");
           remove.type = "button";
           remove.className = "danger icon-danger";
@@ -1617,6 +1803,7 @@
         sodTasksEl.appendChild(row);
       };
 
+      renderSection("Admin Assigned", assignedTasks);
       renderSection("Locked Carryover", carryoverTasks);
       renderSection("New Tasks Added Today", newTasks);
     }
@@ -2122,10 +2309,11 @@
           taskId: t.taskId || createTaskId(),
           title: (t.title || "").trim(),
           priority: normalizePriority(t.priority),
-          source: isCarryoverTask(t) ? "carryover" : "sod",
+          source: isCarryoverTask(t) ? "carryover" : (isAssignedTask(t) ? "assigned" : "sod"),
           lastCompletion: getCarryoverLastCompletion(t),
           lastNote: (t.lastNote || "").trim(),
-          carryoverOrigin: isCarryoverTask(t) ? String(t.carryoverOrigin || "local-storage") : ""
+          carryoverOrigin: isCarryoverTask(t) ? String(t.carryoverOrigin || "local-storage") : "",
+          assignedBy: isAssignedTask(t) ? String(t.assignedBy || "").trim() : ""
         }))
         .filter((t) => t.title.length > 0);
       const tasks = tasksForState.map((t) => ({
@@ -2550,6 +2738,7 @@
         getOrCreateEodDraft(workDateEl.value);
         hydrateCarryoverFromUnsubmittedSod(workDateEl.value);
         await syncCarryoverFromSheets(workDateEl.value, false);
+        await syncAssignmentsFromAdmin(workDateEl.value, false);
         saveState();
         setStatus(sodStatusEl, "", "");
         setStatus(eodStatusEl, "", "");
@@ -2568,27 +2757,31 @@
       submitEodBtn.addEventListener("click", handleEodSubmit);
       syncCarryoverBtn.addEventListener("click", async () => {
         const dateKey = workDateEl.value;
-        syncCarryoverBtn.disabled = true;
-        setStatus(sodStatusEl, "Syncing carryover from Google Sheets...", "info");
+        setButtonLoading(syncCarryoverBtn, true, "Syncing...", "<i class=\"fa-solid fa-rotate\"></i>Sync Now");
         try {
           state.carryoverSyncedByDate[dateKey] = false;
+          state.assignmentSyncedByDate[dateKey] = false;
           await syncCarryoverFromSheets(dateKey, true);
+          await syncAssignmentsFromAdmin(dateKey, true);
           const status = state.syncMetaByDate[dateKey] && state.syncMetaByDate[dateKey].status;
           if (status === "success") {
-            setStatus(sodStatusEl, "Carryover sync complete.", "success");
+            showToast("Sync complete.", "success");
           } else if (status === "fallback") {
-            setStatus(sodStatusEl, "Google sync failed. Using local fallback.", "info");
+            showToast("Google carryover sync failed. Using local fallback.", "info");
           } else if (status === "error") {
-            setStatus(sodStatusEl, "Carryover sync failed.", "error");
+            showToast("Carryover sync failed.", "error");
+          } else {
+            showToast("Sync finished.", "info");
           }
           renderAll();
         } catch (err) {
-          setStatus(sodStatusEl, `Carryover sync failed: ${err.message}`, "error");
+          showToast(`Sync failed: ${err.message}`, "error");
         } finally {
-          syncCarryoverBtn.disabled = false;
+          setButtonLoading(syncCarryoverBtn, false, "", "<i class=\"fa-solid fa-rotate\"></i>Sync Now");
         }
       });
       copySummaryLinkBtn.addEventListener("click", async () => {
+        setButtonLoading(copySummaryLinkBtn, true, "Copying...", "<i class=\"fa-solid fa-link\"></i>Copy Summary Link");
         const params = new URLSearchParams({
           dept: identity.dept,
           name: identity.name,
@@ -2608,9 +2801,11 @@
             document.execCommand("copy");
             document.body.removeChild(ta);
           }
-          setStatus(sodStatusEl, "Summary link copied.", "success");
+          showToast("Summary link copied.", "success");
         } catch (err) {
-          setStatus(sodStatusEl, "Could not copy summary link.", "error");
+          showToast("Could not copy summary link.", "error");
+        } finally {
+          setButtonLoading(copySummaryLinkBtn, false, "", "<i class=\"fa-solid fa-link\"></i>Copy Summary Link");
         }
       });
 
@@ -2650,6 +2845,7 @@
       getOrCreateEodDraft(workDateEl.value);
       hydrateCarryoverFromUnsubmittedSod(workDateEl.value);
       await syncCarryoverFromSheets(workDateEl.value, false);
+      await syncAssignmentsFromAdmin(workDateEl.value, false);
 
       wireEvents();
       renderAll();

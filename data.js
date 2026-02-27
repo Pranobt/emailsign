@@ -1,5 +1,17 @@
 window.SIGNATURES = [
   {
+    "name": "Kruti Parekh",
+    "url": "https://pranobt.github.io/emailsign/KrutiP.html"
+  },
+  {
+    "name": "Priyanka Shahane",
+    "url": "https://pranobt.github.io/emailsign/PriyankaS.html"
+  },
+  {
+    "name": "Vinjal Rao",
+    "url": "https://pranobt.github.io/emailsign/VinjalR.html"
+  },
+  {
     "name": "Vivek Gupta",
     "url": "https://pranobt.github.io/emailsign/VivekG.html"
   },

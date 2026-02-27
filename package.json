@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:smoke",
+    "test:smoke": "playwright test tests/task.smoke.spec.js",
     "start": "node server.js"
   },
   "repository": {
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/Pranobt/emailsign#readme",
   "dependencies": {
+    "@playwright/test": "^1.56.1",
     "puppeteer": "^24.34.0"
   }
 }

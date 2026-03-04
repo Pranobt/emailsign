@@ -1,0 +1,4549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="./fonts/Finnovate-logo-F.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    @font-face {
+      font-family: "Denton";
+      src: url("./fonts/denton/Denton-Bold.woff2") format("woff2"),
+           url("/team/fonts/denton/Denton-Bold.woff2") format("woff2"),
+           url("/fonts/denton/Denton-Bold.woff2") format("woff2"),
+           url("./fonts/denton/Denton-Bold.woff") format("woff"),
+           url("/team/fonts/denton/Denton-Bold.woff") format("woff"),
+           url("/fonts/denton/Denton-Bold.woff") format("woff");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "InterLocal";
+      src: url("./fonts/inter/inter-variablefont_slntwght-webfont.woff2") format("woff2"),
+           url("/team/fonts/inter/inter-variablefont_slntwght-webfont.woff2") format("woff2"),
+           url("/fonts/inter/inter-variablefont_slntwght-webfont.woff2") format("woff2"),
+           url("./fonts/inter/inter-variablefont_slntwght-webfont.woff") format("woff"),
+           url("/team/fonts/inter/inter-variablefont_slntwght-webfont.woff") format("woff"),
+           url("/fonts/inter/inter-variablefont_slntwght-webfont.woff") format("woff");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SFProTextLocal";
+      src: url("./fonts/sfpro/SF-Pro-Text-Regular.otf") format("opentype"),
+           url("/team/fonts/sfpro/SF-Pro-Text-Regular.otf") format("opentype"),
+           url("/fonts/sfpro/SF-Pro-Text-Regular.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SFProTextLocal";
+      src: url("./fonts/sfpro/SF-Pro-Text-Semibold.otf") format("opentype"),
+           url("/team/fonts/sfpro/SF-Pro-Text-Semibold.otf") format("opentype"),
+           url("/fonts/sfpro/SF-Pro-Text-Semibold.otf") format("opentype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SFProDisplayLocal";
+      src: url("./fonts/sfpro/SF-Pro-Display-Semibold.otf") format("opentype"),
+           url("/team/fonts/sfpro/SF-Pro-Display-Semibold.otf") format("opentype"),
+           url("/fonts/sfpro/SF-Pro-Display-Semibold.otf") format("opentype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "SFProDisplayLocal";
+      src: url("./fonts/sfpro/SF-Pro-Display-Bold.otf") format("opentype"),
+           url("/team/fonts/sfpro/SF-Pro-Display-Bold.otf") format("opentype"),
+           url("/fonts/sfpro/SF-Pro-Display-Bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --font-heading: "Denton", "Georgia", serif;
+      --font-body: "InterLocal", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --bg: #eef7f3;
+      --card: #ffffff;
+      --surface: #f6fcf9;
+      --line: #d3e8dd;
+      --line-2: #bedfd0;
+      --text: #113029;
+      --muted: #4d6d63;
+      --brand: #0d8f5f;
+      --brand-dark: #076845;
+      --success: #0f8a55;
+      --warn: #9a6c17;
+      --danger: #b33232;
+      --shadow: 0 22px 56px rgba(11, 36, 63, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: radial-gradient(1000px 520px at 8% 0%, #d9f1e4, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app {
+      width: min(1300px, 100%);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .blocked {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 40px);
+      text-align: center;
+      padding: 24px;
+      border: 1px solid #ebc8c8;
+      background: #fff8f8;
+      color: #6f2323;
+      border-radius: 16px;
+      width: min(800px, 100%);
+      margin: 0 auto;
+    }
+
+    .blocked.active { display: flex; }
+
+    .blocked-box h1 {
+      margin: 0 0 8px;
+      font-family: var(--font-heading);
+      font-size: 32px;
+    }
+
+    .blocked-box p {
+      margin: 0;
+      color: #7d3a3a;
+      font-size: 16px;
+    }
+
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1200px 700px at 20% 15%, rgba(196, 228, 214, 0.24), rgba(196, 228, 214, 0) 60%),
+        rgba(10, 20, 26, 0.42);
+      backdrop-filter: blur(16px) saturate(1.25);
+      -webkit-backdrop-filter: blur(16px) saturate(1.25);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 16px;
+    }
+
+    .lock-overlay.active { display: flex; }
+
+    .lock-card {
+      width: min(420px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(9, 24, 40, 0.28);
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .lock-card h2 {
+      margin: 0;
+      font-family: var(--font-heading);
+      font-size: 30px;
+      line-height: 1.08;
+    }
+
+    .lock-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .lock-card input {
+      letter-spacing: 0.25em;
+      text-align: center;
+      font-weight: 700;
+      font-size: 20px;
+      padding: 12px;
+    }
+
+    .lock-help {
+      min-height: 18px;
+      font-size: 13px;
+      color: #5c6f67;
+    }
+
+    .lock-help.error {
+      color: var(--danger);
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f6fcf9 100%);
+    }
+
+    .title-kicker {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4f7064;
+    }
+
+    .title-main {
+      margin: 2px 0 4px;
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 3.4vw, 42px);
+      line-height: 1.05;
+    }
+
+    .title-meta {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font: inherit;
+      line-height: 1.2;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(180deg, var(--brand), var(--brand-dark));
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    button.secondary {
+      background: #eff8f3;
+      color: var(--text);
+      border-color: var(--line);
+    }
+    button.secondary.btn-sending {
+      background: #eef6ff;
+      color: #144f9b;
+      border-color: #c8ddfb;
+    }
+    button.secondary.btn-sent {
+      background: #edf9f2;
+      color: #1d6a47;
+      border-color: #bfe0cf;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(8, 108, 68, 0.2);
+    }
+
+    button:disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 10px;
+      padding: 14px 20px;
+      background: var(--surface);
+    }
+
+    .department-pill-row {
+      padding: 0 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+      display: grid;
+      gap: 8px;
+    }
+
+    .department-pill-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #527267;
+    }
+
+    .department-pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .department-pill-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: #2f5f4f;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .department-pill-btn:hover:not(:disabled) {
+      box-shadow: 0 6px 12px rgba(8, 108, 68, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .department-pill-btn.active {
+      border-color: #b9dfcd;
+      background: #eaf8f1;
+      color: #1f6e49;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #527267;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .status-line {
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .status-line.error { color: var(--danger); }
+    .status-line.success { color: var(--success); }
+    .status-line.info { color: #275f49; }
+
+    .content {
+      padding: 14px 16px 18px;
+      display: grid;
+      gap: 14px;
+      background: linear-gradient(180deg, #f8fdf9 0%, #edf8f2 100%);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .assign-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(10, 45, 70, 0.08);
+      overflow: hidden;
+    }
+
+    .assign-head-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .assign-card-head {
+      cursor: pointer;
+    }
+
+    .assign-collapse-btn {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #eef8f3;
+      color: #244f42;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .assign-collapse-btn i {
+      font-size: 11px;
+    }
+
+    .assign-body {
+      display: block;
+    }
+
+    .assign-card.collapsed .assign-body {
+      display: none;
+    }
+
+    .assign-card.collapsed {
+      border: 1px solid rgba(0, 147, 86, 0.52);
+      box-shadow:
+        0 5px 12px rgba(0, 147, 86, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    }
+
+    .assign-card.collapsed .assign-card-head {
+      border-bottom: none;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(239, 252, 245, 0.85) 100%);
+    }
+
+    .assign-grid {
+      padding: 12px 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .assign-grid-action {
+      display: flex;
+      align-items: end;
+    }
+
+    .assign-grid-action button {
+      margin-bottom: 1px;
+    }
+
+    .assign-actions {
+      padding: 10px 14px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .user-access-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(10, 45, 70, 0.08);
+      overflow: hidden;
+    }
+    .user-access-card.collapsed .assign-body {
+      display: none;
+    }
+    .user-access-card.collapsed {
+      box-shadow: none;
+      border-style: dashed;
+      border-color: #c7dfd2;
+      background: #f7fcf9;
+    }
+    .user-access-card.collapsed .assign-card-head {
+      border-bottom: 0;
+    }
+
+    .user-access-grid {
+      padding: 12px 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .user-access-meta {
+      padding: 8px 14px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .email-hint {
+      font-size: 12px;
+      color: #55756a;
+    }
+
+    .links-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(10, 45, 70, 0.08);
+      overflow: hidden;
+    }
+
+    .links-wrap {
+      padding: 10px 14px 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .dept-links {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fdf9;
+      overflow: hidden;
+    }
+
+    .dept-links summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 700;
+      color: #2f5f4f;
+      background: #f2faf5;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dept-links summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .dept-links-body {
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .link-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid #deeee5;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px;
+    }
+
+    .link-name {
+      font-weight: 600;
+      color: #204c3e;
+    }
+
+    .link-url {
+      font-size: 12px;
+      color: #46695d;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-actions {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .tiny-btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #224f40;
+      background: #eef8f3;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tiny-btn:hover {
+      box-shadow: 0 6px 12px rgba(8, 108, 68, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .assign-list {
+      display: grid;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .assign-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f7fcf9;
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .assign-item-main {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .assign-item-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f4a3d;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .assign-item-meta {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .assign-tag {
+      border: 1px solid #d5e7de;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #3d6357;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      white-space: nowrap;
+    }
+
+    .assign-remove-btn {
+      border: 1px solid #efcccc;
+      background: #fff3f3;
+      color: #9a2f2f;
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .assign-empty {
+      font-size: 12px;
+      color: #5e7e73;
+      padding: 2px 0;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 10px 20px rgba(10, 45, 70, 0.08);
+      display: grid;
+      gap: 5px;
+    }
+    .kpi.kpi-clickable {
+      cursor: pointer;
+    }
+    .kpi.kpi-active {
+      border-color: #84c5a4;
+      box-shadow: 0 12px 22px rgba(9, 95, 59, 0.16);
+      background: #f5fcf8;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .kpi-value {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: #5a7a6f;
+    }
+
+    .table-tabs {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      background: #eff8f3;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 5px;
+      width: max-content;
+    }
+
+    .tab-btn {
+      border-radius: 8px;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      font-size: 13px;
+      background: transparent;
+      color: #325d4d;
+      font-weight: 600;
+    }
+
+    .tab-btn.active {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--line);
+      box-shadow: 0 4px 10px rgba(8, 77, 52, 0.12);
+    }
+
+    .mini-toggle {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f3faf6;
+      color: #2f5f4f;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      min-width: 124px;
+    }
+
+    .table-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 12px 24px rgba(13, 51, 72, 0.08);
+      overflow: hidden;
+    }
+
+    .table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f6fbf8;
+    }
+
+    .table-title {
+      margin: 0;
+      font-size: 16px;
+      font-family: var(--font-heading);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-head .btn-row {
+      flex-wrap: nowrap;
+      gap: 6px;
+    }
+
+    .header-search {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: #204b3d;
+      font-size: 12px;
+      padding: 7px 10px;
+      min-width: 190px;
+    }
+
+    .table-meta {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    #copyAllLinksBtn {
+      white-space: nowrap;
+      min-width: max-content;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 147, 86, 0.42);
+      background: rgba(255, 255, 255, 0.92);
+      color: #1f5a43;
+      box-shadow: 0 4px 10px rgba(17, 45, 30, 0.08);
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    #copyAllLinksBtn:not([hidden]) {
+      display: inline-flex;
+    }
+
+    #copyAllLinksBtn[hidden] {
+      display: none !important;
+    }
+
+    #copyAllLinksBtn i {
+      font-size: 13px;
+      line-height: 1;
+      margin: 0;
+    }
+
+    #copyAllLinksBtn:hover:not(:disabled) {
+      border-color: rgba(0, 147, 86, 0.6);
+      background: #ffffff;
+      box-shadow: 0 7px 14px rgba(17, 45, 30, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 410px;
+    }
+
+    .table-wrap.no-inner-scroll {
+      overflow: visible;
+      max-height: none;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 940px;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 10px 11px;
+      border-bottom: 1px solid #e2efe8;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fdfb;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: #385f50;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pill.ok {
+      border-color: #bedfcf;
+      background: #edf9f2;
+      color: #1f6e49;
+    }
+
+    .pill.warn {
+      border-color: #efd9ae;
+      background: #fff9ea;
+      color: #8d6016;
+    }
+
+    .pill.bad {
+      border-color: #edc8c8;
+      background: #fff3f3;
+      color: #932e2e;
+    }
+
+    .employee-name-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .employee-details-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: #0e5d44;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
+      text-shadow: none;
+    }
+
+    .employee-details-btn:hover {
+      color: #0a4b36;
+    }
+
+    .details-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13, 24, 19, 0.55);
+      padding: 20px;
+    }
+
+    .details-modal.active {
+      display: flex;
+    }
+
+    .details-modal-card {
+      width: min(980px, 96vw);
+      max-height: 86vh;
+      overflow: auto;
+      background: #ffffff;
+      border: 1px solid #dbe8e1;
+      border-radius: 12px;
+      box-shadow: 0 24px 50px rgba(15, 35, 27, 0.18);
+      padding: 16px;
+    }
+
+    .details-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .details-title {
+      margin: 0;
+      font-size: 18px;
+      color: #173f34;
+    }
+
+    .details-meta {
+      color: #5f7f74;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .details-close {
+      appearance: none;
+      border: 1px solid #d5e4dc;
+      background: #f8fcfa;
+      border-radius: 8px;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: #264e42;
+      font-weight: 700;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .details-block {
+      border: 1px solid #e3eee8;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fcfefd;
+    }
+
+    .details-block h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #214d40;
+    }
+
+    .details-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #26463d;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .details-list li + li {
+      margin-top: 6px;
+    }
+
+    .details-empty {
+      font-size: 13px;
+      color: #6b877c;
+    }
+
+    .stage-status-badges {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stage-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .stage-status-badge i {
+      font-size: 10px;
+    }
+
+    .stage-status-badge.ok {
+      border-color: #badfcc;
+      background: #edf9f2;
+      color: #1f6e49;
+    }
+
+    .stage-status-badge.bad {
+      border-color: #e9c7c7;
+      background: #fff2f2;
+      color: #952f2f;
+    }
+
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-note {
+      padding: 0 4px;
+      font-size: 12px;
+      color: #55756a;
+    }
+
+    /* Liquid glass theme alignment with task.html */
+    :root {
+      --font-heading: "SFProDisplayLocal", "SF Pro Display", "InterLocal", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-body: "SFProTextLocal", "SF Pro Text", "InterLocal", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg: #e5f4ed;
+      --card: rgba(255, 255, 255, 0.68);
+      --surface: rgba(255, 255, 255, 0.72);
+      --line: rgba(255, 255, 255, 0.58);
+      --line-2: rgba(205, 232, 219, 0.92);
+      --text: #17392d;
+      --muted: #4f7064;
+      --brand: #009356;
+      --brand-dark: #007746;
+      --success: #009356;
+      --warn: #9a6c17;
+      --danger: #d4494f;
+      --shadow: 0 10px 30px rgba(18, 66, 45, 0.1);
+    }
+
+    body {
+      background:
+        radial-gradient(820px 520px at 8% -8%, rgba(128, 220, 177, 0.44), transparent 70%),
+        radial-gradient(900px 620px at 95% 0%, rgba(187, 236, 211, 0.44), transparent 72%),
+        linear-gradient(180deg, #d9efe3 0%, #e8f5ee 50%, #f0faf5 100%);
+      padding: 22px;
+      color: var(--text);
+    }
+
+    .app {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow:
+        var(--shadow),
+        0 1px 0 rgba(255, 255, 255, 0.78) inset;
+      backdrop-filter: blur(14px) saturate(1.12);
+      -webkit-backdrop-filter: blur(14px) saturate(1.12);
+    }
+
+    .header,
+    .filters,
+    .department-pill-row,
+    .status-line,
+    .content {
+      border-color: var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.74) 0%, rgba(247, 252, 255, 0.66) 100%);
+    }
+
+    .title-kicker,
+    .field,
+    .department-pill-label {
+      color: #5e7b6f;
+    }
+
+    .title-main,
+    .table-title,
+    .kpi-value {
+      font-family: var(--font-heading);
+    }
+
+    button {
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      border-radius: 12px;
+      background: linear-gradient(180deg, #11b56f 0%, #009356 100%);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(0, 147, 86, 0.18);
+      transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+    }
+
+    button.secondary,
+    .assign-collapse-btn,
+    .department-pill-btn,
+    .tiny-btn,
+    .mini-toggle,
+    .table-tabs {
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      background: rgba(255, 255, 255, 0.78);
+      color: #2f5a49;
+      box-shadow: 0 3px 10px rgba(16, 24, 40, 0.08);
+    }
+
+    button:hover:not(:disabled),
+    .tiny-btn:hover,
+    .department-pill-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(16, 24, 40, 0.1);
+      filter: saturate(1.04);
+    }
+
+    .department-pill-btn.active,
+    .tab-btn.active {
+      background: linear-gradient(180deg, #11b56f 0%, #009356 100%);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 6px 14px rgba(0, 147, 86, 0.2);
+    }
+
+    .department-pill-list {
+      gap: 10px;
+    }
+
+    .department-pill-btn {
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 250, 245, 0.84) 100%),
+        radial-gradient(120% 140% at 18% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 58%);
+      color: #275744;
+      padding: 7px 13px;
+      min-height: 32px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(199, 228, 214, 0.45),
+        0 4px 10px rgba(18, 44, 31, 0.08);
+      backdrop-filter: blur(8px) saturate(1.08);
+      -webkit-backdrop-filter: blur(8px) saturate(1.08);
+      transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, color 140ms ease, background 140ms ease;
+    }
+
+    .department-pill-btn:hover:not(:disabled) {
+      border-color: rgba(0, 147, 86, 0.38);
+      color: #1f4f3d;
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        inset 0 -1px 0 rgba(198, 230, 214, 0.58),
+        0 6px 12px rgba(18, 44, 31, 0.1);
+      filter: none;
+    }
+
+    .department-pill-btn.active {
+      border-color: rgba(255, 255, 255, 0.35);
+      background:
+        linear-gradient(180deg, #19bc76 0%, #009356 100%),
+        radial-gradient(120% 130% at 18% 0%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 55%);
+      color: #ffffff;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 7px 14px rgba(0, 147, 86, 0.2);
+    }
+
+    input,
+    select,
+    .header-search {
+      border: 1px solid rgba(0, 147, 86, 0.34);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    input:focus,
+    select:focus,
+    .header-search:focus {
+      outline: none;
+      border-color: rgba(0, 147, 86, 0.72);
+      box-shadow:
+        0 0 0 3px rgba(0, 147, 86, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    .kpi,
+    .assign-card,
+    .user-access-card,
+    .links-card,
+    .table-card,
+    .dept-links,
+    .link-row,
+    .assign-item,
+    .details-modal-card,
+    .details-block,
+    .lock-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.74);
+      box-shadow:
+        0 6px 16px rgba(21, 47, 87, 0.08),
+        0 1px 0 rgba(255, 255, 255, 0.74) inset;
+      backdrop-filter: blur(10px) saturate(1.08);
+      -webkit-backdrop-filter: blur(10px) saturate(1.08);
+    }
+
+    .table-head,
+    th {
+      background: rgba(248, 253, 250, 0.9);
+      border-color: var(--line-2);
+      color: #436658;
+    }
+
+    td {
+      border-color: var(--line-2);
+    }
+
+    .pill {
+      border-color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.82);
+      color: #3f6253;
+    }
+
+    .details-modal,
+    .lock-overlay {
+      background: rgba(12, 24, 40, 0.38);
+      backdrop-filter: blur(5px) saturate(0.95);
+      -webkit-backdrop-filter: blur(5px) saturate(0.95);
+    }
+
+    @media (max-width: 1100px) {
+      .kpis {
+      grid-template-columns: repeat(3, minmax(130px, 1fr));
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+
+      .assign-grid {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+      }
+
+      .user-access-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+
+      .link-row {
+        grid-template-columns: 1fr;
+      }
+
+      .link-url {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 12px; }
+
+      .header {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .btn-row { justify-content: flex-start; flex-wrap: wrap; }
+
+      .kpis {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .department-pill-row {
+        padding-top: 2px;
+      }
+
+      .assign-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .user-access-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <section id="blocked" class="blocked" aria-hidden="true">
+    <div class="blocked-box">
+      <h1>Invalid admin link</h1>
+      <p id="blockedMsg">This page requires valid admin and code URL parameters.</p>
+    </div>
+  </section>
+
+  <section id="lockOverlay" class="lock-overlay" aria-hidden="true">
+    <div class="lock-card" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+      <h2 id="lockTitle">Session locked</h2>
+      <p>Enter 4-digit passcode to continue.</p>
+      <input id="lockPasscodeInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="4 digit passcode" />
+      <button id="unlockBtn" type="button"><i class="fa-solid fa-lock-open"></i>Unlock</button>
+      <div id="lockHelpText" class="lock-help"></div>
+    </div>
+  </section>
+
+  <main id="app" class="app" hidden>
+    <header class="header">
+      <div>
+        <p class="title-kicker">Operations Console</p>
+        <h1 class="title-main">Task Admin Dashboard</h1>
+        <p class="title-meta">
+          <span id="adminIdentity">Admin: -</span>
+          <span id="generatedAtLine">Last sync: -</span>
+        </p>
+      </div>
+      <div class="btn-row">
+        <button id="leaderboardToggleBtn" class="secondary" type="button"><i class="fa-solid fa-ranking-star"></i>Leaderboard</button>
+        <button id="sendDeptCliqBtn" class="secondary" type="button"><i class="fa-solid fa-bullhorn"></i>Dept Cliq</button>
+        <button id="refreshBtn" type="button"><i class="fa-solid fa-rotate"></i>Refresh</button>
+        <button id="exportBtn" class="secondary" type="button"><i class="fa-solid fa-file-csv"></i>Export CSV</button>
+      </div>
+    </header>
+
+    <section class="filters">
+      <label class="field">Period
+        <select id="rangePreset">
+          <option value="custom_day" selected>Today</option>
+          <option value="last7">Last 7 Days</option>
+          <option value="yesterday">Yesterday</option>
+          <option value="last_week">Last Week</option>
+          <option value="current_month">Current Month</option>
+          <option value="last_month">Last Month</option>
+        </select>
+      </label>
+      <label class="field">Work Date
+        <input id="workDate" type="date" />
+      </label>
+      <label class="field">Employee
+        <select id="employeeFilter"></select>
+      </label>
+      <label class="field">Stage
+        <select id="stageFilter">
+          <option value="All">All</option>
+          <option value="SOD">SOD</option>
+          <option value="EOD">EOD</option>
+          <option value="Carryover">Carryover</option>
+        </select>
+      </label>
+    </section>
+    <section class="department-pill-row">
+      <input id="departmentFilter" type="hidden" value="All" />
+      <div class="department-pill-label">Department</div>
+      <div id="departmentPills" class="department-pill-list"></div>
+    </section>
+
+    <div id="statusLine" class="status-line">Waiting for dashboard data...</div>
+
+    <section class="content">
+      <section id="kpiGrid" class="kpis"></section>
+      <section id="leaderboardPanel" class="table-card" hidden>
+        <div class="table-head">
+          <h2 class="table-title"><i class="fa-solid fa-ranking-star"></i>Top 3 Streaks (Organization-wide)</h2>
+        </div>
+        <div id="leaderboardPanelBody" class="empty">No streak data yet.</div>
+      </section>
+
+      <section class="assign-card collapsed">
+        <div id="assignCardHead" class="table-head assign-card-head" role="button" tabindex="0" aria-controls="assignBody" aria-expanded="false">
+          <h2 class="table-title"><i class="fa-solid fa-user-plus"></i>Assign Tasks</h2>
+          <div class="assign-head-right">
+            <div class="footer-note">Adds locked tasks into employee Start of Day</div>
+            <button id="assignCollapseBtn" class="assign-collapse-btn" type="button" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i>Expand</button>
+          </div>
+        </div>
+        <div id="assignBody" class="assign-body">
+        <div class="assign-grid">
+          <label class="field">Assign Date
+            <input id="assignDate" type="date" />
+          </label>
+          <label class="field">Department
+            <select id="assignDepartment"></select>
+          </label>
+          <label class="field">Employee
+            <select id="assignEmployee"></select>
+          </label>
+          <label class="field">Task Title
+            <input id="assignTaskTitle" type="text" placeholder="Enter task title" />
+          </label>
+          <label class="field">Priority
+            <select id="assignPriority">
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Low">Low</option>
+            </select>
+          </label>
+          <label class="field">Deadline
+            <select id="assignDeadline">
+              <option value="1">1 day</option>
+              <option value="2">2 days</option>
+              <option value="custom">Custom date</option>
+            </select>
+          </label>
+          <label class="field">Custom Deadline
+            <input id="assignDeadlineDate" type="date" disabled />
+          </label>
+          <div class="assign-grid-action">
+            <button id="addAssignTaskBtn" type="button"><i class="fa-solid fa-plus"></i>Add Task</button>
+          </div>
+        </div>
+        <div id="assignDraftList" class="assign-list"></div>
+        <div class="assign-actions">
+          <button id="assignSubmitBtn" class="secondary" type="button"><i class="fa-solid fa-paper-plane"></i>Assign Tasks</button>
+          <div id="assignStatus" class="footer-note"></div>
+        </div>
+        </div>
+      </section>
+
+      <section class="user-access-card collapsed">
+        <div id="userAccessCardHead" class="table-head assign-card-head" role="button" tabindex="0" aria-controls="userAccessBody" aria-expanded="false">
+          <h2 class="table-title"><i class="fa-solid fa-user-shield"></i>User Access</h2>
+          <div class="assign-head-right">
+            <div class="footer-note">Create access links with editable email mapping</div>
+            <button id="userAccessCollapseBtn" class="assign-collapse-btn" type="button" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i>Expand</button>
+          </div>
+        </div>
+        <div id="userAccessBody" class="assign-body">
+        <div class="user-access-grid">
+          <label class="field">Role
+            <select id="newUserRole">
+              <option value="User" selected>User</option>
+              <option value="Admin">Admin</option>
+              <option value="Super Admin">Super Admin</option>
+            </select>
+          </label>
+          <label class="field">Department
+            <select id="newUserDepartment"></select>
+          </label>
+          <label class="field">Employee Name
+            <input id="newUserName" type="text" placeholder="Enter employee name" />
+          </label>
+          <label class="field">Access Code (optional)
+            <input id="newUserCode" type="text" placeholder="Auto-generate if blank" />
+          </label>
+          <label class="field">Email ID
+            <input id="newUserEmail" type="email" placeholder="name@finnovate.in" />
+          </label>
+          <div class="assign-grid-action">
+            <button id="createUserBtn" type="button"><i class="fa-solid fa-link"></i>Create Link</button>
+          </div>
+        </div>
+        <div class="user-access-meta">
+          <button id="copyUserLinkBtn" class="secondary" type="button" hidden><i class="fa-solid fa-copy"></i>Copy User Link</button>
+          <span id="newUserEmailHint" class="email-hint"></span>
+          <div id="createUserStatus" class="footer-note"></div>
+        </div>
+        </div>
+      </section>
+
+      <div class="table-tabs" role="tablist" aria-label="Dashboard tables">
+        <button class="tab-btn active" id="tabEmployee" data-tab="employee" type="button" role="tab" aria-selected="true">Employee Compliance</button>
+        <button class="tab-btn" id="tabDepartment" data-tab="department" type="button" role="tab" aria-selected="false">Department Summary</button>
+        <button class="tab-btn" id="tabCarryover" data-tab="carryover" type="button" role="tab" aria-selected="false">Carryover Aging</button>
+        <button class="tab-btn" id="tabCompleted" data-tab="completed" type="button" role="tab" aria-selected="false">Completed Tasks</button>
+        <button class="tab-btn" id="tabCliqFailed" data-tab="cliq_failed" type="button" role="tab" aria-selected="false">Failed Cliq</button>
+        <button class="tab-btn" id="tabLinks" data-tab="live_links" type="button" role="tab" aria-selected="false">Live Links</button>
+      </div>
+
+      <section id="tableCard" class="table-card">
+        <div class="table-head">
+          <h2 id="tableTitle" class="table-title"><i class="fa-solid fa-users-viewfinder"></i>Employee Compliance</h2>
+          <div class="btn-row">
+            <input id="tableNameSearch" class="header-search" type="text" placeholder="Search name..." aria-label="Search by name" />
+            <select id="employeeBadgeToggle" class="mini-toggle" aria-label="Employee status badges">
+              <option value="both" selected>Both Tags</option>
+              <option value="sod">SOD Only</option>
+              <option value="eod">EOD Only</option>
+            </select>
+            <button id="copyAllLinksBtn" class="secondary" type="button" hidden><i class="fa-solid fa-copy"></i>Copy All Links</button>
+            <div class="footer-note table-meta" id="tableMeta">Rows: 0</div>
+          </div>
+        </div>
+        <div id="tableWrap" class="table-wrap"></div>
+      </section>
+    </section>
+  </main>
+
+  <section id="employeeDetailsModal" class="details-modal" aria-hidden="true">
+    <div class="details-modal-card" role="dialog" aria-modal="true" aria-labelledby="employeeDetailsTitle">
+      <div class="details-head">
+        <div>
+          <h2 id="employeeDetailsTitle" class="details-title">Employee Day Details</h2>
+          <div id="employeeDetailsMeta" class="details-meta"></div>
+        </div>
+        <div class="btn-row">
+          <button id="employeeDetailsRetriggerSod" class="secondary" type="button" disabled>
+            <i class="fa-solid fa-bell"></i> Retrigger SOD Cliq
+          </button>
+          <button id="employeeDetailsRetriggerEod" class="secondary" type="button" disabled>
+            <i class="fa-solid fa-bell"></i> Retrigger EOD Cliq
+          </button>
+          <button id="employeeDetailsClose" class="details-close" type="button"><i class="fa-solid fa-xmark"></i> Close</button>
+        </div>
+      </div>
+      <div id="employeeDetailsBody"></div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const __decodeSecret = (b64) => {
+      try {
+        return atob(String(b64 || ""));
+      } catch (err) {
+        return "";
+      }
+    };
+    const SUPABASE_URL = "https://uzhbqarchcbrwwfamuum.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_GjfdDvnxUJIDhWf_HF6f7Q_pqbF_Ecb";
+    const CLIENT_VERSION = "admin-v1.0.0";
+    const DIRECTORY_CACHE_TTL_MS = 15 * 60 * 1000;
+    const ASSIGN_CLIQ_WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.855dacb74dbbc3d52991e1f46d5b9aee.379912ded1c897cf94fa163a334dce84&isdebug=false";
+    const STAGE_CLIQ_WEBHOOK_URL = __decodeSecret("aHR0cHM6Ly9mbG93LnpvaG8uaW4vNjAwMjc1MzMyNzMvZmxvdy93ZWJob29rL2luY29taW5nP3phcGlrZXk9MTAwMS4yNjJkNzMzMjFlYzRjZjA5MmRjMzRkNjMxMGUzZGVlOC5mMjIwMTlmYmNjZTBjNjA4NGY5MmFjOWRlMjI2Mjk3NiZpc2RlYnVnPWZhbHNl");
+    const SUBMISSION_STAGE_CLIQ_WEBHOOK_URL = "https://flow.zoho.in/60027533273/flow/webhook/incoming?zapikey=1001.262d73321ec4cf092dc34d6310e3dee8.f22019fbcce0c6084f92ac9de2262976&isdebug=false";
+    const LIVE_LINK_DIRECTORY_FALLBACK = {
+      "Information Technology": {
+        "Shalin Bhavsar": "SVQtU0ItNzM5MQ==",
+        "Pranav Shah": "SVQtUFMtMTg0Mg==",
+        "Anoj Tambe": "SVQtQVQtNTYyNw==",
+        "Gunjan Rusia": "SVQtR1ItOTAzNA==",
+        "Thakur Prasad": "SVQtVFAtNDQ3OA=="
+      },
+      Operations: {
+        "Rahul Meher": "T1AtUk0tNjE4Mw==",
+        "Nagma Shaikh": "T1AtTlMtODUwMQ==",
+        "Amit Lad": "T1AtQUwtMzkyNg==",
+        "Akshay Jadhav": "T1AtQUotNzc1NA=="
+      },
+      "Human Resources": {
+        "Vibha Vashistha": "SFItVlYtNjIwNA==",
+        "Akshata Kochrekar": "SFItQUstNzM5Ng==",
+        "Ajay Chariya": "SFItQUMtNjczMg==",
+        "Nimisha Gaonkar": "SFItTkctNTE4Mg=="
+      },
+      Research: {
+        "Humaid Khot": "UlMtSEstNDE3NQ==",
+        "Yash Asrani": "UlMtWUEtMjg2NA==",
+        "Vinjal Rao": "UlMtVlItNjQxMg==",
+        "Ria Ignatious": "UlMtUkktODA5Nw=="
+      },
+      Equity: {
+        "Gaurav Haldankar": "RVEtR0gtMTUzOQ==",
+        "Milind Jain": "RVEtTUotNzIwNA==",
+        "Ovesh Khatri": "RVEtT0stNjQyNw=="
+      },
+      Advisory: {
+        "Rashi Panchal": "QUQtUlAtNTc5MQ=="
+      },
+      "Direct Reportees": {
+        "Pranob Thachanthara": "RFItUFQtMzMyOA==",
+        "Rajvi Gori": "RFItUkctNjgxNQ==",
+        "Chintan Dudhela": "RFItQ0QtOTA0Mw==",
+        "Sagar Maheshwari": "RFItU00tMjU3Ng==",
+        "Jignesh Gajjar": "RFItSkctNTQ2Mg==",
+        "Jayant Furia": "RFItSkYtMTE5OA==",
+        "Vandana Manwani": "RFItVk0tODczMA==",
+        "Neha Sanghrajka": "SFItTlMtNDQ3MQ==",
+        "Kainaz Tata": "SFItS1QtMjQwMQ==",
+        "Priyanka Kelkar": "RFItUEstNDgyNg==",
+        "Pravin Mayekar": "T1AtUE0tMjc0OQ==",
+        "Riya Jain": "UlMtUkotNTMxOA==",
+        "Rushabh Dugad": "UlMtUkQtOTYyMA=="
+      },
+      Marketing: {
+        "Aastha Tiwari": "TUstQVQtNDQxMg==",
+        "Anas Ansari": "TUstQUEtNTgzNw==",
+        "Deepti Baria": "TUstREItNzI5NA==",
+        "Pavan Dhake": "TUstUEQtMzY4MQ==",
+        "Omkar Kandalekar": "TUstT0stOTE1Ng==",
+        "Himanshi Makhe": "TUstSE0tMjQwNw==",
+        "Renu Agarwal": "TUstUkEtNjU0Mw==",
+        "Shruti Wagaralkar": "TUstU1ctNzQxOQ=="
+      }
+    };
+    let liveLinkDirectory = JSON.parse(JSON.stringify(LIVE_LINK_DIRECTORY_FALLBACK));
+
+    const appEl = document.getElementById("app");
+    const blockedEl = document.getElementById("blocked");
+    const blockedMsgEl = document.getElementById("blockedMsg");
+    const adminIdentityEl = document.getElementById("adminIdentity");
+    const generatedAtLineEl = document.getElementById("generatedAtLine");
+    const statusLineEl = document.getElementById("statusLine");
+    const rangePresetEl = document.getElementById("rangePreset");
+    const workDateEl = document.getElementById("workDate");
+    const departmentFilterEl = document.getElementById("departmentFilter");
+    const departmentPillsEl = document.getElementById("departmentPills");
+    const employeeFilterEl = document.getElementById("employeeFilter");
+    const stageFilterEl = document.getElementById("stageFilter");
+    const leaderboardToggleBtn = document.getElementById("leaderboardToggleBtn");
+    const sendDeptCliqBtn = document.getElementById("sendDeptCliqBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const kpiGridEl = document.getElementById("kpiGrid");
+    const leaderboardPanelEl = document.getElementById("leaderboardPanel");
+    const leaderboardPanelBodyEl = document.getElementById("leaderboardPanelBody");
+    const tableTitleEl = document.getElementById("tableTitle");
+    const tableMetaEl = document.getElementById("tableMeta");
+    const tableWrapEl = document.getElementById("tableWrap");
+    const tableNameSearchEl = document.getElementById("tableNameSearch");
+    const employeeBadgeToggleEl = document.getElementById("employeeBadgeToggle");
+    const assignDateEl = document.getElementById("assignDate");
+    const assignDepartmentEl = document.getElementById("assignDepartment");
+    const assignEmployeeEl = document.getElementById("assignEmployee");
+    const assignTaskTitleEl = document.getElementById("assignTaskTitle");
+    const assignPriorityEl = document.getElementById("assignPriority");
+    const assignDeadlineEl = document.getElementById("assignDeadline");
+    const assignDeadlineDateEl = document.getElementById("assignDeadlineDate");
+    const addAssignTaskBtn = document.getElementById("addAssignTaskBtn");
+    const assignSubmitBtn = document.getElementById("assignSubmitBtn");
+    const assignDraftListEl = document.getElementById("assignDraftList");
+    const assignStatusEl = document.getElementById("assignStatus");
+    const assignCollapseBtnEl = document.getElementById("assignCollapseBtn");
+    const assignCardHeadEl = document.getElementById("assignCardHead");
+    const assignBodyEl = document.getElementById("assignBody");
+    const userAccessCollapseBtnEl = document.getElementById("userAccessCollapseBtn");
+    const userAccessCardHeadEl = document.getElementById("userAccessCardHead");
+    const userAccessBodyEl = document.getElementById("userAccessBody");
+    const newUserDepartmentEl = document.getElementById("newUserDepartment");
+    const newUserRoleEl = document.getElementById("newUserRole");
+    const newUserNameEl = document.getElementById("newUserName");
+    const newUserCodeEl = document.getElementById("newUserCode");
+    const newUserEmailEl = document.getElementById("newUserEmail");
+    const newUserEmailHintEl = document.getElementById("newUserEmailHint");
+    const createUserBtnEl = document.getElementById("createUserBtn");
+    const copyUserLinkBtnEl = document.getElementById("copyUserLinkBtn");
+    const createUserStatusEl = document.getElementById("createUserStatus");
+    const copyAllLinksBtn = document.getElementById("copyAllLinksBtn");
+    const lockOverlayEl = document.getElementById("lockOverlay");
+    const lockPasscodeInputEl = document.getElementById("lockPasscodeInput");
+    const unlockBtnEl = document.getElementById("unlockBtn");
+    const lockHelpTextEl = document.getElementById("lockHelpText");
+    const employeeDetailsModalEl = document.getElementById("employeeDetailsModal");
+    const employeeDetailsCloseEl = document.getElementById("employeeDetailsClose");
+    const employeeDetailsRetriggerSodEl = document.getElementById("employeeDetailsRetriggerSod");
+    const employeeDetailsRetriggerEodEl = document.getElementById("employeeDetailsRetriggerEod");
+    const employeeDetailsTitleEl = document.getElementById("employeeDetailsTitle");
+    const employeeDetailsMetaEl = document.getElementById("employeeDetailsMeta");
+    const employeeDetailsBodyEl = document.getElementById("employeeDetailsBody");
+
+    const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+    const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+    const MAX_UNLOCK_ATTEMPTS = 3;
+
+    let adminSession = null;
+    let dashboardData = null;
+    let activeTab = "employee";
+    let employeeBadgeView = "both";
+    let tableNameSearchText = "";
+    let assignDraft = [];
+    let assignCollapsed = true;
+    let userAccessCollapsed = true;
+    let isAssignSubmitting = false;
+    let employeeDetailsSodPayload = null;
+    let employeeDetailsEodPayload = null;
+    let employeeDetailsSodSending = false;
+    let employeeDetailsEodSending = false;
+    let employeeDetailsSodSentTimer = null;
+    let employeeDetailsEodSentTimer = null;
+    const assignWebhookSentAt = {};
+    let inactivityTimerId = null;
+    let mouseMoveThrottleTs = 0;
+    let isLocked = false;
+    let unlockAttemptsLeft = MAX_UNLOCK_ATTEMPTS;
+    let lastDirectorySyncAt = 0;
+    let derivedAdminPasscode = "";
+    let idleStoragePrefix = "";
+    let latestCreatedUserLink = "";
+    let liveEmailDirectory = {};
+    let leaderboardRows = [];
+    let failedCliqRows = [];
+    let employeeKpiFocus = "all";
+    let leaderboardVisible = false;
+    let isDeptCliqSending = false;
+    const supabaseClient = (window.supabase && typeof window.supabase.createClient === "function" && SUPABASE_URL && SUPABASE_ANON_KEY)
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } })
+      : null;
+
+    function todayISO() {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(new Date());
+      const get = (type) => (parts.find((p) => p.type === type) || {}).value || "";
+      return `${get("year")}-${get("month")}-${get("day")}`;
+    }
+
+    function showBlocked(message) {
+      blockedMsgEl.textContent = message || "Invalid access.";
+      blockedEl.classList.add("active");
+      blockedEl.setAttribute("aria-hidden", "false");
+      appEl.hidden = true;
+    }
+
+    function setStatus(message, type) {
+      statusLineEl.className = "status-line";
+      if (type) statusLineEl.classList.add(type);
+      statusLineEl.textContent = message || "";
+    }
+
+    function setAssignStatus(message, type) {
+      assignStatusEl.textContent = message || "";
+      assignStatusEl.style.color = type === "error"
+        ? "var(--danger)"
+        : type === "success"
+          ? "var(--success)"
+          : "#55756a";
+    }
+
+    function getIdleStorageKey_(suffix) {
+      if (!idleStoragePrefix) return "";
+      return `${idleStoragePrefix}:${suffix}`;
+    }
+
+    function saveIdleState_() {
+      const tsKey = getIdleStorageKey_("last_activity_ts");
+      const lockKey = getIdleStorageKey_("locked_state");
+      const attemptsKey = getIdleStorageKey_("attempts_left");
+      if (!tsKey || !lockKey || !attemptsKey) return;
+      sessionStorage.setItem(tsKey, String(Date.now()));
+      sessionStorage.setItem(lockKey, isLocked ? "1" : "0");
+      sessionStorage.setItem(attemptsKey, String(unlockAttemptsLeft));
+    }
+
+    function updateLockHelpText_(message, isError) {
+      lockHelpTextEl.textContent = message || "";
+      lockHelpTextEl.classList.toggle("error", Boolean(isError));
+    }
+
+    function deriveAdminPasscode_(adminCode) {
+      const raw = String(adminCode || "").trim();
+      if (!raw) return "";
+      const trailing = raw.match(/-(\d{4})$/);
+      if (trailing && trailing[1]) return trailing[1];
+      const allDigits = raw.replace(/\D/g, "");
+      if (allDigits.length >= 4) return allDigits.slice(-4);
+      return "";
+    }
+
+    function lockDashboard_() {
+      if (!derivedAdminPasscode) return;
+      isLocked = true;
+      clearTimeout(inactivityTimerId);
+      inactivityTimerId = null;
+      unlockAttemptsLeft = Math.max(0, unlockAttemptsLeft);
+      lockOverlayEl.classList.add("active");
+      lockOverlayEl.setAttribute("aria-hidden", "false");
+      lockPasscodeInputEl.value = "";
+      lockPasscodeInputEl.disabled = unlockAttemptsLeft <= 0;
+      unlockBtnEl.disabled = unlockAttemptsLeft <= 0;
+      if (unlockAttemptsLeft <= 0) {
+        updateLockHelpText_("Reload page to re-authenticate.", true);
+      } else {
+        updateLockHelpText_(`Attempts left: ${unlockAttemptsLeft}`, false);
+      }
+      saveIdleState_();
+      if (unlockAttemptsLeft > 0) {
+        setTimeout(() => lockPasscodeInputEl.focus(), 0);
+      }
+    }
+
+    function startIdleLock_() {
+      if (!derivedAdminPasscode || isLocked) return;
+      clearTimeout(inactivityTimerId);
+      inactivityTimerId = setTimeout(() => {
+        lockDashboard_();
+        setStatus("Session locked due to inactivity.", "info");
+      }, IDLE_TIMEOUT_MS);
+    }
+
+    function resetIdleTimer_() {
+      if (!derivedAdminPasscode || isLocked) return;
+      saveIdleState_();
+      startIdleLock_();
+    }
+
+    async function unlockDashboard_(enteredCode) {
+      const code = String(enteredCode || "").trim();
+      if (!/^\d{4}$/.test(code)) {
+        updateLockHelpText_("Enter exactly 4 digits.", true);
+        lockPasscodeInputEl.focus();
+        return;
+      }
+      if (code === derivedAdminPasscode) {
+        isLocked = false;
+        unlockAttemptsLeft = MAX_UNLOCK_ATTEMPTS;
+        lockOverlayEl.classList.remove("active");
+        lockOverlayEl.setAttribute("aria-hidden", "true");
+        updateLockHelpText_("", false);
+        saveIdleState_();
+        startIdleLock_();
+        if (!dashboardData) {
+          await fetchDashboard();
+        }
+        return;
+      }
+      unlockAttemptsLeft = Math.max(0, unlockAttemptsLeft - 1);
+      lockPasscodeInputEl.value = "";
+      if (unlockAttemptsLeft <= 0) {
+        const tsKey = getIdleStorageKey_("last_activity_ts");
+        const lockKey = getIdleStorageKey_("locked_state");
+        const attemptsKey = getIdleStorageKey_("attempts_left");
+        if (tsKey) sessionStorage.removeItem(tsKey);
+        if (lockKey) sessionStorage.removeItem(lockKey);
+        if (attemptsKey) sessionStorage.removeItem(attemptsKey);
+        clearTimeout(inactivityTimerId);
+        inactivityTimerId = null;
+        lockOverlayEl.classList.remove("active");
+        lockOverlayEl.setAttribute("aria-hidden", "true");
+        showBlocked("Session locked. Reload page to re-authenticate.");
+        return;
+      }
+      updateLockHelpText_(`Incorrect passcode. ${unlockAttemptsLeft} attempt(s) left.`, true);
+      saveIdleState_();
+      lockPasscodeInputEl.focus();
+    }
+
+    function wireIdleEvents_() {
+      const touchAndMouseHandler = () => {
+        if (isLocked) return;
+        const now = Date.now();
+        if (now - mouseMoveThrottleTs < 1200) return;
+        mouseMoveThrottleTs = now;
+        resetIdleTimer_();
+      };
+
+      document.addEventListener("click", resetIdleTimer_, { passive: true });
+      document.addEventListener("keydown", resetIdleTimer_, { passive: true });
+      document.addEventListener("touchstart", resetIdleTimer_, { passive: true });
+      document.addEventListener("scroll", resetIdleTimer_, { passive: true });
+      document.addEventListener("mousemove", touchAndMouseHandler, { passive: true });
+      window.addEventListener("focus", resetIdleTimer_, { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") resetIdleTimer_();
+      });
+    }
+
+    function restoreIdleState_() {
+      const tsKey = getIdleStorageKey_("last_activity_ts");
+      const lockKey = getIdleStorageKey_("locked_state");
+      const attemptsKey = getIdleStorageKey_("attempts_left");
+      if (!tsKey || !lockKey || !attemptsKey) return;
+      const lastTs = Number(sessionStorage.getItem(tsKey) || "0");
+      const storedLocked = sessionStorage.getItem(lockKey) === "1";
+      const attempts = Number(sessionStorage.getItem(attemptsKey) || String(MAX_UNLOCK_ATTEMPTS));
+      unlockAttemptsLeft = Number.isFinite(attempts) ? Math.max(0, Math.min(MAX_UNLOCK_ATTEMPTS, attempts)) : MAX_UNLOCK_ATTEMPTS;
+      if (storedLocked) {
+        lockDashboard_();
+        return;
+      }
+      if (!lastTs) {
+        saveIdleState_();
+        startIdleLock_();
+        return;
+      }
+      if ((Date.now() - lastTs) >= IDLE_TIMEOUT_MS) {
+        lockDashboard_();
+        return;
+      }
+      startIdleLock_();
+    }
+
+    function ensureUnlockedAction_() {
+      if (!isLocked) return true;
+      setStatus("Session locked due to inactivity.", "info");
+      lockPasscodeInputEl.focus();
+      return false;
+    }
+
+    function getParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        admin: (params.get("admin") || "").trim(),
+        code: (params.get("code") || "").trim()
+      };
+    }
+
+    function formatDateTime(ts) {
+      if (!ts) return "-";
+      const d = new Date(ts);
+      if (Number.isNaN(d.getTime())) return "-";
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const yyyy = String(d.getFullYear());
+      const hh = String(d.getHours()).padStart(2, "0");
+      const min = String(d.getMinutes()).padStart(2, "0");
+      return `${dd}-${mm}-${yyyy} ${hh}:${min}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function getTaskPageUrl() {
+      const currentPath = String(window.location.pathname || "/");
+      if (/admin\.html$/i.test(currentPath)) {
+        return `${window.location.origin}${currentPath.replace(/admin\.html$/i, "task.html")}`;
+      }
+      return `${window.location.origin}/team/task.html`;
+    }
+
+    function allowedDepartmentSet() {
+      const allowed = adminSession && Array.isArray(adminSession.allowedDepartments)
+        ? adminSession.allowedDepartments
+        : [];
+      if (allowed.includes("All")) return null;
+      return new Set(allowed);
+    }
+
+    function canonicalDepartmentName(value) {
+      const key = String(value || "").toLowerCase().replace(/[^a-z]/g, "");
+      if (!key) return "";
+      if (key === "hr" || key === "humanresources") return "humanresources";
+      if (key === "it" || key === "informationtechnology") return "informationtechnology";
+      if (key === "op" || key === "operations") return "operations";
+      if (key === "rs" || key === "research") return "research";
+      if (key === "eq" || key === "equity") return "equity";
+      if (key === "dr" || key === "directreportees") return "directreportees";
+      if (key === "mk" || key === "marketing") return "marketing";
+      return key;
+    }
+
+    function isDepartmentAllowed(allowSet, department) {
+      if (!allowSet) return true;
+      const target = canonicalDepartmentName(department);
+      for (const dep of allowSet) {
+        if (canonicalDepartmentName(dep) === target) return true;
+      }
+      return false;
+    }
+
+    function decodeAccessCodeMaybe_(rawCode) {
+      const raw = String(rawCode || "").trim();
+      if (!raw) return "";
+      const decoded = __decodeSecret(raw);
+      return decoded || raw;
+    }
+
+    function buildLiveLink(department, employeeName, rawCode) {
+      const accessCode = decodeAccessCodeMaybe_(rawCode);
+      const params = new URLSearchParams({
+        dept: department,
+        name: employeeName,
+        code: accessCode
+      });
+      return `${getTaskPageUrl()}?${params.toString()}`;
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+
+    function renderLiveLinksByDepartment() {
+      const allowSet = allowedDepartmentSet();
+      const selectedDept = String(departmentFilterEl && departmentFilterEl.value || "All").trim() || "All";
+      const selectedDeptCanonical = selectedDept === "All" ? "" : canonicalDepartmentName(selectedDept);
+      const query = String(tableNameSearchText || "").trim().toLowerCase();
+      const departments = Object.keys(liveLinkDirectory).filter((dept) => {
+        if (!isDepartmentAllowed(allowSet, dept)) return false;
+        if (!selectedDeptCanonical) return true;
+        return canonicalDepartmentName(dept) === selectedDeptCanonical;
+      }).sort();
+
+      if (!departments.length) {
+        return { html: '<div class="empty">No allowed departments for link generation.</div>', count: 0 };
+      }
+
+      const html = departments.map((dept) => {
+        const people = liveLinkDirectory[dept] || {};
+        const names = Object.keys(people).sort().filter((name) => {
+          if (!query) return true;
+          return String(name || "").toLowerCase().includes(query);
+        });
+        if (!names.length) return "";
+        const rows = names.map((name) => {
+          const link = buildLiveLink(dept, name, people[name]);
+          return `
+            <div class="link-row">
+              <div class="link-name">${escapeHtml(name)}</div>
+              <div class="link-url">${escapeHtml(link)}</div>
+              <div class="link-actions">
+                <a class="tiny-btn" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-up-right-from-square"></i>Open</a>
+                <button class="tiny-btn secondary" type="button" data-copy-link="${escapeHtml(link)}"><i class="fa-solid fa-copy"></i>Copy</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <details class="dept-links" open>
+            <summary>
+              <span>${escapeHtml(dept)}</span>
+              <span>${names.length} link(s)</span>
+            </summary>
+            <div class="dept-links-body">${rows}</div>
+          </details>
+        `;
+      }).join("");
+      const count = departments.reduce((acc, dept) => {
+        const people = liveLinkDirectory[dept] || {};
+        const names = Object.keys(people).sort().filter((name) => {
+          if (!query) return true;
+          return String(name || "").toLowerCase().includes(query);
+        });
+        return acc + names.length;
+      }, 0);
+      if (!count) {
+        return { html: '<div class="empty">No live links match current search.</div>', count: 0 };
+      }
+      return { html, count };
+    }
+
+    async function copyAllVisibleLiveLinks() {
+      if (!ensureUnlockedAction_()) return;
+      const allowSet = allowedDepartmentSet();
+      const selectedDept = String(departmentFilterEl && departmentFilterEl.value || "All").trim() || "All";
+      const selectedDeptCanonical = selectedDept === "All" ? "" : canonicalDepartmentName(selectedDept);
+      const query = String(tableNameSearchText || "").trim().toLowerCase();
+      const lines = [];
+      Object.keys(liveLinkDirectory).sort().forEach((dept) => {
+        if (!isDepartmentAllowed(allowSet, dept)) return;
+        if (selectedDeptCanonical && canonicalDepartmentName(dept) !== selectedDeptCanonical) return;
+        const people = liveLinkDirectory[dept] || {};
+        Object.keys(people).sort().forEach((name) => {
+          if (query && !String(name || "").toLowerCase().includes(query)) return;
+          const link = buildLiveLink(dept, name, people[name]);
+          lines.push(`${dept} | ${name} | ${link}`);
+        });
+      });
+      if (!lines.length) {
+        setStatus("No links available to copy.", "error");
+        return;
+      }
+      try {
+        await copyText(lines.join("\n"));
+        setStatus(`Copied ${lines.length} live link(s).`, "success");
+      } catch (err) {
+        setStatus("Could not copy links.", "error");
+      }
+    }
+
+    function normalizeApiPayload_(payload) {
+      const out = Object.assign({}, payload || {});
+      ["tasks", "updates", "taskIds", "titles"].forEach((k) => {
+        if (typeof out[k] === "string" && out[k].trim()) {
+          try { out[k] = JSON.parse(out[k]); } catch (err) {}
+        }
+      });
+      return out;
+    }
+
+    function withTimeout_(promise, timeoutMs) {
+      const ms = Math.max(1000, Number(timeoutMs || 15000));
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error("Request timed out.")), ms);
+        promise.then((res) => {
+          clearTimeout(timer);
+          resolve(res);
+        }).catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+      });
+    }
+
+    function rpcNameForAction_(action) {
+      const map = {
+        validateAdminAccess: "rpc_validate_admin_access",
+        getUserDirectory: "rpc_get_user_directory",
+        getAdminDashboard: "rpc_get_admin_dashboard",
+        getStreakLeaderboard: "rpc_get_streak_leaderboard",
+        getFailedCliqLogs: "rpc_get_failed_cliq_logs",
+        logCliqFailure: "rpc_log_cliq_failure",
+        resolveFailedCliqLog: "rpc_resolve_failed_cliq_log",
+        getSubmittedDayDetails: "rpc_get_submitted_day_details",
+        assignTasks: "rpc_assign_tasks",
+        createUser: "rpc_create_user"
+      };
+      return map[String(action || "").trim()] || "";
+    }
+
+    async function jsonp(action, payload, timeoutMs = 15000) {
+      if (!supabaseClient) throw new Error("Supabase client is not configured.");
+      const rpc = rpcNameForAction_(action);
+      if (!rpc) throw new Error(`Unknown action: ${action}`);
+      const body = normalizeApiPayload_(Object.assign({ action: action }, payload || {}));
+      const op = supabaseClient.rpc(rpc, { p_payload: body });
+      const { data, error } = await withTimeout_(op, timeoutMs);
+      if (error) throw new Error(String(error.message || error));
+      return (data && typeof data === "object") ? data : { ok: true, data: data };
+    }
+
+    function directoryCacheKey_() {
+      if (!adminSession) return "";
+      return `admin_directory_cache_v1:${adminSession.admin}:${adminSession.code}`;
+    }
+
+    function loadDirectoryCache_() {
+      try {
+        const key = directoryCacheKey_();
+        if (!key) return null;
+        const raw = sessionStorage.getItem(key);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return null;
+        const fetchedAt = Number(parsed.fetchedAt || 0);
+        if (!Number.isFinite(fetchedAt) || fetchedAt <= 0) return null;
+        if ((Date.now() - fetchedAt) > DIRECTORY_CACHE_TTL_MS) return null;
+        if (!parsed.directory || typeof parsed.directory !== "object") return null;
+        if (!parsed.emailDirectory || typeof parsed.emailDirectory !== "object") return null;
+        return parsed;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function saveDirectoryCache_(directory, emailDirectory) {
+      try {
+        const key = directoryCacheKey_();
+        if (!key) return;
+        sessionStorage.setItem(key, JSON.stringify({
+          fetchedAt: Date.now(),
+          directory: directory && typeof directory === "object" ? directory : {},
+          emailDirectory: emailDirectory && typeof emailDirectory === "object" ? emailDirectory : {}
+        }));
+      } catch (err) {}
+    }
+
+    async function refreshDirectory_(opts = {}) {
+      if (!adminSession) return;
+      const preferCache = Boolean(opts.preferCache);
+      const force = Boolean(opts.force);
+      if (preferCache && !force) {
+        const cached = loadDirectoryCache_();
+        if (cached) {
+          liveLinkDirectory = cached.directory;
+          liveEmailDirectory = cached.emailDirectory;
+          lastDirectorySyncAt = Number(cached.fetchedAt || Date.now());
+          return;
+        }
+      }
+      const result = await jsonp("getUserDirectory", {
+        admin: adminSession.admin,
+        code: adminSession.code
+      }, 12000);
+      if (!result || result.ok === false) {
+        throw new Error(result && result.message ? result.message : "Could not load user directory.");
+      }
+      const nextDir = result.directory && typeof result.directory === "object"
+        ? result.directory
+        : {};
+      const mergedDir = JSON.parse(JSON.stringify(liveLinkDirectory || {}));
+      Object.keys(nextDir).forEach((dept) => {
+        if (!mergedDir[dept] || typeof mergedDir[dept] !== "object") mergedDir[dept] = {};
+        const users = nextDir[dept] || {};
+        Object.keys(users).forEach((name) => {
+          const incoming = String(users[name] || "").trim();
+          if (incoming && incoming !== "MASKED") mergedDir[dept][name] = incoming;
+          else if (!Object.prototype.hasOwnProperty.call(mergedDir[dept], name)) mergedDir[dept][name] = "";
+        });
+      });
+      liveLinkDirectory = mergedDir;
+      liveEmailDirectory = result.emailDirectory && typeof result.emailDirectory === "object"
+        ? result.emailDirectory
+        : {};
+      lastDirectorySyncAt = Date.now();
+      saveDirectoryCache_(liveLinkDirectory, liveEmailDirectory);
+    }
+
+    function setSelectOptions(selectEl, options, selectedValue) {
+      const html = options
+        .map((opt) => `<option value="${escapeHtml(opt.value)}"${opt.value === selectedValue ? " selected" : ""}>${escapeHtml(opt.label)}</option>`)
+        .join("");
+      selectEl.innerHTML = html;
+    }
+
+    function setCreateUserStatus_(message, type) {
+      createUserStatusEl.textContent = message || "";
+      createUserStatusEl.style.color = type === "error"
+        ? "var(--danger)"
+        : type === "success"
+          ? "var(--success)"
+          : "#55756a";
+    }
+
+    function syncNewUserEmailPreview_() {
+      const selectedRole = String(newUserRoleEl.value || "User").trim();
+      const department = String(newUserDepartmentEl.value || "").trim();
+      const employeeName = String(newUserNameEl.value || "").trim();
+      const isUserRole = selectedRole === "User";
+      newUserDepartmentEl.disabled = selectedRole === "Super Admin";
+      newUserEmailEl.disabled = !isUserRole;
+      if (isUserRole) {
+        newUserCodeEl.disabled = true;
+        newUserCodeEl.value = "";
+        newUserCodeEl.placeholder = "Auto-generated for User";
+      } else {
+        newUserCodeEl.disabled = false;
+        newUserCodeEl.placeholder = "Auto-generate if blank";
+      }
+      if (!employeeName) {
+        newUserEmailHintEl.textContent = "";
+        if (isUserRole) newUserEmailEl.value = "";
+        return;
+      }
+      if (!isUserRole) {
+        newUserEmailHintEl.textContent = "Email is only used for User role notifications.";
+        newUserEmailEl.value = "";
+        return;
+      }
+      let suggested = "";
+      if (department && liveEmailDirectory[department] && liveEmailDirectory[department][employeeName]) {
+        suggested = String(liveEmailDirectory[department][employeeName] || "").trim();
+      }
+      if (!suggested) suggested = defaultEmailFromName_(employeeName);
+      newUserEmailHintEl.textContent = suggested ? `Suggested: ${suggested}` : "";
+      newUserEmailEl.value = suggested;
+    }
+
+    function getDirectoryDepartments_() {
+      const allowSet = allowedDepartmentSet();
+      return Object.keys(liveLinkDirectory || {})
+        .filter((dept) => isDepartmentAllowed(allowSet, dept))
+        .sort();
+    }
+
+    function getDirectoryEmployeesByDept_(dept) {
+      const targetDept = String(dept || "").trim();
+      if (!targetDept || targetDept === "All") {
+        const out = [];
+        Object.keys(liveLinkDirectory || {}).forEach((d) => {
+          const people = liveLinkDirectory[d] || {};
+          Object.keys(people).forEach((name) => out.push(name));
+        });
+        return Array.from(new Set(out)).sort();
+      }
+      const resolvedDept = Object.keys(liveLinkDirectory || {}).find((d) => (
+        canonicalDepartmentName(d) === canonicalDepartmentName(targetDept)
+      )) || targetDept;
+      const people = (liveLinkDirectory && liveLinkDirectory[resolvedDept]) || {};
+      return Object.keys(people).sort();
+    }
+
+    function syncAssignEmployeeOptions() {
+      const allRows = Array.isArray(dashboardData.employeeCompliance) ? dashboardData.employeeCompliance : [];
+      const dept = assignDepartmentEl.value || "All";
+      const employeesFromRows = allRows
+        .filter((r) => dept === "All" || canonicalDepartmentName(r.department) === canonicalDepartmentName(dept))
+        .map((r) => r.employeeName);
+      const employeesFromDirectory = getDirectoryEmployeesByDept_(dept);
+      const employees = Array.from(new Set([].concat(employeesFromRows, employeesFromDirectory))).sort();
+
+      setSelectOptions(
+        assignEmployeeEl,
+        [{ value: "", label: "Select Employee" }].concat(employees.map((e) => ({ value: e, label: e }))),
+        employees.includes(assignEmployeeEl.value) ? assignEmployeeEl.value : ""
+      );
+    }
+
+    function renderAssignDraft() {
+      if (!assignDraft.length) {
+        assignDraftListEl.innerHTML = '<div class="assign-empty">No tasks added yet.</div>';
+        return;
+      }
+      assignDraftListEl.innerHTML = assignDraft.map((t, idx) => `
+        <div class="assign-item">
+          <div class="assign-item-main">
+            <div class="assign-item-title">${escapeHtml(t.title)}</div>
+            <div class="assign-item-meta">
+              <span class="assign-tag">${escapeHtml(`To: ${t.employeeName || "-"}`)}</span>
+              <span class="assign-tag">${escapeHtml(`Dept: ${t.department || "-"}`)}</span>
+              <span class="assign-tag">${escapeHtml(t.priority || "Medium")}</span>
+              <span class="assign-tag">${escapeHtml(t.deadlineDate ? `Deadline ${formatCliqDate(t.deadlineDate)}` : `${String(t.deadlineDays || 1)} day${Number(t.deadlineDays || 1) === 2 ? "s" : ""} deadline`)}</span>
+            </div>
+          </div>
+          <button class="assign-remove-btn" type="button" data-idx="${idx}" aria-label="Remove assigned draft task"><i class="fa-solid fa-trash"></i>Remove</button>
+        </div>
+      `).join("");
+
+      assignDraftListEl.querySelectorAll("button[data-idx]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.getAttribute("data-idx"));
+          if (!Number.isInteger(idx)) return;
+          assignDraft.splice(idx, 1);
+          renderAssignDraft();
+        });
+      });
+    }
+
+    function setAssignCollapsed_(collapsed) {
+      assignCollapsed = Boolean(collapsed);
+      const card = assignBodyEl ? assignBodyEl.closest(".assign-card") : null;
+      if (card) card.classList.toggle("collapsed", assignCollapsed);
+      if (assignCardHeadEl) {
+        assignCardHeadEl.setAttribute("aria-expanded", assignCollapsed ? "false" : "true");
+      }
+      if (assignCollapseBtnEl) {
+        assignCollapseBtnEl.setAttribute("aria-expanded", assignCollapsed ? "false" : "true");
+        assignCollapseBtnEl.innerHTML = assignCollapsed
+          ? '<i class="fa-solid fa-chevron-down"></i>Expand'
+          : '<i class="fa-solid fa-chevron-up"></i>Collapse';
+      }
+    }
+
+    function setUserAccessCollapsed_(collapsed) {
+      userAccessCollapsed = Boolean(collapsed);
+      const card = userAccessBodyEl ? userAccessBodyEl.closest(".user-access-card") : null;
+      if (card) card.classList.toggle("collapsed", userAccessCollapsed);
+      if (userAccessCardHeadEl) {
+        userAccessCardHeadEl.setAttribute("aria-expanded", userAccessCollapsed ? "false" : "true");
+      }
+      if (userAccessCollapseBtnEl) {
+        userAccessCollapseBtnEl.setAttribute("aria-expanded", userAccessCollapsed ? "false" : "true");
+        userAccessCollapseBtnEl.innerHTML = userAccessCollapsed
+          ? '<i class="fa-solid fa-chevron-down"></i>Expand'
+          : '<i class="fa-solid fa-chevron-up"></i>Collapse';
+      }
+    }
+
+    function renderLeaderboardPanel_(rows) {
+      if (!leaderboardPanelEl || !leaderboardPanelBodyEl) return;
+      leaderboardPanelEl.hidden = !leaderboardVisible;
+      if (leaderboardToggleBtn) {
+        leaderboardToggleBtn.setAttribute("aria-expanded", leaderboardVisible ? "true" : "false");
+      }
+      if (!leaderboardVisible) return;
+      const list = (Array.isArray(rows) ? rows : []).slice(0, 3);
+      if (!list.length) {
+        leaderboardPanelBodyEl.className = "empty";
+        leaderboardPanelBodyEl.textContent = "No streak data yet.";
+        return;
+      }
+      leaderboardPanelBodyEl.className = "";
+      leaderboardPanelBodyEl.innerHTML = list.map((r, idx) => {
+        const rank = Math.max(1, Number(r.rank || idx + 1) || idx + 1);
+        const name = escapeHtml(String(r.employeeName || "-"));
+        const dept = escapeHtml(String(r.department || "-"));
+        const current = Math.max(0, Number(r.current || 0));
+        const best = Math.max(current, Number(r.best || 0));
+        return `<div class="kpi-sub" style="padding:8px 12px;border-bottom:1px solid var(--line-2);">#${rank} ${name} (${dept}) - ${current} current | ${best} best</div>`;
+      }).join("");
+    }
+
+    function setEmployeeKpiFocus_(key) {
+      const nextKey = String(key || "all").trim().toLowerCase() || "all";
+      employeeKpiFocus = (employeeKpiFocus === nextKey) ? "all" : nextKey;
+      if (employeeKpiFocus === "sod_submitted" || employeeKpiFocus === "sod_missing") {
+        stageFilterEl.value = "SOD";
+      } else if (employeeKpiFocus === "eod_submitted" || employeeKpiFocus === "eod_missing") {
+        stageFilterEl.value = "EOD";
+      } else if (employeeKpiFocus === "carryover_open") {
+        stageFilterEl.value = "Carryover";
+      } else {
+        stageFilterEl.value = "All";
+      }
+    }
+
+    function matchesEmployeeKpiFocus_(row) {
+      const focus = String(employeeKpiFocus || "all");
+      if (focus === "sod_submitted") return Number(row && row.sodSubmittedDays || 0) > 0;
+      if (focus === "sod_missing") return Number(row && row.sodSubmittedDays || 0) <= 0;
+      if (focus === "eod_submitted") return Number(row && row.eodSubmittedDays || 0) > 0;
+      if (focus === "eod_missing") return Number(row && row.eodSubmittedDays || 0) <= 0;
+      if (focus === "carryover_open") return Number(row && row.openCarryover || 0) > 0;
+      return true;
+    }
+
+    function renderKpis(kpis, employeeRows) {
+      const rows = Array.isArray(employeeRows) ? employeeRows : [];
+      const periodDays = Math.max(1, Number(kpis.periodDays || 1));
+      const totalMembers = rows.length;
+      const sodMembersSubmitted = rows.filter((r) => Number(r.sodSubmittedDays || 0) > 0).length;
+      const eodMembersSubmitted = rows.filter((r) => Number(r.eodSubmittedDays || 0) > 0).length;
+      const sodMembersMissing = Math.max(0, totalMembers - sodMembersSubmitted);
+      const eodMembersMissing = Math.max(0, totalMembers - eodMembersSubmitted);
+
+      const sodEntries = rows.reduce((sum, r) => sum + Number(r.sodSubmittedDays || 0), 0);
+      const eodEntries = rows.reduce((sum, r) => sum + Number(r.eodSubmittedDays || 0), 0);
+      const expectedEntries = Math.max(1, totalMembers * periodDays);
+      const sodCoveragePct = (sodEntries / expectedEntries) * 100;
+      const eodCoveragePct = (eodEntries / expectedEntries) * 100;
+
+      const cards = periodDays === 1
+        ? [
+            { key: "all", label: "Total Members", value: totalMembers, sub: "In selected scope" },
+            { key: "sod_submitted", label: "SOD Submitted", value: sodMembersSubmitted, sub: "Members submitted today" },
+            { key: "eod_submitted", label: "EOD Submitted", value: eodMembersSubmitted, sub: "Members submitted today" },
+            { key: "sod_missing", label: "SOD Missing", value: sodMembersMissing, sub: "Members pending" },
+            { key: "eod_missing", label: "EOD Missing", value: eodMembersMissing, sub: "Members pending" },
+            { key: "carryover_open", label: "Carryover Open", value: Number(kpis.incompleteCarryoverCount || 0), sub: "Task backlog" },
+            { label: "Completion Rate", value: `${Number(kpis.completionRate || 0).toFixed(1)}%`, sub: "EOD weighted" },
+            { label: "Logged Hours", value: Number(kpis.totalLoggedHours || 0).toFixed(2), sub: "Total hours" }
+          ]
+        : [
+            { key: "all", label: "Total Members", value: totalMembers, sub: `Across ${periodDays} day(s)` },
+            { key: "sod_submitted", label: "SOD Entries", value: sodEntries, sub: `${(sodEntries / periodDays).toFixed(1)} avg/day` },
+            { key: "eod_submitted", label: "EOD Entries", value: eodEntries, sub: `${(eodEntries / periodDays).toFixed(1)} avg/day` },
+            { key: "sod_missing", label: "SOD Coverage", value: `${sodCoveragePct.toFixed(1)}%`, sub: `${sodEntries}/${expectedEntries} expected` },
+            { key: "eod_missing", label: "EOD Coverage", value: `${eodCoveragePct.toFixed(1)}%`, sub: `${eodEntries}/${expectedEntries} expected` },
+            { key: "carryover_open", label: "Carryover Open", value: Number(kpis.incompleteCarryoverCount || 0), sub: "Task backlog" },
+            { label: "Completion Rate", value: `${Number(kpis.completionRate || 0).toFixed(1)}%`, sub: "EOD weighted" },
+            { label: "Logged Hours", value: Number(kpis.totalLoggedHours || 0).toFixed(2), sub: "Total hours" }
+          ];
+
+      const cardsHtml = cards.map((c) => `
+        <article class="kpi${c.key ? " kpi-clickable" : ""}${c.key && c.key === employeeKpiFocus ? " kpi-active" : ""}"${c.key ? ` data-kpi-key="${escapeHtml(c.key)}"` : ""}>
+          <span class="kpi-label">${escapeHtml(c.label)}</span>
+          <strong class="kpi-value">${escapeHtml(c.value)}</strong>
+          <span class="kpi-sub">${escapeHtml(c.sub)}</span>
+        </article>
+      `).join("");
+      kpiGridEl.innerHTML = cardsHtml;
+    }
+
+    function toNum(v, fallback = 0) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function normalizeEmployeeRows(rows) {
+      return (Array.isArray(rows) ? rows : []).map((r) => {
+        const sodDays = r.sodSubmittedDays != null
+          ? toNum(r.sodSubmittedDays, 0)
+          : (String(r.sodStatus || "").toLowerCase() === "submitted" ? 1 : 0);
+        const eodDays = r.eodSubmittedDays != null
+          ? toNum(r.eodSubmittedDays, 0)
+          : (String(r.eodStatus || "").toLowerCase() === "submitted" ? 1 : 0);
+        const eodMissingDays = r.eodMissingDays != null
+          ? toNum(r.eodMissingDays, 0)
+          : (String(r.eodStatus || "").toLowerCase() === "missing" ? 1 : 0);
+        const plannedTasks = r.plannedTasks != null ? toNum(r.plannedTasks, 0) : 0;
+        const tasksSubmitted = r.tasksSubmitted != null
+          ? toNum(r.tasksSubmitted, 0)
+          : toNum(r.updatedTasks, 0);
+        const assignedTasks = r.assignedTasks != null ? toNum(r.assignedTasks, 0) : 0;
+        const openCarryover = r.openCarryover != null ? toNum(r.openCarryover, 0) : 0;
+        return {
+          ...r,
+          sodSubmittedDays: sodDays,
+          eodSubmittedDays: eodDays,
+          eodMissingDays,
+          plannedTasks,
+          tasksSubmitted,
+          assignedTasks,
+          openCarryover
+        };
+      });
+    }
+
+    function normalizeDepartmentRows(rows) {
+      return (Array.isArray(rows) ? rows : []).map((r) => ({
+        ...r,
+        sodSubmittedDays: r.sodSubmittedDays != null ? toNum(r.sodSubmittedDays, 0) : toNum(r.sodSubmittedCount, 0),
+        eodSubmittedDays: r.eodSubmittedDays != null ? toNum(r.eodSubmittedDays, 0) : toNum(r.eodSubmittedCount, 0),
+        eodMissingDays: r.eodMissingDays != null ? toNum(r.eodMissingDays, 0) : toNum(r.eodMissingCount, 0),
+        plannedTasks: r.plannedTasks != null ? toNum(r.plannedTasks, 0) : 0,
+        tasksSubmitted: r.tasksSubmitted != null ? toNum(r.tasksSubmitted, 0) : 0,
+        assignedTasks: r.assignedTasks != null ? toNum(r.assignedTasks, 0) : 0,
+        carryoverOpenCount: r.carryoverOpenCount != null ? toNum(r.carryoverOpenCount, 0) : 0
+      }));
+    }
+
+    function buildEmployeeRowsFromDirectoryFallback_() {
+      const allowSet = allowedDepartmentSet();
+      const out = [];
+      Object.keys(liveLinkDirectory || {}).forEach((dept) => {
+        if (!isDepartmentAllowed(allowSet, dept)) return;
+        const users = liveLinkDirectory[dept] || {};
+        Object.keys(users).forEach((name) => {
+          out.push({
+            employeeName: name,
+            department: dept,
+            sodSubmittedDays: 0,
+            eodSubmittedDays: 0,
+            eodMissingDays: 0,
+            plannedTasks: 0,
+            tasksSubmitted: 0,
+            assignedTasks: 0,
+            openCarryover: 0,
+            lastSubmissionAt: ""
+          });
+        });
+      });
+      return out.sort((a, b) => {
+        if (a.department !== b.department) return String(a.department).localeCompare(String(b.department));
+        return String(a.employeeName).localeCompare(String(b.employeeName));
+      });
+    }
+
+    function buildDepartmentRowsFromEmployees_(employeeRows) {
+      const map = {};
+      (Array.isArray(employeeRows) ? employeeRows : []).forEach((r) => {
+        const dep = String(r.department || "").trim();
+        if (!dep) return;
+        if (!map[dep]) {
+          map[dep] = {
+            department: dep,
+            employeeCount: 0,
+            sodSubmittedDays: 0,
+            eodSubmittedDays: 0,
+            eodMissingDays: 0,
+            plannedTasks: 0,
+            tasksSubmitted: 0,
+            assignedTasks: 0,
+            carryoverOpenCount: 0
+          };
+        }
+        map[dep].employeeCount += 1;
+        map[dep].sodSubmittedDays += Number(r.sodSubmittedDays || 0);
+        map[dep].eodSubmittedDays += Number(r.eodSubmittedDays || 0);
+        map[dep].eodMissingDays += Number(r.eodMissingDays || 0);
+        map[dep].plannedTasks += Number(r.plannedTasks || 0);
+        map[dep].tasksSubmitted += Number(r.tasksSubmitted || 0);
+        map[dep].assignedTasks += Number(r.assignedTasks || 0);
+        map[dep].carryoverOpenCount += Number(r.openCarryover || 0);
+      });
+      return Object.keys(map).sort().map((k) => map[k]);
+    }
+
+    function employeeRowKey_(department, employeeName) {
+      return `${canonicalDepartmentName(department)}|${String(employeeName || "").trim().toLowerCase()}`;
+    }
+
+    function mergeDashboardRowsWithDirectory_(rows, stageFilter, departmentFilter, employeeFilter) {
+      const normalized = normalizeEmployeeRows(rows);
+      const stage = String(stageFilter || "All").trim();
+      if (stage !== "All") return normalized;
+      const deptFilterCanonical = String(departmentFilter || "All").trim() === "All"
+        ? ""
+        : canonicalDepartmentName(departmentFilter);
+      const employeeFilterNorm = String(employeeFilter || "All").trim().toLowerCase();
+      const merged = [];
+      const seen = new Set();
+      normalized.forEach((r) => {
+        const key = employeeRowKey_(r.department, r.employeeName);
+        if (seen.has(key)) return;
+        seen.add(key);
+        merged.push(r);
+      });
+      buildEmployeeRowsFromDirectoryFallback_().forEach((r) => {
+        if (deptFilterCanonical && canonicalDepartmentName(r.department) !== deptFilterCanonical) return;
+        if (employeeFilterNorm !== "all" && String(r.employeeName || "").trim().toLowerCase() !== employeeFilterNorm) return;
+        const key = employeeRowKey_(r.department, r.employeeName);
+        if (seen.has(key)) return;
+        seen.add(key);
+        merged.push(r);
+      });
+      merged.sort((a, b) => {
+        if (String(a.department) !== String(b.department)) return String(a.department).localeCompare(String(b.department));
+        return String(a.employeeName).localeCompare(String(b.employeeName));
+      });
+      return merged;
+    }
+
+    function normalizeKpis(kpis) {
+      const safe = kpis || {};
+      return {
+        plannedTasks: toNum(safe.plannedTasks, 0),
+        tasksSubmittedCount: safe.tasksSubmittedCount != null
+          ? toNum(safe.tasksSubmittedCount, 0)
+          : toNum(safe.updatedTasksCount, 0),
+        eodSubmittedCount: toNum(safe.eodSubmittedCount, 0),
+        eodMissingCount: toNum(safe.eodMissingCount, 0),
+        incompleteCarryoverCount: toNum(safe.incompleteCarryoverCount, 0),
+        completionRate: toNum(safe.completionRate, 0),
+        totalLoggedHours: toNum(safe.totalLoggedHours, 0),
+        periodDays: toNum(safe.periodDays, 1)
+      };
+    }
+
+    function statusPill(status) {
+      const s = String(status || "").toLowerCase();
+      if (s === "submitted" || s === "done") return '<span class="pill ok">Submitted</span>';
+      if (s === "missing") return '<span class="pill bad">Missing</span>';
+      if (s === "open") return '<span class="pill warn">Open</span>';
+      return `<span class="pill">${escapeHtml(status || "N/A")}</span>`;
+    }
+
+    function renderStageBadge(label, submittedCount) {
+      const ok = Number(submittedCount || 0) > 0;
+      const icon = ok ? "fa-circle-check" : "fa-circle-xmark";
+      const statusClass = ok ? "ok" : "bad";
+      const title = `${label}: ${ok ? "Submitted" : "Missing"}`;
+      return `<span class="stage-status-badge ${statusClass}" title="${escapeHtml(title)}"><i class="fa-solid ${icon}"></i>${escapeHtml(label)}</span>`;
+    }
+
+    function renderEmployeeNameWithStageStatus(row) {
+      const view = String(employeeBadgeView || "both").toLowerCase();
+      const badges = [];
+      if (view === "both" || view === "sod") badges.push(renderStageBadge("SOD", row.sodSubmittedDays));
+      if (view === "both" || view === "eod") badges.push(renderStageBadge("EOD", row.eodSubmittedDays));
+      return `
+        <span class="employee-name-cell">
+          <span class="stage-status-badges">
+            ${badges.join("")}
+          </span>
+          <button
+            type="button"
+            class="employee-details-btn"
+            data-employee-details="1"
+            data-department="${escapeHtml(row.department)}"
+            data-employee="${escapeHtml(row.employeeName)}"
+            title="View SOD/EOD tasks"
+          >${escapeHtml(row.employeeName)}</button>
+        </span>
+      `;
+    }
+
+    function getEmployeeAccessCode_(department, employeeName) {
+      const deptTarget = canonicalDepartmentName(department);
+      const nameTarget = String(employeeName || "").trim().toLowerCase();
+      const depts = Object.keys(liveLinkDirectory || {});
+      for (let i = 0; i < depts.length; i += 1) {
+        const dept = depts[i];
+        if (canonicalDepartmentName(dept) !== deptTarget) continue;
+        const users = liveLinkDirectory[dept] || {};
+        const names = Object.keys(users);
+        for (let j = 0; j < names.length; j += 1) {
+          const name = names[j];
+          if (String(name || "").trim().toLowerCase() !== nameTarget) continue;
+          return decodeAccessCodeMaybe_(users[name]);
+        }
+      }
+      return "";
+    }
+
+    function taskTimeLabel_(hours, minutes) {
+      return `${Number(hours || 0)}h ${Number(minutes || 0)}m`;
+    }
+
+    function renderTaskListHtml_(items, renderItem) {
+      if (!Array.isArray(items) || !items.length) return '<div class="details-empty">No tasks found.</div>';
+      return `<ul class="details-list">${items.map((item) => `<li>${renderItem(item)}</li>`).join("")}</ul>`;
+    }
+
+    function openEmployeeDetailsModal_() {
+      employeeDetailsModalEl.classList.add("active");
+      employeeDetailsModalEl.setAttribute("aria-hidden", "false");
+    }
+
+    function closeEmployeeDetailsModal_() {
+      employeeDetailsModalEl.classList.remove("active");
+      employeeDetailsModalEl.setAttribute("aria-hidden", "true");
+    }
+
+    function setRetriggerBtnState_(btn, state) {
+      if (!btn) return;
+      btn.classList.remove("btn-sending", "btn-sent");
+      if (state === "sending") btn.classList.add("btn-sending");
+      if (state === "sent") btn.classList.add("btn-sent");
+    }
+
+    function setRetriggerBtnLabel_(btn, iconClass, text) {
+      if (!btn) return;
+      btn.innerHTML = `<i class="${iconClass}"></i> ${escapeHtml(text)}`;
+    }
+
+    function updateEmployeeDetailsRetriggerButtons_() {
+      if (employeeDetailsRetriggerSodEl) {
+        const hasSod = Boolean(employeeDetailsSodPayload);
+        employeeDetailsRetriggerSodEl.disabled = !hasSod || employeeDetailsSodSending || employeeDetailsEodSending;
+        if (employeeDetailsSodSending) {
+          setRetriggerBtnState_(employeeDetailsRetriggerSodEl, "sending");
+          setRetriggerBtnLabel_(employeeDetailsRetriggerSodEl, "fa-solid fa-spinner fa-spin", "Sending SOD...");
+        } else if (employeeDetailsRetriggerSodEl.classList.contains("btn-sent")) {
+          setRetriggerBtnLabel_(employeeDetailsRetriggerSodEl, "fa-solid fa-check", "SOD Sent");
+        } else {
+          setRetriggerBtnState_(employeeDetailsRetriggerSodEl, "");
+          setRetriggerBtnLabel_(employeeDetailsRetriggerSodEl, "fa-solid fa-bell", "Retrigger SOD Cliq");
+        }
+      }
+      if (employeeDetailsRetriggerEodEl) {
+        const hasEod = Boolean(employeeDetailsEodPayload);
+        employeeDetailsRetriggerEodEl.disabled = !hasEod || employeeDetailsEodSending || employeeDetailsSodSending;
+        if (employeeDetailsEodSending) {
+          setRetriggerBtnState_(employeeDetailsRetriggerEodEl, "sending");
+          setRetriggerBtnLabel_(employeeDetailsRetriggerEodEl, "fa-solid fa-spinner fa-spin", "Sending EOD...");
+        } else if (employeeDetailsRetriggerEodEl.classList.contains("btn-sent")) {
+          setRetriggerBtnLabel_(employeeDetailsRetriggerEodEl, "fa-solid fa-check", "EOD Sent");
+        } else {
+          setRetriggerBtnState_(employeeDetailsRetriggerEodEl, "");
+          setRetriggerBtnLabel_(employeeDetailsRetriggerEodEl, "fa-solid fa-bell", "Retrigger EOD Cliq");
+        }
+      }
+    }
+
+    function setEmployeeDetailsSodPayload_(payload) {
+      employeeDetailsSodPayload = payload && typeof payload === "object" ? payload : null;
+      if (!employeeDetailsSodPayload && employeeDetailsSodSentTimer) {
+        clearTimeout(employeeDetailsSodSentTimer);
+        employeeDetailsSodSentTimer = null;
+      }
+      updateEmployeeDetailsRetriggerButtons_();
+    }
+
+    function setEmployeeDetailsEodPayload_(payload) {
+      employeeDetailsEodPayload = payload && typeof payload === "object" ? payload : null;
+      if (!employeeDetailsEodPayload && employeeDetailsEodSentTimer) {
+        clearTimeout(employeeDetailsEodSentTimer);
+        employeeDetailsEodSentTimer = null;
+      }
+      updateEmployeeDetailsRetriggerButtons_();
+    }
+
+    async function openEmployeeDayDetails_(department, employeeName) {
+      if (!ensureUnlockedAction_()) return;
+      const workDate = String(workDateEl.value || todayISO()).trim();
+      const accessCode = getEmployeeAccessCode_(department, employeeName);
+      if (!accessCode) {
+        setStatus("Could not resolve employee access code for task details.", "error");
+        return;
+      }
+
+      employeeDetailsTitleEl.innerHTML = `<strong>${escapeHtml(employeeName)}</strong> - Task Details`;
+      employeeDetailsMetaEl.textContent = `Department: ${department} | Work Date: ${formatCliqDate(workDate)}`;
+      employeeDetailsBodyEl.innerHTML = '<div class="details-empty">Loading task details...</div>';
+      setEmployeeDetailsSodPayload_(null);
+      setEmployeeDetailsEodPayload_(null);
+      openEmployeeDetailsModal_();
+
+      try {
+        const result = await jsonp("getSubmittedDayDetails", {
+          department,
+          employeeName,
+          accessCode,
+          workDate,
+          clientVersion: CLIENT_VERSION
+        }, 18000);
+
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Could not fetch task details.");
+        }
+
+        const sodTasks = Array.isArray(result.sodTasks) ? result.sodTasks : [];
+        const eodUpdates = Array.isArray(result.eodUpdates) ? result.eodUpdates : [];
+        if (result.hasSod && sodTasks.length) {
+          setEmployeeDetailsSodPayload_({
+            department,
+            employeeName,
+            workDate,
+            tasks: sodTasks
+          });
+        } else {
+          setEmployeeDetailsSodPayload_(null);
+        }
+        if (result.hasEod && eodUpdates.length) {
+          setEmployeeDetailsEodPayload_({
+            department,
+            employeeName,
+            workDate,
+            updates: eodUpdates,
+            dailySummary: result.dailySummary || null,
+            totalSpentMinutes: Number(result.totalSpentMinutes || 0)
+          });
+        } else {
+          setEmployeeDetailsEodPayload_(null);
+        }
+        const sodHtml = renderTaskListHtml_(sodTasks, (t) => {
+          const title = escapeHtml(t.title || "-");
+          const priority = escapeHtml(t.priority || "Medium");
+          const freq = escapeHtml(t.frequency || "");
+          const freqPart = freq ? ` | ${freq}` : "";
+          return `${title} (${priority}${freqPart}) - ${escapeHtml(taskTimeLabel_(t.plannedHours, t.plannedMinutes))}`;
+        });
+        const eodHtml = renderTaskListHtml_(eodUpdates, (u) => {
+          const title = escapeHtml(u.title || "-");
+          const pct = Number(u.completionPercent || 0);
+          const extra = u.isExtra ? " | Extra" : "";
+          const note = String(u.note || "").trim();
+          const notePart = note ? ` | Note: ${escapeHtml(note)}` : "";
+          return `${title} (${pct}%${extra}) - ${escapeHtml(taskTimeLabel_(u.spentHours, u.spentMinutes))}${notePart}`;
+        });
+
+        employeeDetailsBodyEl.innerHTML = `
+          <div class="details-grid">
+            <section class="details-block">
+              <h3><strong>SOD Tasks${result.hasSod ? "" : " (Not submitted)"}</strong></h3>
+              ${sodHtml}
+            </section>
+            <section class="details-block">
+              <h3><strong>EOD Tasks${result.hasEod ? "" : " (Not submitted)"}</strong></h3>
+              ${eodHtml}
+            </section>
+          </div>
+        `;
+      } catch (err) {
+        setEmployeeDetailsSodPayload_(null);
+        setEmployeeDetailsEodPayload_(null);
+        employeeDetailsBodyEl.innerHTML = `<div class="details-empty">${escapeHtml(err.message || "Could not load task details.")}</div>`;
+      }
+    }
+
+    async function logCliqFailure_(meta) {
+      if (!adminSession) return;
+      try {
+        const payload = Object.assign({
+          admin: adminSession.admin,
+          code: adminSession.code,
+          clientVersion: CLIENT_VERSION
+        }, meta || {});
+        const result = await jsonp("logCliqFailure", payload, 12000);
+        if (!result || result.ok === false) return;
+        await loadFailedCliqLogs_();
+      } catch (err) {
+        console.warn("Failed to log Cliq failure:", err);
+      }
+    }
+
+    async function loadFailedCliqLogs_() {
+      if (!adminSession) {
+        failedCliqRows = [];
+        return;
+      }
+      try {
+        const result = await jsonp("getFailedCliqLogs", {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          limit: 400,
+          clientVersion: CLIENT_VERSION
+        }, 15000);
+        failedCliqRows = (result && result.ok && Array.isArray(result.logs)) ? result.logs : [];
+      } catch (err) {
+        failedCliqRows = [];
+        console.warn("Failed Cliq logs unavailable:", err);
+      }
+    }
+
+    async function resolveFailedCliqLog_(id, resolution) {
+      if (!adminSession || !Number.isFinite(Number(id))) return false;
+      try {
+        const result = await jsonp("resolveFailedCliqLog", {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          id: Number(id),
+          resolution: String(resolution || "sent"),
+          clientVersion: CLIENT_VERSION
+        }, 12000);
+        return Boolean(result && result.ok);
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function retryFailedCliqLog_(id) {
+      const row = (Array.isArray(failedCliqRows) ? failedCliqRows : []).find((r) => Number(r.id) === Number(id));
+      if (!row) {
+        setStatus("Failed Cliq log not found.", "error");
+        return;
+      }
+      const flowPayload = row.flowPayload && typeof row.flowPayload === "object" ? row.flowPayload : null;
+      if (!flowPayload || !String(flowPayload.stage || "").trim()) {
+        setStatus("Invalid failed Cliq payload; cannot retry.", "error");
+        return;
+      }
+      setStatus(`Retrying ${String(row.stage || "").toUpperCase()} Cliq for ${row.employeeName}...`, "info");
+      const retryBtn = tableWrapEl.querySelector(`button[data-cliq-retry-id="${Number(id)}"]`);
+      if (retryBtn) {
+        retryBtn.disabled = true;
+        retryBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+      }
+      try {
+        const webhookResult = await sendStageCliqWebhook(flowPayload);
+        if (!webhookResult || !webhookResult.ok) {
+          throw new Error(webhookResult && webhookResult.message ? webhookResult.message : "Webhook send failed.");
+        }
+        const resolved = await resolveFailedCliqLog_(Number(id), "retry_sent");
+        if (!resolved) throw new Error("Webhook sent but could not update failed log.");
+        failedCliqRows = failedCliqRows.filter((r) => Number(r.id) !== Number(id));
+        if (activeTab === "cliq_failed") renderTable();
+        setStatus(`Cliq retriggered successfully for ${row.employeeName}. Failed log removed.`, "success");
+      } catch (err) {
+        const errorMessage = String(err && err.message ? err.message : err || "Retry failed");
+        setStatus(`Cliq retry failed: ${errorMessage}`, "error");
+        await logCliqFailure_({
+          stage: row.stage || "",
+          department: row.department || "",
+          employeeName: row.employeeName || "",
+          workDate: row.workDate || "",
+          error: `Retry failed: ${errorMessage}`,
+          flowPayload: flowPayload
+        });
+      } finally {
+        if (retryBtn) {
+          retryBtn.disabled = false;
+          retryBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Retry';
+        }
+      }
+    }
+
+    async function resolveMatchingFailedCliqLogs_(stage, department, employeeName, workDate) {
+      const stageKey = String(stage || "").trim().toUpperCase();
+      const deptKey = canonicalDepartmentName(department || "");
+      const empKey = String(employeeName || "").trim().toLowerCase();
+      const dateKey = String(workDate || "").trim();
+      const matches = (Array.isArray(failedCliqRows) ? failedCliqRows : []).filter((r) => (
+        String(r.stage || "").trim().toUpperCase() === stageKey
+        && canonicalDepartmentName(r.department || "") === deptKey
+        && String(r.employeeName || "").trim().toLowerCase() === empKey
+        && String(r.workDate || "").trim() === dateKey
+      ));
+      if (!matches.length) return;
+      const settled = await Promise.all(matches.map((r) => resolveFailedCliqLog_(Number(r.id), "sent")));
+      const okIds = matches
+        .filter((_, idx) => settled[idx] === true)
+        .map((r) => Number(r.id));
+      if (!okIds.length) return;
+      failedCliqRows = failedCliqRows.filter((r) => !okIds.includes(Number(r.id)));
+      if (activeTab === "cliq_failed") renderTable();
+    }
+
+    function renderTable() {
+      copyAllLinksBtn.hidden = true;
+      if (tableNameSearchEl) tableNameSearchEl.hidden = !(activeTab === "employee" || activeTab === "live_links" || activeTab === "cliq_failed");
+      if (employeeBadgeToggleEl) employeeBadgeToggleEl.hidden = activeTab !== "employee";
+      const disableInternalScroll = activeTab === "employee" || activeTab === "department" || activeTab === "live_links" || activeTab === "cliq_failed";
+      tableWrapEl.classList.toggle("no-inner-scroll", disableInternalScroll);
+      if (!dashboardData) {
+        tableWrapEl.innerHTML = '<div class="empty">No dashboard data.</div>';
+        tableMetaEl.textContent = "Rows: 0";
+        return;
+      }
+
+      if (activeTab === "live_links") {
+        tableTitleEl.innerHTML = '<i class="fa-solid fa-link"></i>Live Links by Department';
+        const linksView = renderLiveLinksByDepartment();
+        tableMetaEl.textContent = `Rows: ${linksView.count}`;
+        copyAllLinksBtn.hidden = false;
+        tableWrapEl.innerHTML = `<div class="links-wrap">${linksView.html}</div>`;
+        tableWrapEl.querySelectorAll("button[data-copy-link]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const link = btn.getAttribute("data-copy-link") || "";
+            if (!link) return;
+            try {
+              await copyText(link);
+              setStatus("Live link copied.", "success");
+            } catch (err) {
+              setStatus("Could not copy live link.", "error");
+            }
+          });
+        });
+        return;
+      }
+
+      if (activeTab === "department") {
+        tableTitleEl.innerHTML = '<i class="fa-solid fa-building"></i>Department Summary';
+        const rows = Array.isArray(dashboardData.departmentSummary) ? dashboardData.departmentSummary : [];
+        tableMetaEl.textContent = `Rows: ${rows.length}`;
+        if (!rows.length) {
+          tableWrapEl.innerHTML = '<div class="empty">No department rows for current filters.</div>';
+          return;
+        }
+        tableWrapEl.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Employees</th>
+                <th>SOD Days</th>
+                <th>EOD Days</th>
+                <th>EOD Missing Days</th>
+                <th>Planned</th>
+                <th>Submitted</th>
+                <th>Assigned</th>
+                <th>Carryover Open</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((r) => `
+                <tr>
+                  <td>${escapeHtml(r.department)}</td>
+                  <td>${escapeHtml(r.employeeCount)}</td>
+                  <td>${escapeHtml(r.sodSubmittedDays)}</td>
+                  <td>${escapeHtml(r.eodSubmittedDays)}</td>
+                  <td>${escapeHtml(r.eodMissingDays)}</td>
+                  <td>${escapeHtml(r.plannedTasks)}</td>
+                  <td>${escapeHtml(r.tasksSubmitted)}</td>
+                  <td>${escapeHtml(r.assignedTasks)}</td>
+                  <td>${escapeHtml(r.carryoverOpenCount)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        return;
+      }
+
+      if (activeTab === "carryover") {
+        tableTitleEl.innerHTML = '<i class="fa-solid fa-hourglass-half"></i>Carryover Aging';
+        const rows = Array.isArray(dashboardData.carryoverAging) ? dashboardData.carryoverAging : [];
+        tableMetaEl.textContent = `Rows: ${rows.length}`;
+        if (!rows.length) {
+          tableWrapEl.innerHTML = '<div class="empty">No carryover tasks for current filters.</div>';
+          return;
+        }
+        tableWrapEl.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Task</th>
+                <th>Completion %</th>
+                <th>Pending Since</th>
+                <th>Pending Working Days</th>
+                <th>Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((r) => `
+                <tr>
+                  <td>${escapeHtml(r.employeeName)}</td>
+                  <td>${escapeHtml(r.department)}</td>
+                  <td>${escapeHtml(r.title)}</td>
+                  <td>${escapeHtml(r.completionPercent)}</td>
+                  <td>${escapeHtml(formatCliqDate(r.pendingSinceDate || ""))}</td>
+                  <td>${escapeHtml(r.pendingWorkingDays)}</td>
+                  <td>${escapeHtml(formatCliqDate(r.lastUpdatedDate || ""))}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        return;
+      }
+
+      if (activeTab === "completed") {
+        tableTitleEl.innerHTML = '<i class="fa-solid fa-circle-check"></i>Completed Tasks';
+        const rows = Array.isArray(dashboardData.completedTasks) ? dashboardData.completedTasks : [];
+        tableMetaEl.textContent = `Rows: ${rows.length}`;
+        if (!rows.length) {
+          tableWrapEl.innerHTML = '<div class="empty">No completed tasks for current filters.</div>';
+          return;
+        }
+        tableWrapEl.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Added Date</th>
+                <th>Completed Date</th>
+                <th>Days Taken (Working)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((r) => `
+                <tr>
+                  <td>${escapeHtml(r.title)}</td>
+                  <td>${escapeHtml(r.employeeName)}</td>
+                  <td>${escapeHtml(r.department)}</td>
+                  <td>${escapeHtml(formatCliqDate(r.addedDate || ""))}</td>
+                  <td>${escapeHtml(formatCliqDate(r.completedDate || ""))}</td>
+                  <td>${escapeHtml(r.daysTakenWorking)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        return;
+      }
+
+      if (activeTab === "cliq_failed") {
+        tableTitleEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>Failed Cliq';
+        const query = String(tableNameSearchText || "").trim().toLowerCase();
+        const rows = (Array.isArray(failedCliqRows) ? failedCliqRows : []).filter((r) => {
+          if (!query) return true;
+          const hay = [
+            String(r.employeeName || ""),
+            String(r.department || ""),
+            String(r.stage || ""),
+            String(r.error || ""),
+            String(r.workDate || "")
+          ].join(" ").toLowerCase();
+          return hay.includes(query);
+        });
+        tableMetaEl.textContent = `Rows: ${rows.length}`;
+        if (!rows.length) {
+          tableWrapEl.innerHTML = '<div class="empty">No failed Cliq logs.</div>';
+          return;
+        }
+        tableWrapEl.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Failed At</th>
+                <th>Stage</th>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Work Date</th>
+                <th>Error</th>
+                <th>Retries</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((r) => `
+                <tr>
+                  <td>${escapeHtml(formatDateTime(r.changedAt))}</td>
+                  <td>${escapeHtml(String(r.stage || "-").toUpperCase())}</td>
+                  <td>${escapeHtml(r.employeeName || "-")}</td>
+                  <td>${escapeHtml(r.department || "-")}</td>
+                  <td>${escapeHtml(formatCliqDate(r.workDate || ""))}</td>
+                  <td>${escapeHtml(r.error || "-")}</td>
+                  <td>${escapeHtml(String(r.retryCount || 0))}</td>
+                  <td>
+                    <button class="tiny-btn secondary" type="button" data-cliq-retry-id="${Number(r.id)}">
+                      <i class="fa-solid fa-rotate-right"></i> Retry
+                    </button>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        return;
+      }
+
+      tableTitleEl.innerHTML = '<i class="fa-solid fa-users-viewfinder"></i>Employee Compliance';
+      const query = String(tableNameSearchText || "").trim().toLowerCase();
+      const stageFilterKey = String(stageFilterEl.value || "All").trim().toUpperCase();
+      const allRows = Array.isArray(dashboardData.employeeCompliance) ? dashboardData.employeeCompliance : [];
+      const rows = allRows.filter((r) => {
+        if (!matchesEmployeeKpiFocus_(r)) return false;
+        if (employeeKpiFocus === "all") {
+          if (stageFilterKey === "SOD" && Number(r.sodSubmittedDays || 0) > 0) return false;
+          if (stageFilterKey === "EOD" && Number(r.eodSubmittedDays || 0) > 0) return false;
+        }
+        if (!query) return true;
+        return String(r.employeeName || "").toLowerCase().includes(query);
+      });
+      tableMetaEl.textContent = `Rows: ${rows.length}`;
+      if (!rows.length) {
+        tableWrapEl.innerHTML = '<div class="empty">No employee rows for current filters.</div>';
+        return;
+      }
+      tableWrapEl.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Department</th>
+              <th>SOD Days</th>
+              <th>EOD Days</th>
+              <th>EOD Missing Days</th>
+              <th>Planned Tasks</th>
+              <th>Tasks Submitted</th>
+              <th>Assigned Tasks</th>
+              <th>Open Carryover</th>
+              <th>Last Submission</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map((r) => `
+              <tr>
+                <td>${renderEmployeeNameWithStageStatus(r)}</td>
+                <td>${escapeHtml(r.department)}</td>
+                <td>${escapeHtml(r.sodSubmittedDays)}</td>
+                <td>${escapeHtml(r.eodSubmittedDays)}</td>
+                <td>${escapeHtml(r.eodMissingDays)}</td>
+                <td>${escapeHtml(r.plannedTasks)}</td>
+                <td>${escapeHtml(r.tasksSubmitted)}</td>
+                <td>${escapeHtml(r.assignedTasks)}</td>
+                <td>${statusPill(Number(r.openCarryover || 0) > 0 ? "open" : "none")}</td>
+                <td>${escapeHtml(formatDateTime(r.lastSubmissionAt))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function getActiveTableDataAndColumns() {
+      if (!dashboardData) return { rows: [], columns: [] };
+      if (activeTab === "department") {
+        return {
+          rows: dashboardData.departmentSummary || [],
+          columns: [
+            { key: "department", label: "Department" },
+            { key: "employeeCount", label: "Employees" },
+            { key: "sodSubmittedDays", label: "SOD Days" },
+            { key: "eodSubmittedDays", label: "EOD Days" },
+            { key: "eodMissingDays", label: "EOD Missing Days" },
+            { key: "plannedTasks", label: "Planned Tasks" },
+            { key: "tasksSubmitted", label: "Tasks Submitted" },
+            { key: "assignedTasks", label: "Assigned Tasks" },
+            { key: "carryoverOpenCount", label: "Carryover Open" },
+          ]
+        };
+      }
+      if (activeTab === "carryover") {
+        return {
+          rows: dashboardData.carryoverAging || [],
+          columns: [
+            { key: "employeeName", label: "Employee" },
+            { key: "department", label: "Department" },
+            { key: "title", label: "Task" },
+            { key: "completionPercent", label: "Completion %" },
+            { key: "pendingSinceDate", label: "Pending Since" },
+            { key: "pendingWorkingDays", label: "Pending Working Days" },
+            { key: "lastUpdatedDate", label: "Last Updated" }
+          ]
+        };
+      }
+      if (activeTab === "completed") {
+        return {
+          rows: dashboardData.completedTasks || [],
+          columns: [
+            { key: "title", label: "Task" },
+            { key: "employeeName", label: "Employee" },
+            { key: "department", label: "Department" },
+            { key: "addedDate", label: "Added Date" },
+            { key: "completedDate", label: "Completed Date" },
+            { key: "daysTakenWorking", label: "Days Taken (Working)" }
+          ]
+        };
+      }
+      if (activeTab === "cliq_failed") {
+        return {
+          rows: (Array.isArray(failedCliqRows) ? failedCliqRows : []).map((r) => ({
+            changedAt: formatDateTime(r.changedAt),
+            stage: String(r.stage || "").toUpperCase(),
+            employeeName: r.employeeName || "",
+            department: r.department || "",
+            workDate: formatCliqDate(r.workDate || ""),
+            error: r.error || "",
+            retryCount: Number(r.retryCount || 0)
+          })),
+          columns: [
+            { key: "changedAt", label: "Failed At" },
+            { key: "stage", label: "Stage" },
+            { key: "employeeName", label: "Employee" },
+            { key: "department", label: "Department" },
+            { key: "workDate", label: "Work Date" },
+            { key: "error", label: "Error" },
+            { key: "retryCount", label: "Retries" }
+          ]
+        };
+      }
+      return {
+        rows: dashboardData.employeeCompliance || [],
+        columns: [
+          { key: "employeeName", label: "Employee" },
+          { key: "department", label: "Department" },
+          { key: "sodSubmittedDays", label: "SOD Days" },
+          { key: "eodSubmittedDays", label: "EOD Days" },
+          { key: "eodMissingDays", label: "EOD Missing Days" },
+          { key: "plannedTasks", label: "Planned Tasks" },
+          { key: "tasksSubmitted", label: "Tasks Submitted" },
+          { key: "assignedTasks", label: "Assigned Tasks" },
+          { key: "openCarryover", label: "Open Carryover" },
+          { key: "_lastSubmissionDisplay", label: "Last Submission" }
+        ]
+      };
+    }
+
+    function csvEscape(value) {
+      const str = String(value == null ? "" : value);
+      if (str.includes(",") || str.includes("\"") || str.includes("\n")) {
+        return `"${str.replace(/"/g, "\"\"")}"`;
+      }
+      return str;
+    }
+
+    function exportCsv() {
+      if (!ensureUnlockedAction_()) return;
+      const { rows, columns } = getActiveTableDataAndColumns();
+      if (!columns.length) {
+        setStatus("Nothing to export.", "error");
+        return;
+      }
+
+      const filters = [
+        `range=${rangePresetEl.value || "custom_day"}`,
+        `workDate=${workDateEl.value || ""}`,
+        `department=${departmentFilterEl.value || "All"}`,
+        `employee=${employeeFilterEl.value || "All"}`,
+        `stage=${stageFilterEl.value || "All"}`
+      ];
+
+      const lines = [];
+      lines.push(`# Filters: ${filters.join(" | ")}`);
+      lines.push(columns.map((c) => csvEscape(c.label)).join(","));
+      rows.forEach((row) => {
+        const exportRow = Object.assign({}, row);
+        ["pendingSinceDate", "lastUpdatedDate", "addedDate", "completedDate", "workDate", "deadlineDate"].forEach((k) => {
+          if (Object.prototype.hasOwnProperty.call(exportRow, k)) {
+            exportRow[k] = formatCliqDate(exportRow[k]);
+          }
+        });
+        if (Object.prototype.hasOwnProperty.call(exportRow, "lastSubmissionAt")) {
+          exportRow._lastSubmissionDisplay = formatDateTime(exportRow.lastSubmissionAt);
+        }
+        if (Object.prototype.hasOwnProperty.call(exportRow, "submittedAt")) {
+          exportRow._submittedAtDisplay = formatDateTime(exportRow.submittedAt);
+        }
+        lines.push(columns.map((c) => csvEscape(exportRow[c.key])).join(","));
+      });
+
+      const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const fileDate = workDateEl.value || todayISO();
+      const fileDept = (departmentFilterEl.value || "all").replace(/\s+/g, "-").toLowerCase();
+      const fileStage = (stageFilterEl.value || "all").toLowerCase();
+      a.href = url;
+      a.download = `task-admin-${fileDate}-${fileDept}-${fileStage}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setStatus("CSV exported.", "success");
+    }
+
+    function applyTab(tab) {
+      activeTab = tab;
+      tabButtons.forEach((btn) => {
+        const isActive = btn.dataset.tab === tab;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+      renderTable();
+    }
+
+    function populateFilters(data) {
+      const meta = data && data.meta ? data.meta : {};
+      const apiDepartments = Array.isArray(meta.departmentOptions) ? meta.departmentOptions : [];
+      const directoryDepartments = getDirectoryDepartments_();
+      const departments = Array.from(new Set([].concat(apiDepartments, directoryDepartments))).sort();
+      const currentDept = departmentFilterEl.value || "All";
+      const resolvedDept = departments.includes(currentDept) ? currentDept : "All";
+      departmentFilterEl.value = resolvedDept;
+      const selectedDeptForEmployees = resolvedDept;
+      const apiEmployees = Array.isArray(meta.employeeOptions) ? meta.employeeOptions : [];
+      const directoryEmployees = getDirectoryEmployeesByDept_(selectedDeptForEmployees);
+      const employees = Array.from(new Set([].concat(apiEmployees, directoryEmployees))).sort();
+
+      const currentEmployee = employeeFilterEl.value || "All";
+      renderDepartmentPills_(departments, resolvedDept);
+
+      setSelectOptions(
+        employeeFilterEl,
+        [{ value: "All", label: "All Employees" }, ...employees.map((e) => ({ value: e, label: e }))],
+        employees.includes(currentEmployee) ? currentEmployee : "All"
+      );
+
+      setSelectOptions(
+        assignDepartmentEl,
+        [{ value: "", label: "Select Department" }].concat(departments.map((d) => ({ value: d, label: d }))),
+        departments.includes(assignDepartmentEl.value) ? assignDepartmentEl.value : ""
+      );
+      setSelectOptions(
+        newUserDepartmentEl,
+        [{ value: "", label: "Select Department" }].concat(departments.map((d) => ({ value: d, label: d }))),
+        departments.includes(newUserDepartmentEl.value) ? newUserDepartmentEl.value : ""
+      );
+      syncNewUserEmailPreview_();
+      syncAssignEmployeeOptions();
+    }
+
+    function renderDepartmentPills_(departments, selectedDept) {
+      if (!departmentPillsEl) return;
+      const options = ["All"].concat(Array.isArray(departments) ? departments : []);
+      const html = options.map((dept) => {
+        const isActive = String(dept) === String(selectedDept || "All");
+        const title = dept === "All" ? "All Departments" : dept;
+        return `<button class="department-pill-btn${isActive ? " active" : ""}" type="button" data-department="${escapeHtml(dept)}">${escapeHtml(title)}</button>`;
+      }).join("");
+      departmentPillsEl.innerHTML = html;
+    }
+
+    function getDashboardRowLimits_() {
+      const preset = String(rangePresetEl.value || "custom_day").trim().toLowerCase();
+      if (preset === "last90") return { carryoverLimit: 300, completedLimit: 300 };
+      if (preset === "last30") return { carryoverLimit: 400, completedLimit: 400 };
+      return { carryoverLimit: 600, completedLimit: 600 };
+    }
+
+    async function fetchDashboard(opts = {}) {
+      if (!ensureUnlockedAction_()) return;
+      if (!adminSession) return;
+      const skipDirectorySync = Boolean(opts.skipDirectorySync);
+      refreshBtn.disabled = true;
+      setStatus("Loading dashboard data...", "info");
+      try {
+        let dirErr = null;
+        const now = Date.now();
+        const isDirectoryFresh = lastDirectorySyncAt > 0 && (now - lastDirectorySyncAt) <= DIRECTORY_CACHE_TTL_MS;
+        const dirPromise = skipDirectorySync || isDirectoryFresh
+          ? Promise.resolve()
+          : refreshDirectory_({ preferCache: true }).catch((err) => { dirErr = err; });
+        const payload = {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          rangePreset: rangePresetEl.value || "custom_day",
+          workDate: workDateEl.value || todayISO(),
+          department: departmentFilterEl.value || "All",
+          employeeName: employeeFilterEl.value || "All",
+          stage: stageFilterEl.value || "All",
+          clientVersion: CLIENT_VERSION
+        };
+        const limits = getDashboardRowLimits_();
+        payload.carryoverLimit = limits.carryoverLimit;
+        payload.completedLimit = limits.completedLimit;
+        const leaderboardPayload = {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          department: departmentFilterEl.value || "All",
+          limit: 3,
+          clientVersion: CLIENT_VERSION
+        };
+        const dashboardPromise = jsonp("getAdminDashboard", payload, 18000);
+        const leaderboardPromise = jsonp("getStreakLeaderboard", leaderboardPayload, 12000)
+          .catch(() => ({ ok: false, leaders: [] }));
+        const failedCliqPromise = jsonp("getFailedCliqLogs", {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          limit: 400,
+          clientVersion: CLIENT_VERSION
+        }, 12000).catch(() => ({ ok: false, logs: [] }));
+        const [result, leaderboardResult, failedCliqResult] = await Promise.all([dashboardPromise, leaderboardPromise, failedCliqPromise]);
+        await dirPromise;
+        if (dirErr) console.warn("Directory sync skipped:", dirErr);
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Dashboard request rejected.");
+        }
+
+        const nextMeta = result.meta || {};
+        const nextFilters = nextMeta.filters || {};
+        const incomingEmployees = mergeDashboardRowsWithDirectory_(
+          result.employeeCompliance,
+          nextFilters.stage || stageFilterEl.value || "All",
+          nextFilters.department || departmentFilterEl.value || "All",
+          nextFilters.employeeName || employeeFilterEl.value || "All"
+        );
+        dashboardData = {
+          kpis: normalizeKpis(result.kpis || {}),
+          departmentSummary: normalizeDepartmentRows(result.departmentSummary),
+          employeeCompliance: incomingEmployees,
+          carryoverAging: Array.isArray(result.carryoverAging) ? result.carryoverAging : [],
+          completedTasks: Array.isArray(result.completedTasks) ? result.completedTasks : [],
+          meta: nextMeta
+        };
+        leaderboardRows = (leaderboardResult && leaderboardResult.ok && Array.isArray(leaderboardResult.leaders))
+          ? leaderboardResult.leaders
+          : [];
+        failedCliqRows = (failedCliqResult && failedCliqResult.ok && Array.isArray(failedCliqResult.logs))
+          ? failedCliqResult.logs
+          : [];
+
+        if (!dashboardData.departmentSummary.length) {
+          dashboardData.departmentSummary = buildDepartmentRowsFromEmployees_(dashboardData.employeeCompliance);
+        }
+
+        populateFilters(dashboardData);
+        renderKpis(dashboardData.kpis, dashboardData.employeeCompliance);
+        renderLeaderboardPanel_(leaderboardRows);
+        renderTable();
+        const rangeMeta = dashboardData.meta && dashboardData.meta.filters
+          ? `${formatCliqDate(dashboardData.meta.filters.fromDate)} to ${formatCliqDate(dashboardData.meta.filters.toDate)}`
+          : "-";
+        generatedAtLineEl.textContent = `Last sync: ${formatDateTime(dashboardData.meta.generatedAt)} | Range: ${rangeMeta}`;
+        setStatus("Dashboard updated.", "success");
+      } catch (err) {
+        setStatus(`Failed to load dashboard: ${err.message}`, "error");
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    }
+
+    async function validateAdminAccess() {
+      const params = getParams();
+      if (!params.admin || !params.code) {
+        showBlocked("Missing admin URL parameters. Use admin=<name>&code=<adminCode>.");
+        return false;
+      }
+      try {
+        const result = await jsonp("validateAdminAccess", {
+          admin: params.admin,
+          code: params.code,
+          clientVersion: CLIENT_VERSION
+        }, 12000);
+
+        if (!result || result.ok === false) {
+          showBlocked(result && result.message ? result.message : "Invalid admin access.");
+          return false;
+        }
+
+        adminSession = {
+          admin: params.admin,
+          code: params.code,
+          role: result.role || "Admin",
+          allowedDepartments: Array.isArray(result.allowedDepartments) ? result.allowedDepartments : []
+        };
+
+        adminIdentityEl.textContent = `Admin: ${adminSession.admin} | Role: ${adminSession.role}`;
+        return true;
+      } catch (err) {
+        showBlocked(`Could not validate admin access: ${err.message}`);
+        return false;
+      }
+    }
+
+    function applyRangePresetUi() {
+      const preset = rangePresetEl.value || "custom_day";
+      workDateEl.disabled = preset !== "custom_day";
+    }
+
+    function addAssignTaskDraft() {
+      const title = (assignTaskTitleEl.value || "").trim();
+      const department = String(assignDepartmentEl.value || "").trim();
+      const employeeName = String(assignEmployeeEl.value || "").trim();
+      if (!department || !employeeName) {
+        setAssignStatus("Select department and employee before adding tasks.", "error");
+        return;
+      }
+      if (!title) {
+        setAssignStatus("Task title is required.", "error");
+        return;
+      }
+      const deadlineMode = String(assignDeadlineEl.value || "1").trim().toLowerCase();
+      const isCustom = deadlineMode === "custom";
+      const customDate = toIsoDateSafe(assignDeadlineDateEl.value || "");
+      if (isCustom && !customDate) {
+        setAssignStatus("Select custom deadline date.", "error");
+        return;
+      }
+      assignDraft.push({
+        taskId: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        title,
+        department,
+        employeeName,
+        priority: assignPriorityEl.value || "Medium",
+        deadlineDays: isCustom ? null : (Number(assignDeadlineEl.value || 1) === 2 ? 2 : 1),
+        deadlineDate: isCustom ? customDate : ""
+      });
+      assignTaskTitleEl.value = "";
+      setAssignStatus("", "");
+      renderAssignDraft();
+    }
+
+    function syncDeadlineInputState_() {
+      const mode = String(assignDeadlineEl.value || "1").trim().toLowerCase();
+      const isCustom = mode === "custom";
+      assignDeadlineDateEl.disabled = !isCustom;
+      if (!isCustom) assignDeadlineDateEl.value = "";
+    }
+
+    function defaultEmailFromName_(name) {
+      const full = String(name || "").trim();
+      if (!full) return "";
+      if (full.toLowerCase() === "kainaz tata") return "kainaz.t@finnovate.in";
+      if (full.toLowerCase() === "aastha tiwari") return "aasthatiwari@finnovate.in";
+      if (full.toLowerCase() === "priyanka kelkar") return "accounts@finnovate.in";
+      return `${full.toLowerCase().replace(/\s+/g, ".")}@finnovate.in`;
+    }
+
+    function getCliqEmailFromName(name, department) {
+      const full = String(name || "").trim();
+      const dept = String(department || "").trim();
+      if (!full) return "";
+      if (dept && liveEmailDirectory[dept] && liveEmailDirectory[dept][full]) {
+        return String(liveEmailDirectory[dept][full] || "").trim() || defaultEmailFromName_(full);
+      }
+      const matches = [];
+      Object.keys(liveEmailDirectory || {}).forEach((dep) => {
+        const users = liveEmailDirectory[dep] || {};
+        Object.keys(users).forEach((userName) => {
+          if (String(userName || "").trim().toLowerCase() !== full.toLowerCase()) return;
+          const email = String(users[userName] || "").trim();
+          if (email) matches.push(email);
+        });
+      });
+      if (matches.length === 1) return matches[0];
+      return defaultEmailFromName_(full);
+    }
+
+    function toFormEncoded(obj) {
+      return new URLSearchParams(
+        Object.entries(obj || {}).map(([k, v]) => [k, v == null ? "" : String(v)])
+      ).toString();
+    }
+
+    function toIsoDateSafe(value) {
+      const s = String(value || "").trim();
+      return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : "";
+    }
+
+    function formatCliqDate(isoDate) {
+      const m = String(isoDate || "").trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!m) return String(isoDate || "").trim() || "-";
+      return `${m[3]}-${m[2]}-${m[1]}`;
+    }
+
+    function addDaysIso(isoDate, days) {
+      const safeIso = toIsoDateSafe(isoDate);
+      if (!safeIso) return "";
+      const [y, m, d] = safeIso.split("-").map((v) => Number(v));
+      const dt = new Date(y, m - 1, d);
+      dt.setDate(dt.getDate() + Number(days || 0));
+      const yy = dt.getFullYear();
+      const mm = String(dt.getMonth() + 1).padStart(2, "0");
+      const dd = String(dt.getDate()).padStart(2, "0");
+      return `${yy}-${mm}-${dd}`;
+    }
+
+    function diffDaysIso(fromIso, toIso) {
+      const from = toIsoDateSafe(fromIso);
+      const to = toIsoDateSafe(toIso);
+      if (!from || !to) return 0;
+      const [fy, fm, fd] = from.split("-").map((v) => Number(v));
+      const [ty, tm, td] = to.split("-").map((v) => Number(v));
+      const fromDt = new Date(fy, fm - 1, fd);
+      const toDt = new Date(ty, tm - 1, td);
+      return Math.floor((toDt.getTime() - fromDt.getTime()) / 86400000);
+    }
+
+    function buildAssignCliqMessage(payload) {
+      const employeeName = String(payload.employeeName || "").trim() || "-";
+      const assignedBy = String(payload.admin || "").trim() || "-";
+      const department = String(payload.department || "").trim() || "-";
+      const workDate = formatCliqDate(payload.workDate);
+      const tasks = Array.isArray(payload.tasks) ? payload.tasks : [];
+      const lines = tasks.map((t, idx) => {
+        const title = String(t.title || "").trim() || "-";
+        const priority = String(t.priority || "Medium").trim();
+        const deadlineDays = Number(t.deadlineDays || 1) === 2 ? 2 : 1;
+        const deadlineDate = formatCliqDate(t.deadlineDate || "");
+        return `${idx + 1}. ${title} [${priority}] | Deadline: ${deadlineDate} (${deadlineDays} day${deadlineDays === 2 ? "s" : ""})`;
+      });
+      return [
+        `Task assignment for ${employeeName}`,
+        `From: ${assignedBy}`,
+        `Department: ${department}`,
+        `Assign Date: ${workDate}`,
+        "",
+        "*Tasks:*",
+        lines.length ? lines.join("\n") : "-"
+      ].join("\n");
+    }
+
+    function ensureArray_(value) {
+      return Array.isArray(value) ? value : [];
+    }
+
+    function firstNameOnly_(raw) {
+      const tokens = String(raw || "").trim().split(/\s+/).filter(Boolean);
+      return tokens.length ? tokens[0] : "";
+    }
+
+    function formatCliqMinutes_(totalMinutes) {
+      const mins = Math.max(0, Number(totalMinutes || 0));
+      const hh = Math.floor(mins / 60);
+      const mm = mins % 60;
+      return `${hh}h ${mm}m`;
+    }
+
+    function normalizeCliqFrequency_(value) {
+      const raw = String(value || "").trim().toLowerCase();
+      if (raw === "daily") return "Daily";
+      if (raw === "weekly") return "Weekly";
+      if (raw === "monthly") return "Monthly";
+      return "";
+    }
+
+    function getRecurringRuleLabel_(task) {
+      const t = task || {};
+      const freq = normalizeCliqFrequency_(t.frequency);
+      if (!freq) return "";
+      if (freq === "Weekly") {
+        const weekdayMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const weekday = Number(t.recurrenceWeekday);
+        return Number.isFinite(weekday) && weekday >= 0 && weekday <= 6 ? `Weekly (${weekdayMap[weekday]})` : "Weekly";
+      }
+      if (freq === "Monthly") {
+        const day = Number(t.recurrenceDayOfMonth);
+        return Number.isFinite(day) && day >= 1 && day <= 31 ? `Monthly (${day})` : "Monthly";
+      }
+      return "Daily";
+    }
+
+    function buildCliqMessageForRetrigger_(stage, payload) {
+      const normalizedStage = String(stage || "").trim().toUpperCase();
+      const p = payload || {};
+      const bullet = "•";
+      const employeeName = String(p.employeeName || "").trim() || "-";
+      const employeeShort = firstNameOnly_(employeeName) || employeeName;
+      const dateLabel = formatCliqDate(p.workDate);
+      const meta = `Date: ${dateLabel}`;
+
+      if (normalizedStage === "SOD") {
+        const plannedTasks = ensureArray_(p.tasks);
+        const plannedCount = plannedTasks.length;
+        const headline = `*${plannedCount} Planned ${plannedCount === 1 ? "Task" : "Tasks"} by ${employeeShort}*`;
+        const formatSodLine = (t) => {
+          const title = String(t && t.title || "").trim() || "-";
+          const plannedH = Number(t && t.plannedHours || 0);
+          const plannedM = Number(t && t.plannedMinutes || 0);
+          const plannedPart = (plannedH > 0 || plannedM > 0) ? ` - ${plannedH}h ${plannedM}m` : "";
+          return `${bullet} ${title}${plannedPart}`;
+        };
+        const recurringTasks = plannedTasks.filter((t) => normalizeCliqFrequency_(t && t.frequency));
+        const assignedTasks = plannedTasks.filter((t) => String(t && t.source || "").toLowerCase() === "assigned");
+        const carryoverTasks = plannedTasks.filter((t) => String(t && t.source || "").toLowerCase() === "carryover");
+        const newTasks = plannedTasks.filter((t) => {
+          const source = String(t && t.source || "").toLowerCase();
+          return source !== "carryover" && source !== "assigned" && !normalizeCliqFrequency_(t && t.frequency);
+        });
+        const newList = newTasks.map((t) => formatSodLine(t));
+        const assignedList = assignedTasks.map((t) => formatSodLine(t));
+        const carryoverList = carryoverTasks.map((t) => formatSodLine(t));
+        const recurringList = recurringTasks.map((t) => {
+          const freq = getRecurringRuleLabel_(t);
+          return `${formatSodLine(t)}${freq ? ` - ${freq}` : ""}`;
+        });
+        const lines = [
+          headline,
+          meta,
+          "",
+          "*New*",
+          (newList.length ? newList.join("\n") : `${bullet} None`),
+          "",
+          "*Admin Assigned*",
+          (assignedList.length ? assignedList.join("\n") : `${bullet} None`),
+          "",
+          "*Carryover Tasks*",
+          (carryoverList.length ? carryoverList.join("\n") : `${bullet} None`)
+        ];
+        if (recurringList.length) {
+          lines.push("", "*Recurring*", recurringList.join("\n"));
+        }
+        return lines.join("\n");
+      }
+
+      const updates = ensureArray_(p.updates);
+      const completed = updates.filter((u) => Number(u && u.completionPercent || 0) === 100);
+      const completedPlanned = completed.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() !== "assigned");
+      const completedAssigned = completed.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() === "assigned");
+      const assignedTasks = updates.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() === "assigned");
+      const extraTasks = updates.filter((u) => Boolean(u && u.isExtra));
+      const completedExtra = extraTasks.filter((u) => Number(u && u.completionPercent || 0) === 100);
+
+      const summary = p && p.dailySummary ? p.dailySummary : {};
+      const plannedDenRaw = Number(summary && summary.plannedBaseCount);
+      const assignedDenRaw = Number(summary && summary.plannedAssignedCount);
+      const plannedDen = Number.isFinite(plannedDenRaw)
+        ? plannedDenRaw
+        : updates.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() !== "assigned").length;
+      const assignedDen = Number.isFinite(assignedDenRaw)
+        ? assignedDenRaw
+        : updates.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() === "assigned").length;
+
+      const headline = `*${completed.length} Completed ${completed.length === 1 ? "Task" : "Tasks"} by ${employeeShort}*`;
+      const totalSpentFromPayload = Number(p.totalSpentMinutes);
+      const computedSpentMinutes = updates.reduce((sum, u) => sum + ((Number(u && u.spentHours || 0) * 60) + Number(u && u.spentMinutes || 0)), 0);
+      const totalSpentMinutes = Number.isFinite(totalSpentFromPayload) ? Math.max(0, totalSpentFromPayload) : computedSpentMinutes;
+      const totalSpentLabel = `Total spent: ${formatCliqMinutes_(totalSpentMinutes)}`;
+      const formatEodTaskLine = (u, includePercent) => {
+        const title = String(u && u.title || "").trim() || "-";
+        const completion = Number(u && u.completionPercent || 0);
+        const spentH = Number(u && u.spentHours || 0);
+        const spentM = Number(u && u.spentMinutes || 0);
+        const note = String(u && u.note || "").trim();
+        const percentPart = includePercent ? ` - ${completion}%` : "";
+        const notePart = note ? ` | Progress note: ${note}` : "";
+        return `${bullet} ${title}${percentPart} - ${spentH}h ${spentM}m${notePart}`;
+      };
+      const plannedList = completedPlanned.map((u) => formatEodTaskLine(u, false));
+      const areAllAssignedTasksCompleted = assignedTasks.length > 0 && completedAssigned.length === assignedTasks.length;
+      const assignedList = assignedTasks.map((u) => formatEodTaskLine(u, !areAllAssignedTasksCompleted));
+
+      const pendingCarryforward = updates.filter((u) => !Boolean(u && u.isExtra) && Number(u && u.completionPercent || 0) < 100);
+      const plannedCountRaw = Number(summary && summary.plannedCount);
+      const plannedCountDen = Number.isFinite(plannedCountRaw) ? plannedCountRaw : updates.filter((u) => !Boolean(u && u.isExtra)).length;
+      const extraDenRaw = Number(summary && summary.extraCount);
+      const extraDen = Number.isFinite(extraDenRaw) ? extraDenRaw : extraTasks.length;
+      const pendingHeader = `*Pending (${pendingCarryforward.length} out of ${Math.max(0, plannedCountDen)} planned)*`;
+      const pendingList = pendingCarryforward.map((u) => formatEodTaskLine(u, true));
+      const areAllExtraTasksCompleted = extraDen > 0 && completedExtra.length === extraDen;
+      const extraList = extraTasks.map((u) => formatEodTaskLine(u, !areAllExtraTasksCompleted));
+
+      const sections = [
+        headline,
+        meta,
+        totalSpentLabel,
+        "",
+        `*${completedPlanned.length}/${Math.max(0, plannedDen)} Planned Tasks Completed*`,
+        (plannedList.length ? plannedList.join("\n") : `${bullet} None`)
+      ];
+
+      if (extraList.length) {
+        const extraHeader = areAllExtraTasksCompleted
+          ? `*Extra Tasks (${completedExtra.length}/${Math.max(0, extraDen)}) - 100% completed*`
+          : `*Extra Tasks (${completedExtra.length}/${Math.max(0, extraDen)})*`;
+        sections.push("", extraHeader, extraList.join("\n"));
+      }
+
+      if (assignedList.length) {
+        sections.push("", `*Assigned: (${completedAssigned.length}/${Math.max(0, assignedDen)})*`, assignedList.join("\n"));
+      }
+
+      if (pendingList.length) {
+        sections.push("", pendingHeader, pendingList.join("\n"));
+      }
+
+      return sections.join("\n");
+    }
+
+    function buildSodCliqMessage_(payload) {
+      return buildCliqMessageForRetrigger_("SOD", payload);
+    }
+
+    function buildEodCliqMessage_(payload) {
+      return buildCliqMessageForRetrigger_("EOD", payload);
+    }
+
+    function buildComplianceNames_(rows, key) {
+      return (Array.isArray(rows) ? rows : [])
+        .filter((r) => Number(r && r[key] || 0) > 0)
+        .map((r) => String(r && r.employeeName || "").trim())
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
+    }
+
+    function buildDepartmentComplianceCliqMessage_(department, rows, workDate) {
+      const safeRows = (Array.isArray(rows) ? rows : [])
+        .map((r) => ({
+          name: String(r && r.employeeName || "").trim(),
+          sod: Number(r && r.sodSubmittedDays || 0) > 0,
+          eod: Number(r && r.eodSubmittedDays || 0) > 0
+        }))
+        .filter((r) => r.name)
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const total = safeRows.length;
+      const sodSubmitted = safeRows.filter((r) => r.sod).length;
+      const eodSubmitted = safeRows.filter((r) => r.eod).length;
+      const statusLines = safeRows.length
+        ? safeRows.map((r) => `${r.sod ? "✅" : "❌"}${r.eod ? "✅" : "❌"} ${r.name}`)
+        : ["-"];
+      return [
+        `*Daily Compliance - ${department}*`,
+        `Date: ${formatCliqDate(workDate)}`,
+        `Total Members: ${total}`,
+        "",
+        "*Legend:* SOD | EOD",
+        statusLines.join("\n"),
+        "",
+        "*Summary*",
+        `SOD Submitted: ${sodSubmitted} | Missing: ${Math.max(0, total - sodSubmitted)}`,
+        `EOD Submitted: ${eodSubmitted} | Missing: ${Math.max(0, total - eodSubmitted)}`
+      ].join("\n");
+    }
+
+    async function triggerDepartmentComplianceCliq_() {
+      if (isDeptCliqSending) return;
+      const rows = Array.isArray(dashboardData && dashboardData.employeeCompliance)
+        ? dashboardData.employeeCompliance
+        : [];
+      if (!rows.length) {
+        setStatus("No employee compliance data available for Cliq broadcast.", "error");
+        return;
+      }
+      const selectedDept = String(departmentFilterEl && departmentFilterEl.value || "All").trim();
+      const depts = selectedDept && selectedDept !== "All"
+        ? [selectedDept]
+        : Array.from(new Set(rows.map((r) => String(r && r.department || "").trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+      if (!depts.length) {
+        setStatus("No departments available for Cliq broadcast.", "error");
+        return;
+      }
+      isDeptCliqSending = true;
+      if (sendDeptCliqBtn) {
+        sendDeptCliqBtn.disabled = true;
+        sendDeptCliqBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>Sending...';
+      }
+      try {
+        const dateToSend = String(workDateEl && workDateEl.value || todayISO()).trim() || todayISO();
+        const adminEmail = getCliqEmailFromName(adminSession && adminSession.admin, "Direct Reportees");
+        for (const dept of depts) {
+          const deptRows = rows.filter((r) => String(r && r.department || "").trim() === dept);
+          if (!deptRows.length) continue;
+          const flowPayload = {
+            stage: "DAILY_COMPLIANCE",
+            employeeName: String(adminSession && adminSession.admin || "Admin").trim(),
+            submitterEmail: adminEmail,
+            department: dept,
+            workDate: dateToSend,
+            taskCount: deptRows.length,
+            totalSpentMinutes: 0,
+            cliq_message: buildDepartmentComplianceCliqMessage_(dept, deptRows, dateToSend),
+            payload_json: JSON.stringify({
+              kind: "department_compliance",
+              department: dept,
+              workDate: dateToSend,
+              rows: deptRows
+            })
+          };
+          const webhookResult = await sendStageCliqWebhook(flowPayload);
+          if (!webhookResult || !webhookResult.ok) {
+            throw new Error(`${dept}: ${String(webhookResult && webhookResult.message || "Webhook delivery failed.")}`);
+          }
+        }
+        setStatus(`Department compliance Cliq sent for ${depts.length} department(s).`, "success");
+      } catch (err) {
+        setStatus(`Department Cliq failed: ${String(err && err.message ? err.message : err)}`, "error");
+      } finally {
+        isDeptCliqSending = false;
+        if (sendDeptCliqBtn) {
+          sendDeptCliqBtn.disabled = false;
+          sendDeptCliqBtn.innerHTML = '<i class="fa-solid fa-bullhorn"></i>Dept Cliq';
+        }
+      }
+    }
+
+    function isCorsLikeNetworkError(err) {
+      const msg = String(err && err.message ? err.message : err || "").toLowerCase();
+      return msg.includes("failed to fetch") || msg.includes("networkerror") || msg.includes("load failed");
+    }
+
+    async function sendAssignCliqWebhook(payload) {
+      if (!ASSIGN_CLIQ_WEBHOOK_URL) return { ok: false, message: "Webhook URL not configured." };
+      const skipDedup = Boolean(payload && payload._skipDedup);
+      const dedupKey = buildAssignWebhookDedupKey_(payload);
+      const nowMs = Date.now();
+      const dedupWindowMs = 3 * 60 * 1000;
+      if (!skipDedup && dedupKey && assignWebhookSentAt[dedupKey] && (nowMs - assignWebhookSentAt[dedupKey]) <= dedupWindowMs) {
+        return { ok: true, skippedDuplicate: true };
+      }
+      try {
+        await fetch(ASSIGN_CLIQ_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: toFormEncoded(payload)
+        });
+        if (dedupKey) assignWebhookSentAt[dedupKey] = nowMs;
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, message: String(err && err.message ? err.message : err) };
+      }
+    }
+
+    async function sendStageCliqWebhook(payload) {
+      if (!SUBMISSION_STAGE_CLIQ_WEBHOOK_URL) return { ok: false, message: "Submission stage webhook URL not configured." };
+      try {
+        await fetch(SUBMISSION_STAGE_CLIQ_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: toFormEncoded(payload),
+          keepalive: true
+        });
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, message: String(err && err.message ? err.message : err) };
+      }
+    }
+
+    async function retriggerSodCliqFromDetails_() {
+      if (!employeeDetailsSodPayload) {
+        setStatus("No SOD submission found for this employee/date.", "error");
+        return;
+      }
+      if (employeeDetailsSodSending) return;
+      employeeDetailsSodSending = true;
+      updateEmployeeDetailsRetriggerButtons_();
+      const p = employeeDetailsSodPayload;
+      try {
+        const flowPayload = {
+          stage: "SOD",
+          employeeName: String(p.employeeName || "").trim(),
+          submitterEmail: getCliqEmailFromName(p.employeeName, p.department),
+          department: String(p.department || "").trim(),
+          workDate: String(p.workDate || "").trim(),
+          taskCount: Array.isArray(p.tasks) ? p.tasks.length : 0,
+          totalSpentMinutes: 0,
+          cliq_message: buildSodCliqMessage_(p),
+          payload_json: JSON.stringify(p || {})
+        };
+        const webhookResult = await sendStageCliqWebhook(flowPayload);
+        if (!webhookResult || !webhookResult.ok) {
+          throw new Error(webhookResult && webhookResult.message ? webhookResult.message : "Webhook delivery failed.");
+        }
+        if (employeeDetailsRetriggerSodEl) {
+          if (employeeDetailsSodSentTimer) clearTimeout(employeeDetailsSodSentTimer);
+          setRetriggerBtnState_(employeeDetailsRetriggerSodEl, "sent");
+          setRetriggerBtnLabel_(employeeDetailsRetriggerSodEl, "fa-solid fa-check", "SOD Sent");
+          employeeDetailsSodSentTimer = setTimeout(() => {
+            setRetriggerBtnState_(employeeDetailsRetriggerSodEl, "");
+            employeeDetailsSodSentTimer = null;
+            updateEmployeeDetailsRetriggerButtons_();
+          }, 1800);
+        }
+        await resolveMatchingFailedCliqLogs_("SOD", p.department, p.employeeName, p.workDate);
+        setStatus(`SOD Cliq retriggered for ${p.employeeName} (${formatCliqDate(p.workDate)}).`, "success");
+      } catch (err) {
+        const errorMessage = String(err && err.message ? err.message : "Unknown error");
+        setStatus(`SOD Cliq retrigger failed: ${errorMessage}`, "error");
+        await logCliqFailure_({
+          stage: "SOD",
+          department: p.department || "",
+          employeeName: p.employeeName || "",
+          workDate: p.workDate || "",
+          error: errorMessage,
+          flowPayload: {
+            stage: "SOD",
+            employeeName: String(p.employeeName || "").trim(),
+            submitterEmail: getCliqEmailFromName(p.employeeName, p.department),
+            department: String(p.department || "").trim(),
+            workDate: String(p.workDate || "").trim(),
+            taskCount: Array.isArray(p.tasks) ? p.tasks.length : 0,
+            totalSpentMinutes: 0,
+            cliq_message: buildSodCliqMessage_(p),
+            payload_json: JSON.stringify(p || {})
+          }
+        });
+      } finally {
+        employeeDetailsSodSending = false;
+        updateEmployeeDetailsRetriggerButtons_();
+      }
+    }
+
+    async function retriggerEodCliqFromDetails_() {
+      if (!employeeDetailsEodPayload) {
+        setStatus("No EOD submission found for this employee/date.", "error");
+        return;
+      }
+      if (employeeDetailsEodSending) return;
+      employeeDetailsEodSending = true;
+      updateEmployeeDetailsRetriggerButtons_();
+      const p = employeeDetailsEodPayload;
+      const totalSpentMinutes = Array.isArray(p.updates)
+        ? p.updates.reduce((sum, u) => sum + ((Number(u && u.spentHours || 0) * 60) + Number(u && u.spentMinutes || 0)), 0)
+        : 0;
+      try {
+        const flowPayload = {
+          stage: "EOD",
+          employeeName: String(p.employeeName || "").trim(),
+          submitterEmail: getCliqEmailFromName(p.employeeName, p.department),
+          department: String(p.department || "").trim(),
+          workDate: String(p.workDate || "").trim(),
+          taskCount: Array.isArray(p.updates) ? p.updates.length : 0,
+          totalSpentMinutes: Math.max(0, totalSpentMinutes),
+          cliq_message: buildEodCliqMessage_(p),
+          payload_json: JSON.stringify(p || {})
+        };
+        const webhookResult = await sendStageCliqWebhook(flowPayload);
+        if (!webhookResult || !webhookResult.ok) {
+          throw new Error(webhookResult && webhookResult.message ? webhookResult.message : "Webhook delivery failed.");
+        }
+        if (employeeDetailsRetriggerEodEl) {
+          if (employeeDetailsEodSentTimer) clearTimeout(employeeDetailsEodSentTimer);
+          setRetriggerBtnState_(employeeDetailsRetriggerEodEl, "sent");
+          setRetriggerBtnLabel_(employeeDetailsRetriggerEodEl, "fa-solid fa-check", "EOD Sent");
+          employeeDetailsEodSentTimer = setTimeout(() => {
+            setRetriggerBtnState_(employeeDetailsRetriggerEodEl, "");
+            employeeDetailsEodSentTimer = null;
+            updateEmployeeDetailsRetriggerButtons_();
+          }, 1800);
+        }
+        await resolveMatchingFailedCliqLogs_("EOD", p.department, p.employeeName, p.workDate);
+        setStatus(`EOD Cliq retriggered for ${p.employeeName} (${formatCliqDate(p.workDate)}).`, "success");
+      } catch (err) {
+        const errorMessage = String(err && err.message ? err.message : "Unknown error");
+        setStatus(`EOD Cliq retrigger failed: ${errorMessage}`, "error");
+        await logCliqFailure_({
+          stage: "EOD",
+          department: p.department || "",
+          employeeName: p.employeeName || "",
+          workDate: p.workDate || "",
+          error: errorMessage,
+          flowPayload: {
+            stage: "EOD",
+            employeeName: String(p.employeeName || "").trim(),
+            submitterEmail: getCliqEmailFromName(p.employeeName, p.department),
+            department: String(p.department || "").trim(),
+            workDate: String(p.workDate || "").trim(),
+            taskCount: Array.isArray(p.updates) ? p.updates.length : 0,
+            totalSpentMinutes: Math.max(0, totalSpentMinutes),
+            cliq_message: buildEodCliqMessage_(p),
+            payload_json: JSON.stringify(p || {})
+          }
+        });
+      } finally {
+        employeeDetailsEodSending = false;
+        updateEmployeeDetailsRetriggerButtons_();
+      }
+    }
+
+    function buildAssignWebhookDedupKey_(payload) {
+      const p = payload && typeof payload === "object" ? payload : {};
+      const raw = [
+        String(p.assignedtoemail || "").trim().toLowerCase(),
+        String(p.from || "").trim().toLowerCase(),
+        String(p.department || "").trim().toLowerCase(),
+        String(p.employeeName || "").trim().toLowerCase(),
+        String(p.workDate || "").trim(),
+        String(p.taskCount || 0),
+        String(p.payload_json || "")
+      ].join("|");
+      if (!raw.trim()) return "";
+      let h = 5381;
+      for (let i = 0; i < raw.length; i++) {
+        h = ((h << 5) + h) + raw.charCodeAt(i);
+        h = h & 0xffffffff;
+      }
+      return `assign:${h >>> 0}`;
+    }
+
+    async function submitAssignments() {
+      if (!ensureUnlockedAction_()) return;
+      if (isAssignSubmitting) return;
+      const department = assignDepartmentEl.value || "";
+      const employeeName = assignEmployeeEl.value || "";
+      const workDate = assignDateEl.value || todayISO();
+      if (!department || !employeeName) {
+        setAssignStatus("Select department and employee.", "error");
+        return;
+      }
+      if (!assignDraft.length) {
+        setAssignStatus("Add at least one task to assign.", "error");
+        return;
+      }
+      const hasAssigneeMismatch = assignDraft.some((t) => (
+        canonicalDepartmentName(t.department) !== canonicalDepartmentName(department) ||
+        String(t.employeeName || "").trim() !== employeeName
+      ));
+      if (hasAssigneeMismatch) {
+        setAssignStatus("Draft tasks include a different assignee. Remove and re-add tasks for the selected employee.", "error");
+        return;
+      }
+
+      isAssignSubmitting = true;
+      assignSubmitBtn.disabled = true;
+      setAssignStatus("Assigning tasks...", "info");
+      try {
+        const submittedTasks = assignDraft.map((t) => {
+          const explicitDate = toIsoDateSafe(t.deadlineDate || "");
+          const deadlineDays = Number(t.deadlineDays || 1) === 2 ? 2 : 1;
+          const resolvedDeadlineDate = explicitDate || addDaysIso(workDate, deadlineDays);
+          const resolvedDays = explicitDate ? Math.max(0, diffDaysIso(workDate, resolvedDeadlineDate)) : deadlineDays;
+          return {
+            taskId: t.taskId,
+            title: t.title,
+            priority: t.priority || "Medium",
+            deadlineDays: resolvedDays,
+            deadlineDate: resolvedDeadlineDate
+          };
+        });
+        const result = await jsonp("assignTasks", {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          workDate,
+          department,
+          employeeName,
+          tasks: JSON.stringify(submittedTasks),
+          clientVersion: CLIENT_VERSION
+        }, 15000);
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Assign request rejected.");
+        }
+        if (result && result.duplicateIgnored) {
+          setAssignStatus("Duplicate assign request ignored. Notification not sent again.", "info");
+          return;
+        }
+
+        const flowPayload = {
+          assignedtoemail: getCliqEmailFromName(employeeName, department),
+          from: getCliqEmailFromName(adminSession.admin),
+          employeeName,
+          department,
+          workDate,
+          taskCount: submittedTasks.length,
+          cliq_message: buildAssignCliqMessage({
+            admin: adminSession.admin,
+            employeeName,
+            department,
+            workDate,
+            tasks: submittedTasks
+          }),
+          payload_json: JSON.stringify({
+            admin: adminSession.admin,
+            employeeName,
+            department,
+            workDate,
+            tasks: submittedTasks
+          })
+        };
+        const webhookResult = await sendAssignCliqWebhook(flowPayload);
+
+        assignDraft = [];
+        renderAssignDraft();
+        const webhookMsg = webhookResult.ok
+          ? " Notification sent."
+          : ` Task assigned, but notification failed: ${webhookResult.message || "Unknown error"}`;
+        setAssignStatus(`Assigned ${result.assignedCount || 0} task(s) to ${employeeName}.${webhookMsg}`, "success");
+        await fetchDashboard();
+      } catch (err) {
+        setAssignStatus(`Assign failed: ${err.message}`, "error");
+      } finally {
+        isAssignSubmitting = false;
+        assignSubmitBtn.disabled = false;
+      }
+    }
+
+    async function createUserLink_() {
+      if (!ensureUnlockedAction_()) return;
+      if (!adminSession) return;
+      const department = String(newUserDepartmentEl.value || "").trim();
+      const role = String(newUserRoleEl.value || "User").trim();
+      const employeeName = String(newUserNameEl.value || "").trim();
+      const accessCode = String(newUserCodeEl.value || "").trim();
+      const email = String(newUserEmailEl.value || "").trim();
+      if ((!department && role !== "Super Admin") || !employeeName) {
+        setCreateUserStatus_("Select department and enter employee name.", "error");
+        return;
+      }
+      createUserBtnEl.disabled = true;
+      setCreateUserStatus_("Creating user link...", "info");
+      try {
+        const result = await jsonp("createUser", {
+          admin: adminSession.admin,
+          code: adminSession.code,
+          department,
+          employeeName,
+          role,
+          accessCode,
+          email,
+          taskPageUrl: getTaskPageUrl(),
+          adminPageUrl: window.location.origin + window.location.pathname,
+          clientVersion: CLIENT_VERSION
+        }, 15000);
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "User creation failed.");
+        }
+        const finalDepartment = String(result.department || department).trim();
+        const finalName = String(result.employeeName || employeeName).trim();
+        const finalCode = String(result.accessCode || accessCode).trim();
+        const finalEmail = String(result.email || email || defaultEmailFromName_(finalName)).trim();
+        const finalRole = String(result.role || role || "User").trim();
+        const finalLink = String(result.link || "").trim() || buildLiveLink(finalDepartment, finalName, finalCode);
+
+        if (finalRole === "User") {
+          if (!liveLinkDirectory[finalDepartment]) liveLinkDirectory[finalDepartment] = {};
+          liveLinkDirectory[finalDepartment][finalName] = finalCode;
+          if (!liveEmailDirectory[finalDepartment]) liveEmailDirectory[finalDepartment] = {};
+          liveEmailDirectory[finalDepartment][finalName] = finalEmail;
+          newUserEmailEl.value = finalEmail;
+        }
+        latestCreatedUserLink = finalLink;
+        copyUserLinkBtnEl.hidden = false;
+
+        await fetchDashboard();
+        const deptLabel = finalDepartment || "All Departments";
+        const emailPart = finalRole === "User" ? ` | ${finalEmail}` : "";
+        setCreateUserStatus_(`${finalRole} ready: ${finalName} (${deptLabel})${emailPart} | Code: ${finalCode}`, "success");
+      } catch (err) {
+        setCreateUserStatus_(err.message || "Could not create user link.", "error");
+      } finally {
+        createUserBtnEl.disabled = false;
+      }
+    }
+
+    function wireEvents() {
+      refreshBtn.addEventListener("click", fetchDashboard);
+      exportBtn.addEventListener("click", exportCsv);
+      if (leaderboardToggleBtn) {
+        leaderboardToggleBtn.addEventListener("click", () => {
+          leaderboardVisible = !leaderboardVisible;
+          renderLeaderboardPanel_(leaderboardRows);
+        });
+      }
+      if (sendDeptCliqBtn) {
+        sendDeptCliqBtn.addEventListener("click", triggerDepartmentComplianceCliq_);
+      }
+
+      rangePresetEl.addEventListener("change", () => {
+        applyRangePresetUi();
+        fetchDashboard();
+      });
+      workDateEl.addEventListener("change", fetchDashboard);
+      stageFilterEl.addEventListener("change", fetchDashboard);
+      departmentFilterEl.addEventListener("change", () => {
+        employeeFilterEl.value = "All";
+        fetchDashboard();
+      });
+      employeeFilterEl.addEventListener("change", fetchDashboard);
+      if (departmentPillsEl) {
+        departmentPillsEl.addEventListener("click", async (event) => {
+          const btn = event.target.closest("button[data-department]");
+          if (!btn) return;
+          const nextDept = String(btn.getAttribute("data-department") || "All").trim() || "All";
+          if (departmentFilterEl.value === nextDept) return;
+          departmentFilterEl.value = nextDept;
+          employeeFilterEl.value = "All";
+          await fetchDashboard();
+        });
+      }
+      assignDepartmentEl.addEventListener("change", syncAssignEmployeeOptions);
+      assignDeadlineEl.addEventListener("change", syncDeadlineInputState_);
+      addAssignTaskBtn.addEventListener("click", addAssignTaskDraft);
+      if (assignCardHeadEl) {
+        assignCardHeadEl.addEventListener("click", () => {
+          setAssignCollapsed_(!assignCollapsed);
+        });
+        assignCardHeadEl.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setAssignCollapsed_(!assignCollapsed);
+          }
+        });
+      }
+      if (assignCollapseBtnEl) {
+        assignCollapseBtnEl.addEventListener("click", (event) => {
+          event.stopPropagation();
+          setAssignCollapsed_(!assignCollapsed);
+        });
+      }
+      if (userAccessCardHeadEl) {
+        userAccessCardHeadEl.addEventListener("click", () => {
+          setUserAccessCollapsed_(!userAccessCollapsed);
+        });
+        userAccessCardHeadEl.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setUserAccessCollapsed_(!userAccessCollapsed);
+          }
+        });
+      }
+      if (userAccessCollapseBtnEl) {
+        userAccessCollapseBtnEl.addEventListener("click", (event) => {
+          event.stopPropagation();
+          setUserAccessCollapsed_(!userAccessCollapsed);
+        });
+      }
+      newUserDepartmentEl.addEventListener("change", syncNewUserEmailPreview_);
+      newUserRoleEl.addEventListener("change", syncNewUserEmailPreview_);
+      newUserNameEl.addEventListener("input", syncNewUserEmailPreview_);
+      createUserBtnEl.addEventListener("click", createUserLink_);
+      copyUserLinkBtnEl.addEventListener("click", async () => {
+        if (!latestCreatedUserLink) return;
+        try {
+          await copyText(latestCreatedUserLink);
+          setCreateUserStatus_("User link copied.", "success");
+        } catch (err) {
+          setCreateUserStatus_("Could not copy user link.", "error");
+        }
+      });
+      newUserNameEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          createUserLink_();
+        }
+      });
+      copyAllLinksBtn.addEventListener("click", copyAllVisibleLiveLinks);
+      unlockBtnEl.addEventListener("click", () => {
+        unlockDashboard_(lockPasscodeInputEl.value);
+      });
+      lockPasscodeInputEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          unlockDashboard_(lockPasscodeInputEl.value);
+        }
+      });
+      assignTaskTitleEl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addAssignTaskDraft();
+        }
+      });
+      assignSubmitBtn.addEventListener("click", submitAssignments);
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => applyTab(btn.dataset.tab));
+      });
+      if (employeeBadgeToggleEl) {
+        employeeBadgeToggleEl.addEventListener("change", () => {
+          employeeBadgeView = String(employeeBadgeToggleEl.value || "both").toLowerCase();
+          if (activeTab === "employee") renderTable();
+        });
+      }
+      if (tableNameSearchEl) {
+        tableNameSearchEl.addEventListener("input", () => {
+          tableNameSearchText = String(tableNameSearchEl.value || "").trim();
+          if (activeTab === "employee" || activeTab === "live_links" || activeTab === "cliq_failed") renderTable();
+        });
+      }
+      if (kpiGridEl) {
+        kpiGridEl.addEventListener("click", (event) => {
+          const card = event.target.closest("[data-kpi-key]");
+          if (!card) return;
+          const key = String(card.getAttribute("data-kpi-key") || "").trim();
+          if (!key) return;
+          setEmployeeKpiFocus_(key);
+          applyTab("employee");
+          renderKpis(dashboardData && dashboardData.kpis ? dashboardData.kpis : {}, dashboardData && dashboardData.employeeCompliance ? dashboardData.employeeCompliance : []);
+          renderTable();
+        });
+      }
+      tableWrapEl.addEventListener("click", (event) => {
+        const retryBtn = event.target.closest("button[data-cliq-retry-id]");
+        if (retryBtn) {
+          const id = Number(retryBtn.getAttribute("data-cliq-retry-id") || 0);
+          if (id > 0) retryFailedCliqLog_(id);
+          return;
+        }
+        const btn = event.target.closest("button[data-employee-details='1']");
+        if (!btn) return;
+        const department = String(btn.getAttribute("data-department") || "").trim();
+        const employeeName = String(btn.getAttribute("data-employee") || "").trim();
+        if (!department || !employeeName) return;
+        openEmployeeDayDetails_(department, employeeName);
+      });
+      employeeDetailsCloseEl.addEventListener("click", closeEmployeeDetailsModal_);
+      if (employeeDetailsRetriggerSodEl) {
+        employeeDetailsRetriggerSodEl.addEventListener("click", retriggerSodCliqFromDetails_);
+      }
+      if (employeeDetailsRetriggerEodEl) {
+        employeeDetailsRetriggerEodEl.addEventListener("click", retriggerEodCliqFromDetails_);
+      }
+      employeeDetailsModalEl.addEventListener("click", (event) => {
+        if (event.target === employeeDetailsModalEl) closeEmployeeDetailsModal_();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeEmployeeDetailsModal_();
+      });
+    }
+
+    async function init() {
+      workDateEl.value = todayISO();
+      assignDateEl.value = todayISO();
+      syncDeadlineInputState_();
+      setAssignCollapsed_(true);
+      setUserAccessCollapsed_(true);
+      applyRangePresetUi();
+      const ok = await validateAdminAccess();
+      if (!ok) return;
+
+      derivedAdminPasscode = deriveAdminPasscode_(adminSession.code);
+      if (!derivedAdminPasscode) {
+        setStatus("Dashboard updated. Inactivity lock unavailable for this admin code.", "info");
+      }
+      idleStoragePrefix = `admin_lock:${adminSession.admin}:${adminSession.code}`;
+
+      wireEvents();
+      appEl.hidden = false;
+      wireIdleEvents_();
+      if (derivedAdminPasscode) {
+        restoreIdleState_();
+      }
+      if (!isLocked) {
+        let initDirErr = null;
+        await Promise.all([
+          refreshDirectory_({ preferCache: true }).catch((err) => { initDirErr = err; }),
+          fetchDashboard({ skipDirectorySync: true })
+        ]);
+        if (initDirErr) {
+          setStatus(`Directory sync failed: ${initDirErr.message}`, "error");
+        }
+      }
+    }
+
+    init().catch((err) => {
+      const msg = String(err && err.message ? err.message : err || "Initialization failed.");
+      showBlocked(`Admin dashboard failed to load: ${msg}`);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finnovate | Financial Health Checkup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#">
+          <span class="dot"></span>
+          <span>Finnovate</span>
+        </a>
+        <div class="header-actions">
+          <a href="#resultsCta" class="btn btn-primary">Book review slot</a>
+          <button id="headerCallbackBtn" class="link-btn" type="button">Need a callback?</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section">
+        <div class="container">
+          <p class="eyebrow">Post-Payment Checkup</p>
+          <h1>Complete your Financial Health Checkup</h1>
+          <p class="lead">Enter rough numbers, answer a few smart questions, get your score instantly.</p>
+          <ul class="trust-list">
+            <li>No OTPs. No passwords.</li>
+            <li>4-5 minutes.</li>
+            <li>Instant score.</li>
+          </ul>
+          <p class="muted">You can skip the form and request a callback anytime.</p>
+          <a href="#checkup" class="btn btn-primary">Start Checkup</a>
+        </div>
+      </section>
+
+      <section id="checkup" class="section">
+        <div class="container layout">
+          <div class="main-col">
+            <section class="panel progress-panel">
+              <div class="progress-head">
+                <h2>Financial Health Checkup</h2>
+                <p id="stepLabel">Step 1 of 3: Your numbers</p>
+              </div>
+              <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33">
+                <span id="progressBar"></span>
+              </div>
+              <ol class="step-list">
+                <li class="active">Your numbers</li>
+                <li>Smart questions</li>
+                <li>Your score</li>
+              </ol>
+            </section>
+
+            <section id="step1" class="panel" aria-labelledby="numbersTitle">
+              <h3 id="numbersTitle">Your numbers</h3>
+              <p class="muted">Use approximate values. We validate all inputs in the review.</p>
+              <form id="numbersForm" novalidate>
+                <div class="grid2">
+                  <label>Current age<input name="age" type="number" min="18" max="100" required /></label>
+                  <label>Retirement age<input name="retirementAge" type="number" min="40" max="100" required /></label>
+                  <label>Monthly take-home income (₹)<input name="income" type="number" min="0" required /></label>
+                  <label>Monthly expenses (₹)<input name="expenses" type="number" min="0" required /></label>
+                  <label>Current total investments (₹)<input name="investments" type="number" min="0" /></label>
+                  <label>Total monthly EMIs (₹)<input name="emi" type="number" min="0" /></label>
+                  <label>Emergency fund available (₹)<input name="emergencyFund" type="number" min="0" /></label>
+                  <label>
+                    Health cover
+                    <select name="healthCover" required>
+                      <option value="">Select</option>
+                      <option value="none">None</option>
+                      <option value="5">up to 5L</option>
+                      <option value="10">10L</option>
+                      <option value="15">15L</option>
+                      <option value="20">20L+</option>
+                    </select>
+                  </label>
+                </div>
+                <div id="termWrap">
+                  <label>
+                    Term cover
+                    <select name="termCover">
+                      <option value="">Select</option>
+                      <option value="none">None</option>
+                      <option value="25">25L</option>
+                      <option value="50">50L</option>
+                      <option value="100">1Cr</option>
+                      <option value="150">1.5Cr</option>
+                      <option value="200">2Cr+</option>
+                    </select>
+                  </label>
+                </div>
+                <p id="termNote" class="muted small hidden">Term insurance is not considered after age 58 in scoring.</p>
+                <p id="expenseWarning" class="warn hidden">Expenses are higher than income. You can continue, but this needs review.</p>
+                <div class="actions">
+                  <button id="toStep2" class="btn btn-primary" type="button">Continue to Smart questions</button>
+                  <button id="inlineCallbackBtn" class="btn btn-outline" type="button">Need a callback?</button>
+                </div>
+              </form>
+            </section>
+
+            <section id="step2" class="panel hidden" aria-labelledby="questionTitle">
+              <h3 id="questionTitle">Smart questions</h3>
+              <p class="muted">One question at a time, like FinnFit Quiz.</p>
+
+              <div class="q-progress"><span id="questionProgress"></span></div>
+
+              <form id="questionForm" class="question-wrap" novalidate>
+                <div class="q-meta">
+                  <span id="qPillar">Goal Planning</span>
+                  <span id="qCounter">Question 1 of 13</span>
+                </div>
+                <article class="q-card">
+                  <p id="qText"></p>
+                  <div id="qOptions" class="q-options"></div>
+                </article>
+              </form>
+
+              <div class="actions">
+                <button id="backToStep1" class="btn btn-outline" type="button">Back to numbers</button>
+                <button id="prevQ" class="btn btn-outline" type="button">Previous question</button>
+                <button id="nextQ" class="btn btn-primary" type="button">Next question</button>
+                <button id="toStep3" class="btn btn-primary hidden" type="button">See my score</button>
+              </div>
+            </section>
+
+            <section id="step3" class="panel hidden" aria-labelledby="scoreTitleBlock">
+              <h3 id="scoreTitleBlock">Your score</h3>
+              <div class="score-head">
+                <div class="ring-wrap">
+                  <svg class="ring" viewBox="0 0 120 120">
+                    <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                    <circle id="ringValue" class="ring-val" cx="60" cy="60" r="52"></circle>
+                  </svg>
+                  <div class="ring-label">
+                    <strong id="mainScore">0/100</strong>
+                    <span class="muted">Financial Health Score</span>
+                  </div>
+                </div>
+                <p id="scoreBand" class="band"></p>
+              </div>
+
+              <h4>Primary Pillar Scores</h4>
+              <div id="pillarList"></div>
+
+              <details class="detail-block">
+                <summary>View detailed breakdown</summary>
+                <h5>Detailed Score Breakdown</h5>
+                <ul id="subScoreList"></ul>
+              </details>
+
+              <h4>Top 5 action points</h4>
+              <ol id="actionList"></ol>
+
+              <section id="resultsCta" class="cta-block">
+                <h4>Next step</h4>
+                <div class="actions">
+                  <a href="#" class="btn btn-primary">Book review slot</a>
+                  <a href="#" class="btn btn-outline">Download app</a>
+                </div>
+                <p class="muted small">In the review, we validate inputs, help you fetch your investments in the app, compare XIRR vs benchmark, then share your PDF score report with action points.</p>
+              </section>
+            </section>
+          </div>
+
+          <aside class="panel side" id="snapshot"></aside>
+        </div>
+      </section>
+    </main>
+
+    <div id="callbackModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="callbackTitle">
+      <div class="modal-card">
+        <button id="closeModal" class="close">&times;</button>
+        <h3 id="callbackTitle">Need a callback?</h3>
+        <p class="muted">If you prefer, our team will collect details on a quick call.</p>
+        <form id="callbackForm" novalidate>
+          <label>Name<input name="name" type="text" required /></label>
+          <label>Phone<input name="phone" type="tel" pattern="[0-9]{10}" required /></label>
+          <label>
+            Preferred time slot
+            <select name="slot" required>
+              <option value="">Select</option>
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Evening</option>
+            </select>
+          </label>
+          <button class="btn btn-primary full" type="submit">Submit request</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

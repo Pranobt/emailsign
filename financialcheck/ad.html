@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finnovate - Investment Adviser</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url("https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold");
+
+        :root {
+            --deep: #1a2732;
+            --accent: #009356;
+            --accent-2: #32c27d;
+            --muted: #5e6b74;
+            --surface: #ffffff;
+            --soft: #f1f6f7;
+            --border: #d6e2e4;
+            --chip: #e8f3f2;
+            --shadow: 0 30px 60px rgba(20, 42, 52, 0.16);
+            --body-color: #f8fafc;
+            --body-bg: linear-gradient(180deg, #f8fafc 0%, #eff3f8 100%);
+            --body-overlay: repeating-linear-gradient(0deg, rgba(0, 147, 86, 0.05) 0, rgba(0, 147, 86, 0.05) 1px, transparent 1px, transparent 26px),
+                            repeating-linear-gradient(90deg, rgba(0, 147, 86, 0.04) 0, rgba(0, 147, 86, 0.04) 1px, transparent 1px, transparent 26px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-color);
+            background-image: var(--body-overlay), var(--body-bg);
+            color: var(--deep);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            background: transparent;
+            border-radius: 0;
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            position: relative;
+            z-index: 1;
+            padding: 24px 18px 32px;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeUp 0.45s ease;
+        }
+
+        #page1 {
+            padding: 0;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 20px 18px 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--deep);
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .back-link:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 24px rgba(0, 147, 86, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .back-link.is-hidden {
+            display: none;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            height: 42px;
+            width: auto;
+            display: block;
+        }
+
+        .brand .brand-name {
+            font-family: 'Denton Bold', 'Denton', 'Inter', sans-serif;
+            font-size: 20px;
+            letter-spacing: 0.2px;
+        }
+
+        .progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 200px;
+            width: 100%;
+        }
+
+        .progress-track {
+            background: var(--soft);
+            height: 10px;
+            border-radius: 999px;
+            overflow: hidden;
+            flex: 1;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .progress-fill {
+            position: absolute;
+            inset: 0;
+            width: 20%;
+            background: linear-gradient(120deg, var(--accent), var(--accent-2));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        h1 {
+            font-family: 'Denton Bold', 'Denton', 'Inter', sans-serif;
+            font-size: 26px;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: var(--deep);
+        }
+
+        h2 {
+            font-family: 'Denton Bold', 'Denton', 'Inter', sans-serif;
+            color: var(--deep);
+            font-size: 18px;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 18px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .required-star {
+            font-size: 14px;
+            color: var(--accent);
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .hero-panel {
+            background: radial-gradient(circle at 15% 20%, rgba(0, 147, 86, 0.12), transparent 55%),
+                        linear-gradient(180deg, #ffffff 0%, #edf8f1 100%);
+            color: var(--deep);
+            border-radius: 0;
+            padding: 22px;
+            border: 1px solid rgba(0, 147, 86, 0.12);
+            box-shadow: none;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .hero-panel .top-actions {
+            margin-bottom: 28px;
+            padding: 0;
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(0, 147, 86, 0.12);
+            color: var(--accent);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .hero-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .hero-panel h1 {
+            font-size: 34px;
+            letter-spacing: -0.02em;
+            margin: 0;
+            color: var(--deep);
+        }
+
+        .hero-kicker {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-section-label {
+            margin-top: 18px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .hero-visual {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: rgba(0, 147, 86, 0.12);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .hero-accent {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 14px 0 0;
+        }
+
+        .hero-highlights {
+            display: grid;
+            gap: 10px;
+            margin: 10px 0 12px;
+        }
+
+        .hero-highlight {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 147, 86, 0.08);
+            color: var(--deep);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .hero-highlight i {
+            color: var(--accent);
+            font-size: 14px;
+        }
+
+        .hero-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+            margin: 0 0 20px;
+            padding: 0;
+        }
+
+        .hero-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--deep);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .hero-list li::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 147, 86, 0.2);
+            flex-shrink: 0;
+        }
+
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .hero-button {
+            background: linear-gradient(135deg, #009356 0%, #12a962 55%, #32c27d 100%);
+            color: #ffffff;
+            border: 1px solid rgba(0, 147, 86, 0.2);
+            padding: 14px 28px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 12px 24px rgba(0, 147, 86, 0.24);
+            width: 100%;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 30px rgba(0, 147, 86, 0.28);
+        }
+
+        .hero-button:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 147, 86, 0.2);
+        }
+
+        .hero-note {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-disclaimer {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .hero-main {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero-visual {
+                align-self: flex-end;
+            }
+
+            .hero-panel h1 {
+                font-size: 30px;
+            }
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--chip);
+            color: var(--deep);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .services {
+            display: flex;
+            gap: 10px;
+            margin: 18px 0 10px;
+            flex-wrap: wrap;
+        }
+
+        .service-tag {
+            padding: 8px 12px;
+            background: var(--soft);
+            border-radius: 12px;
+            color: var(--deep);
+            font-size: 12px;
+            border: 1px solid var(--border);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 22px 0 4px;
+        }
+
+        .stat-item {
+            padding: 14px;
+            border-radius: 14px;
+            background: var(--soft);
+            border: 1px solid var(--border);
+            color: var(--deep);
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 6px rgba(0, 147, 86, 0.15);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #009356 0%, #12a962 55%, #32c27d 100%);
+            color: #ffffff;
+            border: 1px solid rgba(0, 147, 86, 0.2);
+            padding: 14px 30px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 22px;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 12px 24px rgba(0, 147, 86, 0.24);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(0, 147, 86, 0.28);
+        }
+
+        .note-card {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: var(--soft);
+            border: 1px dashed var(--border);
+            color: var(--deep);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 12px 0 4px;
+        }
+
+        .mini-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--soft);
+            color: var(--deep);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+            align-items: stretch;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, rgba(0, 147, 86, 0.12), rgba(255, 255, 255, 0.9));
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 12px 26px rgba(16, 24, 40, 0.08);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 6px;
+            color: var(--deep);
+            font-weight: 700;
+        }
+
+        .pulse {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 10px rgba(0, 147, 86, 0.15);
+        }
+
+        .hero-list {
+            margin-top: 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .hero-list span {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--deep);
+            font-weight: 700;
+        }
+
+        .hero-list i {
+            color: var(--accent);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin: 22px 0 6px;
+        }
+
+        .option-button {
+            padding: 16px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            font-weight: 600;
+            color: var(--deep);
+            min-height: 72px;
+            box-shadow: 0 12px 24px rgba(16, 24, 40, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: var(--chip);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .option-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--deep);
+        }
+
+        .option-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .option-button:hover {
+            border-color: var(--accent);
+            box-shadow: 0 18px 36px rgba(0, 147, 86, 0.16);
+            transform: translateY(-1px);
+        }
+
+        .option-button.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--chip), rgba(255, 255, 255, 0.9));
+            color: var(--deep);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .main-button-1,
+        .main-button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            flex: 1;
+            min-width: 140px;
+            border: 1px solid transparent;
+            font-weight: 700;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .main-button-1 {
+            background: #ffffff;
+            color: var(--deep);
+            border-color: rgba(0, 147, 86, 0.2);
+            box-shadow: 0 10px 18px rgba(16, 24, 40, 0.08);
+        }
+
+        .main-button {
+            background: linear-gradient(135deg, #009356 0%, #12a962 55%, #32c27d 100%);
+            color: #ffffff;
+            box-shadow: 0 12px 22px rgba(0, 147, 86, 0.22);
+            border: 1px solid rgba(0, 147, 86, 0.2);
+        }
+
+        .main-button:hover,
+        .main-button-1:hover {
+            transform: translateY(-1px);
+        }
+
+        .main-button:hover {
+            box-shadow: 0 16px 26px rgba(0, 147, 86, 0.26);
+        }
+
+        .main-button-1:hover {
+            border-color: rgba(0, 147, 86, 0.4);
+            box-shadow: 0 14px 22px rgba(16, 24, 40, 0.12);
+        }
+
+        .main-button:focus-visible,
+        .main-button-1:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 147, 86, 0.2);
+        }
+
+        .form-group {
+            margin: 16px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--deep);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: var(--soft);
+            color: var(--deep);
+        }
+
+        select {
+            appearance: none;
+            background-color: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 46px 14px 16px;
+            box-shadow: 0 12px 24px rgba(16, 24, 40, 0.06);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23009356' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 147, 86, 0.18);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 147, 86, 0.18);
+        }
+
+        .success-message {
+            text-align: center;
+            color: var(--deep);
+            padding: 30px 12px;
+        }
+
+        .success-message h2 {
+            margin-bottom: 12px;
+        }
+
+        .calendar-card {
+            padding: 18px;
+            border-radius: 16px;
+            background: var(--soft);
+            border: 1px solid var(--border);
+            margin: 18px 0;
+        }
+
+        .calendar-embed {
+            width: 100%;
+            min-height: 620px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            margin: 10px 0 4px;
+        }
+
+        .helper {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 6px 0 0;
+        }
+
+        .consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 16px 0;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .consent input {
+            margin-top: 2px;
+        }
+
+        @media (min-width: 900px) {
+            body {
+                padding: 32px 24px;
+            }
+
+            .container {
+                max-width: 980px;
+                padding: 32px 28px;
+            }
+
+            .top-actions {
+                flex-direction: row;
+                align-items: center;
+                padding: 0;
+            }
+
+            .progress {
+                width: auto;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .hero-panel {
+                padding: 28px;
+                border-radius: 24px;
+                box-shadow: none;
+            }
+
+            .hero-panel h1 {
+                font-size: 32px;
+            }
+
+            .hero-cta {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .hero-button {
+                width: auto;
+            }
+
+            .options {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .two-col {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .button-group {
+                flex-direction: row;
+            }
+
+            .page {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body class="no-scroll">
+    <div class="container">
+        <div class="top-actions">
+            <button class="back-link is-hidden" type="button" onclick="goBack()" id="backButton">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back</span>
+            </button>
+            <div class="brand">
+                <img src="assets/images/logo1.png" alt="Finnovate logo">
+            </div>
+            <div class="progress" aria-hidden="true">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-label" id="progressLabel">Step 1 of 7</div>
+            </div>
+        </div>
+
+        <!-- Page 1: Intro -->
+        <div class="page active" id="page1">
+            <div class="hero-panel">
+                <div class="hero-main">
+                    <div>
+                        <h1>Discover your personalized<br>financial journey<span class="hero-accent">.</span></h1>
+                        <p class="hero-kicker">No spam · No obligation</p>
+                    </div>
+                    <div class="hero-visual" aria-hidden="true">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                </div>
+                <p class="hero-subtitle">Answer a few quick questions so we can understand your goals before an introductory call with a SEBI registered investment adviser.</p>
+                <div class="hero-section-label">What you will cover</div>
+                <div class="hero-highlights">
+                    <div class="hero-highlight"><i class="fa-solid fa-bullseye"></i>Your goals and current investments</div>
+                    <div class="hero-highlight"><i class="fa-solid fa-clipboard-check"></i>Our advisory process and fees</div>
+                    <div class="hero-highlight"><i class="fa-solid fa-route"></i>Next steps if it is the right fit</div>
+                </div>
+                <p class="hero-disclaimer">Registration does not imply SEBI endorsement. Investments are subject to market risks.</p>
+                <div class="hero-cta">
+                    <button class="hero-button" onclick="goToPage(2)">Start questionnaire</button>
+                    <span class="hero-note">7 short steps.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Service Selection -->
+        <div class="page" id="page2">
+            <h1>What do you need help with?<span class="required-star">*</span></h1>
+            <p class="subtitle">Pick one focus area.</p>
+
+            <div class="options">
+                <button class="option-button" data-group="service" onclick="selectService('Portfolio review', this); goToPage(3)">
+                    <span class="option-icon"><i class="fa-solid fa-chart-line"></i></span>
+                    <div>
+                        <div class="option-title">Portfolio review</div>
+                        <div class="option-sub">Discuss current holdings</div>
+                    </div>
+                </button>
+                <button class="option-button" data-group="service" onclick="selectService('Financial plan', this); goToPage(3)">
+                    <span class="option-icon"><i class="fa-solid fa-sitemap"></i></span>
+                    <div>
+                        <div class="option-title">Financial plan</div>
+                        <div class="option-sub">Goals + cash flow review</div>
+                    </div>
+                </button>
+                <button class="option-button" data-group="service" onclick="selectService('Ongoing advisory', this); goToPage(3)">
+                    <span class="option-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                    <div>
+                        <div class="option-title">Ongoing advisory</div>
+                        <div class="option-sub">Continued support</div>
+                    </div>
+                </button>
+                <button class="option-button" data-group="service" onclick="selectService('Tax strategy', this); goToPage(3)">
+                    <span class="option-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+                    <div>
+                        <div class="option-title">Tax strategy</div>
+                        <div class="option-sub">Tax planning discussion</div>
+                    </div>
+                </button>
+                <button class="option-button" data-group="service" onclick="selectService('Estate planning', this); goToPage(3)">
+                    <span class="option-icon"><i class="fa-solid fa-house-circle-check"></i></span>
+                    <div>
+                        <div class="option-title">Estate planning</div>
+                        <div class="option-sub">Wills + succession</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 3: Annual Income -->
+        <div class="page" id="page3">
+            <h1>Annual income<span class="required-star">*</span></h1>
+
+            <div class="options">
+                <button class="option-button" data-group="income" onclick="selectIncome('10L and below', this); goToPage(4)"><span class="option-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><div class="option-title">10L and below</div></button>
+                <button class="option-button" data-group="income" onclick="selectIncome('10-20L', this); goToPage(4)"><span class="option-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><div class="option-title">10-20L</div></button>
+                <button class="option-button" data-group="income" onclick="selectIncome('21-35L', this); goToPage(4)"><span class="option-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><div class="option-title">21-35L</div></button>
+                <button class="option-button" data-group="income" onclick="selectIncome('35-50L', this); goToPage(4)"><span class="option-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><div class="option-title">35-50L</div></button>
+                <button class="option-button" data-group="income" onclick="selectIncome('50L - 1cr', this); goToPage(4)"><span class="option-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><div class="option-title">50L - 1cr</div></button>
+                <button class="option-button" data-group="income" onclick="selectIncome('1cr and above', this); goToPage(4)"><span class="option-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><div class="option-title">1cr and above</div></button>
+            </div>
+        </div>
+
+        <!-- Page 4: Investment Details -->
+        <div class="page" id="page4">
+            <h1>Portfolio size<span class="required-star">*</span></h1>
+            <div class="options">
+                <button class="option-button" data-group="portfolio" onclick="selectPortfolio('15L - 50L', this); goToPage(5)"><span class="option-icon"><i class="fa-solid fa-wallet"></i></span><div class="option-title">15L - 50L</div></button>
+                <button class="option-button" data-group="portfolio" onclick="selectPortfolio('50L - 1cr', this); goToPage(5)"><span class="option-icon"><i class="fa-solid fa-wallet"></i></span><div class="option-title">50L - 1cr</div></button>
+                <button class="option-button" data-group="portfolio" onclick="selectPortfolio('1cr +', this); goToPage(5)"><span class="option-icon"><i class="fa-solid fa-wallet"></i></span><div class="option-title">1cr +</div></button>
+                <button class="option-button" data-group="portfolio" onclick="selectPortfolio('Not Investing', this); goToPage(5)"><span class="option-icon"><i class="fa-solid fa-circle-xmark"></i></span><div class="option-title">Not Investing</div></button>
+            </div>
+        </div>
+
+        <!-- Page 5: Goals & Risk -->
+        <div class="page" id="page5">
+            <h1>Primary goal<span class="required-star">*</span></h1>
+            <p class="subtitle">Choose one primary goal.</p>
+
+            <div class="two-col">
+                <div>
+                    <h2 style="margin-bottom: 10px;">Primary goal</h2>
+                    <div class="options">
+                        <button class="option-button" data-group="goal" onclick="selectGoal('Retirement', this); goToPage(6)"><span class="option-icon"><i class="fa-solid fa-person-cane"></i></span><div class="option-title">Retirement</div></button>
+                        <button class="option-button" data-group="goal" onclick="selectGoal('Long-term growth', this); goToPage(6)"><span class="option-icon"><i class="fa-solid fa-arrow-trend-up"></i></span><div class="option-title">Long-term growth</div></button>
+                        <button class="option-button" data-group="goal" onclick="selectGoal('Tax efficiency', this); goToPage(6)"><span class="option-icon"><i class="fa-solid fa-scale-balanced"></i></span><div class="option-title">Tax efficiency</div></button>
+                        <button class="option-button" data-group="goal" onclick="selectGoal('Education or milestone', this); goToPage(6)"><span class="option-icon"><i class="fa-solid fa-graduation-cap"></i></span><div class="option-title">Education / milestone</div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 6: Approach & Timing -->
+        <div class="page" id="page6">
+            <h1>Approach and timing<span class="required-star">*</span></h1>
+            <p class="subtitle">Choose one in each section.</p>
+
+            <div class="two-col">
+                <div>
+                    <h2 style="margin-bottom: 10px;">Investment approach</h2>
+                    <div class="form-group" style="margin-top: 0;">
+                        <label for="approach">Choose one</label>
+                        <select id="approach" name="approach" onchange="selectApproach(this.value)" required>
+                            <option value="" disabled selected>Select one</option>
+                            <option value="DIY">DIY</option>
+                            <option value="Advisory">Advisory</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Not sure">Not sure</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <h2 style="margin-bottom: 10px;">Start timeline</h2>
+                    <div class="options">
+                        <button class="option-button" data-group="timeline" onclick="selectTimeline('Now', this)"><span class="option-icon"><i class="fa-solid fa-play"></i></span><div class="option-title">Now</div></button>
+                        <button class="option-button" data-group="timeline" onclick="selectTimeline('30-90 days', this)"><span class="option-icon"><i class="fa-solid fa-calendar-check"></i></span><div class="option-title">30-90 days</div></button>
+                        <button class="option-button" data-group="timeline" onclick="selectTimeline('6+ months', this)"><span class="option-icon"><i class="fa-solid fa-hourglass-half"></i></span><div class="option-title">6+ months</div></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="main-button" onclick="goToPage(7)">Next</button>
+            </div>
+        </div>
+
+        <!-- Page 7: Thank You / Contact Form -->
+        <div class="page" id="page7">
+            <h1>Share your details</h1>
+            <p class="subtitle">We will match you to the right advisor.</p>
+
+            <form onsubmit="submitForm(event)">
+                <div class="form-group">
+                    <label for="name">Full name *</label>
+                    <input type="text" id="name" name="name" placeholder="First Last" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email ID *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact">Contact Number *</label>
+                    <input type="tel" id="contact" name="contact" inputmode="numeric" autocomplete="tel" pattern="\+91\s?[6-9]\d{9}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+
+                <div class="consent">
+                    <input type="checkbox" id="consent" required>
+                    <label for="consent">I agree to be contacted by Finnovate for fee-based financial planning and investment advisory services. I consent to the privacy policy. *</label>
+                </div>
+
+                <div class="button-group">
+                    <button class="main-button" type="submit">Submit & view next steps</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Page -->
+        <div class="page" id="success">
+            <div class="success-message">
+                <h2>Thank You!</h2>
+                <p class="subtitle" style="margin-bottom: 22px;">Your information has been submitted successfully. Our team will contact you soon.</p>
+                <button class="cta-button" onclick="goToPage(1)">Start Over</button>
+            </div>
+        </div>
+
+        <!-- Calendly Page -->
+        <div class="page" id="calendar">
+            <div class="success-message">
+                <h2>You've skipped the wait</h2>
+                <p class="subtitle" style="margin-bottom: 16px;">Book a slot now with your advisor.</p>
+            </div>
+            <div class="calendar-card">
+                <div class="calendly-inline-widget calendar-embed" data-url="https://calendly.com/finnovate/financial-fitness-consultation" style="min-width:320px;height:660px;"></div>
+            </div>
+            <div class="button-group" style="margin-top: 0;">
+                <button class="main-button-1" type="button" onclick="goToPage(1)">Back to start</button>
+                <button class="main-button-1" type="button" onclick="goToPage('success')">Not now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formData = {};
+        const totalSteps = 7;
+        let currentStep = 1;
+        let calendlyRendered = false;
+
+        function goToPage(pageIdentifier) {
+            const targetId = typeof pageIdentifier === 'string' ? pageIdentifier : 'page' + pageIdentifier;
+            if (!canNavigateTo(targetId, pageIdentifier)) {
+                return;
+            }
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(targetId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            document.body.classList.toggle('no-scroll', targetId === 'page1');
+            positionHeader(targetId);
+            updateProgress(pageIdentifier);
+            updateBackButton(targetId);
+            if (targetId === 'calendar') {
+                renderCalendly();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress(step) {
+            const progressFill = document.getElementById('progressFill');
+            const progressLabel = document.getElementById('progressLabel');
+            if (!progressFill || !progressLabel) return;
+
+            if (step === 'success' || step === 'calendar') {
+                progressFill.style.width = '100%';
+                progressLabel.textContent = 'Completed';
+                return;
+            }
+
+            const numericStep = Math.min(Math.max(Number(step) || 1, 1), totalSteps);
+            const percent = (numericStep / totalSteps) * 100;
+            progressFill.style.width = `${percent}%`;
+            progressLabel.textContent = `Step ${numericStep} of ${totalSteps}`;
+            currentStep = numericStep;
+        }
+
+        function updateBackButton(targetId) {
+            const backButton = document.getElementById('backButton');
+            if (!backButton) return;
+            const hide = targetId === 'page1' || targetId === 'success' || targetId === 'calendar';
+            backButton.classList.toggle('is-hidden', hide);
+        }
+
+        function positionHeader(targetId) {
+            const header = document.querySelector('.top-actions');
+            const container = document.querySelector('.container');
+            if (!header || !container) return;
+            if (targetId === 'page1') {
+                const heroPanel = document.querySelector('#page1 .hero-panel');
+                if (heroPanel && heroPanel.firstElementChild !== header) {
+                    heroPanel.prepend(header);
+                }
+            } else {
+                if (container.firstElementChild !== header) {
+                    container.prepend(header);
+                }
+            }
+        }
+
+        function goBack() {
+            if (currentStep > 1) {
+                goToPage(currentStep - 1);
+            }
+        }
+
+        function canNavigateTo(targetId, pageIdentifier) {
+            const targetStep = Number(pageIdentifier);
+            if (!Number.isNaN(targetStep) && targetStep > currentStep) {
+                return isStepComplete(currentStep);
+            }
+            return true;
+        }
+
+        function isStepComplete(step) {
+            switch (step) {
+                case 2:
+                    if (!formData.service) {
+                        alert('Please select a service to continue.');
+                        return false;
+                    }
+                    return true;
+                case 3:
+                    if (!formData.income) {
+                        alert('Please select your annual income.');
+                        return false;
+                    }
+                    return true;
+                case 4:
+                    if (!formData.portfolio) {
+                        alert('Please select your portfolio size.');
+                        return false;
+                    }
+                    return true;
+                case 5:
+                    if (!formData.goal) {
+                        alert('Please select your primary goal.');
+                        return false;
+                    }
+                    return true;
+                case 6:
+                    {
+                        const approach = document.getElementById('approach');
+                        const approachValue = approach ? approach.value : formData.investmentApproach;
+                        if (!approachValue) {
+                            alert('Please choose your investment approach.');
+                            return false;
+                        }
+                        formData.investmentApproach = approachValue;
+                    }
+                    if (!formData.timeline) {
+                        alert('Please select a start timeline.');
+                        return false;
+                    }
+                    return true;
+                default:
+                    return true;
+            }
+        }
+
+        function setActiveOption(group, button) {
+            document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => btn.classList.remove('active'));
+            if (button) {
+                button.classList.add('active');
+            }
+        }
+
+        function selectService(service, button) {
+            setActiveOption('service', button);
+            formData.service = service;
+        }
+
+        function selectIncome(income, button) {
+            setActiveOption('income', button);
+            formData.income = income;
+        }
+
+        function selectPortfolio(portfolio, button) {
+            setActiveOption('portfolio', button);
+            formData.portfolio = portfolio;
+            formData.hasInvestment = portfolio === 'Not Investing' ? 'No' : 'Yes';
+        }
+
+        function selectGoal(goal, button) {
+            setActiveOption('goal', button);
+            formData.goal = goal;
+        }
+
+        function selectApproach(approach) {
+            formData.investmentApproach = approach;
+        }
+
+        function selectTimeline(timeline, button) {
+            setActiveOption('timeline', button);
+            formData.timeline = timeline;
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            if (form && !form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            formData.name = document.getElementById('name').value;
+            formData.email = document.getElementById('email').value;
+            formData.contact = document.getElementById('contact').value;
+            formData.city = document.getElementById('city').value;
+            formData.consent = document.getElementById('consent').checked;
+            const approach = document.getElementById('approach');
+            if (approach) {
+                formData.investmentApproach = approach.value;
+            }
+            if (!validateContact()) {
+                return;
+            }
+
+            console.log('Form Data:', formData);
+            goToPage(isHighIntent() ? 'calendar' : 'success');
+        }
+
+        function isHighIntent() {
+            const approachReady = ['Advisory', 'Hybrid'].includes(formData.investmentApproach);
+            const incomeFit = ['21-35L', '35-50L', '50L - 1cr', '1cr and above'].includes(formData.income);
+            const timelineFit = formData.timeline === 'Now' || formData.timeline === '30-90 days';
+            return approachReady && incomeFit && timelineFit;
+        }
+
+        function setupContactInput() {
+            const contactInput = document.getElementById('contact');
+            if (!contactInput) return;
+            const prefix = '+91 ';
+            if (!contactInput.value) {
+                contactInput.value = prefix;
+            }
+            const normalize = () => {
+                let digits = contactInput.value.replace(/\D/g, '');
+                if (digits.startsWith('91')) {
+                    digits = digits.slice(2);
+                }
+                digits = digits.slice(0, 10);
+                contactInput.value = prefix + digits;
+            };
+            contactInput.addEventListener('focus', normalize);
+            contactInput.addEventListener('input', () => {
+                normalize();
+                validateContact();
+            });
+            contactInput.addEventListener('blur', validateContact);
+        }
+
+        function validateContact() {
+            const contactInput = document.getElementById('contact');
+            if (!contactInput) return true;
+            const isValid = /^\+91\s?[6-9]\d{9}$/.test(contactInput.value);
+            contactInput.setCustomValidity(isValid ? '' : 'Enter a valid 10-digit Indian mobile number.');
+            if (!isValid) {
+                contactInput.reportValidity();
+            }
+            return isValid;
+        }
+
+        function buildCalendlyUrl() {
+            const baseUrl = 'https://calendly.com/finnovate/financial-fitness-consultation';
+            const params = new URLSearchParams();
+            if (formData.name) {
+                const cleanName = formData.name.replace(/\s+/g, ' ').trim();
+                if (cleanName) {
+                    params.set('name', cleanName);
+                }
+            }
+            if (formData.email) {
+                const cleanEmail = formData.email.replace(/\s+/g, '').trim();
+                if (cleanEmail) {
+                    params.set('email', cleanEmail);
+                }
+            }
+            if (formData.contact) {
+                const digits = formData.contact.replace(/\D/g, '');
+                const mobile = digits.startsWith('91') ? digits.slice(2) : digits;
+                const mobile10 = mobile.slice(-10);
+                if (mobile10) {
+                    params.set('a1', mobile10);
+                }
+            }
+            const currentParams = new URLSearchParams(window.location.search);
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach((key) => {
+                const value = currentParams.get(key);
+                if (value) {
+                    params.set(key, value);
+                }
+            });
+            const query = params.toString();
+            return query ? `${baseUrl}?${query}` : baseUrl;
+        }
+
+        function renderCalendly() {
+            if (calendlyRendered) return;
+            const calendlyContainer = document.querySelector('.calendly-inline-widget');
+            if (!calendlyContainer) return;
+            if (calendlyContainer.children.length > 0) {
+                calendlyRendered = true;
+                return;
+            }
+            const calendlyUrl = buildCalendlyUrl();
+            calendlyContainer.setAttribute('data-url', calendlyUrl);
+            const init = () => {
+                if (!window.Calendly || calendlyRendered) return;
+                calendlyRendered = true;
+                calendlyContainer.innerHTML = '';
+                window.Calendly.initInlineWidget({
+                    url: calendlyUrl,
+                    parentElement: calendlyContainer
+                });
+            };
+            let attempts = 0;
+            const waitForCalendly = () => {
+                if (window.Calendly) {
+                    init();
+                    return;
+                }
+                attempts += 1;
+                if (attempts < 20) {
+                    setTimeout(waitForCalendly, 300);
+                }
+            };
+            waitForCalendly();
+        }
+
+        updateProgress(1);
+        positionHeader('page1');
+        updateBackButton('page1');
+        setupContactInput();
+    </script>
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+</body>
+</html>

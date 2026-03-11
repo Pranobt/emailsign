@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finnovate | Financial Health Checkup</title>
+    <meta
+      name="description"
+      content="Complete your Financial Health Checkup with smart questions, instant scoring, and actionable next steps."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Main header">
+      <div class="container header-inner">
+        <a href="#" class="wordmark" aria-label="Finnovate home">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Finnovate</span>
+        </a>
+        <nav class="header-actions" aria-label="Quick actions">
+          <a href="#results-actions" class="btn btn-primary">Book review slot</a>
+          <button id="headerCallbackBtn" class="link-btn" type="button">Need a callback?</button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section">
+        <div class="container hero-inner">
+          <p class="eyebrow">Post-Payment Checkup</p>
+          <h1>Complete your Financial Health Checkup</h1>
+          <p class="lead">
+            Enter rough numbers, answer a few smart questions, get your score instantly.
+          </p>
+          <ul class="trust-list" aria-label="Trust points">
+            <li>No OTPs. No passwords.</li>
+            <li>4-5 minutes.</li>
+            <li>Instant score.</li>
+          </ul>
+          <p class="muted">You can skip the form and request a callback anytime.</p>
+          <a href="#checkup" class="btn btn-primary">Start Checkup</a>
+        </div>
+      </section>
+
+      <section id="checkup" class="section">
+        <div class="container checkup-layout">
+          <div class="checkup-main">
+            <div class="progress-wrap" aria-label="Checkup progress">
+              <div class="progress-top">
+                <h2>Financial Health Checkup</h2>
+                <p id="stepLabel">Step 1 of 3: Your numbers</p>
+              </div>
+              <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33">
+                <span id="progressBar"></span>
+              </div>
+              <ol class="step-list" aria-hidden="true">
+                <li class="active">Your numbers</li>
+                <li>Smart questions</li>
+                <li>Your score</li>
+              </ol>
+            </div>
+
+            <div class="mobile-snapshot">
+              <button type="button" id="snapshotToggle" class="snapshot-toggle" aria-expanded="false" aria-controls="snapshotPanelMobile">
+                Live snapshot
+              </button>
+              <div id="snapshotPanelMobile" class="snapshot-panel collapsed"></div>
+            </div>
+
+            <section id="step1" class="step-section" aria-labelledby="step1Title">
+              <h3 id="step1Title">Your numbers</h3>
+              <p class="muted">Use rough values. We validate everything with you in the review.</p>
+              <form id="numbersForm" novalidate>
+                <div class="grid-2">
+                  <label>
+                    Current age
+                    <input name="age" type="number" min="18" max="100" required />
+                  </label>
+                  <label>
+                    Retirement age
+                    <input name="retirementAge" type="number" min="40" max="100" required />
+                  </label>
+                  <label>
+                    Monthly take-home income (₹)
+                    <input name="income" type="number" min="0" step="1000" required />
+                  </label>
+                  <label>
+                    Monthly expenses (₹)
+                    <input name="expenses" type="number" min="0" step="1000" required />
+                  </label>
+                  <label>
+                    Current total investments (₹)
+                    <input name="investments" type="number" min="0" step="1000" />
+                  </label>
+                  <label>
+                    Total monthly EMIs (₹) <span class="muted inline">(optional)</span>
+                    <input name="emi" type="number" min="0" step="1000" />
+                  </label>
+                  <label>
+                    Emergency fund available (₹)
+                    <input name="emergencyFund" type="number" min="0" step="1000" />
+                  </label>
+                  <label>
+                    Health cover
+                    <select name="healthCover" required>
+                      <option value="">Select</option>
+                      <option value="none">None</option>
+                      <option value="5">up to 5L</option>
+                      <option value="10">10L</option>
+                      <option value="15">15L</option>
+                      <option value="20">20L+</option>
+                    </select>
+                  </label>
+                </div>
+                <div id="termCoverWrap">
+                  <label>
+                    Term cover
+                    <select name="termCover">
+                      <option value="">Select</option>
+                      <option value="none">None</option>
+                      <option value="25">25L</option>
+                      <option value="50">50L</option>
+                      <option value="100">1Cr</option>
+                      <option value="150">1.5Cr</option>
+                      <option value="200">2Cr+</option>
+                    </select>
+                  </label>
+                </div>
+                <p id="termInfoNote" class="info-note hidden" aria-live="polite">
+                  Term insurance is not considered after age 58 in scoring.
+                </p>
+                <p id="expenseWarning" class="warning hidden" aria-live="polite">
+                  Expenses are higher than income. You can continue, but this needs review.
+                </p>
+                <div class="step-actions">
+                  <button id="step1Next" type="button" class="btn btn-primary">Continue to Smart questions</button>
+                  <button type="button" id="inlineCallbackBtn" class="btn btn-outline">Need a callback?</button>
+                </div>
+              </form>
+            </section>
+
+            <section id="step2" class="step-section hidden" aria-labelledby="step2Title">
+              <h3 id="step2Title">Smart questions</h3>
+              <p class="muted">Quick behavior checks tailored to your stage.</p>
+              <form id="questionsForm"></form>
+              <div class="step-actions">
+                <button id="backToStep1" type="button" class="btn btn-outline">Back</button>
+                <button id="toResults" type="button" class="btn btn-primary">See my score</button>
+              </div>
+            </section>
+
+            <section id="step3" class="step-section hidden" aria-labelledby="step3Title">
+              <h3 id="step3Title">Your score</h3>
+              <div class="score-top">
+                <div class="ring-wrap" aria-label="Financial health score">
+                  <svg class="ring" viewBox="0 0 120 120" role="img" aria-labelledby="scoreTitle scoreText">
+                    <title id="scoreTitle">Financial Health Score</title>
+                    <circle cx="60" cy="60" r="52" class="ring-bg"></circle>
+                    <circle cx="60" cy="60" r="52" class="ring-value" id="ringValue"></circle>
+                  </svg>
+                  <div class="ring-label">
+                    <p id="scoreText" class="score-value">0/100</p>
+                    <p class="muted">Financial Health Score</p>
+                  </div>
+                </div>
+                <p id="scoreBand" class="score-band"></p>
+              </div>
+
+              <div>
+                <h4>Primary Pillar Scores</h4>
+                <div id="pillarList" class="pillar-list"></div>
+              </div>
+
+              <details class="details-breakdown">
+                <summary>View detailed breakdown</summary>
+                <div>
+                  <h5>Detailed Score Breakdown</h5>
+                  <ul id="subScoreList" class="subscore-list"></ul>
+                </div>
+              </details>
+
+              <div>
+                <h4>Top 5 action points</h4>
+                <ol id="actionList" class="action-list"></ol>
+              </div>
+
+              <section id="results-actions" class="next-step">
+                <h4>Next step</h4>
+                <div class="next-step-actions">
+                  <a class="btn btn-primary" href="#">Book review slot</a>
+                  <a class="btn btn-outline" href="#">Download app</a>
+                </div>
+                <p class="muted small">
+                  In the review, we validate inputs, help you fetch your investments in the app, compare XIRR vs benchmark, then share your PDF score report with action points.
+                </p>
+              </section>
+
+              <section class="pdf-preview">
+                <h4>What you will receive in your PDF</h4>
+                <div class="pdf-grid">
+                  <article>Prepared for: <span id="pdfName">You</span></article>
+                  <article>Key metrics at a glance</article>
+                  <article>FI number</article>
+                  <article>Yearly fresh investment</article>
+                  <article>Portfolio XIRR vs benchmark (as entered)</article>
+                  <article>Health insurance range</article>
+                  <article>Emergency fund allocation</article>
+                </div>
+              </section>
+            </section>
+          </div>
+
+          <aside id="snapshotPanelDesktop" class="snapshot-panel desktop" aria-label="Live snapshot"></aside>
+        </div>
+      </section>
+
+      <section class="section faq">
+        <div class="container">
+          <h2>FAQs</h2>
+          <details>
+            <summary>What happens after I submit?</summary>
+            <p>Your score appears instantly with action points, then you can book a review slot.</p>
+          </details>
+          <details>
+            <summary>How soon will the team contact me?</summary>
+            <p>Typically within one business day after you book a review slot or request a callback.</p>
+          </details>
+          <details>
+            <summary>How is score calculated?</summary>
+            <p>We combine your financial inputs and smart-question behavior checks into weighted pillar scores.</p>
+          </details>
+          <details>
+            <summary>Is my data secure?</summary>
+            <p>Yes. You share planning inputs only here. No OTPs and no passwords are requested.</p>
+          </details>
+          <details>
+            <summary>Can I still do the review if I skip the form?</summary>
+            <p>Yes. Use the callback option and our team will collect details on a quick call.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <div id="callbackModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="callbackTitle">
+      <div class="modal-card">
+        <button id="closeModal" class="modal-close" aria-label="Close callback form">&times;</button>
+        <h3 id="callbackTitle">Need a callback?</h3>
+        <p class="muted">If you prefer, our team will collect details on a quick call.</p>
+        <form id="callbackForm" novalidate>
+          <label>
+            Name
+            <input type="text" name="callbackName" required />
+          </label>
+          <label>
+            Phone
+            <input type="tel" name="callbackPhone" required pattern="[0-9]{10}" />
+          </label>
+          <label>
+            Preferred time slot
+            <select name="timeSlot" required>
+              <option value="">Select</option>
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Evening</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-primary full">Submit request</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden" aria-live="polite">Callback request submitted. Our team will reach out shortly.</div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

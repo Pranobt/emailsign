@@ -1,0 +1,696 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+    --otp-accent: #009356;
+    --otp-accent-hover: #007f4a;
+    --otp-text: #101828;
+    --otp-muted: #667085;
+    --otp-border: #e5e7eb;
+    --otp-bg: #ffffff;
+    --otp-shadow: 0 18px 40px rgba(16, 24, 40, 0.07);
+    --otp-panel-deep: #04271f;
+    --otp-panel-green: #0c5c4e;
+    --otp-panel-teal: #0f7f74;
+    --otp-font: "SF Pro Display", "SF Pro Text", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --otp-logo-url: url("https://www.financialopd.com/wp-content/uploads/2025/06/1vdark.png");
+    --otp-doctor-1-url: url("https://www.financialopd.com/wp-content/uploads/2026/02/doctor1.webp");
+    --otp-doctor-2-url: url("https://www.financialopd.com/wp-content/uploads/2026/02/doctor2.webp");
+    --otp-doctor-3-url: url("https://www.financialopd.com/wp-content/uploads/2026/02/doctor3.webp");
+    --otp-doctor-4-url: url("https://www.financialopd.com/wp-content/uploads/2026/02/doctor4.webp");
+    --otp-doctor-5-url: url("https://www.financialopd.com/wp-content/uploads/2026/02/doctor5.webp");
+    --otp-current-doctor: var(--otp-doctor-1-url);
+}
+
+#user_registerform,
+#user_registerform * {
+    box-sizing: border-box;
+    font-family: var(--otp-font);
+}
+
+#user_registerform.card-main.socialv-bp-login {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+#user_registerform .card-inner {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 640px;
+    border-radius: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: #f4f7f6;
+    box-shadow: 0 22px 55px rgba(16, 24, 40, 0.16);
+    overflow: hidden;
+    animation: otpCardEnter 0.38s ease-out both;
+}
+
+#user_registerform .card-inner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 50%;
+    border-radius: 26px 0 0 26px;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(4, 39, 31, 0.26), rgba(4, 39, 31, 0.26)),
+        var(--otp-logo-url),
+        var(--otp-current-doctor),
+        radial-gradient(90% 100% at 20% 18%, rgba(38, 231, 190, 0.22), transparent 54%),
+        radial-gradient(80% 90% at 80% 82%, rgba(0, 147, 86, 0.22), transparent 62%),
+        linear-gradient(140deg, rgba(4, 39, 31, 0.95) 0%, rgba(12, 92, 78, 0.9) 52%, rgba(15, 127, 116, 0.86) 100%);
+    background-repeat: no-repeat;
+    background-size:
+        100% 100%,
+        38% auto,
+        100% 100%,
+        90% 100%,
+        80% 90%,
+        100% 100%;
+    background-position:
+        0 0,
+        6% 34px,
+        0 0,
+        20% 18%,
+        80% 82%,
+        0 0;
+    transform-origin: center center;
+    backface-visibility: hidden;
+    will-change: opacity, transform;
+    animation: otpDoctorSwap 25s cubic-bezier(0.45, 0.05, 0.2, 0.95) infinite;
+    z-index: 1;
+}
+
+#user_registerform .card-inner::after {
+    content: "Join India's Doctors only Personal Financial Community. Connect with peers and grow together.";
+    position: absolute;
+    left: 6%;
+    right: auto;
+    bottom: 34px;
+    width: min(420px, 42%);
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(4, 39, 31, 0.78);
+    backdrop-filter: blur(4px);
+    white-space: normal;
+    color: #f6fffb;
+    font-size: clamp(1.02rem, 1.2vw, 1.32rem);
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    line-height: 1.32;
+    max-height: none;
+    overflow: visible;
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    animation: none;
+    transform: none;
+    opacity: 1;
+    z-index: 2;
+    pointer-events: none;
+}
+
+#user_registerform .socialv-login-form {
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    align-self: stretch;
+    margin: 0 !important;
+    padding: 34px 32px !important;
+    min-height: auto !important;
+    height: auto !important;
+    background: transparent;
+    border-left: 1px solid rgba(16, 24, 40, 0.06);
+    backdrop-filter: none;
+}
+
+#user_registerform .socialv-login-form > * {
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#user_registerform .otp-form-shell {
+    margin: 0;
+}
+
+#user_registerform .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+#user_registerform .row > [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+#user_registerform .otp-form-header {
+    margin-bottom: 10px;
+}
+
+#user_registerform .otp-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 9px;
+    border-radius: 999px;
+    background: rgba(0, 147, 86, 0.1);
+    color: var(--otp-accent);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+#user_registerform .logo-title {
+    margin: 8px 0 4px;
+    color: var(--otp-text);
+    font-size: 1.72rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+#user_registerform .otp-subtitle {
+    margin: 0;
+    color: var(--otp-muted);
+    font-size: 0.9rem;
+}
+
+#user_registerform .otp-form-shell .otp-field {
+    margin-bottom: 10px !important;
+    opacity: 0;
+    animation: otpFieldEnter 0.28s ease-out forwards;
+}
+
+#user_registerform .otp-form-shell .otp-field:nth-child(1) { animation-delay: 0.04s; }
+#user_registerform .otp-form-shell .otp-field:nth-child(2) { animation-delay: 0.08s; }
+#user_registerform .otp-form-shell .otp-field:nth-child(3) { animation-delay: 0.12s; }
+#user_registerform .otp-form-shell .otp-field:nth-child(4) { animation-delay: 0.16s; }
+#user_registerform .otp-form-shell .otp-field:nth-child(5) { animation-delay: 0.2s; }
+#user_registerform .otp-form-shell .otp-field:nth-child(6) { animation-delay: 0.24s; }
+
+#user_registerform label {
+    margin-bottom: 6px;
+    color: var(--otp-text);
+    font-size: 0.89rem;
+    font-weight: 600;
+}
+
+#user_registerform .input-group {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center !important;
+    gap: 0;
+    min-height: 44px;
+    border: 1px solid var(--otp-border);
+    border-radius: 13px;
+    background: var(--otp-bg);
+    overflow: hidden;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+#user_registerform .input-group:focus-within {
+    border-color: #b6e2cc;
+    box-shadow: 0 0 0 3px rgba(0, 147, 86, 0.12);
+}
+
+#user_registerform .input-group-text {
+    grid-column: 1;
+    width: 38px;
+    min-width: 38px;
+    height: 100%;
+    min-height: 44px;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: center !important;
+    border: none;
+    background: transparent;
+    color: #8a94a7;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex: 0 0 38px;
+}
+
+#user_registerform .input-group-text i {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 18px;
+    height: 18px;
+    font-size: 0.97rem;
+    line-height: 1 !important;
+}
+
+#user_registerform .form-control,
+#user_registerform select.form-control {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+    height: auto !important;
+    min-height: 44px !important;
+    line-height: 1.2 !important;
+    border: none;
+    border-radius: 0;
+    box-shadow: none !important;
+    background: transparent;
+    color: var(--otp-text);
+    font-size: 0.93rem;
+    padding: 10px 10px !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+}
+
+#user_registerform select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 36px !important;
+    background-image: linear-gradient(45deg, transparent 50%, #7a879a 50%),
+                      linear-gradient(135deg, #7a879a 50%, transparent 50%);
+    background-position: calc(100% - 16px) calc(50% - 3px),
+                         calc(100% - 11px) calc(50% - 3px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+#user_registerform .form-control::placeholder {
+    color: #98a2b3;
+}
+
+#user_registerform .form-control:focus,
+#user_registerform select.form-control:focus {
+    outline: none;
+}
+
+#user_registerform select.form-control option {
+    color: var(--otp-text);
+    background: #fff;
+}
+
+#user_registerform .atButton,
+#user_registerform .sendOtpBtn,
+#user_registerform .socialv-button.w-100 {
+    border: none !important;
+    border-radius: 11px !important;
+    background: var(--otp-accent) !important;
+    color: #fff !important;
+    font-weight: 600;
+    text-transform: none !important;
+    letter-spacing: 0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.18s ease, transform 0.18s cubic-bezier(0.2, 0.75, 0.32, 1), box-shadow 0.18s ease;
+    will-change: transform;
+}
+
+#user_registerform .atButton:hover,
+#user_registerform .sendOtpBtn:hover,
+#user_registerform .socialv-button.w-100:hover {
+    background: var(--otp-accent-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(0, 147, 86, 0.2);
+}
+
+#user_registerform .atButton:active,
+#user_registerform .sendOtpBtn:active,
+#user_registerform .socialv-button.w-100:active {
+    transform: translateY(0) scale(0.965);
+    box-shadow: 0 2px 7px rgba(0, 147, 86, 0.22) inset;
+}
+
+#user_registerform #registration-send-otp,
+#user_registerform #registration-verify-otp,
+#user_registerform #registration-resend-otp {
+    grid-column: 3;
+    margin: 4px 4px 4px 0 !important;
+    width: auto !important;
+    max-width: max-content;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 14px !important;
+    white-space: nowrap;
+    font-size: 0.8rem !important;
+    flex: 0 0 auto;
+}
+
+/* Force OTP action to stay inline on desktop split layouts */
+#user_registerform .register-username .input-group,
+#user_registerform #otp-section .input-group {
+    grid-template-columns: 38px minmax(0, 1fr) auto !important;
+    flex-wrap: nowrap !important;
+}
+
+#user_registerform .register-username .input-group .form-control,
+#user_registerform #otp-section .input-group .form-control {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#user_registerform .socialv-button.w-100 {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 6px;
+    font-size: 0.94rem;
+}
+
+#user_registerform #otp-timer {
+    margin: 7px 0 0;
+    color: #b42318 !important;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+#user_registerform #otp-success-message {
+    margin-top: 7px;
+    color: var(--otp-accent);
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.error-message {
+    display: block;
+    margin-top: 5px;
+    color: #c81e1e;
+    font-size: 0.79rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+#user_registerform .register-link {
+    margin: 8px 0 0;
+    color: var(--otp-muted);
+    font-size: 0.86rem;
+    text-align: center;
+}
+
+#user_registerform .register-link a.socialv-button-link {
+    margin-left: 6px;
+    color: var(--otp-accent) !important;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+#user_registerform .register-link a.socialv-button-link:hover {
+    text-decoration: underline;
+}
+
+.swal2-title {
+    color: #07142e !important;
+}
+
+@keyframes otpCardEnter {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes otpDoctorSwap {
+    0%, 16% {
+        --otp-current-doctor: var(--otp-doctor-1-url);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    18.5% {
+        opacity: 0.82;
+        transform: scale(1.024);
+    }
+    20%, 36% {
+        --otp-current-doctor: var(--otp-doctor-2-url);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    38.5% {
+        opacity: 0.82;
+        transform: scale(1.024);
+    }
+    40%, 56% {
+        --otp-current-doctor: var(--otp-doctor-3-url);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    58.5% {
+        opacity: 0.82;
+        transform: scale(1.024);
+    }
+    60%, 76% {
+        --otp-current-doctor: var(--otp-doctor-4-url);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    78.5% {
+        opacity: 0.82;
+        transform: scale(1.024);
+    }
+    80%, 96% {
+        --otp-current-doctor: var(--otp-doctor-5-url);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        --otp-current-doctor: var(--otp-doctor-1-url);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes otpHeadlineCarousel {
+    0%, 16% { transform: translateY(0); opacity: 1; }
+    18.5% { transform: translateY(0); opacity: 0.58; }
+    20%, 36% { transform: translateY(-1.24em); opacity: 1; }
+    38.5% { transform: translateY(-1.24em); opacity: 0.58; }
+    40%, 56% { transform: translateY(-2.48em); opacity: 1; }
+    58.5% { transform: translateY(-2.48em); opacity: 0.58; }
+    60%, 76% { transform: translateY(-3.72em); opacity: 1; }
+    78.5% { transform: translateY(-3.72em); opacity: 0.58; }
+    80%, 96% { transform: translateY(-4.96em); opacity: 1; }
+    100% { transform: translateY(-4.96em); opacity: 1; }
+}
+
+@keyframes otpFieldEnter {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1100px) {
+    #user_registerform .card-inner {
+        display: block;
+        min-height: auto;
+    }
+
+    #user_registerform .card-inner::before {
+        display: none;
+    }
+
+    #user_registerform .card-inner::after {
+        display: block;
+        content: "";
+        left: 14px;
+        right: auto;
+        top: 14px;
+        width: min(210px, 62vw);
+        height: 54px;
+        max-height: none;
+        overflow: visible;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        background-image: var(--otp-logo-url);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: left center;
+        text-shadow: none;
+        animation: none !important;
+        opacity: 1;
+    }
+
+    #user_registerform .socialv-login-form {
+        grid-column: auto;
+        border-left: none;
+        padding: 78px 24px 24px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    #user_registerform .card-inner {
+        display: block;
+        min-height: auto;
+        border-radius: 20px;
+    }
+
+    #user_registerform .card-inner::before {
+        display: none;
+        right: 0;
+    }
+
+    #user_registerform .card-inner::after {
+        display: block;
+        content: "";
+        left: 14px;
+        right: auto;
+        top: 14px;
+        width: min(210px, 62vw);
+        height: 54px;
+        max-height: none;
+        overflow: visible;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        background-image: var(--otp-logo-url);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: left center;
+        text-shadow: none;
+        animation: none !important;
+        opacity: 1;
+    }
+
+    #user_registerform .socialv-login-form {
+        grid-column: auto;
+        border-left: none;
+        padding: 78px 20px 22px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    #user_registerform.card-main.socialv-bp-login {
+        margin: 0;
+        padding: 0 6px;
+    }
+
+    #user_registerform .card-inner {
+        display: block;
+        min-height: auto;
+        border-radius: 18px;
+    }
+
+    #user_registerform .card-inner::before {
+        display: none;
+        right: 0;
+    }
+
+    #user_registerform .socialv-login-form {
+        grid-column: auto;
+        border-left: none;
+        padding: 76px 14px 16px !important;
+    }
+
+    #user_registerform .socialv-login-form > * {
+        max-width: 100%;
+    }
+
+    #user_registerform .card-inner::after {
+        display: block;
+        content: "";
+        left: 10px;
+        right: auto;
+        top: 10px;
+        width: min(190px, 72vw);
+        height: 48px;
+        max-height: none;
+        overflow: visible;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        background-image: var(--otp-logo-url);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: left center;
+        text-shadow: none;
+        animation: none !important;
+        opacity: 1;
+    }
+
+    #user_registerform .logo-title {
+        font-size: 1.5rem;
+    }
+
+    #user_registerform .input-group {
+        min-height: 42px !important;
+        grid-template-columns: 36px minmax(0, 1fr);
+    }
+
+    #user_registerform .input-group-text {
+        width: 36px;
+        min-width: 36px;
+        height: 100% !important;
+        min-height: 42px !important;
+        flex: 0 0 36px;
+    }
+
+    #user_registerform .form-control,
+    #user_registerform select.form-control {
+        height: auto !important;
+        min-height: 42px !important;
+        line-height: 1.2 !important;
+        padding: 9px 10px !important;
+        font-size: 0.9rem;
+    }
+
+    #user_registerform .register-username .input-group,
+    #user_registerform #otp-section .input-group {
+        grid-template-columns: 36px minmax(0, 1fr) !important;
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+
+    #user_registerform .register-username .input-group .input-group-text,
+    #user_registerform #otp-section .input-group .input-group-text {
+        flex: 0 0 36px;
+    }
+
+    #user_registerform .register-username .input-group .form-control,
+    #user_registerform #otp-section .input-group .form-control {
+        flex: 1 1 calc(100% - 36px);
+    }
+
+    #user_registerform #registration-send-otp,
+    #user_registerform #registration-verify-otp,
+    #user_registerform #registration-resend-otp {
+        grid-column: 1 / -1;
+        flex: 1 1 100%;
+        width: calc(100% - 6px) !important;
+        margin: 2px 3px 3px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        font-size: 0.82rem !important;
+        border-radius: 10px !important;
+    }
+
+    #user_registerform select.form-control {
+        padding-right: 34px !important;
+        background-position: calc(100% - 15px) calc(50% - 2px),
+                             calc(100% - 10px) calc(50% - 2px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #user_registerform .card-inner,
+    #user_registerform .otp-form-shell .otp-field,
+    #user_registerform .card-inner::before,
+    #user_registerform .card-inner::after {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+
+    #user_registerform .input-group,
+    #user_registerform .atButton,
+    #user_registerform .sendOtpBtn,
+    #user_registerform .socialv-button.w-100 {
+        transition: none !important;
+    }
+}

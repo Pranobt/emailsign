@@ -1,5 +1,9 @@
 window.SIGNATURES = [
   {
+    "name": "Onkar Rathod",
+    "url": "https://pranobt.github.io/emailsign/OnkarR.html"
+  },
+  {
     "name": "Swapnil Bhagwat",
     "url": "https://pranobt.github.io/emailsign/SwapnilB.html"
   },

@@ -50,8 +50,8 @@
       position: relative; z-index: 1;
     }
     .logo-box img {
-      width: 46px; height: 46px;
-      object-fit: contain;
+      height: 44px;
+      width: auto;
       display: block;
     }
     .header-text { position: relative; z-index: 1; }
@@ -362,7 +362,7 @@
       }
       .header-text h1 { font-size: 16px; }
       .header-text p  { font-size: 11px; }
-      .logo-box img { width: 38px; height: 38px; }
+      .logo-box img { height: 36px; width: auto; }
 
       .right-head-title { font-size: 17px; }
       .placeholder-state { padding: 40px 24px; }
@@ -389,7 +389,6 @@
     <div class="logo-box"><img src="https://www.finnovate.in/assets/images/Finnovate_Logo_Rounded.png" alt="Finnovate" /></div>
     <div class="header-text">
       <h1>Personal Links</h1>
-      <p>FINNOVATE &nbsp;·&nbsp; Be Financially Fit</p>
     </div>
   </header>
 
@@ -583,20 +582,17 @@
     { name: "Vivek Rajesh Gupta", id: "644748000059266001" }
   ];
 
-  const COMMON_PREFIX = '644748000';
-
   function buildUTM(base, params) {
     const q = new URLSearchParams(params);
     return base + (base.includes('?') ? '&' : '?') + q.toString();
   }
 
   function getLinks(user) {
-    const termId = user.id.replace(COMMON_PREFIX, '');
     const base = {
       utm_origin:  'Direct_Lead',
       utm_source:  user.name,
       utm_medium:  'personal link',
-      utm_term:    termId,
+      utm_term:    user.id,
     };
     return {
       register:  buildUTM('https://www.financialopd.com/sign-up/',  { ...base, utm_campaign: 'Financialopd', utm_content: 'Register' }),

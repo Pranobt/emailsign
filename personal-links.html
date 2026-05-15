@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finnovate · Personal Links</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #1B6E3E;
+      --green-mid:   #25a05e;
+      --green-light: #d1f0e0;
+      --green-pale:  #f0faf4;
+      --green-dark:  #134f2c;
+      --text:        #1a1f2e;
+      --muted:       #6b7280;
+      --border:      #e5e7eb;
+      --white:       #ffffff;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:   0 4px 16px rgba(0,0,0,.1);
+      --radius:      14px;
+      --radius-sm:   8px;
+    }
+
+    html { font-family: 'Inter', sans-serif; background: var(--green-pale); color: var(--text); height: 100%; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 55%, var(--green-mid) 100%);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 12px rgba(27,110,62,.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .logo-box {
+      width: 42px; height: 42px;
+      background: var(--white);
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 19px; color: var(--green);
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+      position: relative; z-index: 1;
+    }
+    .header-text { position: relative; z-index: 1; }
+    .header-text h1 { color: var(--white); font-size: 18px; font-weight: 700; letter-spacing: -.3px; line-height: 1.2; }
+    .header-text p  { color: rgba(255,255,255,.7); font-size: 12px; font-weight: 400; margin-top: 2px; }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      padding: 24px 28px;
+      flex: 1;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* LEFT PANEL */
+    .panel-left {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    .panel-left-head { padding: 18px 18px 12px; border-bottom: 1px solid var(--border); }
+    .panel-left-head h2 { font-size: 15px; font-weight: 700; color: var(--text); }
+    .panel-left-head p  { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+    .search-wrap { position: relative; margin-top: 11px; }
+    .search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    .search-input {
+      width: 100%;
+      padding: 11px 12px 11px 36px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--green-pale);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .search-input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(37,160,94,.15); }
+    .search-input::placeholder { color: #9ca3af; }
+
+    .count-bar {
+      padding: 7px 18px 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+
+    .name-list { overflow-y: auto; max-height: 55vh; -webkit-overflow-scrolling: touch; }
+    .name-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 18px;
+      cursor: pointer;
+      border-bottom: 1px solid #f3f4f6;
+      transition: background .15s;
+      position: relative;
+      min-height: 52px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .name-item:hover  { background: var(--green-pale); }
+    .name-item.active { background: var(--green-light); }
+    .name-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--green);
+      border-radius: 0 2px 2px 0;
+    }
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+      color: var(--white);
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: .5px;
+    }
+    .name-item.active .avatar { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%); }
+    .name-label { font-size: 14px; font-weight: 500; color: var(--text); }
+    .name-item.active .name-label { color: var(--green-dark); font-weight: 600; }
+    .no-results { padding: 28px 18px; text-align: center; color: var(--muted); font-size: 13px; }
+
+    .selected-person {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--green-light);
+      border-top: 1px solid var(--green-light);
+    }
+    .selected-person.show { display: flex; }
+    .selected-person .avatar {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+      width: 38px; height: 38px; font-size: 13px;
+    }
+    .selected-person-name {
+      flex: 1;
+      font-size: 14px; font-weight: 600;
+      color: var(--green-dark);
+    }
+    .change-btn {
+      padding: 8px 14px;
+      min-height: 36px;
+      background: var(--white);
+      border: 1.5px solid var(--green-mid);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px; font-weight: 600;
+      color: var(--green-dark);
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .change-btn:hover { background: var(--green); color: var(--white); border-color: var(--green); }
+
+    /* RIGHT PANEL */
+    .panel-right { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+
+    .right-head {
+      margin-bottom: 16px;
+      display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    .right-head-title { font-size: 20px; font-weight: 700; color: var(--text); transition: color .2s; }
+    .right-head-title span { color: var(--green); }
+    .right-head-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+    /* placeholder */
+    .placeholder-state {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 2px dashed var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 56px 36px;
+      flex: 1;
+    }
+    .placeholder-icon {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .placeholder-state h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+    .placeholder-state p  { font-size: 13px; color: var(--muted); margin-top: 6px; max-width: 260px; line-height: 1.55; }
+
+    /* cards container */
+    .links-container { display: none; flex-direction: column; gap: 12px; }
+    .links-container.show { display: flex; }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .links-container.show .link-card:nth-child(1) { animation: cardIn .28s ease both; }
+    .links-container.show .link-card:nth-child(2) { animation: cardIn .28s .05s ease both; }
+    .links-container.show .link-card:nth-child(3) { animation: cardIn .28s .10s ease both; }
+    .links-container.show .link-card:nth-child(4) { animation: cardIn .28s .15s ease both; }
+
+    .link-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .link-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-icon {
+      width: 42px; height: 42px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 19px;
+    }
+    .card-icon.green  { background: #d1f0e0; }
+    .card-icon.blue   { background: #dbeafe; }
+    .card-icon.purple { background: #ede9fe; }
+    .card-icon.orange { background: #ffedd5; }
+
+    .card-meta { flex: 1; min-width: 0; }
+    .card-title {
+      font-size: 13.5px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 7px;
+      flex-wrap: wrap;
+    }
+    .card-badge {
+      font-size: 10px; font-weight: 600;
+      padding: 2px 7px; border-radius: 99px; letter-spacing: .3px;
+      flex-shrink: 0;
+    }
+    .badge-green  { background: var(--green-light); color: var(--green-dark); }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+    .badge-purple { background: #ede9fe; color: #6d28d9; }
+    .badge-orange { background: #ffedd5; color: #c2410c; }
+    .card-url {
+      font-size: 11.5px;
+      color: #5a6270;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 12px;
+      word-break: break-all;
+      line-height: 1.6;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -.01em;
+    }
+
+    .copy-btn {
+      flex-shrink: 0;
+      padding: 10px 16px;
+      min-height: 44px;
+      background: var(--green-pale);
+      color: var(--green-dark);
+      border: 1.5px solid var(--green-light);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 5px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .copy-btn:hover  { background: var(--green); color: var(--white); border-color: var(--green); }
+    .copy-btn:active { transform: scale(.97); }
+    .copy-btn.copied { background: #16a34a; color: var(--white); border-color: #16a34a; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 20px;
+      background: #1a1f2e;
+      color: var(--white);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 13.5px; font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      display: flex; align-items: center; gap: 8px;
+      transform: translateY(20px); opacity: 0;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+      pointer-events: none;
+      z-index: 1000;
+      max-width: calc(100vw - 40px);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 14px 24px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    /* MOBILE */
+    @media (max-width: 680px) {
+      .layout {
+        grid-template-columns: 1fr;
+        padding: 14px;
+        gap: 14px;
+      }
+      .panel-left {
+        position: static;
+      }
+      .name-list {
+        max-height: 36vh;
+      }
+      .header {
+        padding: 13px 16px;
+        gap: 12px;
+      }
+      .header-text h1 { font-size: 16px; }
+      .header-text p  { font-size: 11px; }
+      .logo-box { width: 38px; height: 38px; font-size: 17px; }
+
+      .right-head-title { font-size: 17px; }
+      .placeholder-state { padding: 40px 24px; }
+
+      .link-card { padding: 14px; gap: 9px; }
+      .card-header { gap: 10px; }
+      .card-icon { width: 38px; height: 38px; font-size: 17px; border-radius: 9px; }
+      .copy-btn { padding: 9px 12px; font-size: 12.5px; min-height: 40px; }
+      .card-title { font-size: 12.5px; }
+      .card-url { font-size: 10.5px; padding: 7px 10px; }
+    }
+
+    @media (max-width: 400px) {
+      .card-header { flex-wrap: wrap; }
+      .card-meta { flex-basis: calc(100% - 52px); }
+      .copy-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-box">F</div>
+    <div class="header-text">
+      <h1>Personal Links</h1>
+      <p>FINNOVATE &nbsp;·&nbsp; Be Financially Fit</p>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="layout">
+
+    <!-- LEFT: Name picker -->
+    <aside class="panel-left">
+      <div class="panel-left-head">
+        <h2>Find your name</h2>
+        <p>Tap your name to get your personal links.</p>
+        <div class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input class="search-input" type="text" id="searchInput" placeholder="Type your name..." autocomplete="off" autocorrect="off" spellcheck="false" />
+        </div>
+      </div>
+      <div class="selected-person" id="selectedPerson">
+        <div class="avatar" id="selectedAvatar"></div>
+        <span class="selected-person-name" id="selectedPersonName"></span>
+        <button class="change-btn" onclick="changeUser()">Change</button>
+      </div>
+      <div class="count-bar" id="countBar">ALL MEMBERS</div>
+      <div class="name-list" id="nameList"></div>
+    </aside>
+
+    <!-- RIGHT: Links -->
+    <section class="panel-right" id="rightPanel">
+      <div class="right-head">
+        <div>
+          <div class="right-head-title" id="rightHeadTitle">Your Personal Links</div>
+          <div class="right-head-sub" id="rightSubtitle">Tap your name on the left to see your links.</div>
+        </div>
+      </div>
+
+      <!-- Placeholder -->
+      <div class="placeholder-state" id="placeholderState">
+        <div class="placeholder-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B6E3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <h3>No name selected yet</h3>
+        <p>Search or scroll to find your name, then tap it to see your 4 personal links.</p>
+      </div>
+
+      <!-- Link cards -->
+      <div class="links-container" id="linksContainer">
+
+        <!-- Card 1: Financialopd Register -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon green">📋</div>
+            <div class="card-meta">
+              <div class="card-title">
+                Financialopd · Register
+                <span class="card-badge badge-green">Financialopd</span>
+              </div>
+            </div>
+            <button class="copy-btn" onclick="copyLink('url-register', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="card-url" id="url-register"></div>
+        </div>
+
+        <!-- Card 2: FinnFit 50 -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon orange">🎯</div>
+            <div class="card-meta">
+              <div class="card-title">
+                FinnFit Test · 50 Marks
+                <span class="card-badge badge-orange">Finnfit</span>
+              </div>
+            </div>
+            <button class="copy-btn" onclick="copyLink('url-finnfit50', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="card-url" id="url-finnfit50"></div>
+        </div>
+
+        <!-- Card 3: FinnFit 20 -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon purple">📝</div>
+            <div class="card-meta">
+              <div class="card-title">
+                FinnFit Quiz · 20 Marks
+                <span class="card-badge badge-purple">Finnfit</span>
+              </div>
+            </div>
+            <button class="copy-btn" onclick="copyLink('url-finnfit20', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="card-url" id="url-finnfit20"></div>
+        </div>
+
+        <!-- Card 4: Calendly -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon blue">📅</div>
+            <div class="card-meta">
+              <div class="card-title">
+                Calendly · Book a Meeting
+                <span class="card-badge badge-blue">Calendly</span>
+              </div>
+            </div>
+            <button class="copy-btn" onclick="copyLink('url-calendly', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="card-url" id="url-calendly"></div>
+        </div>
+
+
+      </div><!-- /links-container -->
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Finnovate Internal Tool &nbsp;·&nbsp; These links are personal, do not share with other team members
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Copied!</span>
+  </div>
+
+<script>
+  const USERS = [
+    { name: "Aakanksha Padwal",   id: "644748000036512645" },
+    { name: "Ajay Jadeja",        id: "644748000008330006" },
+    { name: "Ajinkya Jadhav",     id: "644748000001274001" },
+    { name: "Anuj Rane",          id: "644748000067787001" },
+    { name: "Artish More",        id: "644748000001982001" },
+    { name: "Avani Bazaz",        id: "644748000063607001" },
+    { name: "Avinash Tiwari",     id: "644748000001275001" },
+    { name: "Chetan Vadnere",     id: "644748000062584001" },
+    { name: "Chintan Dudhela",    id: "644748000001981001" },
+    { name: "Dimple Jagwani",     id: "644748000045219001" },
+    { name: "Drishti Bellani",    id: "644748000003508001" },
+    { name: "Gaurav Khode",       id: "644748000032219247" },
+    { name: "Gaurav Prasad",      id: "644748000001983021" },
+    { name: "Gosal Sangole",      id: "644748000001276001" },
+    { name: "Jayant Furia",       id: "644748000001980001" },
+    { name: "Jignesh Gajjar",     id: "644748000001973001" },
+    { name: "Kashin Shetty",      id: "644748000064625001" },
+    { name: "Kavya Shah",         id: "644748000064633001" },
+    { name: "Kruti Parekh",       id: "644748000060507001" },
+    { name: "Mansi Gangani",      id: "644748000030799001" },
+    { name: "Mayuri Verma",       id: "644748000033866203" },
+    { name: "Melitta Coutinho",   id: "644748000002846001" },
+    { name: "Nikhil Ambep",       id: "644748000067801001" },
+    { name: "Nikita Fichadiya",   id: "644748000036045001" },
+    { name: "Onkar Rathod",       id: "644748000062325001" },
+    { name: "Pradnya Patil",      id: "644748000002041026" },
+    { name: "Prerna Amrutkar",    id: "644748000062584039" },
+    { name: "Preshita Jadhav",    id: "644748000002043001" },
+    { name: "Priyanka Malviya",   id: "644748000015180001" },
+    { name: "Priyanka Shahane",   id: "644748000059017001" },
+    { name: "Rajvi Gori",         id: "644748000058261001" },
+    { name: "Rashi Panchal",      id: "644748000055014001" },
+    { name: "Rekha Mohnot",       id: "644748000002035004" },
+    { name: "Rushikesh Shivgan",  id: "644748000035910007" },
+    { name: "Sagar Maheshwari",   id: "644748000000334001" },
+    { name: "Sangeeta Singh",     id: "644748000035694042" },
+    { name: "Satvik Yadav",       id: "644748000049197001" },
+    { name: "Shraddha Udage",     id: "644748000061643001" },
+    { name: "Siddhesh Pathar",    id: "644748000001983001" },
+    { name: "Sumit Bari",         id: "644748000064874001" },
+    { name: "Sushant Bandewar",   id: "644748000002159001" },
+    { name: "Sushil Asrani",      id: "644748000001990001" },
+    { name: "Swapnil Bhagwat",    id: "644748000062164001" },
+    { name: "Swapnil Kansara",    id: "644748000046003012" },
+    { name: "Swapnil Kshirsagar", id: "644748000037448005" },
+    { name: "Tushar Parmar",      id: "644748000024524001" },
+    { name: "Vandana Manwani",    id: "644748000002028001" },
+    { name: "Veenie Shah",        id: "644748000067807002" },
+    { name: "Vishal Kadganchi",   id: "644748000034070001" },
+    { name: "Vivek Rajesh Gupta", id: "644748000059266001" }
+  ];
+
+  const COMMON_PREFIX = '644748000';
+
+  function buildUTM(base, params) {
+    const q = new URLSearchParams(params);
+    return base + (base.includes('?') ? '&' : '?') + q.toString();
+  }
+
+  function getLinks(user) {
+    const termId = user.id.replace(COMMON_PREFIX, '');
+    const base = {
+      utm_origin:  'Direct_Lead',
+      utm_source:  user.name,
+      utm_medium:  'personal link',
+      utm_term:    termId,
+    };
+    return {
+      register:  buildUTM('https://www.financialopd.com/sign-up/',  { ...base, utm_campaign: 'Financialopd', utm_content: 'Register' }),
+      finnfit50: buildUTM('https://plan.finnovate.in/finnfit',       { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Test' }),
+      finnfit20: buildUTM('https://plan.finnovate.in/finnfit-quiz',  { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Quiz' }),
+      calendly:  buildUTM('https://calendly.com/finnovate/financial-fitness-consultation', { ...base, utm_campaign: 'Calendly', utm_content: 'Book a Meeting' }),
+    };
+  }
+
+  let currentLinks = null;
+  let activeItem   = null;
+
+  function initials(name) {
+    return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  }
+
+  function renderList(users) {
+    const list = document.getElementById('nameList');
+    const bar  = document.getElementById('countBar');
+    bar.textContent = users.length === USERS.length
+      ? `ALL MEMBERS · ${USERS.length}`
+      : `${users.length} OF ${USERS.length} MEMBERS`;
+
+    if (users.length === 0) {
+      list.innerHTML = '<div class="no-results">No results found.</div>';
+      return;
+    }
+
+    list.innerHTML = users.map(u => `
+      <div class="name-item${activeItem === u.name ? ' active' : ''}"
+           data-name="${u.name}" onclick="selectUser('${u.name.replace(/'/g, "\\'")}')">
+        <div class="avatar">${initials(u.name)}</div>
+        <span class="name-label">${u.name}</span>
+      </div>
+    `).join('');
+  }
+
+  function selectUser(name) {
+    const user = USERS.find(u => u.name === name);
+    if (!user) return;
+
+    activeItem   = name;
+    currentLinks = getLinks(user);
+
+    const firstName = name.split(' ')[0];
+
+    // collapse list, show compact selected row
+    document.getElementById('countBar').style.display = 'none';
+    document.getElementById('nameList').style.display = 'none';
+    document.getElementById('selectedAvatar').textContent = initials(name);
+    document.getElementById('selectedPersonName').textContent = name;
+    document.getElementById('selectedPerson').classList.add('show');
+
+    renderList(getFilteredUsers());
+
+    // update heading with first name
+    document.getElementById('rightHeadTitle').innerHTML =
+      `<span>${firstName}'s</span> Personal Links`;
+    document.getElementById('rightSubtitle').textContent =
+      'Your links are ready. Tap Copy to share.';
+
+    // re-trigger card animations by toggling .show
+    const container = document.getElementById('linksContainer');
+    container.classList.remove('show');
+    document.getElementById('placeholderState').style.display = 'none';
+    void container.offsetWidth; // force reflow
+    container.classList.add('show');
+
+    // fill URLs
+    const setCard = (id, fullUrl, displayUrl) => {
+      const el = document.getElementById(id);
+      el.dataset.url = fullUrl;
+      el.textContent = displayUrl;
+    };
+    setCard('url-register',  currentLinks.register,  currentLinks.register);
+    setCard('url-finnfit50', currentLinks.finnfit50,  currentLinks.finnfit50);
+    setCard('url-finnfit20', currentLinks.finnfit20,  currentLinks.finnfit20);
+    setCard('url-calendly',  currentLinks.calendly,   currentLinks.calendly);
+
+    // update browser URL so the page is bookmarkable
+    const pageUrl = new URL(window.location.href);
+    pageUrl.searchParams.set('for', name);
+    window.history.replaceState(null, '', pageUrl.toString());
+
+    // reset copy buttons
+    document.querySelectorAll('.copy-btn').forEach(b => {
+      b.classList.remove('copied');
+      b.innerHTML = copyIcon() + ' Copy';
+    });
+
+    // on mobile, scroll to links
+    if (window.innerWidth <= 680) {
+      setTimeout(() => {
+        document.getElementById('rightPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }
+
+  function changeUser() {
+    document.getElementById('selectedPerson').classList.remove('show');
+    document.getElementById('countBar').style.display = '';
+    document.getElementById('nameList').style.display = '';
+    document.getElementById('searchInput').value = '';
+    renderList(USERS);
+    document.getElementById('searchInput').focus();
+  }
+
+  function copyIcon() {
+    return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  }
+  function checkIcon() {
+    return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  }
+
+  function copyLink(elId, btn) {
+    const url = document.getElementById(elId).dataset.url;
+    if (!url) return;
+    navigator.clipboard.writeText(url).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = checkIcon() + ' Copied!';
+      showToast('Link copied!');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = copyIcon() + ' Copy';
+      }, 2200);
+    });
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function getFilteredUsers() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    return q ? USERS.filter(u => u.name.toLowerCase().includes(q)) : USERS;
+  }
+
+  document.getElementById('searchInput').addEventListener('input', () => {
+    renderList(getFilteredUsers());
+  });
+
+  // auto-select from URL param on load
+  (function init() {
+    renderList(USERS);
+    const params = new URLSearchParams(window.location.search);
+    const forName = params.get('for');
+    if (forName) {
+      const match = USERS.find(u => u.name.toLowerCase() === forName.toLowerCase());
+      if (match) selectUser(match.name);
+    }
+  })();
+</script>
+</body>
+</html>

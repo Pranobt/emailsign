@@ -233,6 +233,7 @@
     .links-container.show .link-card:nth-child(2) { animation: cardIn .28s .05s ease both; }
     .links-container.show .link-card:nth-child(3) { animation: cardIn .28s .10s ease both; }
     .links-container.show .link-card:nth-child(4) { animation: cardIn .28s .15s ease both; }
+    .links-container.show .link-card:nth-child(5) { animation: cardIn .28s .20s ease both; }
 
     .link-card {
       background: var(--white);
@@ -434,7 +435,7 @@
           </svg>
         </div>
         <h3>No name selected yet</h3>
-        <p>Search or scroll to find your name, then tap it to see your 4 personal links.</p>
+        <p>Search or scroll to find your name, then tap it to see your 5 personal links.</p>
       </div>
 
       <!-- Link cards -->
@@ -512,6 +513,23 @@
           <div class="card-url" id="url-calendly"></div>
         </div>
 
+        <!-- Card 5: Google Review -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon green">⭐</div>
+            <div class="card-meta">
+              <div class="card-title">
+                Google · Leave a Review
+                <span class="card-badge badge-green">Google</span>
+              </div>
+            </div>
+            <button class="copy-btn" onclick="copyLink('url-review', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="card-url" id="url-review"></div>
+        </div>
 
       </div><!-- /links-container -->
     </section>
@@ -599,6 +617,7 @@
       finnfit50: buildUTM('https://plan.finnovate.in/finnfit',       { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Test' }),
       finnfit20: buildUTM('https://plan.finnovate.in/finnfit-quiz',  { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Quiz' }),
       calendly:  buildUTM('https://calendly.com/finnovate/financial-fitness-consultation', { ...base, utm_campaign: 'Calendly', utm_content: 'Book a Meeting' }),
+      review:    'https://g.page/r/CZaNoptWqry6EBM/review',
     };
   }
 
@@ -671,6 +690,7 @@
     setCard('url-finnfit50', currentLinks.finnfit50,  currentLinks.finnfit50);
     setCard('url-finnfit20', currentLinks.finnfit20,  currentLinks.finnfit20);
     setCard('url-calendly',  currentLinks.calendly,   currentLinks.calendly);
+    setCard('url-review',    currentLinks.review,     currentLinks.review);
 
     // update browser URL so the page is bookmarkable
     const pageUrl = new URL(window.location.href);

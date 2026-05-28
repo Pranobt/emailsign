@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whoa there!</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eef7f2 0%, #f4faf7 60%, #f8fcfa 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    .card {
+      text-align: center;
+      padding: 56px 48px;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(0, 100, 58, 0.12);
+      border-radius: 28px;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 12px 40px rgba(0, 60, 35, 0.09);
+    }
+
+    .emoji {
+      font-size: 72px;
+      line-height: 1;
+      margin-bottom: 24px;
+      display: block;
+      animation: wobble 2s ease-in-out infinite;
+    }
+
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-4deg); }
+      50%       { transform: rotate(4deg); }
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0e1f17;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #4a6257;
+      margin-bottom: 32px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(0, 147, 86, 0.08);
+      border: 1px solid rgba(0, 147, 86, 0.16);
+      color: #007040;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    a.btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: linear-gradient(180deg, #00a762 0%, #00894f 100%);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(0, 100, 58, 0.22);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    a.btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0, 100, 58, 0.28);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="emoji">🕵️</span>
+    <div class="tag">Access Denied</div>
+    <h1>Sneaky, sneaky!</h1>
+    <p>
+      Looks like you took a wrong turn somewhere.<br />
+      Nothing to see here — move along!
+    </p>
+    <a class="btn" href="/">Take me somewhere safe</a>
+  </div>
+</body>
+</html>

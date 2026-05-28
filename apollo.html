@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finnovate: Financial Literacy RTM Proposal for Apollo Hospital</title>
+    <title>Finnovate: Financial Literacy RTM Proposal for Nashik Ophthalmological Association (NOA)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -37,8 +37,11 @@
         }
 
         body.is-exporting {
-            padding: 0;
-            background: #fff;
+            display: block !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: #fff !important;
+            gap: 0 !important;
         }
 
         h1, h2 {
@@ -49,111 +52,89 @@
         .document {
             width: 210mm;
             min-height: 297mm;
-            padding: 8mm;
+            padding: 12mm 14mm;
             background: var(--paper);
             border-radius: 16px;
             box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
+        }
+
+        .document > * + * {
+            margin-top: 14px;
         }
 
         body.is-exporting .document {
-            padding: 8mm;
-            border-radius: 0;
-            box-shadow: none;
+            width: 100% !important;
+            min-height: auto !important;
+            padding: 12mm 14mm !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
 
         body.is-exporting .download-area {
             display: none;
         }
 
-        .hero {
-            border-radius: 14px;
-            background: linear-gradient(135deg, #0b6b43 0%, #0f9d58 55%, #11a35e 100%);
-            padding: 18px 18px 16px;
-            position: relative;
-            color: #fff;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: "";
-            position: absolute;
-            right: -60px;
-            top: -80px;
-            width: 220px;
-            height: 220px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 70%);
-        }
-
-        .hero-top {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .logo-wrap {
-            background: #fff;
-            border-radius: 12px;
-            padding: 10px;
+        /* ── Letterhead ── */
+        .letterhead {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 10px 4px 14px;
         }
 
-        .logo {
-            width: 100%;
-            height: auto;
+        .letterhead .logo {
+            height: 60px;
+            width: auto;
             display: block;
         }
 
-        .hero-meta {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
+        .letterhead-address {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            line-height: 1.6;
         }
 
-        .hero-title {
-            font-size: 22px;
-            line-height: 1.2;
-            margin: 0;
-            color: #fff;
-            position: relative;
-            z-index: 1;
+        .letter-divider {
+            height: 4px;
+            background: linear-gradient(90deg, #0b8457 60%, #f0c040 100%);
+            border-radius: 2px;
+            margin-bottom: 20px;
         }
 
-        .hero-subtitle {
+        .letter-meta {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.85);
-            margin: 6px 0 0;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
+            color: var(--ink);
+            margin-bottom: 18px;
+            display: grid;
+            gap: 6px;
         }
 
-        .hero-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.25);
-            margin: 12px 0 8px;
-            position: relative;
-            z-index: 1;
+        .letter-to {
+            font-size: 13px;
+            color: var(--ink);
+            line-height: 1.7;
+            margin-bottom: 16px;
         }
 
-        .intro {
+        .letter-subject {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 18px;
+        }
+
+        .letter-greeting {
+            font-size: 13px;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+
+        .letter-opening {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.88);
-            margin: 0;
-            position: relative;
-            z-index: 1;
+            color: var(--muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
         .stats {
@@ -170,9 +151,10 @@
         }
 
         .stat-number {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--accent-dark);
+            white-space: nowrap;
         }
 
         .stat-label {
@@ -342,7 +324,11 @@
         .roadmap,
         .quote,
         .contact,
-        .why-grid {
+        .why-grid,
+        header,
+        section,
+        .timeline-panel,
+        .commitment-grid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
@@ -529,7 +515,7 @@
 
         @page {
             size: A4;
-            margin: 8mm;
+            margin: 12mm 0;
         }
 
         @media (max-width: 960px) {
@@ -582,10 +568,6 @@
             }
         }
 
-        body.is-exporting .hero-top {
-            grid-template-columns: 120px 1fr;
-        }
-
         body.is-exporting .stats {
             grid-template-columns: repeat(5, minmax(0, 1fr));
         }
@@ -619,19 +601,28 @@
 
         @media print {
             body {
-                padding: 0;
-                background: #fff;
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+                gap: 0 !important;
             }
 
-            .page {
-                width: auto;
-                min-height: auto;
-                border-radius: 0;
-                box-shadow: none;
+            .document {
+                width: 100% !important;
+                min-height: auto !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 12mm 14mm !important;
+            }
+
+            .stats {
+                display: grid !important;
+                grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
             }
 
             .download-area {
-                display: none;
+                display: none !important;
             }
         }
     </style>
@@ -639,26 +630,36 @@
 <body>
 
 <div id="pdf-content" class="document">
-    <header class="hero">
-        <div class="hero-top">
-            <div class="logo-wrap">
-                <img class="logo" src="assets/logo1.png" alt="Finnovate logo" loading="eager">
-            </div>
-            <div>
-                <div class="hero-meta">Engagement Proposal</div>
-                <h1 class="hero-title">Financial Literacy RTM Proposal</h1>
-                <p class="hero-subtitle">Apollo Hospital</p>
+    <header>
+        <div class="letterhead">
+            <img class="logo" src="assets/logo1.png" alt="Finnovate logo" loading="eager">
+            <div class="letterhead-address">
+                703, The Summit Business Park<br>
+                Andheri – Kurla Road, Andheri East, Mumbai – 400093
             </div>
         </div>
-        <div class="hero-divider"></div>
-        <p class="intro">Finnovate supports doctors and medical professionals with structured financial planning, focused on long-term clarity and practical outcomes.</p>
+        <div class="letter-divider"></div>
+
+        <div class="letter-meta">
+            <div><strong>Ref:</strong> FIN/NOA/2026/01</div>
+            <div><strong>Date:</strong> 24 / 03 / 2026</div>
+        </div>
+
+        <div class="letter-to">
+            To,<br><br>
+            The President / Secretary,<br>
+            Nashik Ophthalmological Association (NOA),<br>
+            Nashik.
+        </div>
+
+        <div class="letter-subject">
+            Subject: Proposal for Financial Wellness Engagement for Members of Nashik Ophthalmological Association (NOA)
+        </div>
+
+        <div class="letter-greeting">Respected Sir / Ma'am,</div>
+        <p class="letter-opening">Greetings from Finnovate. We are pleased to present this proposal for a financial literacy and wellness initiative for the ophthalmologists and members of the Nashik Ophthalmological Association (NOA). Finnovate supports doctors and medical professionals with structured financial planning, focused on long-term clarity and practical outcomes.</p>
     </header>
 
-<section class="panel">
-        <h2>Backed by Doctors</h2>
-        <p class="panel-text">Doctors have been so impressed with our services; that some marquee names have invested not just in our service; but also by taking a stake in our business.</p>
-        <img class="doctor-collage" src="assets/home-banner-1.png" alt="Doctors who trust Finnovate" loading="lazy">
-    </section>
 <section class="panel">
         <h2>Key Metrics</h2>
         <div class="stats">
@@ -668,7 +669,7 @@
             </div>
             <div class="stat">
                 <div class="stat-number">93%</div>
-            <div class="stat-label">Doctors as clients</div>
+                <div class="stat-label">Doctors as clients</div>
             </div>
             <div class="stat">
                 <div class="stat-number">1100+ Cr</div>
@@ -684,6 +685,11 @@
             </div>
         </div>
     </section>
+<section class="panel">
+        <h2>Backed by Doctors</h2>
+        <p class="panel-text">Doctors have been so impressed with our services; that some marquee names have invested not just in our service; but also by taking a stake in our business.</p>
+        <img class="doctor-collage" src="assets/home-banner-1.png" alt="Doctors who trust Finnovate" loading="lazy">
+    </section>
 
      <section class="panel">
         <h2>Our Past Collaboration So Far</h2>
@@ -696,7 +702,7 @@
 
     <section class="panel timeline-panel">
         <h2>Objective</h2>
-        <p class="panel-text">This proposal is presented to explore a hospital-supported financial literacy initiative at Apollo Hospital, with small-group, peer-led sessions for doctors.</p>
+        <p class="panel-text">This proposal is presented to explore a hospital-supported financial literacy initiative at Nashik Ophthalmological Association (NOA), with small-group, peer-led sessions for doctors.</p>
     </section>
 
     <section class="panel">
@@ -754,7 +760,7 @@
         <div class="panel">
             <h2>Deliverables</h2>
             <ul class="clean-list">
-                <li><span class="dot"></span><span>Co-created RTM agenda tailored to Apollo doctors.</span></li>
+                <li><span class="dot"></span><span>Co-created RTM agenda tailored to NOA doctors.</span></li>
                 <li><span class="dot"></span><span>Small-group session facilitation with expert-led discussion.</span></li>
                 <li><span class="dot"></span><span>Summary of key takeaways and practical action points.</span></li>
                 <li><span class="dot"></span><span>Optional one-to-one follow-up slots for interested doctors.</span></li>
@@ -795,11 +801,16 @@
     </section>
 
     <section class="panel">
+        <h2>Permission to Meet Doctors</h2>
+        <p class="panel-text">We seek permission to meet doctors individually to create a better understanding of Finnovate, its vision, and the value it seeks to bring through knowledge-driven engagement. One-on-one interactions can help build familiarity, trust, and clarity, while also allowing doctors to engage at their convenience in a more personalized setting.</p>
+    </section>
+
+    <section class="panel">
         <h2>Next Steps</h2>
         <ul class="clean-list">
             <li><span class="dot"></span><span>Confirm if this would add value to your colleagues and the preferred session format.</span></li>
             <li><span class="dot"></span><span>Share the preferred dates, timings, and an indicative group size.</span></li>
-            <li><span class="dot"></span><span>Avinash would coordinate the next steps and logistics.</span></li>
+            <li><span class="dot"></span><span>Gaurav Prasad would coordinate the next steps and logistics.</span></li>
         </ul>
     </section>
 
@@ -856,9 +867,12 @@
     <section class="contact">
         <div>
             <div class="contact-title">Contact Finnovate</div>
-            <div class="contact-detail">hello@finnovate.in | avinash.tiwari@finnovate.in</div>
+            <div class="contact-detail">hello@finnovate.in | gaurav.prasad@finnovate.in</div>
         </div>
-        <div class="contact-phone">+91 84509 16947</div>
+        <div>
+            <div class="contact-title">Gaurav Prasad, Finnovate</div>
+            <div class="contact-phone">+91 77108 76383</div>
+        </div>
     </section>
     </div>
 </div>
@@ -918,7 +932,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'Finnovate_Apollo_RTM_Proposal.pdf';
+            link.download = 'Finnovate_NOA_RTM_Proposal.pdf';
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -930,27 +944,31 @@
         }
     };
 
+    // A4 at 96 dpi — used only to set canvas render width
     const pxPerMm = 96 / 25.4;
-    const a4Size = {
-        width: Math.round(210 * pxPerMm),
-        height: Math.round(297 * pxPerMm)
-    };
+    const a4WidthPx = Math.round(210 * pxPerMm);
 
     const applyExportSizing = () => {
         const previous = {
             width: pdfContent.style.width,
             minHeight: pdfContent.style.minHeight,
-            height: pdfContent.style.height
+            height: pdfContent.style.height,
+            borderRadius: pdfContent.style.borderRadius,
+            boxShadow: pdfContent.style.boxShadow
         };
 
-        pdfContent.style.width = `${a4Size.width}px`;
-        pdfContent.style.minHeight = `${a4Size.height}px`;
+        pdfContent.style.width = '210mm';
+        pdfContent.style.minHeight = 'auto';
         pdfContent.style.height = 'auto';
+        pdfContent.style.borderRadius = '0';
+        pdfContent.style.boxShadow = 'none';
 
         return () => {
             pdfContent.style.width = previous.width;
             pdfContent.style.minHeight = previous.minHeight;
             pdfContent.style.height = previous.height;
+            pdfContent.style.borderRadius = previous.borderRadius;
+            pdfContent.style.boxShadow = previous.boxShadow;
         };
     };
 
@@ -976,19 +994,19 @@
         await Promise.all([waitForFonts(), waitForImages()]);
 
         const options = {
-            margin: [0, 0, 0, 0],
-            filename: 'Finnovate_Apollo_RTM_Proposal.pdf',
+            margin: [10, 0, 10, 0],   // top/right/bottom/left in mm
+            filename: 'Finnovate_NOA_RTM_Proposal.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: '#ffffff',
-                scrollY: 0,
-                width: a4Size.width,
-                windowWidth: a4Size.width
+                scrollY: -window.scrollY,
+                width: a4WidthPx,
+                windowWidth: a4WidthPx
             },
-            jsPDF: { unit: 'px', format: [a4Size.width, a4Size.height], orientation: 'portrait' },
-            pagebreak: { mode: ['css', 'legacy'] }
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
         try {

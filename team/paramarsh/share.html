@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paramarsh 3 — Annual Shareholders' Meeting | FINNOVATE</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold" rel="stylesheet">
+<style>
+  :root {
+    --green:        #009356;
+    --green-dark:   #007544;
+    --green-subtle: #f2faf6;
+    --black:        #111111;
+    --dark:         #1a1a1a;
+    --grey-700:     #555555;
+    --grey-500:     #888888;
+    --white:        #ffffff;
+    --font-display: "Denton Bold", Georgia, serif;
+    --font-body:    'Manrope', sans-serif;
+    --m: 13mm;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── SCREEN ── */
+  body {
+    font-family: var(--font-body);
+    background: #bebebe;
+    -webkit-font-smoothing: antialiased;
+    padding: 28px 0 56px;
+    overflow-x: hidden;
+  }
+
+  /* ── A4 PAGE ── */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto 18px;
+    background: var(--white);
+    box-shadow: 0 6px 48px rgba(0,0,0,.28);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── PRINT ── */
+  @page { size: A4; margin: 0; }
+  @media print {
+    body { background: none !important; padding: 0 !important; margin: 0 !important; }
+    .page { box-shadow: none !important; margin: 0 !important; padding: 0; page-break-after: always; }
+    .page:last-of-type { page-break-after: avoid; }
+    .pdf-btn { display: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    img { image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
+  }
+
+  /* ── DOWNLOAD BUTTON ── */
+  .pdf-btn {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    z-index: 999;
+    display: flex; align-items: center; gap: 7px;
+    padding: 13px 22px;
+    background: var(--green);
+    color: var(--white);
+    border: none; border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 11.5px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(0,147,86,.38);
+    transition: all .2s ease;
+  }
+  .pdf-btn:hover { background: var(--green-dark); transform: translateY(-2px); }
+
+  /* ── PRE-READ BUTTON ── */
+  .preread-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid rgba(0,147,86,.45);
+    color: var(--green); border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 7pt; font-weight: 700;
+    letter-spacing: .8px; text-transform: uppercase;
+    text-decoration: none;
+    transition: background .15s, border-color .15s;
+  }
+  .preread-btn:hover { background: rgba(0,147,86,.08); border-color: var(--green); }
+
+  /* ════════════════════════════════
+     SHARED
+  ════════════════════════════════ */
+  .sec-label {
+    font-size: 6.5pt; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--green); margin-bottom: 2.5mm;
+  }
+  .sec-heading {
+    font-family: var(--font-display);
+    font-size: 14pt; color: var(--black); margin-bottom: 2.5mm;
+  }
+  .body-text {
+    font-size: 8.5pt; line-height: 1.65; color: var(--grey-700);
+  }
+
+  /* ════════════════════════════════
+     PAGE 1
+  ════════════════════════════════ */
+
+  /* Top bar — matches logo background exactly */
+  .p1-topbar {
+    background: #0a2818;
+    padding: 5.5mm var(--m);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .p1-topbar-logo img {
+    height: 10mm;
+    width: auto;
+    display: block;
+  }
+  .p1-topbar-tag {
+    font-size: 7pt; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+  }
+
+  /* Hero — dark, rich background */
+  .p1-hero {
+    flex: 0 0 auto;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 12mm var(--m) 10mm;
+    position: relative;
+    background: #0a2818;
+    overflow: hidden;
+  }
+
+  /* Large faded "3" watermark */
+  .p1-hero::before {
+    content: '3';
+    position: absolute;
+    font-family: var(--font-display);
+    font-size: 320pt;
+    font-style: italic;
+    color: rgba(255,255,255,.04);
+    line-height: 1;
+    right: -5mm;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Decorative arc */
+  .p1-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30mm; left: -30mm;
+    width: 90mm; height: 90mm;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.06);
+    pointer-events: none;
+  }
+
+  .p1-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 4px 15px;
+    border: 1px solid rgba(255,255,255,.3); border-radius: 100px;
+    font-size: 7pt; font-weight: 600;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.75); margin-bottom: 7mm;
+    position: relative; z-index: 1;
+  }
+  .p1-badge::before {
+    content: ''; width: 5px; height: 5px;
+    border-radius: 50%; background: var(--green); flex-shrink: 0;
+  }
+
+  .p1-edition {
+    font-family: var(--font-display);
+    font-size: 8.5pt; letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(255,255,255,.35); margin-bottom: 3mm;
+    position: relative; z-index: 1;
+  }
+  .p1-title {
+    font-family: var(--font-display);
+    font-size: 56pt; line-height: 1; letter-spacing: -1px;
+    color: #ffffff; margin-bottom: 2.5mm;
+    position: relative; z-index: 1;
+  }
+  .p1-title em { color: #5ddb9a; font-style: italic; }
+  .p1-tagline {
+    font-family: var(--font-display);
+    font-size: 14pt; font-style: italic;
+    color: rgba(255,255,255,.6); letter-spacing: .5px;
+    margin-bottom: 8mm;
+    position: relative; z-index: 1;
+  }
+  .p1-rule {
+    width: 1px; height: 12mm;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    margin: 0 auto 8mm;
+    position: relative; z-index: 1;
+  }
+  .p1-meta {
+    display: flex; gap: 11mm; justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .p1-meta-item { text-align: center; }
+  .p1-meta-label {
+    font-size: 6.5pt; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.38); margin-bottom: 2px;
+  }
+  .p1-meta-value {
+    font-family: var(--font-display);
+    font-size: 11.5pt; font-weight: 500; color: #ffffff;
+  }
+
+  /* Welcome — grows to fill space between hero and agenda */
+  .p1-welcome {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8mm var(--m);
+    border-left: none;
+  }
+  .p1-welcome-inner {
+    padding: 7mm 8mm;
+    border-left: 3px solid var(--green);
+    background: var(--green-subtle);
+  }
+
+  /* Agenda band */
+  .p1-agenda {
+    flex-shrink: 0;
+    padding: 7mm var(--m);
+    background: var(--green-subtle);
+    border-top: 1px solid rgba(0,147,86,.1);
+  }
+  .p1-agenda-header {
+    display: flex; align-items: baseline; gap: 5mm;
+    margin-bottom: 5mm;
+  }
+  .p1-agenda-label {
+    font-size: 7pt; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--green);
+  }
+  .p1-agenda-title {
+    font-family: var(--font-display);
+    font-size: 14pt; color: var(--black);
+  }
+  .agenda-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(0,147,86,.12);
+    border: 1px solid rgba(0,147,86,.12);
+  }
+  .agenda-item {
+    background: var(--white);
+    padding: 4mm 5mm;
+    display: flex; gap: 4mm; align-items: center;
+  }
+  .agenda-item.full { grid-column: 1 / -1; }
+  .agenda-num {
+    font-family: var(--font-display);
+    font-size: 17pt; color: var(--green);
+    line-height: 1; flex-shrink: 0; width: 7mm;
+  }
+  .agenda-text {
+    font-size: 8.5pt; font-weight: 600;
+    color: var(--black); line-height: 1.35;
+  }
+
+  /* Bottom bar */
+  .p1-footer {
+    background: var(--dark);
+    padding: 5.5mm var(--m);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .p1-footer-addr {
+    font-size: 7.5pt; color: rgba(255,255,255,.5); line-height: 1.55;
+  }
+  .p1-footer-right { text-align: right; }
+  .p1-footer-date {
+    font-family: var(--font-display);
+    font-size: 12pt; color: var(--white);
+    display: block; margin-bottom: 1px;
+  }
+  .p1-footer-sub {
+    font-size: 7pt; color: rgba(255,255,255,.45); letter-spacing: 1px;
+  }
+
+  /* ════════════════════════════════
+     PAGES 2 & 3
+  ════════════════════════════════ */
+
+  .p2-header {
+    background: #0a2818;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 5mm var(--m);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .p2-header-logo img {
+    height: 9mm;
+    width: auto;
+    display: block;
+  }
+  .p2-header-tag {
+    font-size: 7pt; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+  }
+
+  .p2-body {
+    flex: 1;
+    padding: 7mm var(--m) 0;
+    display: flex; flex-direction: column;
+    gap: 5mm;
+  }
+
+  .sh-section-header {
+    display: flex; align-items: baseline; gap: 5mm;
+    flex-shrink: 0;
+  }
+
+  /* ── SHAREHOLDER ROW ── */
+  .sh-rows { display: flex; flex-direction: column; }
+
+  .sh-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 7mm;
+    padding: 5.5mm 0;
+    border-top: 1px solid rgba(0,0,0,.06);
+  }
+  .sh-row:first-child { border-top: none; }
+
+  .sh-col {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2.5mm; flex-shrink: 0;
+  }
+  .sh-avatar {
+    width: 24mm; height: 24mm; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .sh-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .sh-initials {
+    font-family: var(--font-display);
+    font-size: 14pt; color: var(--white); letter-spacing: .5px;
+  }
+
+  .sh-info { flex: 1; }
+  .sh-prefix {
+    font-size: 7pt; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--green); margin-bottom: 1.5mm;
+  }
+  .sh-name {
+    font-family: var(--font-display);
+    font-size: 18pt; color: var(--black); line-height: 1.1;
+    margin-bottom: 2mm;
+  }
+  .sh-degrees {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-bottom: 2.5mm;
+  }
+  .sh-degree {
+    font-size: 6.5pt; font-weight: 700; letter-spacing: .4px;
+    color: var(--grey-700);
+    background: #f1f5f9;
+    border: 1px solid #d1d5db;
+    padding: 1.5px 7px; border-radius: 3px;
+  }
+  .sh-title {
+    font-size: 9pt; font-weight: 600;
+    color: var(--green); line-height: 1.3;
+    margin-bottom: 3mm;
+  }
+  .sh-bio {
+    font-size: 8pt; line-height: 1.6; color: var(--grey-700);
+  }
+  .sh-tag {
+    display: inline-block;
+    padding: 2px 9px;
+    font-size: 6pt; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border: 1px solid rgba(0,147,86,.3);
+    color: var(--green); border-radius: 100px;
+  }
+
+  /* Entity (no photo) badge — rectangle */
+  .sh-entity-badge {
+    width: 24mm; height: 15mm; border-radius: 5px;
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1mm;
+  }
+  .sh-entity-abbr {
+    font-family: var(--font-display);
+    font-size: 13pt; color: var(--white); letter-spacing: .5px; line-height: 1;
+  }
+  .sh-entity-type {
+    font-size: 5.5pt; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: rgba(255,255,255,.6);
+  }
+
+  /* Thin page-end bar for page 2 */
+  .p2-endbar {
+    flex-shrink: 0;
+    padding: 4mm var(--m);
+    background: #0a2818;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .p2-endbar-left {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .p2-endbar-left-title {
+    font-family: var(--font-body);
+    font-size: 8pt; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.85);
+  }
+  .p2-endbar-left-sub {
+    font-size: 7pt; color: rgba(255,255,255,.4); letter-spacing: 0.5px;
+  }
+  .p2-endbar-note {
+    font-size: 7pt; color: rgba(255,255,255,.45); letter-spacing: 1px;
+  }
+
+  /* Venue */
+  .venue-block {
+    background: var(--dark);
+    padding: 6mm var(--m);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .venue-label {
+    font-size: 6.5pt; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.38); margin-bottom: 1.5mm;
+  }
+  .venue-name {
+    font-family: var(--font-display);
+    font-size: 16pt; color: var(--white); margin-bottom: 1mm;
+  }
+  .venue-addr {
+    font-size: 7.5pt; color: rgba(255,255,255,.5); line-height: 1.55;
+  }
+  .venue-right { display: flex; gap: 7mm; }
+  .v-item { text-align: center; }
+  .v-label {
+    font-size: 6.5pt; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.35); margin-bottom: 2px;
+  }
+  .v-value {
+    font-family: var(--font-display);
+    font-size: 10.5pt; color: var(--white);
+  }
+  .venue-map-link {
+    display: inline-flex; align-items: center; gap: 2.5px;
+    margin-top: 2.5mm;
+    font-size: 7pt; font-weight: 700; letter-spacing: .4px;
+    color: var(--green); text-decoration: none;
+  }
+
+  /* Contact strip */
+  .contact-strip {
+    background: var(--dark);
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding: 4mm var(--m);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .contact-lbl {
+    font-size: 6pt; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 1mm;
+  }
+  .contact-name {
+    font-family: var(--font-display); font-size: 11pt; color: var(--white); line-height: 1.2;
+  }
+  .contact-phone {
+    font-size: 7.5pt; color: rgba(255,255,255,.5); margin-top: 1mm;
+  }
+  .contact-btns { display: flex; gap: 3mm; align-items: center; }
+  .btn-call, .btn-wa {
+    display: inline-flex; align-items: center; gap: 2mm;
+    padding: 2.5mm 5mm; border-radius: 100px;
+    font-size: 7.5pt; font-weight: 700; letter-spacing: .3px;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn-call {
+    background: rgba(255,255,255,.1); color: var(--white);
+    border: 1px solid rgba(255,255,255,.2);
+  }
+  .btn-wa {
+    background: #25D366; color: var(--white); border: 1px solid transparent;
+  }
+
+  /* Footer */
+  .p2-footer {
+    background: #0a2818;
+    padding: 5mm var(--m);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .p2-footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .p2-footer-left-title {
+    font-family: var(--font-body);
+    font-size: 8pt; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.85);
+  }
+  .p2-footer-left-sub {
+    font-size: 7pt;
+    color: rgba(255,255,255,.4);
+    letter-spacing: 0.5px;
+  }
+  .p2-footer-text {
+    font-size: 7.5pt; color: rgba(255,255,255,.7);
+    text-align: right; line-height: 1.55;
+  }
+
+  /* ════════════════════════════════
+     PAGE 4 — SCHEDULE
+  ════════════════════════════════ */
+  .schedule-intro {
+    margin: 7mm var(--m) 0;
+    padding: 6mm 7mm;
+    background: linear-gradient(135deg, #0a2818, #103723);
+    color: var(--white);
+    border-radius: 8px;
+  }
+  .schedule-intro-kicker {
+    font-size: 6.5pt; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+    margin-bottom: 2mm;
+  }
+  .schedule-intro-title {
+    font-family: var(--font-display);
+    font-size: 22pt; line-height: 1;
+    margin-bottom: 2mm;
+  }
+  .schedule-intro-copy {
+    font-size: 8.5pt; line-height: 1.65;
+    color: rgba(255,255,255,.72);
+    max-width: 120mm;
+  }
+  .schedule-body {
+    flex: 1;
+    padding: 6mm var(--m) 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: 24mm 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(0,0,0,.08);
+    border-bottom: 1px solid rgba(0,0,0,.08);
+  }
+  .schedule-item {
+    display: contents;
+  }
+  .schedule-time,
+  .schedule-card {
+    padding-top: 5mm;
+    padding-bottom: 5mm;
+    border-top: 1px solid rgba(0,0,0,.06);
+  }
+  .schedule-item:first-child .schedule-time,
+  .schedule-item:first-child .schedule-card {
+    border-top: none;
+  }
+  .schedule-time {
+    padding-right: 5mm;
+  }
+  .schedule-time-main {
+    font-family: var(--font-display);
+    font-size: 15pt;
+    line-height: 1;
+    color: var(--green);
+    margin-bottom: 1mm;
+  }
+  .schedule-time-sub {
+    font-size: 6.5pt;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--grey-500);
+  }
+  .schedule-card {
+    position: relative;
+    padding-left: 6mm;
+  }
+  .schedule-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6mm;
+    bottom: 6mm;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--green), rgba(0,147,86,.15));
+    border-radius: 999px;
+  }
+  .schedule-session {
+    font-family: var(--font-display);
+    font-size: 14pt;
+    line-height: 1.1;
+    color: var(--black);
+    margin-bottom: 1.2mm;
+  }
+  .schedule-speaker {
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 2mm;
+  }
+  .schedule-copy {
+    font-size: 8pt;
+    line-height: 1.6;
+    color: var(--grey-700);
+  }
+  .schedule-close {
+    margin-top: auto;
+    padding: 6mm var(--m);
+    background: var(--green-subtle);
+    border-top: 1px solid rgba(0,147,86,.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8mm;
+  }
+  .schedule-close-left {
+    max-width: 118mm;
+  }
+  .schedule-close-title {
+    font-family: var(--font-display);
+    font-size: 14pt;
+    color: var(--black);
+    margin-bottom: 1.5mm;
+  }
+  .schedule-close-copy {
+    font-size: 8pt;
+    line-height: 1.6;
+    color: var(--grey-700);
+  }
+  .schedule-close-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3mm 5mm;
+    border-radius: 999px;
+    background: var(--white);
+    border: 1px solid rgba(0,147,86,.18);
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--green);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── DOWNLOAD BUTTON ── -->
+<button class="pdf-btn" id="downloadPdf" onclick="this.textContent='Generating…'; this.disabled=true; window.location.href='/download-pdf'; setTimeout(()=>{this.textContent='Download PDF'; this.disabled=false;}, 4000)">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+  Download PDF
+</button>
+
+<!-- ════════════════════════════════════
+     PAGE 1 — COVER + WELCOME + AGENDA
+════════════════════════════════════ -->
+<div class="page">
+
+  <div class="p1-topbar">
+    <span class="p1-topbar-logo"><img src="shareholderphoto/Finnovate-logo-2.png" alt="Finnovate"></span>
+    <span class="p1-topbar-tag">Formal Invitation</span>
+  </div>
+
+  <div class="p1-hero">
+    <div class="p1-badge">Annual Shareholders' Meeting</div>
+    <div class="p1-edition">Third Edition &nbsp;·&nbsp; 2026</div>
+    <h1 class="p1-title">Paramarsh <em>3</em></h1>
+    <p class="p1-tagline">Let the Ideas Flow</p>
+    <div class="p1-rule"></div>
+    <div class="p1-meta">
+      <div class="p1-meta-item">
+        <div class="p1-meta-label">Date</div>
+        <div class="p1-meta-value">Saturday, 28 March 2026</div>
+      </div>
+      <div class="p1-meta-item">
+        <div class="p1-meta-label">Time</div>
+        <div class="p1-meta-value">3:30 PM onwards</div>
+      </div>
+      <div class="p1-meta-item">
+        <div class="p1-meta-label">Venue</div>
+        <div class="p1-meta-value">Hotel Sahara Star, Vile Parle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome fills remaining space between hero and agenda -->
+  <div class="p1-welcome">
+    <div class="p1-welcome-inner">
+      <div class="sec-label">Welcome</div>
+      <h2 class="sec-heading">Dear Shareholder,</h2>
+      <p class="body-text">We are pleased to invite you to <strong>Paramarsh 3</strong>, our 3rd Annual Shareholders' Meeting. Your presence and insights remain invaluable as we reflect on our progress and chart the path forward for FINNOVATE. We look forward to seeing you.</p>
+      <a href="preread.html" class="preread-btn" target="_blank" style="margin-top:5mm;">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Read the Pre-Read
+      </a>
+    </div>
+  </div>
+
+  <div class="p1-agenda">
+    <div class="p1-agenda-header">
+      <span class="p1-agenda-label">Agenda</span>
+      <span class="p1-agenda-title">What to Expect</span>
+    </div>
+    <div class="agenda-grid">
+      <div class="agenda-item">
+        <span class="agenda-num">01</span>
+        <span class="agenda-text">Introduction of New Shareholders</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-num">02</span>
+        <span class="agenda-text">Progress and Achievements to Date</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-num">03</span>
+        <span class="agenda-text">Exchange of Ideas</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-num">04</span>
+        <span class="agenda-text">Future Course of Action</span>
+      </div>
+      <div class="agenda-item full">
+        <span class="agenda-num">05</span>
+        <span class="agenda-text">Q&amp;A and Feedback Session</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="p1-footer">
+    <div class="p1-footer-addr">
+      Hotel Sahara Star, Domestic Airport<br>
+      Vile Parle East, Mumbai 400099
+    </div>
+    <div class="p1-footer-right">
+      <span class="p1-footer-date">28.03.2026</span>
+      <span class="p1-footer-sub">Saturday &nbsp;·&nbsp; 3:30 PM &nbsp;·&nbsp; Smart Casual</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════
+     PAGE 2 — SHAREHOLDERS 1–4
+════════════════════════════════════ -->
+<div class="page">
+
+  <div class="p2-header">
+    <span class="p2-header-logo"><img src="shareholderphoto/Finnovate-logo-2.png" alt="Finnovate"></span>
+    <span class="p2-header-tag">Paramarsh 3 &nbsp;·&nbsp; 28 March 2026</span>
+  </div>
+
+  <div class="p2-body">
+
+    <div class="sh-section-header">
+      <div>
+        <div class="sec-label">Our Shareholders</div>
+        <div style="font-family:var(--font-display);font-size:14pt;color:var(--black);margin-bottom:2mm;">The People Behind Finnovate</div>
+      </div>
+    </div>
+
+    <div class="sh-rows">
+
+      <!-- 1. Dr. Ramakant Deshpande -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/DrRamakantDeshpande.png" alt="Dr. Ramakant Deshpande"></div>
+          <span class="sh-tag">Lead Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-prefix">Padma Shri Awardee</div>
+          <div class="sh-name">Dr. Ramakant Deshpande</div>
+          <div class="sh-degrees">
+            <span class="sh-degree">MS (General Surgery)</span>
+            <span class="sh-degree">MCh (Surgical Oncology)</span>
+            <span class="sh-degree">FICS</span>
+          </div>
+          <div class="sh-title">Surgical Oncologist &amp; Lead Investor</div>
+          <p class="sh-bio">Chairman of Asian Cancer Institute with 40+ years in surgical oncology. Pioneer of thoracoscopic surgery at Tata Memorial Hospital. Trained at Memorial Sloan Kettering, New York. Specialises in lung, esophageal, and breast cancers. Honoured with Padma Shri in 2014 for exceptional contributions to medicine.</p>
+        </div>
+      </div>
+
+      <!-- 2. Dr. Dilip Raichura -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/drdileep.png" alt="Dr. Dilip Raichura"></div>
+          <span class="sh-tag">Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-name">Dr. Dilip Raichura</div>
+          <div class="sh-degrees">
+            <span class="sh-degree">DGO</span>
+            <span class="sh-degree">MD (Obstetrics &amp; Gynaecology)</span>
+          </div>
+          <div class="sh-title">Gynaecologist &amp; Obstetrician</div>
+          <p class="sh-bio">A highly respected gynaecologist and obstetrician based in Mumbai's western suburbs. Runs Raichura Prasuti Gruha in Kandivali West — a well-established maternity and women's health practice trusted by families for decades. A veteran in his field, Dr. Raichura is also an avid reader and a stock market investor since 1980 — with an encyclopaedic knowledge of companies across sectors, tracking businesses with remarkable depth spanning over four decades.</p>
+        </div>
+      </div>
+
+      <!-- 3. Dr. Shrikant Badwe — photo -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/DrShrikantBadwe.png" alt="Dr. Shrikant Badwe"></div>
+          <span class="sh-tag">Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-name">Dr. Shrikant Badwe</div>
+          <div class="sh-degrees">
+            <span class="sh-degree">MS (General Surgery)</span>
+            <span class="sh-degree">MCh (Urology)</span>
+            <span class="sh-degree">FICS</span>
+          </div>
+          <div class="sh-title">Renowned Urologist</div>
+          <p class="sh-bio">One of Mumbai's most experienced urologists with 45+ years of practice. Associated with Sir H.N. Reliance Foundation Hospital and Nanavati Max Hospital. Recipient of the Rajhans Prathisthan Award and Award for Distinguished Services. Member of the Urological Society of India and Society Internationale de Urologie.</p>
+        </div>
+      </div>
+
+      <!-- 4. Dr. Mukesh Gupta — photo -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/Mukesh.png" alt="Dr. Mukesh Gupta"></div>
+          <span class="sh-tag">Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-name">Dr. Mukesh Gupta</div>
+          <div class="sh-degrees">
+            <span class="sh-degree">MD (Obstetrics &amp; Gynaecology)</span>
+            <span class="sh-degree">DNB</span>
+            <span class="sh-degree">PGDPC</span>
+            <span class="sh-degree">IIM Calcutta — Strategy Mgmt</span>
+          </div>
+          <div class="sh-title">Consultant Obstetrician &amp; Gynaecologist · Healthcare Strategy Consultant</div>
+          <p class="sh-bio">Founder of Le Nest Hospital, Malad West. 25+ years in obstetrics &amp; gynaecology with deep commitment to women's health through natural birthing and community medicine. University topper in MD Ob/Gyn. Le Nest channel: 4 lakh subscribers, 4.5 crore views. IIM Calcutta Alumni — Strategy Management for Corporate Leaders (2021). Awards: Emerging Star of Medicine (IMA) · Healthcare Excellence (India Today) · Navabharat.</p>
+        </div>
+      </div>
+
+      <!-- 5. CA Bharat Gupta -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/BharatGupta.jpg" alt="CA Bharat Gupta"></div>
+          <span class="sh-tag">Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-name">CA Bharat Gupta</div>
+          <div class="sh-title">Global Trade Finance Specialist</div>
+          <p class="sh-bio">A Chartered Accountant and Cost &amp; Works Accountant with 30+ years across banking and global commodity trading. Has held senior roles at Louis Dreyfus, Olam Agri, and in banking. Specialises in structuring innovative trade finance solutions. Has built businesses across India, Dubai, Singapore, Asia, Europe, Middle East and Africa. Recognised speaker at international trade finance forums.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="p2-endbar">
+    <div class="p2-endbar-left">
+      <span class="p2-endbar-left-title">Confidential</span>
+      <span class="p2-endbar-left-sub">For Shareholders Only &nbsp;·&nbsp; Paramarsh 3 &nbsp;·&nbsp; © 2026 Finnovate</span>
+    </div>
+    <span class="p2-endbar-note">Continued overleaf</span>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════
+     PAGE 3 — SHAREHOLDERS 6–9 + VENUE
+════════════════════════════════════ -->
+<div class="page">
+
+  <div class="p2-header">
+    <span class="p2-header-logo"><img src="shareholderphoto/Finnovate-logo-2.png" alt="Finnovate"></span>
+    <span class="p2-header-tag">Paramarsh 3 &nbsp;·&nbsp; 28 March 2026</span>
+  </div>
+
+  <div class="p2-body">
+
+    <div class="sh-section-header">
+      <span class="sec-label">Our Shareholders</span>
+      <span style="font-family:var(--font-display);font-size:14pt;color:var(--black);">Continued</span>
+    </div>
+
+    <div class="sh-rows">
+
+      <!-- 6. Dr. Nikhil Datar -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/dr-nikhil-datar.avif" alt="Dr. Nikhil Datar"></div>
+          <span class="sh-tag">Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-name">Dr. Nikhil Datar</div>
+          <div class="sh-degrees">
+            <span class="sh-degree">DGO</span>
+            <span class="sh-degree">MD (Obstetrics &amp; Gynaecology)</span>
+            <span class="sh-degree">LLB</span>
+          </div>
+          <div class="sh-title">Senior Gynaecologist &amp; Health Rights Activist</div>
+          <p class="sh-bio">Medical Director and Senior Gynaecologist at Cloudnine Hospital, Mumbai. A law graduate and celebrated health rights activist whose landmark PIL (Dr. Nikhil Datar vs. Union of India) led to an amendment in the MTP Act. Featured on Aamir Khan's Satyamev Jayate. Commonwealth Fellow from the UK. Founder President of the Patient Safety Alliance.</p>
+        </div>
+      </div>
+
+      <!-- 7. CA Shankar Vailaya — photo -->
+      <div class="sh-row">
+        <div class="sh-col">
+          <div class="sh-avatar"><img src="shareholderphoto/ShankarVailaya.jpeg" alt="CA Shankar Vailaya"></div>
+          <span class="sh-tag">Investor</span>
+        </div>
+        <div class="sh-info">
+          <div class="sh-name">CA Shankar Vailaya</div>
+          <div class="sh-title">Director, Northbeam Venture Pvt. Ltd.</div>
+          <p class="sh-bio">35+ years in capital markets, governance, and board leadership. Former Director at Sharekhan. Serves on the board of multiple companies, bringing deep expertise in corporate finance, strategic governance, and institutional growth.</p>
+        </div>
+      </div>
+
+      <!-- 8–11. Entity & Individual Investors — 2×2 grid -->
+      <div style="padding:5.5mm 0;border-top:1px solid rgba(0,0,0,.06);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm;">
+
+          <!-- Medha Family Office -->
+          <div style="border:1px solid var(--border);border-radius:8px;padding:4mm;display:flex;gap:3.5mm;align-items:flex-start;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2mm;flex-shrink:0;">
+              <div class="sh-entity-badge">
+                <span class="sh-entity-abbr">MFO</span>
+                <span class="sh-entity-type">Family Office</span>
+              </div>
+              <span class="sh-tag">Investor</span>
+            </div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:13pt;color:var(--black);line-height:1.1;margin-bottom:1.5mm;">Medha Family Office</div>
+              <div class="sh-title" style="margin-bottom:0;">Mr. Tejas Mehta — Founder</div>
+            </div>
+          </div>
+
+          <!-- Samrit Life Ventures LLP -->
+          <div style="border:1px solid var(--border);border-radius:8px;padding:4mm;display:flex;gap:3.5mm;align-items:flex-start;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2mm;flex-shrink:0;">
+              <div class="sh-entity-badge">
+                <span class="sh-entity-abbr">SLV</span>
+                <span class="sh-entity-type">Ventures LLP</span>
+              </div>
+              <span class="sh-tag">Investor</span>
+            </div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:13pt;color:var(--black);line-height:1.1;margin-bottom:1.5mm;">Samrit Life Ventures LLP</div>
+              <div class="sh-title" style="margin-bottom:0;">Mr. Veekaas Mehtaa — Founder</div>
+            </div>
+          </div>
+
+          <!-- Sethulakshmi Warrier & Aparna Warrier -->
+          <div style="border:1px solid var(--border);border-radius:8px;padding:4mm;display:flex;gap:3.5mm;align-items:flex-start;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2mm;flex-shrink:0;">
+              <div class="sh-avatar" style="width:16mm;height:16mm;"><span class="sh-initials" style="font-size:10pt;">SW<br>AW</span></div>
+              <span class="sh-tag">Investor</span>
+            </div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:13pt;color:var(--black);line-height:1.1;margin-bottom:1.5mm;">Ms. Sethulakshmi Warrier &amp; Ms. Aparna Warrier</div>
+              <div class="sh-title" style="margin-bottom:0;">Director, AITA Carriers Pvt. Ltd.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="venue-block">
+    <div>
+      <div class="venue-label">Venue</div>
+      <div class="venue-name">Hotel Sahara Star</div>
+      <div class="venue-addr">
+        Domestic Airport, Navpada<br>
+        Vile Parle East, Mumbai 400099
+      </div>
+      <a href="https://maps.app.goo.gl/Thp4c689r3ZLYCs4A" class="venue-map-link" target="_blank">
+        <svg width="9" height="11" viewBox="0 0 10 13" fill="none"><path d="M5 0C2.79 0 1 1.79 1 4c0 3.5 4 9 4 9s4-5.5 4-9c0-2.21-1.79-4-4-4zm0 5.5C4.17 5.5 3.5 4.83 3.5 4S4.17 2.5 5 2.5 6.5 3.17 6.5 4 5.83 5.5 5 5.5z" fill="currentColor"/></svg>
+        Get Directions
+      </a>
+    </div>
+    <div class="venue-right">
+      <div class="v-item">
+        <div class="v-label">Date</div>
+        <div class="v-value">28 March 2026</div>
+      </div>
+      <div class="v-item">
+        <div class="v-label">Day</div>
+        <div class="v-value">Saturday</div>
+      </div>
+      <div class="v-item">
+        <div class="v-label">Time</div>
+        <div class="v-value">3:30 PM onwards</div>
+      </div>
+      <div class="v-item">
+        <div class="v-label">Dress Code</div>
+        <div class="v-value">Smart Casual</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-strip">
+    <div>
+      <div class="contact-lbl">For Queries</div>
+      <div class="contact-name">Neha Sanghrajka</div>
+      <div class="contact-phone">+91 98206 18785</div>
+    </div>
+    <div class="contact-btns">
+      <a href="tel:+919820618785" class="btn-call">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        Call
+      </a>
+      <a href="https://wa.me/919820618785" class="btn-wa" target="_blank">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <div class="p2-footer">
+    <div class="p2-footer-left">
+      <span class="p2-footer-left-title">Confidential</span>
+      <span class="p2-footer-left-sub">For Shareholders Only &nbsp;·&nbsp; Paramarsh 3 &nbsp;·&nbsp; © 2026 Finnovate</span>
+    </div>
+    <div class="p2-footer-text">
+      Thank you for your continued trust and support.<br>
+      We look forward to seeing you at Paramarsh 3.
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════
+     PAGE 4 — DAY PLAN
+════════════════════════════════════ -->
+<div class="page">
+
+  <div class="p2-header">
+    <span class="p2-header-logo"><img src="shareholderphoto/Finnovate-logo-2.png" alt="Finnovate"></span>
+    <span class="p2-header-tag">Paramarsh 3 &nbsp;·&nbsp; Detailed Schedule</span>
+  </div>
+
+  <div class="schedule-intro">
+    <div class="schedule-intro-kicker">Day Plan</div>
+    <div class="schedule-intro-title">The Evening at a Glance</div>
+    <div class="schedule-intro-copy">A structured flow for the evening, designed to move from context and updates into ideas, discussion, and the way forward.</div>
+  </div>
+
+  <div class="schedule-body">
+    <div class="schedule-grid">
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">3:30</div>
+          <div class="schedule-time-sub">PM</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Meet and Greet</div>
+          <div class="schedule-speaker">Tea and Coffee</div>
+          <div class="schedule-copy">Arrival, informal interactions, and a warm welcome before the formal proceedings begin.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">3:45</div>
+          <div class="schedule-time-sub">PM Sharp</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Opening Remarks and Context</div>
+          <div class="schedule-speaker">Ms. Nehal Mota</div>
+          <div class="schedule-copy">Opening note, current context, and a framing of the day before moving into the operating updates.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">4:00</div>
+          <div class="schedule-time-sub">PM</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Tech Wayforward</div>
+          <div class="schedule-speaker">Mr. Naveen Singh</div>
+          <div class="schedule-copy">Platform progress to date, current product readiness, and the next three-month milestones across app experience, onboarding, and transaction flow.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">4:30</div>
+          <div class="schedule-time-sub">PM</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Marketing Wayforward</div>
+          <div class="schedule-speaker">Mr. Chintan Dudhela and Mr. Pranob T</div>
+          <div class="schedule-copy">Brand, digital, and database-led initiatives, along with the way forward for the next phases of measurable growth.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">5:00</div>
+          <div class="schedule-time-sub">PM</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Zoho and Internal Operations</div>
+          <div class="schedule-speaker">Mr. Sagar Maheshwari</div>
+          <div class="schedule-copy">A walkthrough of the internal systems layer and how Zoho is now supporting CRM, service, people processes, and reporting.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">5:30</div>
+          <div class="schedule-time-sub">PM</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">People and HR Way Forward</div>
+          <div class="schedule-speaker">Ms. Kainaz Tata and Ms. Neha Sanghrajka</div>
+          <div class="schedule-copy">Team structure, people updates, and the organisational priorities shaping the next stage of Finnovate's growth.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">6:00</div>
+          <div class="schedule-time-sub">PM</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Brainstorming and Exchange of Ideas</div>
+          <div class="schedule-speaker">Open House Discussion</div>
+          <div class="schedule-copy">A collaborative working session to exchange perspectives, discuss ideas, and capture feedback from the room.</div>
+        </div>
+      </div>
+
+      <div class="schedule-item">
+        <div class="schedule-time">
+          <div class="schedule-time-main">6:30</div>
+          <div class="schedule-time-sub">PM Onwards</div>
+        </div>
+        <div class="schedule-card">
+          <div class="schedule-session">Q&amp;A and Closing Discussion</div>
+          <div class="schedule-speaker">Till Close</div>
+          <div class="schedule-copy">Questions, reflections, and concluding remarks as the evening moves toward its close.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="schedule-close">
+    <div class="schedule-close-left">
+      <div class="schedule-close-title">A Focused, Working Session</div>
+      <div class="schedule-close-copy">The evening is designed to be practical and discussion-led, with enough room for both formal updates and meaningful exchange.</div>
+    </div>
+    <div class="schedule-close-badge">3:30 PM Onwards &nbsp;·&nbsp; Sahara Star</div>
+  </div>
+
+  <div class="p2-footer">
+    <div class="p2-footer-left">
+      <span class="p2-footer-left-title">Confidential</span>
+      <span class="p2-footer-left-sub">For Shareholders Only &nbsp;·&nbsp; Paramarsh 3 &nbsp;·&nbsp; © 2026 Finnovate</span>
+    </div>
+    <div class="p2-footer-text">
+      Thank you for your continued trust and support.<br>
+      We look forward to seeing you at Paramarsh 3.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function scalePages() {
+    if (window.matchMedia('print').matches) return;
+    var pages = document.querySelectorAll('.page');
+    var vw = window.innerWidth;
+    var pageW = 794; // 210mm at 96dpi
+    var gap = 18;
+    var scale = Math.min(1, (vw - 8) / pageW);
+
+    pages.forEach(function(p) {
+      // Reset first so offsetHeight is accurate
+      p.style.transform = 'none';
+      p.style.transformOrigin = '';
+      p.style.marginLeft = 'auto';
+      p.style.marginRight = 'auto';
+      p.style.marginBottom = gap + 'px';
+
+      if (scale < 1) {
+        var naturalH = p.offsetHeight;
+        // top-left origin avoids right-side clipping; re-centre with marginLeft
+        var leftMargin = (vw - pageW * scale) / 2;
+        p.style.transform = 'scale(' + scale + ')';
+        p.style.transformOrigin = 'top left';
+        p.style.marginLeft = leftMargin + 'px';
+        p.style.marginRight = '0';
+        // Pull next page up to close the dead space transform leaves behind
+        p.style.marginBottom = (naturalH * scale - naturalH + gap) + 'px';
+      }
+    });
+
+    document.body.style.padding = scale < 1 ? '8px 0' : '28px 0 56px';
+  }
+
+  scalePages();
+  window.addEventListener('resize', scalePages);
+</script>
+</body>
+</html>

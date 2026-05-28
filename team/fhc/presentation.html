@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FHC Team Guide · Finnovate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold">
+<style>
+:root {
+  --green:      #009356;
+  --green-dark: #007544;
+  --green-hero: #0a2818;
+  --black:      #0d1117;
+  --grey-700:   #4b5563;
+  --grey-500:   #6b7280;
+  --grey-400:   #9ca3af;
+  --grey-200:   #e5e7eb;
+  --grey-100:   #f9fafb;
+  --white:      #ffffff;
+  --border:     #e5e7eb;
+  --font-display: "Denton Bold", Georgia, serif;
+  --font-body:    'Manrope', sans-serif;
+  --sidebar-w:  220px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: var(--font-body); background: var(--black); overflow: hidden; }
+.shell { display: flex; height: 100vh; width: 100vw; }
+
+/* ── SIDEBAR ── */
+.sidebar { width: var(--sidebar-w); flex-shrink: 0; background: #0d1117; border-right: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; overflow: hidden; }
+.sidebar-header { padding: 20px 16px 14px; border-bottom: 1px solid rgba(255,255,255,.08); flex-shrink: 0; }
+.sidebar-meta { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: .6px; text-transform: uppercase; }
+.sidebar-title { font-size: 14px; font-weight: 700; color: rgba(255,255,255,.85); margin-bottom: 6px; }
+.slide-list { flex: 1; overflow-y: auto; padding: 8px 0; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.1) transparent; }
+.slide-list::-webkit-scrollbar { width: 4px; }
+.slide-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+.sl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px; cursor: pointer; border-left: 3px solid transparent; transition: background .15s, border-color .15s; }
+.sl-item:hover { background: rgba(255,255,255,.04); }
+.sl-item.active { border-left-color: var(--green); background: rgba(0,147,86,.08); }
+.sl-num { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.25); min-width: 16px; padding-top: 1px; flex-shrink: 0; }
+.sl-item.active .sl-num { color: var(--green); }
+.sl-title { font-size: 12px; line-height: 1.4; color: rgba(255,255,255,.45); font-weight: 500; }
+.sl-item.active .sl-title { color: #fff; font-weight: 600; }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; background: #e8e8e8; overflow: hidden; position: relative; }
+.slide-viewport { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+
+/* ── ANIMATIONS ── */
+@keyframes elemIn { from { opacity:0; transform:translateY(16px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes slideInRight  { from { opacity:0; transform:translateX(52px) scale(.98); } to { opacity:1; transform:translateX(0) scale(1); } }
+@keyframes slideInLeft   { from { opacity:0; transform:translateX(-52px) scale(.98); } to { opacity:1; transform:translateX(0) scale(1); } }
+@keyframes slideOutLeft  { from { opacity:1; transform:translateX(0) scale(1); } to { opacity:0; transform:translateX(-52px) scale(.98); } }
+@keyframes slideOutRight { from { opacity:1; transform:translateX(0) scale(1); } to { opacity:0; transform:translateX(52px) scale(.98); } }
+.el-anim { opacity:0; animation: elemIn .45s cubic-bezier(.22,.68,0,1.15) both; }
+.slide { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; overflow:hidden; }
+.slide.active { opacity:1; pointer-events:auto; }
+.slide.anim-in-right  { animation: slideInRight  .38s cubic-bezier(.22,.68,0,1.2) both; }
+.slide.anim-in-left   { animation: slideInLeft   .38s cubic-bezier(.22,.68,0,1.2) both; }
+.slide.anim-out-left  { animation: slideOutLeft  .28s cubic-bezier(.4,0,1,1)      both; }
+.slide.anim-out-right { animation: slideOutRight .28s cubic-bezier(.4,0,1,1)      both; }
+:fullscreen .sidebar          { display:none; }
+:-webkit-full-screen .sidebar { display:none; }
+:fullscreen .nav-bar          { left:0; }
+:-webkit-full-screen .nav-bar { left:0; }
+.slide-inner { width:920px; height:580px; padding:28px 40px; display:flex; flex-direction:column; gap:12px; flex-shrink:0; transform-origin:center center; }
+.slide-bg-alt   { background: var(--grey-100); }
+.slide-bg-white { background: #fff; }
+
+/* ── COVER ── */
+.slide-cover { background: var(--green-hero); overflow:hidden; }
+.slide-cover .slide-inner { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:48px 60px; position:relative; z-index:1; }
+.cover-deco { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(0,147,86,.2) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(0,147,86,.12) 0%, transparent 60%); }
+.cover-deco::before { content:''; position:absolute; right:-80px; top:-80px; width:420px; height:420px; border-radius:50%; border:1.5px solid rgba(0,147,86,.18); }
+.cover-deco::after  { content:''; position:absolute; right:60px; top:60px; width:280px; height:280px; border-radius:50%; border:1px solid rgba(0,147,86,.12); }
+.cover-eyebrow { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:14px; }
+.cover-title   { font-family:var(--font-display); font-size:72px; color:#fff; line-height:1.02; margin-bottom:16px; }
+.cover-title span { color:var(--green); }
+.cover-sub     { font-size:15px; color:rgba(255,255,255,.5); font-weight:400; margin-bottom:36px; line-height:1.65; max-width:520px; }
+.cover-tag     { font-size:11px; color:rgba(255,255,255,.22); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:5px 14px; }
+.cover-dots    { position:absolute; bottom:40px; right:60px; display:grid; grid-template-columns:repeat(8,1fr); gap:9px; opacity:.07; pointer-events:none; }
+.cover-dots span { width:4px; height:4px; border-radius:50%; background:#fff; display:block; }
+
+/* ── SECTION BREAKER ── */
+.slide-breaker { background: var(--green-hero); overflow:hidden; }
+.slide-breaker .slide-inner { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; position:relative; z-index:1; }
+.breaker-deco { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 70% 90% at 90% 50%, rgba(0,147,86,.15) 0%, transparent 65%); }
+.breaker-deco::before { content:''; position:absolute; right:-60px; top:-60px; width:340px; height:340px; border-radius:50%; border:1.5px solid rgba(0,147,86,.15); }
+.breaker-num       { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:18px; }
+.breaker-title     { font-family:var(--font-display); font-size:68px; color:#fff; line-height:1.06; margin-bottom:20px; }
+.breaker-title span { color:var(--green); }
+.breaker-sub       { font-size:14px; color:rgba(255,255,255,.45); font-weight:400; line-height:1.6; max-width:440px; }
+.breaker-sub strong { color:rgba(255,255,255,.75); font-weight:600; }
+
+/* ── SECTION HEADER ── */
+.s-eyebrow { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--green); }
+.s-title   { font-family:var(--font-display); font-size:36px; color:var(--black); line-height:1.1; }
+.s-sub     { font-size:13px; color:var(--grey-500); line-height:1.55; max-width:780px; }
+
+/* ── NAV BAR ── */
+.nav-bar { position:fixed; bottom:0; left:220px; right:0; height:52px; background:rgba(17,17,17,.92); backdrop-filter:blur(8px); border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; justify-content:space-between; padding:0 24px; transform:translateY(100%); transition:transform .25s ease; z-index:100; }
+.nav-bar.visible { transform:translateY(0); }
+.nav-btn { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); color:#fff; border-radius:6px; padding:7px 18px; font-size:12px; font-family:var(--font-body); font-weight:600; cursor:pointer; transition:background .15s; }
+.nav-btn:hover { background:rgba(255,255,255,.14); }
+.nav-btn:disabled { opacity:.25; cursor:default; }
+.nav-counter { font-size:13px; color:rgba(255,255,255,.4); }
+.nav-counter span { color:#fff; font-weight:600; }
+
+/* ── SCREENSHOT FRAME ── */
+.sc-frame { background:#1a1a2e; border-radius:10px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,.3); flex-shrink:0; }
+.sc-bar { background:#2d2d3d; height:26px; display:flex; align-items:center; padding:0 12px; gap:6px; flex-shrink:0; }
+.sc-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.sc-url { flex:1; background:rgba(255,255,255,.07); border-radius:4px; height:14px; margin:0 10px; display:flex; align-items:center; padding:0 8px; }
+.sc-url-text { font-size:8px; color:rgba(255,255,255,.4); white-space:nowrap; overflow:hidden; }
+.sc-img { width:100%; display:block; object-fit:cover; object-position:top; }
+
+/* ── CARDS ── */
+.card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+.card-title { font-size:13px; font-weight:700; color:var(--black); margin-bottom:6px; }
+.card-sub   { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--grey-400); margin-bottom:4px; }
+.card-list  { list-style:none; }
+.card-list li { font-size:11px; color:var(--grey-700); padding:2.5px 0 2.5px 14px; position:relative; line-height:1.45; }
+.card-list li::before { content:'→'; position:absolute; left:0; color:var(--green); font-size:9px; top:4px; }
+.card-list.check li::before { content:'✓'; color:var(--green); font-size:9px; top:4px; }
+
+/* ── STAGE PILL ── */
+.stage-pill { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:3px 10px; font-size:10px; font-weight:700; }
+.sp-green  { background:rgba(0,147,86,.1);  color:var(--green-dark); border:1px solid rgba(0,147,86,.2); }
+.sp-orange { background:#fff8e5; color:#92400e; border:1px solid #fde68a; }
+.sp-blue   { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+.sp-solid  { background:var(--green); color:#fff; }
+.sp-solid-orange { background:#d97706; color:#fff; }
+.sp-solid-blue   { background:#1d73e8; color:#fff; }
+
+/* ── JOURNEY TIMELINE ── */
+.jt-wrap { display:flex; flex-direction:column; gap:0; flex:1; }
+.jt-rail  { display:flex; align-items:center; padding:0 8px; margin-bottom:10px; }
+.jt-node  { display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
+.jt-circle{ width:34px; height:34px; border-radius:50%; background:var(--green); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 4px rgba(0,147,86,.15); flex-shrink:0; z-index:1; }
+.jt-line  { flex:1; height:2px; background: linear-gradient(90deg, var(--green) 0%, rgba(0,147,86,.3) 100%); margin:0 -1px; }
+.jt-cards { display:flex; gap:8px; }
+.jt-card  { flex:1; background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px 12px 10px; box-shadow:0 2px 8px rgba(0,0,0,.05); display:flex; flex-direction:column; gap:6px; position:relative; overflow:hidden; }
+.jt-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--green); border-radius:12px 12px 0 0; }
+.jt-card-icon { font-size:22px; line-height:1; }
+.jt-card-title { font-size:11.5px; font-weight:800; color:var(--black); line-height:1.2; }
+.jt-card-desc  { font-size:10px; color:var(--grey-500); line-height:1.45; flex:1; }
+.jt-card-badge { display:inline-flex; align-items:center; gap:4px; background:rgba(0,147,86,.08); border:1px solid rgba(0,147,86,.2); border-radius:6px; padding:3px 7px; font-size:9px; font-weight:700; color:var(--green-dark); margin-top:auto; }
+.jt-card-badge svg { width:9px; height:9px; flex-shrink:0; }
+
+/* ── STAGE TABLE ── */
+.stage-table { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+.st-head { display:grid; grid-template-columns:110px 1fr 1fr 1fr; background:var(--grey-100); border-bottom:1px solid var(--border); padding:8px 14px; gap:8px; }
+.st-head div { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--grey-400); }
+.st-row  { display:grid; grid-template-columns:110px 1fr 1fr 1fr; padding:10px 14px; border-bottom:1px solid var(--grey-200); gap:8px; align-items:start; }
+.st-row:last-child { border-bottom:none; }
+.st-stage { font-size:11px; font-weight:700; color:var(--black); }
+.st-cell  { font-size:10.5px; color:var(--grey-700); line-height:1.5; }
+.st-cell strong { color:var(--black); font-weight:700; }
+
+/* ── GRID LAYOUTS ── */
+.two-col   { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+
+/* ── HIGHLIGHT ── */
+.hl { background:rgba(0,147,86,.07); border:1px solid rgba(0,147,86,.2); border-radius:10px; padding:10px 14px; }
+.hl-title { font-size:11px; font-weight:700; color:var(--green-dark); margin-bottom:3px; }
+.hl-text  { font-size:11px; color:var(--grey-700); line-height:1.5; }
+.hl-blue  { background:#eff6ff; border-color:#bfdbfe; }
+.hl-blue .hl-title { color:#1d4ed8; }
+.hl-amber { background:#fffbeb; border-color:#fde68a; }
+.hl-amber .hl-title { color:#92400e; }
+
+/* ── TRIGGER ROWS ── */
+.trig-list { display:flex; flex-direction:column; gap:6px; }
+.trig-row  { display:flex; align-items:flex-start; gap:10px; background:#fff; border:1px solid var(--border); border-radius:9px; padding:10px 12px; }
+.trig-icon { width:28px; height:28px; border-radius:7px; background:rgba(0,147,86,.1); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.trig-label{ font-size:12px; font-weight:700; color:var(--black); }
+.trig-desc { font-size:10px; color:var(--grey-500); line-height:1.45; margin-top:1px; }
+
+/* ── TIMELINE MOCK ── */
+.tl-mock { display:flex; align-items:flex-start; background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 18px; }
+.tl-item { display:flex; flex-direction:column; align-items:center; flex:1; }
+.tl-dot  { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
+.tl-dot.done   { background:var(--green); color:#fff; }
+.tl-dot.pulse  { background:#fff; border:2px solid var(--green); color:var(--green); box-shadow:0 0 0 4px rgba(0,147,86,.12); }
+.tl-dot.warn   { background:#d97706; color:#fff; }
+.tl-dot.empty  { background:#fff; border:2px solid #d1d5db; color:#d1d5db; }
+.tl-conn { flex:1; height:2px; margin-top:10px; border-radius:999px; }
+.tl-conn.done  { background:var(--green); }
+.tl-conn.empty { background:#e1e6ec; }
+.tl-lbl  { font-size:9px; font-weight:600; color:var(--grey-700); text-align:center; margin-top:5px; line-height:1.3; }
+.tl-lbl.active { color:var(--green); font-weight:700; }
+
+/* ── ROLE CARD ── */
+.role-card { background:#fff; border:1px solid var(--border); border-radius:10px; padding:12px 14px; display:flex; align-items:center; gap:10px; }
+.role-av { width:34px; height:34px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; }
+.role-name  { font-size:12px; font-weight:700; color:var(--black); }
+.role-email { font-size:9.5px; color:var(--grey-400); margin-top:1px; }
+.role-badge { display:inline-flex; align-items:center; border-radius:999px; padding:3px 9px; font-size:10px; font-weight:700; margin-left:auto; }
+.rb-admin   { background:rgba(0,147,86,.1); color:var(--green-dark); border:1px solid rgba(0,147,86,.2); }
+.rb-analyst { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+
+/* ── STATUS MOCK ── */
+.status-mock { background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px; }
+.sm-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--grey-400); margin-bottom:5px; }
+.sm-opts  { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+.sm-opt   { font-size:10px; font-weight:600; border-radius:6px; padding:4px 10px; border:1px solid var(--border); color:var(--grey-500); }
+.sm-opt.cur  { background:var(--green); color:#fff; border-color:var(--green); }
+.sm-opt.done { background:var(--grey-100); color:var(--grey-400); text-decoration:line-through; }
+
+/* ── REF TABLE ── */
+.ref-table { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.ref-row   { display:grid; grid-template-columns:120px 1fr 100px; padding:9px 14px; border-bottom:1px solid var(--grey-200); gap:10px; align-items:center; }
+.ref-row:last-child { border-bottom:none; }
+.ref-head  { background:var(--grey-100); }
+.ref-head div { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--grey-400); }
+
+/* ── TAB CARDS ── */
+.tab-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.tab-card { background:#fff; border:1px solid var(--border); border-radius:10px; padding:12px; }
+.tab-pill { display:inline-block; border-radius:999px; padding:3px 9px; font-size:10px; font-weight:700; margin-bottom:5px; }
+.tp-gray  { background:var(--grey-100); color:var(--grey-700); border:1px solid var(--border); }
+.tp-green { background:rgba(0,147,86,.1); color:var(--green-dark); border:1px solid rgba(0,147,86,.25); }
+.tab-desc { font-size:10.5px; color:var(--grey-500); line-height:1.45; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Finnovate FHC</div>
+      <div class="sidebar-meta">Team Guide · 2025</div>
+    </div>
+    <div class="slide-list" id="slideList"></div>
+  </aside>
+
+  <div class="main">
+    <div class="slide-viewport" id="viewport">
+
+      <!-- ═══ 1. COVER ═══ -->
+      <div class="slide slide-cover" data-title="FHC Team Guide">
+        <div class="cover-deco"></div>
+        <div class="cover-dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="slide-inner">
+          <div class="cover-eyebrow el-anim">Internal Team Walkthrough</div>
+          <div class="cover-title el-anim">Financial<br>Health <span>Checkup</span></div>
+          <div class="cover-sub el-anim">Everything the team needs to know — from the first rupee a customer pays to the final report they receive.</div>
+          <div class="cover-tag el-anim">Vandana · Mansi · Kruti · Aakanksha · 2025</div>
+        </div>
+      </div>
+
+      <!-- ═══ 2. THE 5-STAGE JOURNEY ═══ -->
+      <div class="slide slide-bg-alt" data-title="The Customer Journey">
+        <div class="slide-inner" style="padding:22px 32px 18px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;">
+            <div>
+              <div class="s-eyebrow el-anim">Overview</div>
+              <div class="s-title el-anim" style="font-size:30px;">The 5-stage customer journey</div>
+            </div>
+            <div class="el-anim" style="font-size:10px;color:var(--grey-400);font-weight:600;letter-spacing:.4px;text-align:right;line-height:1.5;">Zoho CRM sends an automatic<br>email at <strong style="color:var(--green-dark);">every stage</strong></div>
+          </div>
+
+          <div class="jt-wrap el-anim" style="margin-top:4px;">
+            <!-- rail -->
+            <div class="jt-rail">
+              <div class="jt-node"><div class="jt-circle">1</div></div>
+              <div class="jt-line"></div>
+              <div class="jt-node"><div class="jt-circle">2</div></div>
+              <div class="jt-line"></div>
+              <div class="jt-node"><div class="jt-circle" style="background:var(--green-dark);box-shadow:0 0 0 5px rgba(0,147,86,.2);">3</div></div>
+              <div class="jt-line" style="background:linear-gradient(90deg,rgba(0,147,86,.3) 0%,rgba(0,147,86,.3) 100%);"></div>
+              <div class="jt-node"><div class="jt-circle" style="background:var(--grey-400);box-shadow:none;">4</div></div>
+              <div class="jt-line" style="background:var(--grey-200);"></div>
+              <div class="jt-node"><div class="jt-circle" style="background:var(--grey-400);box-shadow:none;">5</div></div>
+            </div>
+            <!-- cards -->
+            <div class="jt-cards">
+              <div class="jt-card">
+                <div class="jt-card-icon">💳</div>
+                <div class="jt-card-title">Payment Done</div>
+                <div class="jt-card-desc">Customer pays ₹999 on the landing page via Cashfree</div>
+                <div class="jt-card-badge"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Invoice email + WhatsApp</div>
+              </div>
+              <div class="jt-card">
+                <div class="jt-card-icon">📋</div>
+                <div class="jt-card-title">Form Submitted</div>
+                <div class="jt-card-desc">Customer fills 6-section financial health form. RM auto-assigned.</div>
+                <div class="jt-card-badge"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Confirmation + Calendly link</div>
+              </div>
+              <div class="jt-card" style="border-color:var(--green);box-shadow:0 0 0 3px rgba(0,147,86,.1);">
+                <div class="jt-card-icon">📞</div>
+                <div class="jt-card-title">Call Booked</div>
+                <div class="jt-card-desc">Customer picks a slot on Calendly with their assigned RM</div>
+                <div class="jt-card-badge"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Call confirmation email</div>
+              </div>
+              <div class="jt-card" style="opacity:.75;">
+                <div class="jt-card-icon">📊</div>
+                <div class="jt-card-title">Report Ready</div>
+                <div class="jt-card-desc">RM marks report ready in admin after the call</div>
+                <div class="jt-card-badge" style="background:rgba(0,0,0,.04);border-color:var(--grey-200);color:var(--grey-500);"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>"Your report is being prepared"</div>
+              </div>
+              <div class="jt-card" style="opacity:.75;">
+                <div class="jt-card-icon">📤</div>
+                <div class="jt-card-title">Report Shared</div>
+                <div class="jt-card-desc">RM shares personalised report via admin — customer gets link</div>
+                <div class="jt-card-badge" style="background:rgba(0,0,0,.04);border-color:var(--grey-200);color:var(--grey-500);"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Report delivery email</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="two-col el-anim" style="flex:0 0 auto;margin-top:10px;">
+            <div class="hl">
+              <div class="hl-title">⚡ Automatic at every stage</div>
+              <div class="hl-text">Zoho CRM workflows fire an email to the customer at each stage — no manual emailing needed from the team.</div>
+            </div>
+            <div class="hl hl-amber">
+              <div class="hl-title">↩ Meeting Cancelled — a detour</div>
+              <div class="hl-text">If the customer cancels their Calendly booking, stage goes to <strong>Meeting Cancelled</strong> and they receive a rebooking email automatically.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 3. WHAT EACH STAGE MEANS ═══ -->
+      <div class="slide slide-bg-white" data-title="Stage-by-Stage Explained">
+        <div class="slide-inner" style="gap:8px;">
+          <div class="s-eyebrow el-anim">Reference</div>
+          <div class="s-title el-anim">What each stage means</div>
+          <div class="stage-table el-anim">
+            <div class="st-head">
+              <div>Stage</div>
+              <div>What triggered it</div>
+              <div>What customer receives</div>
+              <div>What the team does</div>
+            </div>
+            <div class="st-row">
+              <div><span class="stage-pill sp-solid">💳 Payment Done</span></div>
+              <div class="st-cell">Customer completes ₹999 payment on <strong>finnovate.in/ad/ffc.html</strong></div>
+              <div class="st-cell">Invoice email + WhatsApp with form link</div>
+              <div class="st-cell">Lead created in Zoho. Temporarily assigned to David.</div>
+            </div>
+            <div class="st-row">
+              <div><span class="stage-pill sp-solid">📋 Form Submitted</span></div>
+              <div class="st-cell">Customer fills &amp; submits the financial health form</div>
+              <div class="st-cell">Confirmation email. Redirected to Calendly to book a call.</div>
+              <div class="st-cell"><strong>RM assigned</strong> (round-robin). RM gets email notification with record link.</div>
+            </div>
+            <div class="st-row">
+              <div><span class="stage-pill sp-solid">📞 Call Booked</span></div>
+              <div class="st-cell">Customer books a Calendly slot with their assigned RM</div>
+              <div class="st-cell">Calendly confirmation + WhatsApp reminder</div>
+              <div class="st-cell">Open record → review <strong>Call Brief</strong> tab before the call.</div>
+            </div>
+            <div class="st-row">
+              <div><span class="stage-pill sp-solid">📊 Report Ready</span></div>
+              <div class="st-cell">RM sets Report Status → <strong>Ready</strong> in the Workflow tab</div>
+              <div class="st-cell">Email: "Your report is being prepared"</div>
+              <div class="st-cell">Download PDF, review it, then proceed to Share.</div>
+            </div>
+            <div class="st-row" style="border-bottom:none;">
+              <div><span class="stage-pill sp-solid">📤 Report Shared</span></div>
+              <div class="st-cell">RM clicks <strong>Share Report</strong> button in the record header</div>
+              <div class="st-cell">Email with personal report link (unique per customer)</div>
+              <div class="st-cell">Journey complete. Follow up for service conversion.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION BREAK: CUSTOMER ═══ -->
+      <div class="slide slide-breaker" data-title="— Customer Journey">
+        <div class="breaker-deco"></div>
+        <div class="slide-inner">
+          <div class="breaker-num el-anim">Part 01</div>
+          <div class="breaker-title el-anim">Customer<br><span>Journey</span></div>
+          <div class="breaker-sub el-anim">What the customer sees and experiences — from the landing page through to getting their report</div>
+        </div>
+      </div>
+
+      <!-- ═══ 5. PAYMENT — LANDING PAGE ═══ -->
+      <div class="slide slide-bg-alt" data-title="Stage 1 — Payment">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Customer Journey · Stage 1</div>
+          <div class="s-title el-anim">Payment Done — the starting point</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="card el-anim">
+                <div class="card-sub">What the customer does</div>
+                <div class="card-title">Visits ffc.html and pays ₹999</div>
+                <ul class="card-list">
+                  <li>Sees the Financial Health Checkup offer</li>
+                  <li>Fills name, email, phone number</li>
+                  <li>Clicks "Start My Financial Checkup" → Cashfree payment page</li>
+                  <li>Completes ₹999 payment → redirected to thank-you page with form link</li>
+                </ul>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">What gets sent automatically</div>
+                <div class="card-title">Invoice email + WhatsApp in seconds</div>
+                <ul class="card-list">
+                  <li><strong>WhatsApp:</strong> "Payment confirmed — here's your form link"</li>
+                  <li><strong>Email: GST invoice for ₹999 (via Mailercloud)</li>
+                  <li>Zoho CRM: new Lead created, FHC Stage = Payment Done</li>
+                </ul>
+              </div>
+              <div class="hl el-anim">
+                <div class="hl-title">UTM tracking</div>
+                <div class="hl-text">The source of every lead (Google Ad, Instagram, WhatsApp) is captured in UTM fields and saved on the record.</div>
+              </div>
+            </div>
+            <div class="sc-frame el-anim" style="flex:1;">
+              <div class="sc-bar">
+                <div class="sc-dot" style="background:#ff5f57;"></div>
+                <div class="sc-dot" style="background:#febc2e;"></div>
+                <div class="sc-dot" style="background:#28c840;"></div>
+                <div class="sc-url"><div class="sc-url-text">finnovate.in/ad/ffc.html</div></div>
+              </div>
+              <img class="sc-img" src="screenshots/01-landing.png" alt="FHC Landing Page" style="max-height:370px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 6. FORM SUBMITTED ═══ -->
+      <div class="slide slide-bg-alt" data-title="Stage 2 — Form Submitted">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Customer Journey · Stage 2</div>
+          <div class="s-title el-anim">Form Submitted — &amp; RM assigned</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="card el-anim">
+                <div class="card-sub">The financial health form captures</div>
+                <div class="card-title">6 sections of financial data</div>
+                <ul class="card-list check">
+                  <li>Personal &amp; family details</li>
+                  <li>Monthly income, expenses &amp; savings rate</li>
+                  <li>Existing investments &amp; assets (MF, FD, gold, property)</li>
+                  <li>Insurance: term cover, health cover, life policies</li>
+                  <li>All loans &amp; EMIs outstanding</li>
+                  <li>Financial goals, timeline &amp; concerns</li>
+                </ul>
+              </div>
+              <div class="card el-anim" style="background:var(--green-hero);border-color:rgba(0,147,86,.3);">
+                <div class="card-sub" style="color:rgba(255,255,255,.35);">RM Assignment (Auto · Round-Robin)</div>
+                <div class="card-title" style="color:#fff;">Aakanksha → Kruti → Mansi → repeat</div>
+                <ul class="card-list" style="margin-top:2px;">
+                  <li style="color:rgba(255,255,255,.7);">System auto-assigns to the next RM in the cycle</li>
+                  <li style="color:rgba(255,255,255,.7);">RM gets email: "New lead assigned to you" with record link</li>
+                  <li style="color:rgba(255,255,255,.7);">Zoho Owner field updated to assigned RM</li>
+                  <li style="color:rgba(255,255,255,.7);">Customer auto-redirected to Calendly to book a call</li>
+                </ul>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+              <div class="hl el-anim hl-blue">
+                <div class="hl-title">After submission</div>
+                <div class="hl-text">The customer is automatically redirected to Calendly where they can pick a call slot. The form link stays active — customers can come back and re-fill if they missed something.</div>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">RM notification email includes</div>
+                <div class="card-title">Everything you need to get started</div>
+                <ul class="card-list">
+                  <li>Customer full name, email &amp; phone</li>
+                  <li>Payment order ID &amp; date</li>
+                  <li>Direct link → open their record in admin</li>
+                </ul>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">Zoho CRM update</div>
+                <div class="card-title">FHC Stage → Form Submitted</div>
+                <ul class="card-list">
+                  <li>All form data synced to Lead/Contact record</li>
+                  <li>Owner reassigned from David to the RM</li>
+                  <li>Zoho workflow triggers customer email automatically</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 7. CALL BOOKED ═══ -->
+      <div class="slide slide-bg-alt" data-title="Stage 3 — Call Booked">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Customer Journey · Stage 3</div>
+          <div class="s-title el-anim">Call Booked — prepare your brief</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="card el-anim">
+                <div class="card-sub">When customer books on Calendly</div>
+                <div class="card-title">3 things happen automatically</div>
+                <ul class="card-list">
+                  <li>FHC Stage in Zoho → <strong>Call Booked</strong></li>
+                  <li>Customer gets Calendly confirmation email + calendar invite</li>
+                  <li>Admin dashboard record shows "Booked" with the call date/time</li>
+                </ul>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">Your action — before the call</div>
+                <div class="card-title">Open the Call Brief tab</div>
+                <ul class="card-list">
+                  <li>Go to the record → <strong>Call Brief</strong> tab</li>
+                  <li>Review FI Score, insurance gaps, goal timeline</li>
+                  <li>Note the main areas of concern the customer mentioned</li>
+                  <li>Prepare your talking points</li>
+                </ul>
+              </div>
+              <div class="hl el-anim hl-amber">
+                <div class="hl-title">If customer cancels</div>
+                <div class="hl-text">Stage → <strong>Meeting Cancelled</strong>. Zoho sends a "rebook anytime" email. The timeline shows a warning (!) on the Call step. Customer can rebook using their original link.</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+              <div class="card el-anim">
+                <div class="card-sub">Call Brief tab shows you</div>
+                <div class="card-title">Auto-generated financial summary</div>
+                <ul class="card-list check">
+                  <li><strong>FI Score</strong> — how financially independent they are (%)</li>
+                  <li><strong>Emergency Fund</strong> — months covered (required vs current)</li>
+                  <li><strong>Term Cover Gap</strong> — how under-insured they are</li>
+                  <li><strong>Health Cover Gap</strong> — same for health insurance</li>
+                  <li><strong>Net Worth</strong> — total assets minus liabilities</li>
+                  <li><strong>Goals</strong> — stated financial goals &amp; timeline</li>
+                  <li><strong>Areas of concern</strong> — what they're worried about</li>
+                </ul>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">During Meeting tab</div>
+                <div class="card-title">Use during &amp; after the call</div>
+                <ul class="card-list">
+                  <li>Record meeting outcome (interested, follow-up needed, etc.)</li>
+                  <li>Notes from the conversation</li>
+                  <li>Any corrections to financial data from the customer</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SECTION BREAK: ADMIN ═══ -->
+      <div class="slide slide-breaker" data-title="— Admin Console">
+        <div class="breaker-deco"></div>
+        <div class="slide-inner">
+          <div class="breaker-num el-anim">Part 02</div>
+          <div class="breaker-title el-anim">Admin<br><span>Console</span></div>
+          <div class="breaker-sub el-anim">Your workspace as a team — where you track every lead, update stages, and share reports.<br><strong>finnovate.in/ad/admin-login.php</strong></div>
+        </div>
+      </div>
+
+      <!-- ═══ 9. LOGGING IN ═══ -->
+      <div class="slide slide-bg-alt" data-title="Logging In">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Admin Console</div>
+          <div class="s-title el-anim">Logging in</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="hl el-anim" style="margin-bottom:2px;">
+                <div class="hl-title">Login URL</div>
+                <div class="hl-text" style="font-size:13px;font-weight:700;font-family:monospace;">finnovate.in/ad/admin-login.php</div>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">Two roles</div>
+                <div class="card-title">Admin vs Analyst</div>
+                <div style="margin-top:8px;display:flex;flex-direction:column;gap:7px;">
+                  <div style="display:flex;gap:8px;align-items:flex-start;"><span class="role-badge rb-admin" style="margin-left:0;flex-shrink:0;margin-top:1px;">Admin</span><span style="font-size:11px;color:var(--grey-700);">Full access — all records, manage users, integrations &amp; settings</span></div>
+                  <div style="display:flex;gap:8px;align-items:flex-start;"><span class="role-badge rb-analyst" style="margin-left:0;flex-shrink:0;margin-top:1px;">Analyst</span><span style="font-size:11px;color:var(--grey-700);">See only your assigned leads — update workflow &amp; notes</span></div>
+                </div>
+              </div>
+              <div class="role-card el-anim"><div class="role-av" style="background:var(--green);">VM</div><div><div class="role-name">Vandana Manwani</div><div class="role-email">vandana.manwani@finnovate.in</div></div><span class="role-badge rb-admin">Admin</span></div>
+              <div class="role-card el-anim"><div class="role-av" style="background:#1d73e8;">MG</div><div><div class="role-name">Mansi Gangani</div><div class="role-email">mansi.gangani@finnovate.in</div></div><span class="role-badge rb-analyst">Analyst</span></div>
+              <div class="role-card el-anim"><div class="role-av" style="background:#7c3aed;">KP</div><div><div class="role-name">Kruti Parekh</div><div class="role-email">kruti.parekh@finnovate.in</div></div><span class="role-badge rb-analyst">Analyst</span></div>
+              <div class="role-card el-anim"><div class="role-av" style="background:#b45309;">AP</div><div><div class="role-name">Aakanksha Padwal</div><div class="role-email">aakanksha.padwal@finnovate.in</div></div><span class="role-badge rb-analyst">Analyst</span></div>
+            </div>
+            <div class="sc-frame el-anim" style="flex:1;">
+              <div class="sc-bar">
+                <div class="sc-dot" style="background:#ff5f57;"></div>
+                <div class="sc-dot" style="background:#febc2e;"></div>
+                <div class="sc-dot" style="background:#28c840;"></div>
+                <div class="sc-url"><div class="sc-url-text">finnovate.in/ad/admin-login.php</div></div>
+              </div>
+              <img class="sc-img" src="screenshots/02-login.png" alt="Admin Login" style="max-height:430px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 10. THE DASHBOARD ═══ -->
+      <div class="slide slide-bg-alt" data-title="The Dashboard">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Admin Console</div>
+          <div class="s-title el-anim">The Dashboard — your home screen</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="card el-anim">
+                <div class="card-sub">What you see</div>
+                <div class="card-title">All your assigned leads (analysts) or all leads (admin)</div>
+                <ul class="card-list">
+                  <li>Customer name, email, phone</li>
+                  <li>Payment date &amp; order ID</li>
+                  <li>Status badges: Pay / Form / Call / Report / Zoho</li>
+                  <li>Click <strong>Open →</strong> to go to the full record</li>
+                </ul>
+              </div>
+              <div class="card el-anim">
+                <div class="card-sub">Filters — find what you need fast</div>
+                <div class="card-title">8 filter options including Stage</div>
+                <ul class="card-list check">
+                  <li><strong>Stage</strong> — filter by journey stage (e.g. "Call Booked")</li>
+                  <li><strong>Form</strong> — Submitted or Pending</li>
+                  <li><strong>Report</strong> — Not Started / In Progress / Ready / Shared</li>
+                  <li><strong>Call</strong> — Not Booked / Booked / Completed / No Show</li>
+                  <li>Date range, search by name/email/phone</li>
+                </ul>
+              </div>
+              <div class="hl el-anim">
+                <div class="hl-title">Quick tabs at the top</div>
+                <div class="hl-text">Use <strong>Pending forms</strong>, <strong>Report queue</strong>, and <strong>Booked calls</strong> tabs as shortcuts to common filtered views.</div>
+              </div>
+            </div>
+            <div class="sc-frame el-anim" style="flex:1;">
+              <div class="sc-bar">
+                <div class="sc-dot" style="background:#ff5f57;"></div>
+                <div class="sc-dot" style="background:#febc2e;"></div>
+                <div class="sc-dot" style="background:#28c840;"></div>
+                <div class="sc-url"><div class="sc-url-text">finnovate.in/ad/admin-dashboard.php</div></div>
+              </div>
+              <img class="sc-img" src="screenshots/03-dashboard.png" alt="Admin Dashboard" style="max-height:420px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 11. RECORD DETAIL & TIMELINE ═══ -->
+      <div class="slide slide-bg-alt" data-title="Record Detail & Timeline">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Admin Console</div>
+          <div class="s-title el-anim">Record Detail — the timeline &amp; tabs</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="tl-mock el-anim">
+                <div class="tl-item"><div class="tl-dot done">✓</div><div class="tl-lbl">Payment<br>Done</div></div>
+                <div class="tl-conn done"></div>
+                <div class="tl-item"><div class="tl-dot done">✓</div><div class="tl-lbl">Form<br>Submitted</div></div>
+                <div class="tl-conn done"></div>
+                <div class="tl-item"><div class="tl-dot pulse" style="font-size:8px;">●</div><div class="tl-lbl active">Call<br>Booked</div></div>
+                <div class="tl-conn empty"></div>
+                <div class="tl-item"><div class="tl-dot empty"></div><div class="tl-lbl">Report<br>Ready</div></div>
+                <div class="tl-conn empty"></div>
+                <div class="tl-item"><div class="tl-dot empty"></div><div class="tl-lbl">Report<br>Shared</div></div>
+              </div>
+              <div style="font-size:10px;color:var(--grey-400);margin-top:-4px;">✓ Green = done &nbsp;·&nbsp; Pulsing = current step &nbsp;·&nbsp; Gray = not yet reached &nbsp;·&nbsp; Orange ! = No Show / Cancelled</div>
+              <div class="tab-grid el-anim" style="flex:1;">
+                <div class="tab-card"><span class="tab-pill tp-gray">Overview</span><div class="tab-desc">Customer info, payment details, assigned RM, UTM source</div></div>
+                <div class="tab-card"><span class="tab-pill tp-gray">FH Indicators</span><div class="tab-desc">FI Score, insurance gaps, net worth — edit if customer corrects a value</div></div>
+                <div class="tab-card"><span class="tab-pill tp-green">Workflow ★</span><div class="tab-desc">Update call status &amp; report status — your most-used tab</div></div>
+                <div class="tab-card"><span class="tab-pill tp-gray">Call Brief</span><div class="tab-desc">Auto-generated financial summary to review before every call</div></div>
+                <div class="tab-card"><span class="tab-pill tp-gray">During Meeting</span><div class="tab-desc">Log outcome &amp; notes during or after the call</div></div>
+                <div class="tab-card"><span class="tab-pill tp-gray">Communication</span><div class="tab-desc">Full log of every email &amp; WhatsApp sent to this customer</div></div>
+              </div>
+            </div>
+            <div class="sc-frame el-anim" style="flex:1;">
+              <div class="sc-bar">
+                <div class="sc-dot" style="background:#ff5f57;"></div>
+                <div class="sc-dot" style="background:#febc2e;"></div>
+                <div class="sc-dot" style="background:#28c840;"></div>
+                <div class="sc-url"><div class="sc-url-text">finnovate.in/ad/admin-record.php?tab=overview</div></div>
+              </div>
+              <img class="sc-img" src="screenshots/04-record-overview.png" alt="Record Detail" style="max-height:400px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 12. WORKFLOW TAB ═══ -->
+      <div class="slide slide-bg-alt" data-title="Workflow Tab — Updating Stages">
+        <div class="slide-inner">
+          <div class="s-eyebrow el-anim">Admin Console · Workflow Tab</div>
+          <div class="s-title el-anim">Updating the stage — your main job</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="status-mock el-anim">
+                <div class="sm-label">Call Status</div>
+                <div class="sm-opts">
+                  <span class="sm-opt done">Not Booked</span>
+                  <span class="sm-opt done">Booked</span>
+                  <span class="sm-opt cur">Completed</span>
+                  <span class="sm-opt">No Show</span>
+                </div>
+                <div class="sm-label">Report Status</div>
+                <div class="sm-opts" style="margin-bottom:0;">
+                  <span class="sm-opt done">Not Started</span>
+                  <span class="sm-opt cur">In Progress</span>
+                  <span class="sm-opt">Ready</span>
+                  <span class="sm-opt">Shared</span>
+                </div>
+              </div>
+              <div class="trig-list el-anim">
+                <div class="trig-row">
+                  <div class="trig-icon">📞</div>
+                  <div><div class="trig-label">After call done → set Call: Completed + Report: In Progress</div><div class="trig-desc">This records that the call happened and you're working on the report now.</div></div>
+                </div>
+                <div class="trig-row">
+                  <div class="trig-icon">✅</div>
+                  <div><div class="trig-label">Report done → set Report: Ready</div><div class="trig-desc">Zoho automatically sends customer an email: "Your report is being prepared." Stage → Report Ready.</div></div>
+                </div>
+                <div class="trig-row">
+                  <div class="trig-icon">📤</div>
+                  <div><div class="trig-label">Click "Share Report" in the header → Report: Shared</div><div class="trig-desc">Customer gets their personal report link by email. Stage → Report Shared. Journey complete.</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="sc-frame el-anim" style="flex:1;">
+              <div class="sc-bar">
+                <div class="sc-dot" style="background:#ff5f57;"></div>
+                <div class="sc-dot" style="background:#febc2e;"></div>
+                <div class="sc-dot" style="background:#28c840;"></div>
+                <div class="sc-url"><div class="sc-url-text">finnovate.in/ad/admin-record.php?tab=workflow</div></div>
+              </div>
+              <img class="sc-img" src="screenshots/05-record-workflow.png" alt="Workflow Tab" style="max-height:420px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 13. QUICK REFERENCE ═══ -->
+      <div class="slide slide-bg-alt" data-title="Quick Reference">
+        <div class="slide-inner" style="gap:10px;">
+          <div class="s-eyebrow el-anim">Summary</div>
+          <div class="s-title el-anim">Quick Reference</div>
+          <div class="two-col" style="flex:1;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="ref-table el-anim">
+                <div class="ref-row ref-head"><div>Name</div><div>Email</div><div>Role</div></div>
+                <div class="ref-row"><div style="font-size:12px;font-weight:700;">Vandana</div><div style="font-size:10px;color:var(--grey-700);">vandana.manwani@finnovate.in</div><div><span class="role-badge rb-admin">Admin</span></div></div>
+                <div class="ref-row"><div style="font-size:12px;font-weight:700;">Mansi</div><div style="font-size:10px;color:var(--grey-700);">mansi.gangani@finnovate.in</div><div><span class="role-badge rb-analyst">Analyst</span></div></div>
+                <div class="ref-row"><div style="font-size:12px;font-weight:700;">Kruti</div><div style="font-size:10px;color:var(--grey-700);">kruti.parekh@finnovate.in</div><div><span class="role-badge rb-analyst">Analyst</span></div></div>
+                <div class="ref-row"><div style="font-size:12px;font-weight:700;">Aakanksha</div><div style="font-size:10px;color:var(--grey-700);">aakanksha.padwal@finnovate.in</div><div><span class="role-badge rb-analyst">Analyst</span></div></div>
+              </div>
+              <div class="hl el-anim">
+                <div class="hl-title">Default password</div>
+                <div class="hl-text" style="font-size:13px;font-weight:700;font-family:monospace;color:var(--green-dark);letter-spacing:.5px;">Finno@1234</div>
+                <div class="hl-text" style="margin-top:3px;">Change it via sidebar → Change Password after first login.</div>
+              </div>
+            </div>
+            <div class="trig-list el-anim">
+              <div class="trig-row"><div class="trig-icon">🌐</div><div><div class="trig-label">Admin Panel</div><div class="trig-desc">finnovate.in/ad/admin-login.php</div></div></div>
+              <div class="trig-row"><div class="trig-icon">📊</div><div><div class="trig-label">New lead comes in</div><div class="trig-desc">You get an email notification with their name, phone &amp; a direct link to their record.</div></div></div>
+              <div class="trig-row"><div class="trig-icon">📞</div><div><div class="trig-label">Before the call</div><div class="trig-desc">Open record → Call Brief tab. Review FI Score, insurance gaps &amp; goals.</div></div></div>
+              <div class="trig-row"><div class="trig-icon">📝</div><div><div class="trig-label">After the call</div><div class="trig-desc">Workflow tab → Call: Completed → Report: In Progress → Save.</div></div></div>
+              <div class="trig-row"><div class="trig-icon">📤</div><div><div class="trig-label">Sending the report</div><div class="trig-desc">Report: Ready → Save → click Share Report (top right of record).</div></div></div>
+              <div class="trig-row"><div class="trig-icon">❓</div><div><div class="trig-label">Need help?</div><div class="trig-desc">Contact Pranob — pranob.thachanthara@finnovate.in</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /viewport -->
+
+    <div class="nav-bar">
+      <button class="nav-btn" id="prevBtn" disabled>← Prev</button>
+      <div class="nav-counter"><span id="curNum">1</span> / <span id="totNum">—</span></div>
+      <div style="display:flex;gap:8px;">
+        <button class="nav-btn" id="nextBtn">Next →</button>
+        <button class="nav-btn" id="fsBtn">⛶ Fullscreen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const slides   = Array.from(document.querySelectorAll('.slide'));
+  const listEl   = document.getElementById('slideList');
+  const curNumEl = document.getElementById('curNum');
+  const totNumEl = document.getElementById('totNum');
+  const prevBtn  = document.getElementById('prevBtn');
+  const nextBtn  = document.getElementById('nextBtn');
+  const fsBtn    = document.getElementById('fsBtn');
+
+  const hashSlide = parseInt(window.location.hash.replace('#',''), 10);
+  let current = (hashSlide >= 1 && hashSlide <= slides.length) ? hashSlide - 1 : 0;
+  totNumEl.textContent = slides.length;
+
+  slides.forEach((slide, i) => {
+    const item = document.createElement('div');
+    item.className = 'sl-item' + (i === current ? ' active' : '');
+    item.innerHTML = `<div class="sl-num">${i+1}</div><div class="sl-title">${slide.dataset.title || 'Slide '+(i+1)}</div>`;
+    item.addEventListener('click', () => goTo(i));
+    listEl.appendChild(item);
+  });
+
+  const STAGGER_SEL = [
+    '.s-eyebrow','.s-title','.s-sub',
+    '.cover-eyebrow','.cover-title','.cover-sub','.cover-tag',
+    '.breaker-num','.breaker-title','.breaker-sub',
+    '.card','.flow-step','.tab-card','.role-card',
+    '.trig-row','.tl-mock','.hl','.status-mock',
+    '.sc-frame','.stage-table','.ref-table',
+  ].join(',');
+
+  function staggerSlide(slide) {
+    const els = slide.querySelectorAll(STAGGER_SEL);
+    els.forEach(el => { el.classList.remove('el-anim'); void el.offsetWidth; });
+    els.forEach((el, i) => {
+      el.style.animationDelay = `${i * 55 + 70}ms`;
+      el.classList.add('el-anim');
+    });
+  }
+
+  slides.forEach(s => s.classList.remove('active','anim-in-right','anim-in-left','anim-out-left','anim-out-right'));
+  slides[current].classList.add('active');
+  staggerSlide(slides[current]);
+  curNumEl.textContent = current + 1;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === slides.length - 1;
+  history.replaceState(null,'','#'+(current+1));
+
+  let animating = false;
+
+  function goTo(n) {
+    if (n < 0 || n >= slides.length || n === current || animating) return;
+    animating = true;
+    const dir    = n > current ? 1 : -1;
+    const outCls = dir > 0 ? 'anim-out-left'  : 'anim-out-right';
+    const inCls  = dir > 0 ? 'anim-in-right'  : 'anim-in-left';
+    const DURATION = 320;
+    slides[current].classList.add(outCls);
+    listEl.children[current].classList.remove('active');
+    const prev = current;
+    current = n;
+    slides[current].classList.add('active', inCls);
+    staggerSlide(slides[current]);
+    listEl.children[current].classList.add('active');
+    listEl.children[current].scrollIntoView({ block:'nearest', behavior:'smooth' });
+    curNumEl.textContent = current + 1;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    history.replaceState(null,'','#'+(current+1));
+    setTimeout(() => {
+      slides[prev].classList.remove('active', outCls);
+      slides[current].classList.remove(inCls);
+      animating = false;
+    }, DURATION);
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+    if (e.key === 'f' || e.key === 'F') toggleFs();
+  });
+
+  function toggleFs() {
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); fsBtn.textContent = '✕ Exit'; }
+    else { document.exitFullscreen(); fsBtn.textContent = '⛶ Fullscreen'; }
+  }
+  fsBtn.addEventListener('click', toggleFs);
+
+  const navBar = document.querySelector('.nav-bar');
+  let hideTimer;
+  function showNav() { navBar.classList.add('visible'); clearTimeout(hideTimer); hideTimer = setTimeout(() => navBar.classList.remove('visible'), 2500); }
+  document.addEventListener('mousemove', showNav);
+  document.addEventListener('keydown', showNav);
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) fsBtn.textContent = '⛶ Fullscreen'; setTimeout(scaleSlides, 50); });
+
+  function scaleSlides() {
+    const vp = document.getElementById('viewport');
+    const scale = Math.min(vp.offsetWidth / 920, vp.offsetHeight / 580) * 0.94;
+    document.querySelectorAll('.slide-inner').forEach(el => { el.style.transform = `scale(${scale})`; });
+  }
+  window.addEventListener('resize', scaleSlides);
+  scaleSlides();
+</script>
+</body>
+</html>

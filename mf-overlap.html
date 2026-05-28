@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutual Fund Overlap Calculator | Finnovate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#009356;
+  --green-light:#e8f5ee;
+  --green-mid:#c3e8d5;
+  --blue:#1a6fbf;
+  --purple:#7b3fa0;
+  --ink:#0d1117;
+  --ink-2:#3a3f47;
+  --ink-3:#6b7280;
+  --border:#e8eaed;
+  --surface:#f9fafb;
+  --white:#ffffff;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f5f6f8;color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ---- LAYOUT ---- */
+.calc-page{max-width:1080px;margin:0 auto;padding:32px 20px 48px}
+.calc-header{margin-bottom:28px}
+.calc-header h1{font-family:'DM Serif Display',serif;font-size:2em;color:var(--ink);line-height:1.2;margin-bottom:6px}
+.calc-header h1 em{color:var(--green);font-style:italic}
+.calc-header p{color:var(--ink-3);font-size:.93em;line-height:1.6;max-width:520px}
+
+/* Two-column layout */
+.calc-body{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+
+/* ---- LEFT PANEL ---- */
+.left-panel{display:flex;flex-direction:column;gap:14px;position:sticky;top:20px}
+.panel-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+
+.fund-slot{padding:18px}
+.fund-slot-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.fund-badge{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75em;font-weight:700;color:#fff;flex-shrink:0}
+.fund-badge.a{background:var(--blue)}
+.fund-badge.b{background:var(--purple)}
+.fund-slot-head span{font-size:.82em;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+
+.search-wrap{position:relative}
+.search-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:.9em;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--surface);outline:none;transition:border-color .18s,background .18s}
+.search-input:focus{border-color:var(--green);background:var(--white)}
+.search-input::placeholder{color:#b0b8c4}
+
+.dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);max-height:220px;overflow-y:auto;z-index:200;scrollbar-width:thin}
+.dropdown::-webkit-scrollbar{width:4px}
+.dropdown::-webkit-scrollbar-track{background:transparent}
+.dropdown::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.dd-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid #f3f4f6;transition:background .12s;min-height:44px;display:flex;flex-direction:column;justify-content:center}
+.dd-item:last-child{border-bottom:none}
+.dd-item:hover{background:var(--green-light)}
+.dd-item .dd-name{font-size:.875em;font-weight:500;color:var(--ink);line-height:1.35}
+.dd-item .dd-meta{font-size:.76em;color:var(--ink-3);margin-top:2px}
+.dd-msg{padding:12px 14px;font-size:.875em;color:var(--ink-3);font-style:italic}
+
+.chip{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:9px;padding:10px 12px}
+.chip.b-chip{background:#f5eeff;border-color:#d8b4fe}
+.chip-info .chip-name{font-size:.875em;font-weight:600;color:var(--ink);line-height:1.35}
+.chip-info .chip-meta{font-size:.76em;color:var(--ink-3);margin-top:2px}
+.chip-x{background:none;border:none;cursor:pointer;color:#b0b8c4;font-size:1em;padding:1px 2px;line-height:1;flex-shrink:0;transition:color .15s}
+.chip-x:hover{color:#c0392b}
+
+.divider-line{height:1px;background:var(--border);margin:0 18px}
+
+.calc-btn{margin:16px 18px 18px;width:calc(100% - 36px);padding:13px;background:var(--green);color:#fff;font-family:'DM Sans',sans-serif;font-size:.95em;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:background .18s,transform .1s,opacity .2s;letter-spacing:.01em}
+.calc-btn:hover:not(:disabled){background:#007a47;transform:translateY(-1px)}
+.calc-btn:active:not(:disabled){transform:translateY(0)}
+.calc-btn:disabled{opacity:.38;cursor:not-allowed}
+
+.same-warn{margin:0 18px 14px;padding:9px 12px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.8em;color:#92400e;display:none}
+
+
+
+/* ---- RIGHT PANEL ---- */
+.right-panel{}
+.placeholder-state{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:48px 32px;text-align:center}
+.placeholder-state .ph-icon{font-size:2.5em;margin-bottom:12px;opacity:.3}
+.placeholder-state p{color:var(--ink-3);font-size:.9em;line-height:1.6}
+
+/* Loader */
+.loader-state{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:48px 32px;text-align:center;display:none}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-state p{color:var(--ink-3);font-size:.9em}
+
+/* Error */
+.error-state{background:#fff5f5;border:1px solid #fecaca;border-radius:var(--radius);padding:16px 20px;color:#b91c1c;font-size:.875em;display:none;line-height:1.5}
+
+/* Results */
+.results-wrap{display:flex;flex-direction:column;gap:16px;display:none}
+
+/* Score card */
+.score-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:28px 24px}
+.score-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px}
+.score-left .score-num{font-family:'DM Serif Display',serif;font-size:3.4em;line-height:1;color:var(--ink)}
+.score-right{text-align:right;max-width:220px}
+.score-label{font-size:.9em;font-weight:500;color:var(--ink-2);line-height:1.5}
+.overlap-bar-track{height:8px;background:#eef0f3;border-radius:20px;overflow:hidden;margin-bottom:8px}
+.overlap-bar-fill{height:100%;border-radius:20px;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.bar-ticks{display:flex;justify-content:space-between;font-size:.72em;color:#b0b8c4}
+
+/* Stat row */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.stat-item{text-align:center}
+.stat-item .sv{font-size:1.25em;font-weight:700;color:var(--ink)}
+.stat-item .sl{font-size:.74em;color:var(--ink-3);margin-top:2px}
+.cmp-divider{height:1px;background:var(--border);margin:10px 0}
+
+/* Holdings section */
+.section-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.section-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.section-head h3{font-size:.9em;font-weight:700;color:var(--ink)}
+.section-head p{font-size:.78em;color:var(--ink-3)}
+
+/* Tabs */
+.tab-bar{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;background:var(--surface);border-bottom:1px solid var(--border)}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:11px 18px;font-family:'DM Sans',sans-serif;font-size:.83em;font-weight:600;color:var(--ink-3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-1px;transition:color .15s,border-color .15s;min-height:44px}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);background:var(--white)}
+.tab-count{display:inline-block;background:#eef0f3;color:var(--ink-3);font-size:.75em;border-radius:20px;padding:1px 6px;margin-left:4px;font-weight:600;transition:background .15s,color .15s}
+.tab-btn.active .tab-count{background:var(--green);color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Tables */
+.tsc{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tsc table{width:100%;border-collapse:collapse;min-width:400px;font-size:.845em}
+.tsc th{background:var(--green);color:#fff;font-weight:600;padding:9px 14px;text-align:left;white-space:nowrap;font-size:.8em;text-transform:uppercase;letter-spacing:.04em}
+.tsc td{padding:9px 14px;border-bottom:1px solid #f3f4f6;vertical-align:middle;color:var(--ink)}
+.tsc tr:last-child td{border-bottom:none}
+.tsc tr:nth-child(odd) td{background:#fdf8f6}
+.tsc tr:nth-child(even) td{background:#f7fbf9}
+.tsc tr:hover td{background:var(--green-light)}
+.w-a{color:var(--blue);font-weight:600;white-space:nowrap}
+.w-b{color:var(--purple);font-weight:600;white-space:nowrap}
+.sector-tag{display:inline-block;font-size:.75em;background:#f0f1f3;color:var(--ink-2);border-radius:5px;padding:2px 7px;white-space:nowrap}
+.rank-num{color:#b0b8c4;font-size:.8em;font-weight:500}
+.stock-name{font-weight:500}
+.table-empty{padding:24px 20px;text-align:center;font-size:.875em;color:var(--ink-3)}
+
+/* Fund comparison cards */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border)}
+.compare-col{padding:18px}
+.compare-col:first-child{border-right:1px solid var(--border)}
+.cmp-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.cmp-badge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7em;font-weight:700;color:#fff;flex-shrink:0}
+.cmp-badge.a{background:var(--blue)}
+.cmp-badge.b{background:var(--purple)}
+.cmp-name{font-size:.82em;font-weight:600;color:var(--ink);line-height:1.3}
+.cmp-cat{font-size:.74em;color:var(--ink-3);margin-top:1px}
+.cmp-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f5f6f8;gap:8px}
+.cmp-row:last-child{border-bottom:none}
+.cmp-label{font-size:.78em;color:var(--ink-3);flex-shrink:0}
+.cmp-val{font-size:.82em;font-weight:600;color:var(--ink);text-align:right}
+.returns-mini{display:flex;gap:6px;margin:10px 0 6px}
+.ret-pill{flex:1;text-align:center;background:var(--surface);border-radius:7px;padding:6px 4px}
+.ret-pill span:first-child{display:block;font-size:.68em;color:var(--ink-3)}
+.ret-pill span:last-child{display:block;font-size:.84em;font-weight:700;margin-top:2px}
+.pos{color:var(--green)}
+.neg{color:#dc2626}
+.na-val{color:#b0b8c4;font-weight:400}
+.sector-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sector-chip{font-size:.72em;background:var(--surface);border:1px solid var(--border);color:var(--ink-2);border-radius:5px;padding:2px 7px}
+
+/* Disclaimer */
+.disclaimer{font-size:.74em;color:var(--ink-3);line-height:1.65;padding:14px 0 0;border-top:1px solid var(--border);margin-top:4px}
+
+/* ---- MOBILE ---- */
+@media(max-width:767px){
+  .calc-page{padding:20px 14px 40px}
+  .calc-header h1{font-size:1.5em}
+  .calc-body{grid-template-columns:1fr;gap:14px}
+  .left-panel{position:static}
+  .score-top{flex-direction:column;gap:8px}
+  .score-right{text-align:left}
+  .stat-row{grid-template-columns:repeat(3,1fr)}
+  .compare-grid{grid-template-columns:1fr}
+  .compare-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .score-left .score-num{font-size:2.6em}
+}
+@media(min-width:768px) and (max-width:899px){
+  .calc-body{grid-template-columns:300px 1fr}
+}
+</style>
+</head>
+<body>
+<div class="calc-page">
+
+  <div class="calc-header">
+    <h1>MF Overlap <em>Calculator</em></h1>
+    <p>Find out how much your two mutual funds share the same stocks. Spot hidden redundancy before it quietly reduces your diversification.</p>
+  </div>
+
+  <div class="calc-body">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="panel-card">
+
+        <!-- Fund A -->
+        <div class="fund-slot">
+          <div class="fund-slot-head">
+            <div class="fund-badge a">A</div>
+            <span>Fund A</span>
+          </div>
+          <div class="search-wrap">
+            <input type="text" class="search-input" id="searchA" placeholder="Search e.g. Parag Parikh" autocomplete="off" aria-label="Search Fund A">
+            <div class="dropdown" id="dropdownA" style="display:none"></div>
+          </div>
+          <div id="chipA" style="display:none;margin-top:8px"></div>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <!-- Fund B -->
+        <div class="fund-slot">
+          <div class="fund-slot-head">
+            <div class="fund-badge b">B</div>
+            <span>Fund B</span>
+          </div>
+          <div class="search-wrap">
+            <input type="text" class="search-input" id="searchB" placeholder="Search e.g. Mirae Asset" autocomplete="off" aria-label="Search Fund B">
+            <div class="dropdown" id="dropdownB" style="display:none"></div>
+          </div>
+          <div id="chipB" style="display:none;margin-top:8px"></div>
+        </div>
+
+        <div class="same-warn" id="sameWarn">Both funds are the same. Please select two different funds.</div>
+
+        <button class="calc-btn" id="calcBtn" disabled onclick="calculateOverlap()">Calculate Overlap</button>
+
+
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel" id="rightPanel">
+
+      <!-- Placeholder -->
+      <div class="placeholder-state" id="placeholderState">
+        <div class="ph-icon">⊕</div>
+        <p>Select two mutual funds on the left and click <strong>Calculate Overlap</strong> to see the full holdings comparison.</p>
+      </div>
+
+      <!-- Loader -->
+      <div class="loader-state" id="loaderState">
+        <div class="spinner"></div>
+        <p>Fetching holdings data...</p>
+      </div>
+
+      <!-- Error -->
+      <div class="error-state" id="errorState"></div>
+
+      <!-- Results -->
+      <div class="results-wrap" id="resultsWrap">
+
+        <!-- Score Card -->
+        <div class="score-card">
+          <div class="score-top">
+            <div class="score-left">
+              <div class="score-num" id="scoreNum">--</div>
+            </div>
+            <div class="score-right">
+              <div class="score-label" id="scoreLabel"></div>
+            </div>
+          </div>
+          <div class="overlap-bar-track">
+            <div class="overlap-bar-fill" id="barFill" style="width:0%"></div>
+          </div>
+          <div class="bar-ticks"><span>0%</span><span>100%</span></div>
+          <div class="stat-row">
+            <div class="stat-item"><div class="sv" id="statCommon">0</div><div class="sl">Common stocks</div></div>
+            <div class="stat-item"><div class="sv" id="statA">0</div><div class="sl">Only in Fund A</div></div>
+            <div class="stat-item"><div class="sv" id="statB">0</div><div class="sl">Only in Fund B</div></div>
+          </div>
+        </div>
+
+        <!-- Holdings Breakdown -->
+        <div class="section-card">
+          <div class="tab-bar" id="tabBar">
+            <button class="tab-btn active" id="tabCommon" onclick="switchTab('common')">Common <span class="tab-count" id="cntCommon">0</span></button>
+            <button class="tab-btn" id="tabOnlyA" onclick="switchTab('onlyA')">Only Fund A <span class="tab-count" id="cntA">0</span></button>
+            <button class="tab-btn" id="tabOnlyB" onclick="switchTab('onlyB')">Only Fund B <span class="tab-count" id="cntB">0</span></button>
+          </div>
+          <div class="tab-panel active" id="panelCommon"><div class="tsc" id="tableCommon"></div></div>
+          <div class="tab-panel" id="panelOnlyA"><div class="tsc" id="tableOnlyA"></div></div>
+          <div class="tab-panel" id="panelOnlyB"><div class="tsc" id="tableOnlyB"></div></div>
+        </div>
+
+        <!-- Fund Comparison -->
+        <div class="section-card">
+          <div class="section-head">
+            <h3>Fund Comparison</h3>
+          </div>
+          <div class="compare-grid" id="compareGrid"></div>
+        </div>
+
+        <!-- Disclaimer -->
+        <p class="disclaimer">Holdings data is sourced from publicly available AMFI disclosures. This tool is for informational purposes only and does not constitute investment advice. Please consult a SEBI-registered investment adviser before making any investment decision.</p>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API='https://finapi.upvaly.com';
+const ACRONYMS=new Set(['ELSS','SIP','NAV','NFO','IDCW','ETF','FOF','PSU','FMP','CEF','NRI','SBI','HDFC','ICICI','HSBC','DSP','ITI','LIC','UTI','JM','ESG','MNC','IT','BFSI','CRISIL','BSE','NSE']);
+let selA=null,selB=null,timerA=null,timerB=null;
+
+function cleanName(s){
+  if(!s)return'';
+  return s.toLowerCase().split(/\s+/).map(w=>{
+    const u=w.toUpperCase().replace(/[^A-Z]/g,'');
+    if(ACRONYMS.has(u))return u;
+    return w.charAt(0).toUpperCase()+w.slice(1);
+  }).join(' ');
+}
+
+function shortName(s){
+  return cleanName(s)
+    .replace(/\s*-\s*Direct Plan\s*-?\s*/i,' - Direct - ')
+    .replace(/\s*-\s*Regular Plan\s*-?\s*/i,' - Regular - ')
+    .replace(/\s*-\s*(Growth Option|Growth)\s*$/i,' Growth')
+    .replace(/\s*-\s*IDCW\s*$/i,' IDCW')
+    .replace(/\s{2,}/g,' ').trim();
+}
+
+function doSearch(slot){
+  const q=document.getElementById('search'+slot).value.trim();
+  if(q.length<3){hideDd(slot);return;}
+  fetch(`${API}/api/mf/search?schemeName=${encodeURIComponent(q)}`)
+    .then(r=>r.json())
+    .then(d=>{if(d.status==='success')renderDd(slot,d.data||[]);else renderDd(slot,[]);})
+    .catch(()=>renderDd(slot,[]));
+}
+
+function renderDd(slot,funds){
+  const dd=document.getElementById('dropdown'+slot);
+  if(!funds.length){dd.innerHTML='<div class="dd-msg">No funds found. Try a different name.</div>';dd.style.display='block';return;}
+  dd.innerHTML=funds.slice(0,8).map(f=>`
+    <div class="dd-item" tabindex="0" role="option"
+      onmousedown="selectFund('${slot}',${JSON.stringify(f).replace(/"/g,'&quot;')})"
+      onkeydown="if(event.key==='Enter')selectFund('${slot}',${JSON.stringify(f).replace(/"/g,'&quot;')})">
+      <span class="dd-name">${cleanName(f.schemeName)}</span>
+      <span class="dd-meta">${f.fundHouse||''} &middot; ${f.schemeCategory||''}</span>
+    </div>`).join('');
+  dd.style.display='block';
+}
+
+function hideDd(slot){document.getElementById('dropdown'+slot).style.display='none';}
+
+function selectFund(slot,fund){
+  if(slot==='A')selA=fund;else selB=fund;
+  document.getElementById('search'+slot).style.display='none';
+  hideDd(slot);
+  const chip=document.getElementById('chip'+slot);
+  const isBslot=slot==='B';
+  chip.innerHTML=`<div class="chip${isBslot?' b-chip':''}">
+    <div class="chip-info">
+      <div class="chip-name">${shortName(fund.schemeName)}</div>
+      <div class="chip-meta">${fund.fundHouse||''} &middot; ${fund.schemeCategory||''}</div>
+    </div>
+    <button class="chip-x" onclick="clearFund('${slot}')" title="Remove">&#x2715;</button>
+  </div>`;
+  chip.style.display='block';
+  checkSame();updateBtn();
+}
+
+function clearFund(slot){
+  if(slot==='A')selA=null;else selB=null;
+  document.getElementById('chip'+slot).style.display='none';
+  const inp=document.getElementById('search'+slot);
+  inp.style.display='block';inp.value='';inp.focus();
+  document.getElementById('sameWarn').style.display='none';
+  hideResults();updateBtn();
+}
+
+function checkSame(){
+  const w=document.getElementById('sameWarn');
+  w.style.display=(selA&&selB&&selA.schemeCode===selB.schemeCode)?'block':'none';
+}
+
+function updateBtn(){
+  const same=selA&&selB&&selA.schemeCode===selB.schemeCode;
+  document.getElementById('calcBtn').disabled=!(selA&&selB&&!same);
+}
+
+function hideResults(){
+  document.getElementById('resultsWrap').style.display='none';
+  document.getElementById('errorState').style.display='none';
+  document.getElementById('placeholderState').style.display='block';
+}
+
+function showEl(id){document.getElementById(id).style.display='block';}
+function hideEl(id){document.getElementById(id).style.display='none';}
+
+function calculateOverlap(){
+  if(!selA||!selB)return;
+  hideEl('placeholderState');hideEl('resultsWrap');hideEl('errorState');
+  showEl('loaderState');
+  fetch(`${API}/api/mf/compare?funds=${selA.schemeCode},${selB.schemeCode}`)
+    .then(r=>r.json())
+    .then(d=>{
+      hideEl('loaderState');
+      if(d.status!=='success'||!d.data||d.data.length<2){showError('Could not fetch holdings data. Please try again.');return;}
+      renderResults(d.data[0],d.data[1]);
+    })
+    .catch(()=>{hideEl('loaderState');showError('Network error. Please check your connection and try again.');});
+}
+
+function showError(msg){
+  const el=document.getElementById('errorState');
+  el.textContent=msg;el.style.display='block';
+}
+
+function renderResults(fA,fB){
+  const hA=(fA.holdings||[]).filter(h=>h.weightage);
+  const hB=(fB.holdings||[]).filter(h=>h.weightage);
+  const mA={},mB={};
+  hA.forEach(h=>mA[h.name]=h);
+  hB.forEach(h=>mB[h.name]=h);
+
+  const common=[],onlyA=[],onlyB=[];
+  let pct=0;
+  hA.forEach(h=>{
+    if(mB[h.name]){
+      const wA=parseFloat(h.weightage),wB=parseFloat(mB[h.name].weightage);
+      pct+=Math.min(wA,wB);
+      common.push({name:h.name,sector:h.sector||'',wA,wB});
+    }else onlyA.push(h);
+  });
+  hB.forEach(h=>{if(!mA[h.name])onlyB.push(h);});
+  common.sort((a,b)=>Math.min(b.wA,b.wB)-Math.min(a.wA,a.wB));
+
+  renderScore(pct,common.length,onlyA.length,onlyB.length);
+  renderCommonTable(common);
+  renderExTable('OnlyA',onlyA,'w-a');
+  renderExTable('OnlyB',onlyB,'w-b');
+  renderCompare(fA,fB);
+
+  document.getElementById('cntCommon').textContent=common.length;
+  document.getElementById('cntA').textContent=onlyA.length;
+  document.getElementById('cntB').textContent=onlyB.length;
+  document.getElementById('statCommon').textContent=common.length;
+  document.getElementById('statA').textContent=onlyA.length;
+  document.getElementById('statB').textContent=onlyB.length;
+
+  switchTab('common');
+  const rw=document.getElementById('resultsWrap');
+  rw.style.display='flex';
+  setTimeout(()=>rw.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function renderScore(pct,nCommon,nA,nB){
+  const r=pct.toFixed(1);
+  document.getElementById('scoreNum').textContent=r+'%';
+  const barColor=pct<20?'#009356':pct<40?'#f59e0b':'#dc2626';
+  const label=pct<20?'Low overlap. Good diversification between these two funds.'
+    :pct<40?'Moderate overlap. Some redundancy exists between these funds.'
+    :pct<60?'High overlap. Significant redundancy between the two funds.'
+    :'Very high overlap. These funds hold largely the same stocks.';
+  document.getElementById('scoreLabel').textContent=label;
+  const bar=document.getElementById('barFill');
+  bar.style.background=barColor;
+  setTimeout(()=>bar.style.width=Math.min(pct,100)+'%',120);
+}
+
+function renderCommonTable(common){
+  if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found between these two funds.</div>';return;}
+  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Sector</th><th>Fund A %</th><th>Fund B %</th></tr></thead><tbody>`;
+  common.forEach((s,i)=>{
+    h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td><span class="sector-tag">${s.sector||'N/A'}</span></td><td class="w-a">${s.wA.toFixed(2)}%</td><td class="w-b">${s.wB.toFixed(2)}%</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('tableCommon').innerHTML=h;
+}
+
+function renderExTable(which,holdings,wcls){
+  const el=document.getElementById('table'+which);
+  if(!holdings.length){el.innerHTML='<div class="table-empty">No exclusive holdings in this fund.</div>';return;}
+  const sorted=[...holdings].sort((a,b)=>parseFloat(b.weightage)-parseFloat(a.weightage));
+  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Sector</th><th>Weight</th></tr></thead><tbody>`;
+  sorted.forEach((s,i)=>{
+    h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td><span class="sector-tag">${s.sector||'N/A'}</span></td><td class="${wcls}">${parseFloat(s.weightage).toFixed(2)}%</td></tr>`;
+  });
+  h+='</tbody></table>';
+  el.innerHTML=h;
+}
+
+function renderCompare(fA,fB){
+  document.getElementById('compareGrid').innerHTML=buildCol(fA,'a','A')+buildCol(fB,'b','B');
+}
+
+function buildCol(f,cls,slot){
+  const c=f.cagr||{};
+  const sectors=(f.sectors||[]).slice(0,5);
+  function ret(label,val){
+    if(!val)return`<div class="ret-pill"><span>${label}</span><span class="na-val">N/A</span></div>`;
+    const v=parseFloat(val);
+    return`<div class="ret-pill"><span>${label}</span><span class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${v.toFixed(1)}%</span></div>`;
+  }
+  const secHtml=sectors.length
+    ?sectors.map(s=>`<span class="sector-chip">${s.sectorName||s.sector||''} ${parseFloat(s.percentage||s.weightage||0).toFixed(1)}%</span>`).join('')
+    :'<span style="color:#b0b8c4;font-size:.78em">Not available</span>';
+
+  return`<div class="compare-col">
+    <div class="cmp-head">
+      <div class="cmp-badge ${cls}">${slot}</div>
+      <div><div class="cmp-name">${shortName(f.schemeName)}</div><div class="cmp-cat">${f.schemeCategory||''}</div></div>
+    </div>
+    <div class="cmp-row"><span class="cmp-label">AUM</span><span class="cmp-val">&#8377;${f.aum||'N/A'} Cr</span></div>
+    <div class="cmp-row"><span class="cmp-label">Expense Ratio</span><span class="cmp-val">${f.expenseRatio||'N/A'}%</span></div>
+    <div class="cmp-row"><span class="cmp-label">Risk</span><span class="cmp-val">${f.schemeRisk||'N/A'}</span></div>
+    <div class="cmp-row"><span class="cmp-label">Latest NAV</span><span class="cmp-val">&#8377;${f.latestNav||'N/A'}</span></div>
+    <div class="cmp-row"><span class="cmp-label">Fund Manager</span><span class="cmp-val" style="font-size:.75em">${f.schemeFundManagers||'N/A'}</span></div>
+    <div class="cmp-divider"></div>
+    <div class="returns-mini">${ret('1Y',c['1y'])}${ret('3Y',c['3y'])}${ret('5Y',c['5y'])}</div>
+    <div class="cmp-divider"></div>
+    <div class="sector-chips">${secHtml}</div>
+  </div>`;
+}
+
+function switchTab(tab){
+  ['common','onlyA','onlyB'].forEach(t=>{
+    const pid='panel'+t.charAt(0).toUpperCase()+t.slice(1);
+    const tid='tab'+t.charAt(0).toUpperCase()+t.slice(1);
+    document.getElementById(pid).classList.remove('active');
+    document.getElementById(tid).classList.remove('active');
+  });
+  document.getElementById('panel'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+}
+
+// Events
+['A','B'].forEach(slot=>{
+  document.getElementById('search'+slot).addEventListener('input',function(){
+    clearTimeout(slot==='A'?timerA:timerB);
+    const t=setTimeout(()=>doSearch(slot),320);
+    if(slot==='A')timerA=t;else timerB=t;
+    if(this.value.trim().length<3)hideDd(slot);
+  });
+  document.getElementById('search'+slot).addEventListener('keydown',function(e){
+    if(e.key==='ArrowDown'){const f=document.querySelector('#dropdown'+slot+' .dd-item');if(f)f.focus();}
+    if(e.key==='Escape')hideDd(slot);
+  });
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#searchA')&&!e.target.closest('#dropdownA'))hideDd('A');
+  if(!e.target.closest('#searchB')&&!e.target.closest('#dropdownB'))hideDd('B');
+});
+</script>
+</body>
+</html>

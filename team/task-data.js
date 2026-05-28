@@ -63,9 +63,11 @@
           "Rushabh Dugad": "UlMtUkQtOTYyMA=="
         },
         Marketing: {
+          "Aishwarya Krishnan": "TUstQUstNDgyNw==",
           "Aastha Tiwari": "TUstQVQtNDQxMg==",
           "Anas Ansari": "TUstQUEtNTgzNw==",
           "Deepti Baria": "TUstREItNzI5NA==",
+          "Hitesh Nagvekar": "TUstSE4tNDYxOQ==",
           "Pavan Dhake": "TUstUEQtMzY4MQ==",
           "Omkar Kandalekar": "TUstT0stOTE1Ng==",
           "Himanshi Makhe": "TUstSE0tMjQwNw==",

@@ -1,0 +1,18 @@
+# Disable directory listing
+Options -Indexes
+
+# Custom error pages
+ErrorDocument 403 /error.html
+ErrorDocument 404 /error.html
+
+# Block access to sensitive files
+<FilesMatch "\.(sql|env|json|log|md|git|sh|config|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to hidden files/folders (starting with .)
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

@@ -21,95 +21,121 @@ const USER_DIRECTORY = TASK_DATA.USER_DIRECTORY && typeof TASK_DATA.USER_DIRECTO
 const SUPER_ADMIN_LINKS = TASK_DATA.SUPER_ADMIN_LINKS && typeof TASK_DATA.SUPER_ADMIN_LINKS === "object"
   ? TASK_DATA.SUPER_ADMIN_LINKS
   : {};
-const ATTENDANCE_DEBUG_STORAGE_KEY = "taskApp:attendanceDebug";
+const ATTENDANCE_DEBUG_STORAGE_KEY = window.TaskAppState.ATTENDANCE_DEBUG_STORAGE_KEY;
 const supabaseClient = (window.supabase && typeof window.supabase.createClient === "function" && SUPABASE_URL && SUPABASE_ANON_KEY)
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } })
   : null;
 
-const appEl = document.getElementById("app");
-    const blockedEl = document.getElementById("blocked");
-    const blockedMsgEl = document.getElementById("blockedMsg");
-    const nameLineEl = document.getElementById("nameLine");
-    const deptLineEl = document.getElementById("deptLine");
-    const streakChipEl = document.getElementById("streakChip");
-    const streakTextEl = document.getElementById("streakText");
-    const streakLeaderboardToggleEl = document.getElementById("streakLeaderboardToggle");
-    const streakPopEl = document.getElementById("streakPop");
-    const streakNoteEl = document.getElementById("streakNote");
-    const streakLeaderboardEl = document.getElementById("streakLeaderboard");
-    const streakConfettiEl = document.getElementById("streakConfetti");
-    const workDateEl = document.getElementById("workDate");
-    const prevMonthBtn = document.getElementById("prevMonthBtn");
-    const nextMonthBtn = document.getElementById("nextMonthBtn");
-    const prevDayBtn = document.getElementById("prevDayBtn");
-    const nextDayBtn = document.getElementById("nextDayBtn");
-    const monthLabelEl = document.getElementById("monthLabel");
-    const dateChipListEl = document.getElementById("dateChipList");
-    const startCountCardEl = document.getElementById("startCountCard");
-    const hoursSplitCardEl = document.getElementById("hoursSplitCard");
-    const endCountCardEl = document.getElementById("endCountCard");
-    const postponedCountCardEl = document.getElementById("postponedCountCard");
-    const toastStackEl = document.getElementById("toastStack");
-    const confirmOverlayEl = document.getElementById("confirmOverlay");
-    const confirmTitleEl = document.getElementById("confirmTitle");
-    const confirmBodyEl = document.getElementById("confirmBody");
-    const confirmDetailsEl = document.getElementById("confirmDetails");
-    const confirmCancelBtn = document.getElementById("confirmCancelBtn");
-    const confirmProceedBtn = document.getElementById("confirmProceedBtn");
-
-    const newTaskTitleEl = document.getElementById("newTaskTitle");
-    const newTaskFrequencyEl = document.getElementById("newTaskFrequency");
-    const newTaskRecurrenceRowEl = document.getElementById("newTaskRecurrenceRow");
-    const newTaskWeeklyDayEl = document.getElementById("newTaskWeeklyDay");
-    const newTaskMonthlyDateEl = document.getElementById("newTaskMonthlyDate");
-    const newTaskPriorityEl = document.getElementById("newTaskPriority");
-    const newTaskPriorityGroupEl = document.getElementById("newTaskPriorityGroup");
-    const newTaskPlannedTimeEl = document.getElementById("newTaskPlannedTime");
-    const addTaskBtn = document.getElementById("addTaskBtn");
-    const plannerTaskTitleEl = document.getElementById("plannerTaskTitle");
-    const plannerDraftTasksEl = document.getElementById("plannerDraftTasks");
-    const addPlannerTaskBtn = document.getElementById("addPlannerTaskBtn");
-    const plannerComposeHeaderEl = document.getElementById("plannerComposeHeader");
-    const plannerComposeSectionEl = document.getElementById("plannerComposeSection");
-    const submitPlannerTasksBtn = document.getElementById("submitPlannerTasksBtn");
-    const clearPlannerDraftBtn = document.getElementById("clearPlannerDraftBtn");
-    const plannerTasksEl = document.getElementById("plannerTasks");
-    const plannerStatusEl = document.getElementById("plannerStatus");
-    const plannerCountCardEl = document.getElementById("plannerCountCard");
-    const plannerSelectedCountCardEl = document.getElementById("plannerSelectedCountCard");
-    const addPlannerToExtraBtn = document.getElementById("addPlannerToExtraBtn");
-    const movePlannerToSodBtn = document.getElementById("movePlannerToSodBtn");
-    const plannerToggleBtn = document.getElementById("plannerToggleBtn");
-    const plannerCloseBtn = document.getElementById("plannerCloseBtn");
-    const plannerSidebarEl = document.getElementById("plannerSidebar");
-    const plannerFocusOverlayEl = document.getElementById("plannerFocusOverlay");
-    const submitSodBtn = document.getElementById("submitSodBtn");
-    const sodSubmitMetaEl = document.getElementById("sodSubmitMeta");
-    const sodStatusEl = document.getElementById("sodStatus");
-    const sodTasksEl = document.getElementById("sodTasks");
-    const sodPanelEl = document.querySelector('section.panel[aria-label="Start of Day"]');
-    const sodSourceHintEl = document.getElementById("sodSourceHint");
-    const syncMetaLineEl = document.getElementById("syncMetaLine");
-    const saveMetaLineEl = document.getElementById("saveMetaLine");
-    const dayStatusRowEl = document.getElementById("dayStatusRow");
-    const dayStatusBtnEl = document.getElementById("dayStatusBtn");
-    const dayStatusMetaEl = document.getElementById("dayStatusMeta");
-    const sodLoginTimeMetaEl = document.getElementById("sodLoginTimeMeta");
-    const eodCheckoutTimeMetaEl = document.getElementById("eodCheckoutTimeMeta");
-    const sodBucketsEl = document.getElementById("sodBuckets");
-    const plannedQuickChipsEl = document.getElementById("plannedQuickChips");
-    const syncCarryoverBtn = document.getElementById("syncCarryoverBtn");
-    const openAdminBtn = document.getElementById("openAdminBtn");
-
-    const addExtraBtn = document.getElementById("addExtraBtn");
-    const submitEodBtn = document.getElementById("submitEodBtn");
-    const eodStatusEl = document.getElementById("eodStatus");
-    const eodTasksEl = document.getElementById("eodTasks");
-    const eodPanelEl = document.querySelector('section.panel[aria-label="End of Day"]');
-    const COMPLETION_OPTIONS = [10, 25, 50, 75, 90, 100];
-    const RECURRING_FREQUENCIES = ["Daily", "Weekly", "Monthly"];
-    const WEEKDAY_LABELS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const SOD_POSTPONE_LIMIT = 5;
+const {
+  appEl,
+  blockedEl,
+  blockedMsgEl,
+  nameLineEl,
+  deptLineEl,
+  streakChipEl,
+  streakTextEl,
+  streakLeaderboardToggleEl,
+  streakPopEl,
+  streakNoteEl,
+  streakLeaderboardEl,
+  streakConfettiEl,
+  workDateEl,
+  taskTabButtons,
+  taskTabSubmissionsEl,
+  taskTabPlannerEl,
+  taskTabApprovalsEl,
+  approvalsListEl,
+  approvalsStatusEl,
+  approvalCountCardEl,
+  prevMonthBtn,
+  nextMonthBtn,
+  prevDayBtn,
+  nextDayBtn,
+  monthLabelEl,
+  dateChipListEl,
+  startCountCardEl,
+  hoursSplitCardEl,
+  eodElapsedTimeEl,
+  postponedCountCardEl,
+  toastStackEl,
+  confirmOverlayEl,
+  confirmTitleEl,
+  confirmBodyEl,
+  confirmDetailsEl,
+  confirmCancelBtn,
+  confirmProceedBtn,
+  taskEditOverlayEl,
+  taskEditTitleEl,
+  taskEditTitleInputEl,
+  taskEditPriorityInputEl,
+  taskEditFrequencyInputEl,
+  taskEditProjectWrapEl,
+  taskEditProjectInputEl,
+  taskEditWeeklyWrapEl,
+  taskEditWeeklyInputEl,
+  taskEditMonthlyWrapEl,
+  taskEditMonthlyInputEl,
+  taskEditPlannedInputEl,
+  taskEditQuickChipsEl,
+  taskEditErrorEl,
+  taskEditCancelBtn,
+  taskEditSaveBtn,
+  newTaskTitleEl,
+  newTaskFrequencyEl,
+  newTaskProjectWrapEl,
+  newTaskProjectEl,
+  newTaskRecurrenceRowEl,
+  newTaskWeeklyDayEl,
+  newTaskMonthlyDateEl,
+  newTaskPriorityEl,
+  newTaskPriorityGroupEl,
+  newTaskPlannedTimeEl,
+  addTaskBtn,
+  plannerTaskTitleEl,
+  plannerDraftTasksEl,
+  addPlannerTaskBtn,
+  plannerComposeHeaderEl,
+  plannerComposeSectionEl,
+  submitPlannerTasksBtn,
+  clearPlannerDraftBtn,
+  plannerTasksEl,
+  plannerStatusEl,
+  plannerCountCardEl,
+  plannerSelectedCountCardEl,
+  addPlannerToExtraBtn,
+  movePlannerToSodBtn,
+  plannerToggleBtn,
+  plannerCloseBtn,
+  plannerSidebarEl,
+  plannerFocusOverlayEl,
+  submitSodBtn,
+  sodSubmitMetaEl,
+  sodStatusEl,
+  sodTasksEl,
+  sodPanelEl,
+  sodSourceHintEl,
+  syncMetaLineEl,
+  saveMetaLineEl,
+  dayStatusRowEl,
+  dayStatusBtnEl,
+  dayStatusMetaEl,
+  sodLoginTimeMetaEl,
+  eodCheckoutTimeMetaEl,
+  sodBucketsEl,
+  sodSelectedPreviewEl,
+  plannedQuickChipsEl,
+  syncCarryoverBtn,
+  openAdminBtn,
+  addExtraBtn,
+  submitEodBtn,
+  eodStatusEl,
+  eodTasksEl,
+  eodPanelEl,
+  COMPLETION_OPTIONS,
+  RECURRING_FREQUENCIES,
+  WEEKDAY_LABELS,
+  SOD_POSTPONE_LIMIT
+} = window.TaskAppDom || {};
 
     let identity = null;
     let state = null;
@@ -119,32 +145,146 @@ const appEl = document.getElementById("app");
     let pendingWebhookRequests = 0;
     let undoActionState = null;
     const WEBHOOK_DEDUP_WINDOW_MS = 3 * 60 * 1000;
-    const SAVE_DEBOUNCE_MS = 180;
     const webhookSentAt = {};
-    let saveTimerId = null;
-    let hasPendingSave = false;
     let isRenderQueued = false;
     let isRenderingAll = false;
     let rerenderRequested = false;
     let summaryCardsRafId = 0;
     let eodTimerTickerId = 0;
-    let streakState = {
-      current: 0,
-      best: 0,
-      lastCountedDate: "",
-      sodSubmittedDays: 0,
-      eodSubmittedDays: 0,
-      isBroken: false,
-      brokenSinceDate: "",
-      brokenReason: ""
-    };
-    let streakLeaders = [];
-    let streakLeaderboardError = "";
-    let streakLeaderboardFetchInFlight = false;
-    let streakLeaderboardLoaded = false;
+    let eodElapsedIntervalId = 0;
+    const attendanceRefreshTimerByDate = {};
+    const eodAttendanceEditSyncTimerByDate = {};
     const IS_APPLE_PLATFORM = /mac|iphone|ipad|ipod/i.test(
       String((navigator && (navigator.userAgentData && navigator.userAgentData.platform)) || navigator.platform || "")
     );
+    const {
+      parseISODate_,
+      toISODate_,
+      shiftISODateByDays_,
+      shiftISODateByMonths_,
+      createRequestId,
+      formatDateTime,
+      formatStatusTimestamp_,
+      createTaskId,
+      escapeHtml,
+      parseHours,
+      parseMinutes,
+      parseTimeHHMM,
+      formatMinutes,
+      formatDurationInput_
+    } = window.TaskAppUtils || {};
+    const parsePercent = function(value) {
+      return window.TaskAppUtils.parsePercent(value, COMPLETION_OPTIONS);
+    };
+    const stateStore = window.TaskAppState.createStore({
+      storagePrefix: STORAGE_PREFIX,
+      getIdentity: () => identity,
+      todayISO,
+      renderSaveMeta
+    });
+    const streakManager = window.TaskAppStreaks.createManager({
+      callApi,
+      getIdentity: () => identity,
+      clientVersion: CLIENT_VERSION,
+      dom: window.TaskAppDom,
+      escapeHtml,
+      formatCliqDate: formatCliqDate_,
+      showToast
+    });
+    const renderStreak_ = function() {
+      return streakManager.renderStreak();
+    };
+    const renderStreakLeaderboard_ = function() {
+      return streakManager.renderStreakLeaderboard();
+    };
+    const applyStreakResult_ = function(incoming, options) {
+      return streakManager.applyStreakResult(incoming, options);
+    };
+    const refreshUserStreak_ = function(options) {
+      return streakManager.refreshUserStreak(options);
+    };
+    const refreshStreakLeaderboard_ = function(options) {
+      return streakManager.refreshStreakLeaderboard(options);
+    };
+    window.__refreshStreakLeaderboard = function() {
+      refreshStreakLeaderboard_({ timeoutMs: 8000 });
+    };
+    const approvalsManager = window.TaskAppApprovals.createManager({
+      getState: () => state,
+      getIdentity: () => identity,
+      callApi,
+      saveState,
+      ensureArray,
+      normalizePriority,
+      parsePercent,
+      parseHours,
+      parseMinutes,
+      parseTimeHHMM,
+      formatMinutes,
+      formatDateTime,
+      formatDateLabel,
+      autoResizeTextarea_,
+      getFieldError,
+      clearFieldError,
+      setFieldError,
+      focusEditorField,
+      renderEodTasks,
+      getPendingTasksForDate,
+      getAllowedCompletionOptions,
+      getNextActiveEodEditor_,
+      setStatus,
+      createRequestId,
+      getSubmitterEmailForCliq: getSubmitterEmailForCliq_,
+      sendApprovalRequestCliqNotifications: sendApprovalRequestCliqNotifications_,
+      dom: window.TaskAppDom,
+      clientVersion: CLIENT_VERSION
+    });
+    const plannerManager = window.TaskAppPlanner.createManager({
+      getState: () => state,
+      getIdentity: () => identity,
+      callApi,
+      callApiJsonp,
+      saveState,
+      setStatus,
+      ensureArray,
+      normalizePriority,
+      createTaskId,
+      escapeHtml,
+      todayISO,
+      isUnsupportedActionError_,
+      isPastDate_,
+      isSodSubmittedForDate_,
+      isSodLockedByMode_,
+      isEodSubmittedForDate_,
+      normalizePlannerTitleKey_,
+      getOrCreateStartDraft,
+      getOrCreateEodDraft,
+      renderAll,
+      setButtonLoading,
+      showToast,
+      formatDateLabel,
+      dom: window.TaskAppDom,
+      clientVersion: CLIENT_VERSION
+    });
+    const attendanceManager = window.TaskAppAttendance.createManager({
+      getState: () => state,
+      getIdentity: () => identity,
+      callApiJsonp,
+      saveState,
+      renderAll,
+      escapeHtml,
+      setButtonLoading,
+      isSodSubmittedForDate_,
+      isEodSubmittedForDate_,
+      todayISO,
+      isTruthyDebugFlag_,
+      attendanceDebugStorageKey: ATTENDANCE_DEBUG_STORAGE_KEY,
+      dom: window.TaskAppDom,
+      clientVersion: CLIENT_VERSION
+    });
+    const apiClient = window.TaskAppApi.createClient({
+      supabaseClient
+    });
 
     function timerIconHtml_(kind, fallbackFaClass) {
       if (IS_APPLE_PLATFORM) {
@@ -159,37 +299,6 @@ const appEl = document.getElementById("app");
         return `<span class="apple-symbol" aria-hidden="true">${symbol}</span>`;
       }
       return `<i class="${fallbackFaClass}" aria-hidden="true"></i>`;
-    }
-
-    function parseISODate_(iso) {
-      const match = String(iso || "").trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      if (!match) return null;
-      const dt = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-      return Number.isNaN(dt.getTime()) ? null : dt;
-    }
-
-    function toISODate_(dt) {
-      const y = String(dt.getFullYear());
-      const m = String(dt.getMonth() + 1).padStart(2, "0");
-      const d = String(dt.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-
-    function shiftISODateByDays_(iso, days) {
-      const base = parseISODate_(iso) || new Date();
-      const dt = new Date(base.getFullYear(), base.getMonth(), base.getDate());
-      dt.setDate(dt.getDate() + Number(days || 0));
-      return toISODate_(dt);
-    }
-
-    function shiftISODateByMonths_(iso, months) {
-      const base = parseISODate_(iso) || new Date();
-      const targetMonth = base.getMonth() + Number(months || 0);
-      const dt = new Date(base.getFullYear(), targetMonth, 1);
-      const maxDay = new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate();
-      const day = Math.min(base.getDate(), maxDay);
-      dt.setDate(day);
-      return toISODate_(dt);
     }
 
     function setWorkDateAndRefresh_(iso) {
@@ -255,33 +364,15 @@ const appEl = document.getElementById("app");
     }
 
     function isAttendanceDebugEnabled_() {
-      try {
-        const qs = new URLSearchParams(window.location.search || "");
-        if (qs.has("attendanceDebug")) {
-          return isTruthyDebugFlag_(qs.get("attendanceDebug"));
-        }
-      } catch (err) {
-        // Ignore URL parsing issues and fall back to localStorage.
-      }
-      try {
-        return isTruthyDebugFlag_(localStorage.getItem(ATTENDANCE_DEBUG_STORAGE_KEY));
-      } catch (err) {
-        return false;
-      }
+      return attendanceManager.isAttendanceDebugEnabled_();
     }
 
     function attendanceDebugLog_() {
-      if (!isAttendanceDebugEnabled_()) return;
-      const args = Array.prototype.slice.call(arguments);
-      args.unshift("[attendance-debug]");
-      console.debug.apply(console, args);
+      return attendanceManager.attendanceDebugLog_.apply(null, arguments);
     }
 
     function attendanceDebugError_() {
-      if (!isAttendanceDebugEnabled_()) return;
-      const args = Array.prototype.slice.call(arguments);
-      args.unshift("[attendance-debug]");
-      console.error.apply(console, args);
+      return attendanceManager.attendanceDebugError_.apply(null, arguments);
     }
 
     function resolveInitialWorkDate_(savedDate) {
@@ -319,53 +410,68 @@ const appEl = document.getElementById("app");
       return `${yy}-${mm}-${dd}`;
     }
 
-    function createRequestId() {
-      return `req-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    }
-
-    function formatDateTime(ts) {
-      if (!ts) return "-";
-      const d = new Date(ts);
-      if (Number.isNaN(d.getTime())) return "-";
-      const dd = String(d.getDate()).padStart(2, "0");
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const yyyy = String(d.getFullYear());
-      return `${dd}-${mm}-${yyyy}`;
-    }
-
-    function formatStatusTimestamp_(ts) {
-      if (!ts) return "-";
-      const d = new Date(ts);
-      if (Number.isNaN(d.getTime())) return "-";
-      const dd = String(d.getDate()).padStart(2, "0");
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const yyyy = String(d.getFullYear());
-      const hh = String(d.getHours()).padStart(2, "0");
-      const min = String(d.getMinutes()).padStart(2, "0");
-      return `${dd}-${mm}-${yyyy} ${hh}:${min}`;
-    }
-
-    function createTaskId() {
-      if (window.crypto && typeof window.crypto.randomUUID === "function") {
-        return window.crypto.randomUUID();
-      }
-      return `task-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
-    }
-
-    function escapeHtml(value) {
-      return String(value == null ? "" : value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
     function normalizePriority(raw) {
       const v = (raw || "").trim().toLowerCase();
       if (v === "low") return "Low";
       if (v === "high") return "High";
       return "Medium";
+    }
+
+    function canonicalDepartmentKey_(value) {
+      const key = String(value || "").trim().toLowerCase().replace(/[^a-z]/g, "");
+      if (key === "mk" || key === "marketing") return "marketing";
+      return key;
+    }
+
+    function isMarketingDepartment_(value) {
+      return canonicalDepartmentKey_(value) === "marketing";
+    }
+
+    function isMarketingIdentity_() {
+      return isMarketingDepartment_(identity && identity.dept);
+    }
+
+    function normalizeTaskProject(raw) {
+      return String(raw || "").trim();
+    }
+
+    function ensureProjectOptionValue_(selectEl, value) {
+      if (!selectEl) return;
+      const normalized = normalizeTaskProject(value);
+      if (!normalized) {
+        selectEl.value = "";
+        return;
+      }
+      const hasOption = Array.from(selectEl.options || []).some((opt) => String(opt.value || "").trim() === normalized);
+      if (!hasOption) {
+        const optionEl = document.createElement("option");
+        optionEl.value = normalized;
+        optionEl.textContent = normalized;
+        selectEl.appendChild(optionEl);
+      }
+      selectEl.value = normalized;
+    }
+
+    function renderNewTaskProjectControls_() {
+      const dateKey = String(workDateEl && workDateEl.value || "").trim();
+      const isMarketing = isMarketingIdentity_();
+      const isSodSubmitted = isSodSubmittedForDate_(dateKey);
+      const isSodLocked = isSodLockedByMode_(dateKey);
+      const isDisabled = isSodSubmitted || isSodLocked;
+      if (newTaskProjectWrapEl) newTaskProjectWrapEl.hidden = !isMarketing;
+      if (newTaskProjectEl) {
+        newTaskProjectEl.disabled = isMarketing ? isDisabled : true;
+        if (!isMarketing) newTaskProjectEl.value = "";
+      }
+    }
+
+    function buildProjectChip_(project) {
+      const value = normalizeTaskProject(project);
+      if (!value) return null;
+      const chip = document.createElement("span");
+      chip.className = "meta-chip";
+      chip.textContent = `Project: ${value}`;
+      return chip;
     }
 
     function renderSodPrioritySegment_() {
@@ -485,6 +591,24 @@ const appEl = document.getElementById("app");
       };
     }
 
+    function accessCodeCandidates_(rawCode) {
+      const raw = String(rawCode || "").trim();
+      if (!raw) return [];
+      const out = [];
+      const add = (value) => {
+        const code = String(value || "").trim();
+        if (code && !out.includes(code)) out.push(code);
+      };
+      add(raw);
+      try {
+        add(atob(raw));
+      } catch (err) {}
+      try {
+        add(btoa(raw));
+      } catch (err) {}
+      return out;
+    }
+
     function resolveIdentityFromParams_(params) {
       const dept = String(params && params.dept || "").trim();
       const name = String(params && params.name || "").trim();
@@ -549,100 +673,18 @@ const appEl = document.getElementById("app");
       openAdminBtn.hidden = false;
     }
 
-    function getStorageKey() {
-      return `${STORAGE_PREFIX}:${identity.dept}:${identity.name}`;
-    }
-
-    function defaultState() {
-      return {
-        workDate: todayISO(),
-        startDraftByDate: {},
-        startSourceByDate: {},
-        sodPostponedByDate: {},
-        sodPostponeCountByTaskKey: {},
-        syncMetaByDate: {},
-        sodByDate: {},
-        sodSubmittedFlagByDate: {},
-        eodSubmittedByDate: {},
-        eodSubmittedUpdatesByDate: {},
-        submissionCheckByDate: {},
-        submissionDetailsSyncedByDate: {},
-        eodDraftByDate: {},
-        carryoverByDate: {},
-        carryoverSourceByDate: {},
-        carryoverSyncedByDate: {},
-        attendanceByDate: {},
-        dayStatusByDate: {},
-        attendanceSyncedByDate: {},
-        assignmentByDate: {},
-        assignmentSyncedByDate: {},
-        recurringByDate: {},
-        recurringSyncedByDate: {},
-        plannerTasks: [],
-        plannerInSodByDate: {},
-        plannerDraftTasks: [],
-        plannerConsumedTitleKeys: [],
-        plannerSelectedTaskIds: {},
-        plannerSyncedAt: "",
-        plannerCollapsed: true,
-        plannerComposeCollapsed: true,
-        eodUnlockedWithoutSodByDate: {},
-        collapsedSectionsByDate: {},
-        _savedAt: ""
-      };
-    }
-
     function loadState() {
-      const base = defaultState();
-      const key = getStorageKey();
-      if (!key) return base;
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return base;
-        const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== "object") return base;
-        return Object.assign(base, parsed);
-      } catch (err) {
-        return base;
-      }
+      return stateStore.loadState();
     }
 
-    function flushStateSave_(force) {
-      if (!hasPendingSave || !state) return;
-      if (!force && saveTimerId) return;
-      const key = getStorageKey();
-      if (!key) return;
-      try {
-        localStorage.setItem(key, JSON.stringify(state));
-        hasPendingSave = false;
-      } catch (err) {
-        // Ignore storage errors to avoid blocking task flow.
-      }
-    }
+    const startDraftRemoteSyncTimersByDate = Object.create(null);
+    const startDraftRemoteSyncInFlightByDate = Object.create(null);
+    const startDraftRemoteSyncQueuedByDate = Object.create(null);
+    const startDraftRemoteSignatureByDate = Object.create(null);
 
     function saveState(force) {
-      const key = getStorageKey();
-      if (!key || !state) return;
-      try {
-        state._savedAt = new Date().toISOString();
-        renderSaveMeta();
-        hasPendingSave = true;
-        if (force === true) {
-          if (saveTimerId) {
-            clearTimeout(saveTimerId);
-            saveTimerId = null;
-          }
-          flushStateSave_(true);
-          return;
-        }
-        if (saveTimerId) return;
-        saveTimerId = setTimeout(() => {
-          saveTimerId = null;
-          flushStateSave_(true);
-        }, SAVE_DEBOUNCE_MS);
-      } catch (err) {
-        // Ignore storage errors to avoid blocking task flow.
-      }
+      stateStore.saveState(state, force);
+      scheduleRemoteStartDraftSync_(String((workDateEl && workDateEl.value) || (state && state.workDate) || "").trim(), force === true);
     }
 
     function ensureArray(value) {
@@ -656,6 +698,194 @@ const appEl = document.getElementById("app");
         }
       }
       return [];
+    }
+
+    function sanitizeStartDraftTasksForRemote_(dateKey) {
+      const draftTasks = ensureArray(state && state.startDraftByDate && state.startDraftByDate[dateKey]);
+      return draftTasks
+        .map((t) => ({
+          taskId: String(t && t.taskId || "").trim() || createTaskId(),
+          title: String(t && t.title || "").trim(),
+          project: normalizeTaskProject(t && t.project),
+          priority: normalizePriority(t && t.priority),
+          source: (String(t && t.source || "").trim().toLowerCase() === "planner")
+            ? "planner"
+            : (isCarryoverTask(t) ? "carryover" : (isAssignedTask(t) ? "assigned" : (isRecurringTask(t) ? "recurring" : "sod"))),
+          frequency: normalizeRecurringFrequency(t && t.frequency),
+          recurrenceWeekday: normalizeRecurringWeekday(t && t.recurrenceWeekday),
+          recurrenceDayOfMonth: normalizeRecurringDayOfMonth(t && t.recurrenceDayOfMonth),
+          plannedHours: Number.isFinite(Number(t && t.plannedHours)) ? Number(t.plannedHours) : 0,
+          plannedMinutes: Number.isFinite(Number(t && t.plannedMinutes)) ? Number(t.plannedMinutes) : 0,
+          addedDate: isCarryoverTask(t) ? String(t && (t.addedDate || t.carryFrom) || "").trim() : "",
+          lastCompletion: (isCarryoverTask(t) || isAssignedTask(t) || isRecurringTask(t)) ? getCarryoverLastCompletion(t) : null,
+          lastNote: (isCarryoverTask(t) || isAssignedTask(t) || isRecurringTask(t)) ? String(t && t.lastNote || "").trim() : "",
+          carryoverOrigin: isCarryoverTask(t) ? String(t && t.carryoverOrigin || "") : "",
+          assignedBy: isAssignedTask(t) ? String(t && t.assignedBy || "").trim() : ""
+        }))
+        .filter((t) => t.title.length > 0);
+    }
+
+    function getSelectedStartDraftTaskIdsForRemote_(dateKey, tasks) {
+      const selectedMap = state && state.sodSelectedTaskIdsByDate && typeof state.sodSelectedTaskIdsByDate === "object"
+        ? state.sodSelectedTaskIdsByDate[dateKey]
+        : null;
+      const out = {};
+      (Array.isArray(tasks) ? tasks : []).forEach((task) => {
+        const taskId = String(task && task.taskId || "").trim();
+        if (!taskId) return;
+        out[taskId] = selectedMap ? Boolean(selectedMap[taskId]) : true;
+      });
+      return out;
+    }
+
+    function computeRemoteStartDraftSignature_(dateKey) {
+      const tasks = sanitizeStartDraftTasksForRemote_(dateKey);
+      const selectedTaskIds = getSelectedStartDraftTaskIdsForRemote_(dateKey, tasks);
+      return JSON.stringify({ tasks, selectedTaskIds });
+    }
+
+    async function flushRemoteStartDraftSync_(dateKey, force = false) {
+      const key = String(dateKey || "").trim();
+      if (!identity || !key) return;
+      if (startDraftRemoteSyncInFlightByDate[key]) {
+        startDraftRemoteSyncQueuedByDate[key] = true;
+        return;
+      }
+      const isAlreadySubmitted = Boolean(
+        (Array.isArray(state && state.sodByDate && state.sodByDate[key]) && state.sodByDate[key].length > 0)
+        || (state && state.sodSubmittedFlagByDate && state.sodSubmittedFlagByDate[key])
+      );
+      if (isAlreadySubmitted) {
+        delete startDraftRemoteSignatureByDate[key];
+        return;
+      }
+      const signature = computeRemoteStartDraftSignature_(key);
+      if (!force && startDraftRemoteSignatureByDate[key] === signature) return;
+      const parsed = JSON.parse(signature);
+      startDraftRemoteSyncInFlightByDate[key] = true;
+      try {
+        const result = await callApi("saveStartDraft", {
+          workDate: key,
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          tasks: parsed.tasks,
+          selectedTaskIds: parsed.selectedTaskIds,
+          clientVersion: CLIENT_VERSION
+        }, { timeoutMs: 8000, maxAttempts: 2 });
+        if (!result || result.ok === false) {
+          throw new Error(result && result.message ? result.message : "Draft sync failed.");
+        }
+        startDraftRemoteSignatureByDate[key] = signature;
+      } catch (err) {
+      } finally {
+        startDraftRemoteSyncInFlightByDate[key] = false;
+        if (startDraftRemoteSyncQueuedByDate[key]) {
+          startDraftRemoteSyncQueuedByDate[key] = false;
+          scheduleRemoteStartDraftSync_(key, true);
+        }
+      }
+    }
+
+    function scheduleRemoteStartDraftSync_(dateKey, immediate = false) {
+      const key = String(dateKey || "").trim();
+      if (!identity || !key) return;
+      const existingTimer = startDraftRemoteSyncTimersByDate[key];
+      if (existingTimer) {
+        window.clearTimeout(existingTimer);
+        delete startDraftRemoteSyncTimersByDate[key];
+      }
+      const delayMs = immediate ? 0 : 900;
+      startDraftRemoteSyncTimersByDate[key] = window.setTimeout(() => {
+        delete startDraftRemoteSyncTimersByDate[key];
+        flushRemoteStartDraftSync_(key, immediate).catch(() => {});
+      }, delayMs);
+    }
+
+    function normalizeRemoteStartDraftPayload_(result) {
+      const rawTasks = Array.isArray(result && result.tasks) ? result.tasks : [];
+      const tasks = rawTasks
+        .map((t) => ({
+          taskId: String(t && t.taskId || "").trim() || createTaskId(),
+          title: String(t && t.title || t.task || "").trim(),
+          project: normalizeTaskProject(t && t.project),
+          priority: normalizePriority(t && t.priority),
+          source: (String(t && t.source || "").trim().toLowerCase() === "planner")
+            ? "planner"
+            : (String(t && t.source || "").trim().toLowerCase() === "carryover"
+              ? "carryover"
+              : (String(t && t.source || "").trim().toLowerCase() === "assigned"
+                ? "assigned"
+                : (normalizeRecurringFrequency(t && t.frequency) ? "recurring" : "sod"))),
+          frequency: normalizeRecurringFrequency(t && t.frequency),
+          recurrenceWeekday: normalizeRecurringWeekday(t && t.recurrenceWeekday),
+          recurrenceDayOfMonth: normalizeRecurringDayOfMonth(t && t.recurrenceDayOfMonth),
+          plannedHours: Number.isFinite(Number(t && t.plannedHours)) ? Number(t.plannedHours) : 0,
+          plannedMinutes: Number.isFinite(Number(t && t.plannedMinutes)) ? Number(t.plannedMinutes) : 0,
+          addedDate: String(t && (t.addedDate || t.carryFrom) || "").trim(),
+          lastCompletion: Number.isFinite(Number(t && t.lastCompletion)) ? Number(t.lastCompletion) : null,
+          lastNote: String(t && t.lastNote || "").trim(),
+          carryoverOrigin: String(t && t.carryoverOrigin || "").trim(),
+          assignedBy: String(t && t.assignedBy || "").trim()
+        }))
+        .filter((t) => t.title.length > 0);
+      const selectedTaskIdsRaw = (result && result.selectedTaskIds && typeof result.selectedTaskIds === "object" && !Array.isArray(result.selectedTaskIds))
+        ? result.selectedTaskIds
+        : {};
+      const selectedTaskIds = {};
+      tasks.forEach((task) => {
+        const taskId = String(task.taskId || "").trim();
+        if (!taskId) return;
+        selectedTaskIds[taskId] = Object.prototype.hasOwnProperty.call(selectedTaskIdsRaw, taskId)
+          ? Boolean(selectedTaskIdsRaw[taskId])
+          : true;
+      });
+      return { tasks, selectedTaskIds };
+    }
+
+    async function loadRemoteStartDraft_(dateKey, options = {}) {
+      const key = String(dateKey || "").trim();
+      if (!identity || !key) return false;
+      const hasSubmittedSod = Boolean(
+        (Array.isArray(state && state.sodByDate && state.sodByDate[key]) && state.sodByDate[key].length > 0)
+        || (state && state.sodSubmittedFlagByDate && state.sodSubmittedFlagByDate[key])
+      );
+      if (hasSubmittedSod) return false;
+      const existingDraft = ensureArray(state && state.startDraftByDate && state.startDraftByDate[key]);
+      const allowOverwrite = Boolean(options && options.allowOverwrite);
+      if (!allowOverwrite && existingDraft.length > 0) return false;
+      try {
+        const result = await callApi("getStartDraft", {
+          workDate: key,
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          clientVersion: CLIENT_VERSION
+        }, { timeoutMs: 8000, maxAttempts: 2 });
+        if (!result || result.ok === false) return false;
+        const remote = normalizeRemoteStartDraftPayload_(result);
+        if (!remote.tasks.length) return false;
+        state.startDraftByDate[key] = remote.tasks;
+        state.sodSelectedTaskIdsByDate[key] = remote.selectedTaskIds;
+        state.startSourceByDate[key] = "supabase";
+        startDraftRemoteSignatureByDate[key] = JSON.stringify({
+          tasks: remote.tasks,
+          selectedTaskIds: remote.selectedTaskIds
+        });
+        saveState();
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function ensurePreviousDraftAvailableForCarryover_(dateKey) {
+      const prevDate = previousDateISO(dateKey);
+      const prevSod = ensureArray(state && state.sodByDate && state.sodByDate[prevDate]);
+      const prevDraft = ensureArray(state && state.startDraftByDate && state.startDraftByDate[prevDate]);
+      if (prevSod.length || prevDraft.length) return;
+      if (isEodSubmittedForDate_(prevDate)) return;
+      await loadRemoteStartDraft_(prevDate);
     }
 
     function normalizePlannerTitleKey_(title) {
@@ -705,184 +935,6 @@ const appEl = document.getElementById("app");
         }, 180);
       }, durationMs);
     }
-
-    function renderStreak_() {
-      const current = Math.max(0, Number(streakState && streakState.current || 0));
-      const best = Math.max(current, Number(streakState && streakState.best || 0));
-      if (streakTextEl) streakTextEl.textContent = `Streak: ${current} | Best: ${best}`;
-      if (streakChipEl) {
-        streakChipEl.title = "Streak counts consecutive working days with both SOD and EOD submitted.";
-      }
-      if (streakNoteEl) {
-        if (streakState && streakState.isBroken && streakState.brokenSinceDate) {
-          const reason = String(streakState.brokenReason || "SOD or EOD was not submitted");
-          const sinceText = formatCliqDate_(streakState.brokenSinceDate);
-          streakNoteEl.textContent = `Your streak is broken since ${sinceText}: ${reason}. To regain streak continuity, submit both SOD and EOD for ${sinceText}.`;
-        } else {
-          streakNoteEl.textContent = "";
-        }
-      }
-    }
-
-    function renderStreakLeaderboard_() {
-      if (!streakLeaderboardEl) return;
-      if (!streakLeaderboardLoaded && streakLeaders.length === 0 && !streakLeaderboardError) {
-        streakLeaderboardEl.innerHTML = `
-          <div class="streak-leaderboard-title">Top 3 Streaks (Organization-wide)</div>
-          <div>Loading leaderboard...</div>
-        `;
-        if (!streakLeaderboardFetchInFlight) {
-          streakLeaderboardFetchInFlight = true;
-          refreshStreakLeaderboard_({ timeoutMs: 8000 })
-            .then(() => {
-              streakLeaderboardFetchInFlight = false;
-            })
-            .catch(() => {
-              streakLeaderboardFetchInFlight = false;
-            });
-        }
-        return;
-      }
-      if (streakLeaderboardError) {
-        streakLeaderboardEl.innerHTML = `
-          <div class="streak-leaderboard-title">Top 3 Streaks (Organization-wide)</div>
-          <div>${escapeHtml(streakLeaderboardError)}</div>
-        `;
-        return;
-      }
-      const rows = Array.isArray(streakLeaders) ? streakLeaders.slice(0, 3) : [];
-      if (!rows.length) {
-        streakLeaderboardEl.innerHTML = `
-          <div class="streak-leaderboard-title">Top 3 Streaks (Organization-wide)</div>
-          <div>No leaderboard data yet.</div>
-        `;
-        return;
-      }
-      const items = rows.map((r) => {
-        const name = escapeHtml(String(r.employeeName || "-"));
-        const dept = escapeHtml(String(r.department || "-"));
-        const current = Math.max(0, Number(r.current || 0));
-        const best = Math.max(current, Number(r.best || 0));
-        return `<li>${name} (${dept}) - ${current} current | ${best} best</li>`;
-      }).join("");
-      streakLeaderboardEl.innerHTML = `
-        <div class="streak-leaderboard-title">Top 3 Streaks (Organization-wide)</div>
-        <ol class="streak-leaderboard-list">${items}</ol>
-      `;
-    }
-
-    function playStreakConfetti_(count = 36) {
-      if (!streakConfettiEl) return;
-      streakConfettiEl.innerHTML = "";
-      const colors = ["#ff7a00", "#ffd166", "#1b8dff", "#5dd39e", "#ff4f64"];
-      for (let i = 0; i < count; i += 1) {
-        const piece = document.createElement("span");
-        piece.className = "streak-confetti-piece";
-        piece.style.left = `${Math.random() * 100}%`;
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDuration = `${1.6 + Math.random() * 1.1}s`;
-        piece.style.animationDelay = `${Math.random() * 0.28}s`;
-        streakConfettiEl.appendChild(piece);
-      }
-      setTimeout(() => {
-        streakConfettiEl.innerHTML = "";
-      }, 2600);
-    }
-
-    function playStreakIncrementFx_(streak) {
-      if (streakChipEl) {
-        streakChipEl.classList.remove("pulse");
-        void streakChipEl.offsetWidth;
-        streakChipEl.classList.add("pulse");
-      }
-      if (streakPopEl) {
-        streakPopEl.textContent = "+1 day";
-        streakPopEl.classList.remove("show");
-        void streakPopEl.offsetWidth;
-        streakPopEl.classList.add("show");
-      }
-      if (Number(streak && streak.milestone || 0) > 0) {
-        playStreakConfetti_(48);
-        showToast(`Streak milestone: ${Number(streak.milestone)} days`, "success", 3000);
-      }
-    }
-
-    function applyStreakResult_(incoming, options = {}) {
-      const s = incoming && typeof incoming === "object" ? incoming : {};
-      const prevCurrent = Math.max(0, Number(streakState && streakState.current || 0));
-      const nextCurrent = Math.max(0, Number(s.current || 0));
-      const nextBest = Math.max(nextCurrent, Number(s.best || 0));
-      streakState.current = nextCurrent;
-      streakState.best = nextBest;
-      streakState.lastCountedDate = String(s.lastCountedDate || s.countedDate || streakState.lastCountedDate || "");
-      streakState.sodSubmittedDays = Math.max(0, Number(s.sodSubmittedDays != null ? s.sodSubmittedDays : streakState.sodSubmittedDays));
-      streakState.eodSubmittedDays = Math.max(0, Number(s.eodSubmittedDays != null ? s.eodSubmittedDays : streakState.eodSubmittedDays));
-      streakState.isBroken = s.isBroken != null ? Boolean(s.isBroken) : streakState.isBroken;
-      streakState.brokenSinceDate = s.brokenSinceDate != null
-        ? String(s.brokenSinceDate || "")
-        : streakState.brokenSinceDate;
-      streakState.brokenReason = s.brokenReason != null
-        ? String(s.brokenReason || "")
-        : streakState.brokenReason;
-      renderStreak_();
-      if (Boolean(options.animate) && (Boolean(s.incremented) || nextCurrent > prevCurrent)) {
-        playStreakIncrementFx_(s);
-      }
-    }
-
-    async function refreshUserStreak_(options = {}) {
-      if (!identity) return;
-      try {
-        const result = await callApi("getUserStreak", {
-          department: identity.dept,
-          employeeName: identity.name,
-          accessCode: identity.code,
-          clientVersion: CLIENT_VERSION
-        }, { timeoutMs: Number(options.timeoutMs || 8000) });
-        if (!result || result.ok === false) return;
-        applyStreakResult_(result, { animate: Boolean(options.animate) });
-      } catch (err) {
-        // Non-blocking by design.
-      }
-    }
-
-    async function refreshStreakLeaderboard_(options = {}) {
-      if (!identity) {
-        streakLeaderboardError = "Leaderboard is initializing. Try again in 1-2 seconds.";
-        streakLeaderboardLoaded = true;
-        renderStreakLeaderboard_();
-        return;
-      }
-      try {
-        const result = await callApi("getStreakLeaderboard", {
-          dept: identity.dept,
-          department: "All",
-          name: identity.name,
-          accessCode: identity.code,
-          limit: 3,
-          clientVersion: CLIENT_VERSION
-        }, { timeoutMs: Number(options.timeoutMs || 8000) });
-        if (!result || result.ok === false) {
-          streakLeaderboardError = result && result.message
-            ? String(result.message)
-            : "Leaderboard unavailable right now.";
-          streakLeaderboardLoaded = true;
-          renderStreakLeaderboard_();
-          return;
-        }
-        streakLeaderboardError = "";
-        streakLeaders = Array.isArray(result.leaders) ? result.leaders : [];
-        streakLeaderboardLoaded = true;
-        renderStreakLeaderboard_();
-      } catch (err) {
-        streakLeaderboardError = String(err && err.message ? err.message : err || "Leaderboard unavailable right now.");
-        streakLeaderboardLoaded = true;
-        renderStreakLeaderboard_();
-      }
-    }
-    window.__refreshStreakLeaderboard = function() {
-      refreshStreakLeaderboard_({ timeoutMs: 8000 });
-    };
 
     function hasPendingSubmitOrWebhook_() {
       return Boolean(isSodSubmitting || isEodSubmitting || pendingWebhookRequests > 0);
@@ -962,9 +1014,52 @@ const appEl = document.getElementById("app");
       return state.startDraftByDate[dateKey];
     }
 
+    function getOrCreateSodSelectionByDate_(dateKey) {
+      const key = String(dateKey || workDateEl.value || "").trim();
+      if (!key) return {};
+      if (!state.sodSelectedTaskIdsByDate || typeof state.sodSelectedTaskIdsByDate !== "object") {
+        state.sodSelectedTaskIdsByDate = {};
+      }
+      if (!state.sodSelectedTaskIdsByDate[key] || typeof state.sodSelectedTaskIdsByDate[key] !== "object") {
+        state.sodSelectedTaskIdsByDate[key] = {};
+      }
+      return state.sodSelectedTaskIdsByDate[key];
+    }
+
+    function syncSodSelectionForDate_(dateKey, tasks) {
+      const selectedMap = getOrCreateSodSelectionByDate_(dateKey);
+      const validIds = {};
+      ensureArray(tasks).forEach((task, idx) => {
+        const taskId = String(task && task.taskId || "").trim();
+        if (!taskId) return;
+        validIds[taskId] = true;
+        if (!Object.prototype.hasOwnProperty.call(selectedMap, taskId)) {
+          selectedMap[taskId] = false;
+        }
+      });
+      Object.keys(selectedMap).forEach((taskId) => {
+        if (!validIds[taskId]) delete selectedMap[taskId];
+      });
+      return selectedMap;
+    }
+
     function getCarryoverLastCompletion(task) {
       const n = Number(task && task.lastCompletion);
       return Number.isFinite(n) ? n : null;
+    }
+
+    function getTaskIdentityKey_(task) {
+      const taskId = String(task && task.taskId || "").trim();
+      if (taskId) return `id:${taskId}`;
+      const title = String(task && task.title || "").trim().toLowerCase();
+      return title ? `title:${title}` : "";
+    }
+
+    function removeTaskFromListByIdentity_(list, task) {
+      if (!Array.isArray(list) || !task) return list;
+      const targetKey = getTaskIdentityKey_(task);
+      if (!targetKey) return list;
+      return list.filter((item) => getTaskIdentityKey_(item) !== targetKey);
     }
 
     function isCarryoverTask(task) {
@@ -980,15 +1075,54 @@ const appEl = document.getElementById("app");
     }
 
     function isLockedStartTask(task) {
-      return isCarryoverTask(task) || isAssignedTask(task) || isRecurringTask(task);
+      return isAssignedTask(task) || isRecurringTask(task);
+    }
+
+    function isPartiallyCompletedStartTask_(task) {
+      const completion = Number(task && task.lastCompletion);
+      return Number.isFinite(completion) && completion > 0 && completion < 100;
+    }
+
+    function getSodPostponeTaskKeys_(task) {
+      const keys = [];
+      const taskId = String(task && task.taskId || "").trim();
+      if (taskId) keys.push(`id:${taskId}`);
+      const title = String(task && task.title || "").trim().toLowerCase();
+      const source = String(task && task.source || "").trim().toLowerCase();
+      if (title) {
+        if (source) keys.push(`source:${source}|title:${title}`);
+        keys.push(`title:${title}`);
+      }
+      return Array.from(new Set(keys)).filter(Boolean);
     }
 
     function getSodPostponeTaskKey_(task) {
-      const taskId = String(task && task.taskId || "").trim();
-      if (taskId) return `id:${taskId}`;
-      const title = String(task && task.title || "").trim().toLowerCase();
-      if (title) return `title:${title}`;
-      return "";
+      const keys = getSodPostponeTaskKeys_(task);
+      if (!keys.length) return "";
+      const titleKey = keys.find((key) => key.startsWith("source:")) || keys.find((key) => key.startsWith("title:"));
+      return titleKey || keys[0];
+    }
+
+    function getSodPostponeCount_(task) {
+      if (!state || !state.sodPostponeCountByTaskKey || typeof state.sodPostponeCountByTaskKey !== "object") {
+        return 0;
+      }
+      const counts = getSodPostponeTaskKeys_(task)
+        .map((key) => Number(state.sodPostponeCountByTaskKey[key] || 0))
+        .filter((value) => Number.isFinite(value) && value > 0);
+      if (!counts.length) return 0;
+      return Math.max.apply(null, counts);
+    }
+
+    function setSodPostponeCount_(task, value) {
+      if (!state) return;
+      if (!state.sodPostponeCountByTaskKey || typeof state.sodPostponeCountByTaskKey !== "object") {
+        state.sodPostponeCountByTaskKey = {};
+      }
+      const next = Math.max(0, Math.floor(Number(value || 0)));
+      getSodPostponeTaskKeys_(task).forEach((key) => {
+        state.sodPostponeCountByTaskKey[key] = next;
+      });
     }
 
     function getAllowedCompletionOptions(task) {
@@ -1002,16 +1136,13 @@ const appEl = document.getElementById("app");
 
     function getSodSubmissionSnapshot_(dateKey, tasks) {
       const list = Array.isArray(tasks) ? tasks : [];
-      const sodPostponedMap = state.sodPostponedByDate && state.sodPostponedByDate[dateKey]
-        ? state.sodPostponedByDate[dateKey]
-        : {};
+      const selectedMap = getOrCreateSodSelectionByDate_(dateKey);
       let submitCount = 0;
       let totalPlannedMinutes = 0;
 
       list.forEach((task) => {
         const taskId = String(task && task.taskId || "").trim();
-        const isPostponedCarryover = isCarryoverTask(task) && taskId && Boolean(sodPostponedMap[taskId]);
-        if (isPostponedCarryover) return;
+        if (!isSodSubmittedForDate_(dateKey) && taskId && !selectedMap[taskId]) return;
 
         submitCount += 1;
         const plannedHours = Number(task && task.plannedHours);
@@ -1043,10 +1174,118 @@ const appEl = document.getElementById("app");
       sodSubmitMetaEl.textContent = `Will submit: ${snap.submitCount} ${taskWord} | Planned: ${formatMinutes(snap.totalPlannedMinutes)}`;
     }
 
+    function computeElapsedMinutesSinceLogin_(dateKey) {
+      const attendance = getAttendancePayloadForDate_(dateKey);
+      if (!attendance) return null;
+      // If EOD submitted, use stored workingMinutes
+      if (isEodSubmittedForDate_(dateKey) && attendance.workingMinutes != null) {
+        return Number(attendance.workingMinutes);
+      }
+      const loginRaw = String(attendance.loginTime || "").trim();
+      if (!loginRaw) return null;
+      // loginTime is "HH:MM"
+      const match = loginRaw.match(/^(\d{1,2}):(\d{2})$/);
+      if (!match) return null;
+      const loginH = Number(match[1]);
+      const loginM = Number(match[2]);
+      if (!Number.isFinite(loginH) || !Number.isFinite(loginM)) return null;
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const loginMinutes = loginH * 60 + loginM;
+      const elapsed = nowMinutes - loginMinutes;
+      return elapsed >= 0 ? elapsed : null;
+    }
+
+    function updateEodElapsedTime_(dateKey) {
+      if (!eodElapsedTimeEl) return;
+      const elapsed = computeElapsedMinutesSinceLogin_(dateKey);
+      if (elapsed === null) {
+        eodElapsedTimeEl.textContent = "--";
+        return;
+      }
+      const h = Math.floor(elapsed / 60);
+      const m = elapsed % 60;
+      eodElapsedTimeEl.textContent = `${h}h ${String(m).padStart(2, "0")}m`;
+    }
+
+    function startEodElapsedInterval_() {
+      if (eodElapsedIntervalId) return;
+      eodElapsedIntervalId = setInterval(() => {
+        const dateKey = workDateEl && workDateEl.value;
+        if (dateKey) updateEodElapsedTime_(dateKey);
+      }, 60000);
+    }
+
+    function renderSodSelectedPreview_(dateKey, tasks, selectedMap) {
+      if (!sodSelectedPreviewEl) return;
+      if (isSodSubmittedForDate_(dateKey) || isSodLockedByMode_(dateKey)) {
+        sodSelectedPreviewEl.hidden = true;
+        return;
+      }
+      const selected = ensureArray(tasks).filter((t) => {
+        const taskId = String(t && t.taskId || "").trim();
+        return taskId && Boolean(selectedMap[taskId]);
+      });
+      if (!selected.length) {
+        sodSelectedPreviewEl.hidden = true;
+        return;
+      }
+      sodSelectedPreviewEl.hidden = false;
+      const titleEl = document.createElement("div");
+      titleEl.className = "sod-preview-title";
+      titleEl.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Queued for submission (${selected.length})`;
+      const list = document.createElement("ul");
+      list.className = "sod-preview-list";
+      selected.forEach((t, i) => {
+        const li = document.createElement("li");
+        li.className = "sod-preview-item";
+        const num = document.createElement("span");
+        num.className = "sod-preview-num";
+        num.textContent = `${i + 1}.`;
+        const name = document.createElement("span");
+        name.className = "sod-preview-name";
+        name.textContent = t.title;
+        const h = Number.isFinite(Number(t.plannedHours)) ? Number(t.plannedHours) : 0;
+        const m = Number.isFinite(Number(t.plannedMinutes)) ? Number(t.plannedMinutes) : 0;
+        if (h > 0 || m > 0) {
+          const dur = document.createElement("span");
+          dur.className = "sod-preview-dur";
+          dur.textContent = `${h}h ${m}m`;
+          li.appendChild(num);
+          li.appendChild(name);
+          li.appendChild(dur);
+        } else {
+          li.appendChild(num);
+          li.appendChild(name);
+        }
+        list.appendChild(li);
+      });
+      sodSelectedPreviewEl.innerHTML = "";
+      sodSelectedPreviewEl.appendChild(titleEl);
+      sodSelectedPreviewEl.appendChild(list);
+    }
+
     function buildCompletionOptionsMarkup(values) {
       return [
         "<option value=\"\">Select</option>",
         ...values.map((v) => `<option value=\"${v}\">${v}</option>`)
+      ].join("");
+    }
+
+    const PROJECT_GROUPS = [
+      { label: "Branding", options: ["Medical Monarchs", "The Compounding Mindset", "Medical Maharathi", "Business Monarchs", "Brand Film", "FinancialOPD", "Fund ka Funda"] },
+      { label: "Social Media & Digital", options: ["CRM", "Lead Gen Ads", "Financial Fitness Checkup", "Founders Linkedin Account", "Social Media", "Website"] },
+      { label: "Webinars & Events", options: ["Paid Webinar", "Wednesday Webinar"] },
+      { label: "Offline Marketing", options: ["Mega Event", "RTM", "Nashik April Event", "IDA", "Ajanta Pharma"] },
+      { label: "Content & PR", options: ["Case Studies", "NewsLetter", "PR"] },
+    ];
+
+    function buildProjectOptionsMarkup() {
+      return [
+        "<option value=\"\">Select project</option>",
+        ...PROJECT_GROUPS.map(g =>
+          `<optgroup label="${g.label}">${g.options.map(o => `<option value="${o}">${o}</option>`).join("")}</optgroup>`
+        )
       ].join("");
     }
 
@@ -1260,6 +1499,7 @@ const appEl = document.getElementById("app");
               return {
                 taskId: taskId,
                 title: title,
+                project: normalizeTaskProject(t && t.project || sourceMeta && sourceMeta.project),
                 priority: normalizePriority(t && t.priority),
                 source: source,
                 frequency: resolvedFrequency,
@@ -1284,6 +1524,7 @@ const appEl = document.getElementById("app");
               return {
                 taskId: String(t && t.taskId || "").trim() || createTaskId(),
                 title: String(t && t.title || "").trim(),
+                project: normalizeTaskProject(t && t.project),
                 priority: normalizePriority(t && t.priority),
                 source: "sod",
                 frequency: normalizeRecurringFrequency(t && t.frequency),
@@ -1301,11 +1542,33 @@ const appEl = document.getElementById("app");
             }
           })
           .filter((t) => t.title.length > 0);
+        const sodPendingTasks = ensureArray(result.sodPendingTasks)
+          .map((t) => ({
+            taskId: String(t && t.taskId || "").trim() || createTaskId(),
+            title: String(t && t.title || "").trim(),
+            project: normalizeTaskProject(t && t.project),
+            priority: normalizePriority(t && t.priority),
+            source: String(t && t.source || "").trim().toLowerCase() || "sod",
+            frequency: normalizeRecurringFrequency(t && t.frequency),
+            recurrenceWeekday: normalizeRecurringWeekday(t && t.recurrenceWeekday),
+            recurrenceDayOfMonth: normalizeRecurringDayOfMonth(t && t.recurrenceDayOfMonth),
+            plannedHours: Number.isFinite(Number(t && t.plannedHours)) ? Number(t.plannedHours) : 0,
+            plannedMinutes: Number.isFinite(Number(t && t.plannedMinutes)) ? Number(t.plannedMinutes) : 0,
+            lastCompletion: Number.isFinite(Number(t && t.lastCompletion)) ? Number(t.lastCompletion) : null,
+            lastNote: String(t && t.lastNote || "").trim(),
+            addedDate: String(t && (t.addedDate || t.carryFrom) || "").trim(),
+            carryoverOrigin: String(t && t.carryoverOrigin || "").trim(),
+            assignedBy: String(t && t.assignedBy || "").trim(),
+            deadlineDate: String(t && t.deadlineDate || "").trim(),
+            deadlineDays: Number.isFinite(Number(t && t.deadlineDays)) ? Number(t.deadlineDays) : null
+          }))
+          .filter((t) => t.title.length > 0);
 
         const eodUpdates = ensureArray(result.eodUpdates)
           .map((u) => ({
             taskId: String(u.taskId || "").trim() || createTaskId(),
             title: String(u.title || u.task || u.name || "").trim(),
+            project: normalizeTaskProject(u.project),
             completionPercent: Number(u.completionPercent || 0),
             spentHours: Number(u.spentHours || 0),
             spentMinutes: Number(u.spentMinutes || 0),
@@ -1319,10 +1582,12 @@ const appEl = document.getElementById("app");
         if (result.hasSod) {
           state.sodSubmittedFlagByDate[dateKey] = true;
           state.sodByDate[dateKey] = sodTasks;
+          state.sodPendingByDate[dateKey] = sodPendingTasks;
         } else {
           // Backend is authoritative for submitted flags; clear stale local state.
           state.sodSubmittedFlagByDate[dateKey] = false;
           delete state.sodByDate[dateKey];
+          delete state.sodPendingByDate[dateKey];
         }
         if (result.hasEod) {
           state.eodSubmittedByDate[dateKey] = true;
@@ -1331,6 +1596,7 @@ const appEl = document.getElementById("app");
             state.eodSubmittedUpdatesByDate[dateKey] = sodTasks.map((t) => ({
               taskId: String(t.taskId || "").trim() || createTaskId(),
               title: String(t.title || "").trim(),
+              project: normalizeTaskProject(t.project),
               completionPercent: 0,
               spentHours: 0,
               spentMinutes: 0,
@@ -1379,6 +1645,7 @@ const appEl = document.getElementById("app");
         byKey.set(key, {
           taskId: t.taskId || createTaskId(),
           title: (t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: "carryover",
           addedDate: String(t.addedDate || t.carryFrom || "").trim(),
@@ -1398,6 +1665,7 @@ const appEl = document.getElementById("app");
         byKey.set(key, {
           taskId: t.taskId || createTaskId(),
           title: (t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source,
           frequency: normalizeRecurringFrequency(t.frequency),
@@ -1428,6 +1696,7 @@ const appEl = document.getElementById("app");
         .map((t) => ({
           taskId: t.taskId || createTaskId(),
           title: String(t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: "carryover",
           carryFrom: prevDate,
@@ -1495,6 +1764,7 @@ const appEl = document.getElementById("app");
         byKey.set(k, {
           taskId: t.taskId || createTaskId(),
           title: String(t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: "assigned",
           assignedBy: String(t.assignedBy || "").trim(),
@@ -1535,6 +1805,7 @@ const appEl = document.getElementById("app");
         byKey.set(k, {
           taskId: t.taskId || createTaskId(),
           title: String(t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: "assigned",
           assignedBy: String(t.assignedBy || "").trim(),
@@ -1597,6 +1868,7 @@ const appEl = document.getElementById("app");
           .map((t) => ({
             taskId: t.taskId || createTaskId(),
             title: String(t.title || "").trim(),
+            project: normalizeTaskProject(t.project),
             priority: normalizePriority(t.priority),
             source: "assigned",
             assignedBy: String(t.assignedBy || "").trim(),
@@ -1670,6 +1942,7 @@ const appEl = document.getElementById("app");
         return {
           taskId: t.taskId || createTaskId(),
           title: String(t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: "recurring",
           frequency: frequency,
@@ -1781,6 +2054,7 @@ const appEl = document.getElementById("app");
           selectedTaskIds: {},
           updatesByTaskId: {},
           stopRecurringByTaskId: {},
+          approvalByTaskId: {},
           extras: [],
           activeEditorId: "",
           fieldErrors: {}
@@ -1795,7 +2069,97 @@ const appEl = document.getElementById("app");
       if (!state.eodDraftByDate[dateKey].fieldErrors || typeof state.eodDraftByDate[dateKey].fieldErrors !== "object") {
         state.eodDraftByDate[dateKey].fieldErrors = {};
       }
+      if (!state.eodDraftByDate[dateKey].approvalByTaskId || typeof state.eodDraftByDate[dateKey].approvalByTaskId !== "object") {
+        state.eodDraftByDate[dateKey].approvalByTaskId = {};
+      }
       return state.eodDraftByDate[dateKey];
+    }
+
+    function getApprovalDraftForTask_(eodDraft, taskId) {
+      return approvalsManager.getApprovalDraftForTask(eodDraft, taskId);
+    }
+
+    function clearApprovalDraftForTask_(eodDraft, taskId) {
+      return approvalsManager.clearApprovalDraftForTask(eodDraft, taskId);
+    }
+
+    function clearApprovalDraftByRequestId_(requestId) {
+      return approvalsManager.clearApprovalDraftByRequestId(requestId);
+    }
+
+    function isApprovalTaskSubmittedLock_(eodDraft, taskId) {
+      return approvalsManager.isApprovalTaskSubmittedLock(eodDraft, taskId);
+    }
+
+    function normalizeApprovalStatus_(value) {
+      return approvalsManager.normalizeApprovalStatus(value);
+    }
+
+    function approvalStatusLabel_(approval) {
+      return approvalsManager.approvalStatusLabel(approval);
+    }
+
+    function approvalStatusClass_(approval) {
+      return approvalsManager.approvalStatusClass(approval);
+    }
+
+    function findUserApprovalByRequestId_(requestId) {
+      return approvalsManager.findUserApprovalByRequestId(requestId);
+    }
+
+    function getLatestApprovalForTask_(taskId, title, workDate) {
+      return approvalsManager.getLatestApprovalForTask(taskId, title, workDate);
+    }
+
+    function getCliqEmailForName_(name) {
+      return approvalsManager.getCliqEmailForName(name);
+    }
+
+    async function syncDepartmentApprovers_(force = false) {
+      return approvalsManager.syncDepartmentApprovers(force);
+    }
+
+    async function syncUserApprovals_(force = false) {
+      return approvalsManager.syncUserApprovals(force);
+    }
+
+    function renderTaskTabState_() {
+      const rawTab = String(state && state.taskTab || "submissions").trim() || "submissions";
+      const activeTab = rawTab === "planner" ? "submissions" : rawTab;
+      if (state && state.taskTab !== activeTab) state.taskTab = activeTab;
+      taskTabButtons.forEach((btn) => {
+        const isActive = String(btn.dataset.taskTab || "") === activeTab;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+      if (taskTabSubmissionsEl) taskTabSubmissionsEl.hidden = activeTab !== "submissions";
+      if (taskTabPlannerEl) taskTabPlannerEl.hidden = activeTab !== "planner";
+      if (taskTabApprovalsEl) taskTabApprovalsEl.hidden = activeTab !== "approvals";
+    }
+
+    function setTaskTab_(tab) {
+      if (!state) return;
+      const rawTab = String(tab || "").trim() || "submissions";
+      const nextTab = rawTab === "planner" ? "submissions" : rawTab;
+      if (state.taskTab === nextTab) return;
+      state.taskTab = nextTab;
+      saveState();
+      renderAll();
+      if (nextTab === "approvals") {
+        syncUserApprovals_(true)
+          .then(() => renderApprovalsPanel_())
+          .catch((err) => {
+            setStatus(approvalsStatusEl, `Approval sync failed: ${String(err && err.message ? err.message : err)}`, "error");
+          });
+      }
+    }
+
+    function buildApprovalControls_(dateKey, taskId, title, project, sourceNote, editorId, eodDraft) {
+      return approvalsManager.buildApprovalControls(dateKey, taskId, title, project, sourceNote, editorId, eodDraft);
+    }
+
+    function renderApprovalsPanel_() {
+      return approvalsManager.renderApprovalsPanel();
     }
 
     function showBlocked(message) {
@@ -1808,121 +2172,39 @@ const appEl = document.getElementById("app");
     }
 
     function toFormEncoded(payload) {
-      const params = new URLSearchParams();
-      Object.keys(payload).forEach((key) => {
-        const val = payload[key];
-        if (val == null) {
-          params.append(key, "");
-        } else if (typeof val === "object") {
-          params.append(key, JSON.stringify(val));
-        } else {
-          params.append(key, String(val));
-        }
-      });
-      return params.toString();
+      return window.TaskAppApi.toFormEncoded(payload);
     }
 
     function isCorsLikeNetworkError(err) {
-      const msg = String(err && err.message ? err.message : err).toLowerCase();
-      return msg.includes("networkerror")
-        || msg.includes("failed to fetch")
-        || msg.includes("load failed")
-        || msg.includes("cors");
+      return window.TaskAppApi.isCorsLikeNetworkError(err);
     }
 
     function isTimeoutLikeError(err) {
-      const msg = String(err && err.message ? err.message : err).toLowerCase();
-      return msg.includes("timed out") || msg.includes("timeout");
+      return window.TaskAppApi.isTimeoutLikeError(err);
     }
 
     function normalizeApiPayload_(payload) {
-      const out = Object.assign({}, payload || {});
-      ["tasks", "updates", "taskIds", "titles"].forEach((k) => {
-        if (typeof out[k] === "string" && out[k].trim()) {
-          try { out[k] = JSON.parse(out[k]); } catch (err) {}
-        }
-      });
-      return out;
+      return window.TaskAppApi.normalizeApiPayload_(payload);
     }
 
     function withTimeout_(promise, timeoutMs) {
-      const ms = Math.max(1000, Number(timeoutMs || 10000));
-      return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error("Request timed out.")), ms);
-        promise.then((res) => {
-          clearTimeout(timer);
-          resolve(res);
-        }).catch((err) => {
-          clearTimeout(timer);
-          reject(err);
-        });
-      });
+      return window.TaskAppApi.withTimeout_(promise, timeoutMs);
     }
 
     function rpcNameForAction_(action) {
-      const map = {
-        validateAccess: "rpc_validate_user_access",
-        getUserStreak: "rpc_get_user_streak",
-        getStreakLeaderboard: "rpc_get_streak_leaderboard",
-        getUserAttendance: "rpc_get_user_attendance",
-        getUserDayStatus: "rpc_get_user_day_status",
-        setUserDayStatus: "rpc_set_user_day_status",
-        submitSOD: "rpc_submit_sod",
-        submitEOD: "rpc_submit_eod",
-        getCarryover: "rpc_get_carryover",
-        getAssignments: "rpc_get_assignments",
-        getRecurringTasks: "rpc_get_recurring_tasks",
-        getSubmittedDayDetails: "rpc_get_submitted_day_details",
-        syncRecurringTasks: "rpc_sync_recurring_tasks",
-        completeRecurringTasks: "rpc_complete_recurring_tasks",
-        getPlannerTasks: "rpc_get_planner_tasks",
-        addPlannerTasks: "rpc_planner_add_tasks",
-        movePlannerToSOD: "rpc_planner_move_to_sod",
-        returnPlannerTasks: "rpc_planner_return_tasks",
-        markPlannerConsumed: "rpc_planner_mark_consumed",
-        updatePlannerTask: "rpc_planner_update_task",
-        deletePlannerTask: "rpc_planner_delete_task"
-      };
-      return map[String(action || "").trim()] || "";
+      return window.TaskAppApi.rpcNameForAction_(action);
     }
 
     async function callApi(action, payload, options = {}) {
-      if (!supabaseClient) throw new Error("Supabase client is not configured.");
-      const rpc = rpcNameForAction_(action);
-      if (!rpc) throw new Error(`Unknown action: ${action}`);
-      const body = normalizeApiPayload_(Object.assign({ action: action }, payload || {}));
-      const timeoutMs = Math.max(1000, Number(options.timeoutMs || 15000));
-      const maxAttempts = Math.max(1, Number(options.maxAttempts || 1));
-      let lastErr = null;
-      for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-        try {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), timeoutMs);
-          const op = supabaseClient
-            .rpc(rpc, { p_payload: body })
-            .abortSignal(controller.signal);
-          const { data, error } = await op;
-          clearTimeout(timer);
-          if (error) throw new Error(String(error.message || error));
-          return (data && typeof data === "object") ? data : { ok: true, data: data };
-        } catch (err) {
-          const isAbort = err && (err.name === "AbortError" || String(err.message || err).toLowerCase().includes("aborted"));
-          lastErr = isAbort ? new Error("Request timed out.") : err;
-        }
-      }
-      throw lastErr || new Error("Request failed.");
+      return apiClient.callApi(action, payload, options);
     }
 
     function callApiJsonp(action, payload, timeoutMs = 8000) {
-      return callApi(action, payload, { timeoutMs: timeoutMs, maxAttempts: 2 });
+      return apiClient.callApiJsonp(action, payload, timeoutMs);
     }
 
     function isUnsupportedActionError_(err) {
-      const msg = String(err && err.message ? err.message : err).toLowerCase();
-      return msg.includes("unknown action")
-        || msg.includes("invalid action")
-        || msg.includes("not implemented")
-        || msg.includes("could not find the function");
+      return window.TaskAppApi.isUnsupportedActionError_(err);
     }
 
     function normalizeCarryoverPayload(result) {
@@ -1933,6 +2215,7 @@ const appEl = document.getElementById("app");
         .map((t) => ({
           taskId: t.taskId || createTaskId(),
           title: (t.title || t.task || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: "carryover",
           addedDate: String(t.addedDate || t.carryStartDate || t.pendingSinceDate || "").trim(),
@@ -1963,7 +2246,8 @@ const appEl = document.getElementById("app");
         const meta = {
           localTaskId: id || "",
           completion: Number.isFinite(completion) ? completion : null,
-          note: String(t && t.lastNote || "").trim()
+          note: String(t && t.lastNote || "").trim(),
+          project: normalizeTaskProject(t && t.project)
         };
         if (id) byId.set(id, meta);
         if (title) byTitle.set(title, meta);
@@ -1986,6 +2270,7 @@ const appEl = document.getElementById("app");
         return {
           ...t,
           taskId: prev.localTaskId || t.taskId || createTaskId(),
+          project: normalizeTaskProject(t && t.project || prev && prev.project),
           lastCompletion: resolvedCompletion,
           lastNote: String(t && t.lastNote || "").trim() || String(prev && prev.note || "").trim()
         };
@@ -1993,611 +2278,75 @@ const appEl = document.getElementById("app");
     }
 
     function normalizePlannerPayload_(result) {
-      const raw = ensureArray(result && result.tasks);
-      return raw.map((t) => {
-        const plannedHours = Math.max(0, Math.floor(Number(t && t.plannedHours || 0)));
-        const plannedMinutes = Math.max(0, Math.floor(Number(t && t.plannedMinutes || 0)));
-        return {
-          taskId: String(t && t.taskId || "").trim() || createTaskId(),
-          title: String(t && t.title || "").trim(),
-          priority: normalizePriority(t && t.priority),
-          plannedHours: plannedHours,
-          plannedMinutes: plannedMinutes,
-          source: "planner",
-          status: "Open"
-        };
-      }).filter((t) => t.title.length > 0);
+      return plannerManager.normalizePlannerPayload_(result);
+    }
+
+    function normalizePlannerTaskState_(tasks) {
+      return plannerManager.normalizePlannerTaskState_(tasks);
     }
 
     function normalizePlannerInSodPayload_(result) {
-      const raw = ensureArray(result && result.inSodTasks);
-      return raw.map((t) => {
-        const plannedHours = Math.max(0, Math.floor(Number(t && t.plannedHours || 0)));
-        const plannedMinutes = Math.max(0, Math.floor(Number(t && t.plannedMinutes || 0)));
-        return {
-          taskId: String(t && t.taskId || "").trim() || createTaskId(),
-          title: String(t && t.title || "").trim(),
-          priority: normalizePriority(t && t.priority),
-          plannedHours: plannedHours,
-          plannedMinutes: plannedMinutes,
-          source: "planner",
-          status: "InSOD"
-        };
-      }).filter((t) => t.title.length > 0);
+      return plannerManager.normalizePlannerInSodPayload_(result);
     }
 
     async function syncPlannerFromSheets(dateKey, force = false) {
-      if (!identity) return;
-      const workDate = String(dateKey || workDateEl.value || "").trim() || todayISO();
-      if (!force && state.plannerSyncedAt) return;
-      try {
-        const result = await callApiJsonp("getPlannerTasks", {
-          workDate: workDate,
-          department: identity.dept,
-          employeeName: identity.name,
-          accessCode: identity.code,
-          clientVersion: CLIENT_VERSION
-        }, 9000);
-        if (!result || result.ok === false) {
-          throw new Error(result && result.message ? result.message : "Planner fetch rejected.");
-        }
-        state.plannerTasks = normalizePlannerPayload_(result);
-        const hasInSodPayload = Boolean(
-          result
-          && Object.prototype.hasOwnProperty.call(result, "inSodTasks")
-        );
-        const inSodTasks = hasInSodPayload ? normalizePlannerInSodPayload_(result) : [];
-        if (!state.plannerInSodByDate || typeof state.plannerInSodByDate !== "object") {
-          state.plannerInSodByDate = {};
-        }
-        if (hasInSodPayload) {
-          state.plannerInSodByDate[workDate] = inSodTasks;
-        }
-        if (hasInSodPayload && !isSodSubmittedForDate_(workDate)) {
-          mergePlannerInSodIntoStartDraft_(workDate, inSodTasks);
-        }
-        state.plannerConsumedTitleKeys = ensureArray(result.consumedTitleKeys).map((k) => String(k || "").trim()).filter((k) => k.length > 0);
-        const validSelected = {};
-        const taskSet = {};
-        ensureArray(state.plannerTasks).forEach((t) => { taskSet[String(t.taskId || "").trim()] = true; });
-        Object.keys(state.plannerSelectedTaskIds || {}).forEach((taskId) => {
-          if (taskSet[taskId] && state.plannerSelectedTaskIds[taskId]) validSelected[taskId] = true;
-        });
-        state.plannerSelectedTaskIds = validSelected;
-        state.plannerSyncedAt = new Date().toISOString();
-      } catch (err) {
-        if (isUnsupportedActionError_(err)) {
-          state.plannerTasks = [];
-          if (!state.plannerInSodByDate || typeof state.plannerInSodByDate !== "object") {
-            state.plannerInSodByDate = {};
-          }
-          state.plannerInSodByDate[workDate] = [];
-          state.plannerSelectedTaskIds = {};
-          state.plannerSyncedAt = new Date().toISOString();
-          return;
-        }
-        setStatus(plannerStatusEl, `Planner sync failed: ${String(err && err.message ? err.message : err)}`, "info");
-      } finally {
-        saveState();
-      }
+      return plannerManager.syncPlannerFromSheets(dateKey, force);
     }
 
     function mergePlannerMovedTasksIntoSod_(dateKey, movedTasks) {
-      const draft = getOrCreateStartDraft(dateKey);
-      ensureArray(movedTasks).forEach((t) => {
-        const taskId = String(t && t.taskId || "").trim();
-        const title = String(t && t.title || "").trim();
-        if (!taskId || !title) return;
-        const exists = draft.some((x) => {
-          const aId = String(x && x.taskId || "").trim();
-          if (aId && taskId) return aId === taskId;
-          return String(x && x.title || "").trim().toLowerCase() === title.toLowerCase();
-        });
-        if (exists) return;
-        draft.push({
-          taskId: taskId,
-          title: title,
-          priority: normalizePriority(t.priority),
-          source: "planner",
-          plannedHours: Math.max(0, Math.floor(Number(t && t.plannedHours || 0))),
-          plannedMinutes: Math.max(0, Math.floor(Number(t && t.plannedMinutes || 0)))
-        });
-      });
-      state.startSourceByDate[dateKey] = "local-storage";
+      return plannerManager.mergePlannerMovedTasksIntoSod_(dateKey, movedTasks);
     }
 
     function mergePlannerInSodIntoStartDraft_(dateKey, inSodTasks) {
-      const existing = Array.isArray(state.startDraftByDate[dateKey]) ? state.startDraftByDate[dateKey] : [];
-      const keyOf = (t) => {
-        const id = String(t && t.taskId || "").trim();
-        const title = String(t && t.title || "").trim().toLowerCase();
-        return id ? `id:${id}` : `title:${title}`;
-      };
-      const plannerKeySet = {};
-      const byKey = new Map();
-
-      ensureArray(inSodTasks).forEach((t) => {
-        const k = keyOf(t);
-        if (!k) return;
-        plannerKeySet[k] = true;
-        byKey.set(k, {
-          taskId: String(t.taskId || "").trim() || createTaskId(),
-          title: String(t.title || "").trim(),
-          priority: normalizePriority(t.priority),
-          plannedHours: Math.max(0, Math.floor(Number(t && t.plannedHours || 0))),
-          plannedMinutes: Math.max(0, Math.floor(Number(t && t.plannedMinutes || 0))),
-          source: "planner"
-        });
-      });
-
-      existing.forEach((t) => {
-        const key = keyOf(t);
-        if (!key) return;
-        if (String(t && t.source || "").toLowerCase() === "planner" && !plannerKeySet[key]) return;
-        if (byKey.has(key)) return;
-        byKey.set(key, { ...t });
-      });
-
-      state.startDraftByDate[dateKey] = Array.from(byKey.values()).filter((t) => String(t.title || "").trim().length > 0);
-      state.startSourceByDate[dateKey] = "local-storage";
+      return plannerManager.mergePlannerInSodIntoStartDraft_(dateKey, inSodTasks);
     }
 
     function addPlannerDraftTask_() {
-      if (!identity) return;
-      const title = String(plannerTaskTitleEl && plannerTaskTitleEl.value || "").trim();
-      if (!title) {
-        setStatus(plannerStatusEl, "Planner task title is required.", "error");
-        return;
-      }
-      const titleKey = normalizePlannerTitleKey_(title);
-      const consumedSet = {};
-      ensureArray(state.plannerConsumedTitleKeys).forEach((k) => { consumedSet[String(k || "").trim()] = true; });
-      if (consumedSet[titleKey]) {
-        setStatus(plannerStatusEl, "This task was already consumed and cannot be added again.", "error");
-        return;
-      }
-      const openExists = ensureArray(state.plannerTasks).some((t) => normalizePlannerTitleKey_(t.title) === titleKey);
-      const draftExists = ensureArray(state.plannerDraftTasks).some((t) => normalizePlannerTitleKey_(t.title) === titleKey);
-      if (openExists || draftExists) {
-        setStatus(plannerStatusEl, "Task already exists in planner.", "info");
-        return;
-      }
-      state.plannerDraftTasks = ensureArray(state.plannerDraftTasks);
-      state.plannerDraftTasks.push({
-        taskId: createTaskId(),
-        title: title,
-        priority: "Medium",
-        plannedHours: 0,
-        plannedMinutes: 0
-      });
-      if (plannerTaskTitleEl) plannerTaskTitleEl.value = "";
-      state.plannerComposeCollapsed = false;
-      saveState();
-      renderPlannerTasks();
-      setStatus(plannerStatusEl, "Task added to draft list. Keep adding, then submit list.", "success");
+      return plannerManager.addPlannerDraftTask_();
     }
 
     function renderPlannerDraftTasks_() {
-      if (!plannerDraftTasksEl) return;
-      const draft = ensureArray(state.plannerDraftTasks);
-      plannerDraftTasksEl.innerHTML = "";
-      if (!draft.length) {
-        const empty = document.createElement("div");
-        empty.className = "muted";
-        empty.textContent = "Draft list is empty.";
-        plannerDraftTasksEl.appendChild(empty);
-        return;
-      }
-      draft.forEach((task, idx) => {
-        const row = document.createElement("div");
-        row.className = "task-row";
-        const head = document.createElement("div");
-        head.className = "task-row-head";
-        const left = document.createElement("div");
-        left.className = "task-title-wrap";
-        const sr = document.createElement("span");
-        sr.className = "sr-badge";
-        sr.textContent = `D${idx + 1}`;
-        const title = document.createElement("span");
-        title.className = "task-title";
-        title.textContent = String(task.title || "");
-        left.appendChild(sr);
-        left.appendChild(title);
-        head.appendChild(left);
-
-        const actions = document.createElement("div");
-        actions.className = "task-actions-inline";
-        const edit = document.createElement("button");
-        edit.type = "button";
-        edit.className = "secondary icon-subtle";
-        edit.title = "Edit task";
-        edit.innerHTML = "<i class=\"fa-solid fa-pen\"></i>";
-        edit.addEventListener("click", () => {
-          const nextTitleRaw = window.prompt("Edit planner draft title", String(task.title || ""));
-          if (nextTitleRaw === null) return;
-          const nextTitle = String(nextTitleRaw || "").trim();
-          if (!nextTitle) {
-            setStatus(plannerStatusEl, "Title is required.", "error");
-            return;
-          }
-          draft[idx] = Object.assign({}, draft[idx], {
-            title: nextTitle
-          });
-          state.plannerDraftTasks = draft;
-          saveState();
-          renderPlannerTasks();
-        });
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "danger icon-danger";
-        remove.title = "Remove task";
-        remove.innerHTML = "<i class=\"fa-solid fa-xmark\"></i>";
-        remove.addEventListener("click", () => {
-          draft.splice(idx, 1);
-          state.plannerDraftTasks = draft;
-          saveState();
-          renderPlannerTasks();
-        });
-        actions.appendChild(edit);
-        actions.appendChild(remove);
-        head.appendChild(actions);
-        row.appendChild(head);
-        plannerDraftTasksEl.appendChild(row);
-      });
+      return plannerManager.renderPlannerDraftTasks_();
     }
 
     async function submitPlannerDraftTasks_() {
-      if (!identity) return;
-      const dateKey = String(workDateEl.value || "").trim() || todayISO();
-      const draft = ensureArray(state.plannerDraftTasks);
-      if (!draft.length) {
-        setStatus(plannerStatusEl, "Draft list is empty.", "error");
-        return;
-      }
-      setButtonLoading(submitPlannerTasksBtn, true, "Submitting...", "<i class=\"fa-solid fa-upload\"></i>Submit List To Planner");
-      try {
-        const res = await callApi("addPlannerTasks", {
-          workDate: dateKey,
-          department: identity.dept,
-          employeeName: identity.name,
-          accessCode: identity.code,
-          tasks: draft
-        });
-        if (!res || res.ok === false) {
-          throw new Error(res && res.message ? res.message : "Planner submit failed.");
-        }
-        state.plannerDraftTasks = [];
-        await syncPlannerFromSheets(dateKey, true);
-        const skippedLocked = ensureArray(res.skippedLockedTitles).length;
-        const skippedExisting = ensureArray(res.skippedExistingTitles).length;
-        const added = Number(res.addedCount || 0);
-        const msg = `Added ${added} task(s)` +
-          (skippedLocked ? ` | Locked: ${skippedLocked}` : "") +
-          (skippedExisting ? ` | Existing: ${skippedExisting}` : "");
-        setStatus(plannerStatusEl, msg, "success");
-        state.plannerComposeCollapsed = true;
-        saveState();
-        renderAll();
-      } catch (err) {
-        setStatus(plannerStatusEl, `Planner submit failed: ${String(err && err.message ? err.message : err)}`, "error");
-      } finally {
-        setButtonLoading(submitPlannerTasksBtn, false, "", "<i class=\"fa-solid fa-upload\"></i>Submit List To Planner");
-      }
+      return plannerManager.submitPlannerDraftTasks_();
     }
 
     function clearPlannerDraftTasks_() {
-      state.plannerDraftTasks = [];
-      saveState();
-      renderPlannerTasks();
-      setStatus(plannerStatusEl, "Draft list cleared.", "info");
+      return plannerManager.clearPlannerDraftTasks_();
     }
 
     async function updatePlannerTask_(task) {
-      const nextTitleRaw = window.prompt("Edit planner task title", String(task && task.title || ""));
-      if (nextTitleRaw === null) return;
-      const nextTitle = String(nextTitleRaw || "").trim();
-      if (!nextTitle) {
-        setStatus(plannerStatusEl, "Title is required.", "error");
-        return;
-      }
-      try {
-        const res = await callApi("updatePlannerTask", {
-          workDate: workDateEl.value,
-          department: identity.dept,
-          employeeName: identity.name,
-          accessCode: identity.code,
-          taskId: String(task && task.taskId || "").trim(),
-          title: nextTitle,
-          priority: normalizePriority(task && task.priority),
-          plannedHours: Math.max(0, Math.floor(Number(task && task.plannedHours || 0))),
-          plannedMinutes: Math.max(0, Math.floor(Number(task && task.plannedMinutes || 0)))
-        });
-        if (!res || res.ok === false) {
-          throw new Error(res && res.message ? res.message : "Update failed.");
-        }
-        await syncPlannerFromSheets(workDateEl.value, true);
-        setStatus(plannerStatusEl, "Planner task updated.", "success");
-        renderPlannerTasks();
-      } catch (err) {
-        setStatus(plannerStatusEl, `Update failed: ${String(err && err.message ? err.message : err)}`, "error");
-      }
+      const result = await plannerManager.updatePlannerTask_(task);
+      renderAll();
+      return result;
     }
 
     async function deletePlannerTask_(task) {
-      const ok = window.confirm(`Remove planner task "${String(task && task.title || "").trim()}"?`);
-      if (!ok) return;
-      try {
-        const res = await callApi("deletePlannerTask", {
-          workDate: workDateEl.value,
-          department: identity.dept,
-          employeeName: identity.name,
-          accessCode: identity.code,
-          taskId: String(task && task.taskId || "").trim()
-        });
-        if (!res || res.ok === false) {
-          throw new Error(res && res.message ? res.message : "Delete failed.");
-        }
-        await syncPlannerFromSheets(workDateEl.value, true);
-        setStatus(plannerStatusEl, "Planner task removed.", "success");
-        renderPlannerTasks();
-      } catch (err) {
-        setStatus(plannerStatusEl, `Delete failed: ${String(err && err.message ? err.message : err)}`, "error");
-      }
+      const result = await plannerManager.deletePlannerTask_(task);
+      renderAll();
+      return result;
     }
 
     async function moveSelectedPlannerTasks_(targetMode) {
-      if (!identity) return;
-      const dateKey = String(workDateEl.value || "").trim() || todayISO();
-      if (isPastDate_(dateKey)) {
-        setStatus(plannerStatusEl, "Cannot move planner tasks to a past date.", "error");
-        return;
-      }
-      const selectedIds = Object.keys(state.plannerSelectedTaskIds || {}).filter((taskId) => Boolean(state.plannerSelectedTaskIds[taskId]));
-      if (!selectedIds.length) {
-        setStatus(plannerStatusEl, "Select at least one planner task.", "error");
-        return;
-      }
-      const plannerTasksById = {};
-      ensureArray(state.plannerTasks).forEach((task) => {
-        const taskId = String(task && task.taskId || "").trim();
-        if (!taskId) return;
-        plannerTasksById[taskId] = task;
-      });
-      const selectedPlannerTasks = selectedIds
-        .map((taskId) => plannerTasksById[taskId])
-        .filter((task) => Boolean(task))
-        .map((task) => ({
-          taskId: String(task.taskId || "").trim(),
-          title: String(task.title || "").trim(),
-          priority: normalizePriority(task.priority),
-          plannedHours: Math.max(0, Math.floor(Number(task && task.plannedHours || 0))),
-          plannedMinutes: Math.max(0, Math.floor(Number(task && task.plannedMinutes || 0))),
-          source: "planner"
-        }))
-        .filter((task) => task.taskId && task.title);
-
-      const mode = String(targetMode || "sod").toLowerCase();
-      const isForceEod = mode === "eod";
-      const isSodSubmitted = isSodSubmittedForDate_(dateKey);
-      const isLocked = isSodLockedByMode_(dateKey);
-      const isEodSubmitted = isEodSubmittedForDate_(dateKey);
-      if (isForceEod && isEodSubmitted) {
-        setStatus(plannerStatusEl, "Cannot add planner tasks to EOD extras after EOD submit.", "info");
-        return;
-      }
-      let moveToEodInstead = false;
-      if (isForceEod) {
-        moveToEodInstead = true;
-      } else if (isSodSubmitted) {
-        moveToEodInstead = window.confirm("SOD is already submitted for this date. Move selected planner tasks to EOD extras instead?");
-        if (!moveToEodInstead) return;
-      } else if (isLocked) {
-        setStatus(plannerStatusEl, "Cannot move tasks. Start of Day mode is locked.", "info");
-        return;
-      }
-
-      const actionBtn = isForceEod ? addPlannerToExtraBtn : movePlannerToSodBtn;
-      const loadingLabel = isForceEod ? "Adding..." : "Moving...";
-      const normalLabel = isForceEod
-        ? "<i class=\"fa-solid fa-plus\"></i>EOD Extra"
-        : "<i class=\"fa-solid fa-arrow-right\"></i>Move To SOD";
-      setButtonLoading(actionBtn, true, loadingLabel, normalLabel);
-      try {
-        const res = await callApi("movePlannerToSOD", {
-          workDate: dateKey,
-          department: identity.dept,
-          employeeName: identity.name,
-          accessCode: identity.code,
-          taskIds: selectedIds
-        });
-        if (!res || res.ok === false) {
-          throw new Error(res && res.message ? res.message : "Move failed.");
-        }
-        const moved = ensureArray(res.movedTasks);
-        const movedEffective = (moved.length || res.transport !== "no-cors")
-          ? moved
-          : selectedPlannerTasks;
-        const updatedOn = String(dateKey || "").trim();
-        const updatedOnDisplay = /^\d{4}-\d{2}-\d{2}$/.test(updatedOn)
-          ? `${updatedOn.slice(8, 10)}-${updatedOn.slice(5, 7)}-${updatedOn.slice(0, 4)}`
-          : updatedOn;
-        if (moveToEodInstead) {
-          const eodDraft = getOrCreateEodDraft(dateKey);
-          movedEffective.forEach((t) => {
-            eodDraft.extras.unshift({
-              taskId: createTaskId(),
-              title: String(t.title || "").trim(),
-              completionPercent: "",
-              spentHours: "",
-              spentMinutes: "",
-              spentDuration: "",
-              note: "",
-              priority: normalizePriority(t.priority),
-              source: "planner",
-              plannerTaskId: String(t.taskId || "").trim()
-            });
-          });
-          setStatus(plannerStatusEl, "Planner task(s) added to EOD extras.", "success");
-          showToast(`Planner tasks added to EOD on ${updatedOnDisplay}.`, "success", 5000);
-        } else {
-          mergePlannerMovedTasksIntoSod_(dateKey, movedEffective);
-          setStatus(plannerStatusEl, "Planner task(s) moved to SOD.", "success");
-          showToast(`Planner tasks moved to SOD on ${updatedOnDisplay}.`, "success", 5000);
-        }
-        state.plannerSelectedTaskIds = {};
-        await syncPlannerFromSheets(dateKey, true);
-        saveState();
-        renderAll();
-      } catch (err) {
-        setStatus(plannerStatusEl, `Move failed: ${String(err && err.message ? err.message : err)}`, "error");
-      } finally {
-        setButtonLoading(actionBtn, false, "", normalLabel);
-      }
+      return plannerManager.moveSelectedPlannerTasks_(targetMode);
     }
 
     async function moveSelectedPlannerToSod_() {
-      return moveSelectedPlannerTasks_("sod");
+      return plannerManager.moveSelectedPlannerToSod_();
     }
 
     async function moveSelectedPlannerToEodExtras_() {
-      return moveSelectedPlannerTasks_("eod");
+      return plannerManager.moveSelectedPlannerToEodExtras_();
     }
 
     function togglePlannerCompose_() {
-      state.plannerComposeCollapsed = !Boolean(state.plannerComposeCollapsed);
-      saveState();
-      renderPlannerTasks();
+      return plannerManager.togglePlannerCompose_();
     }
 
     function renderPlannerTasks() {
-      if (!plannerTasksEl) return;
-      const dateKey = String(workDateEl.value || "").trim() || todayISO();
-      const isPast = isPastDate_(dateKey);
-      const isLocked = isSodLockedByMode_(dateKey);
-      const isSodSubmitted = isSodSubmittedForDate_(dateKey);
-      const tasks = ensureArray(state.plannerTasks);
-      const selected = state.plannerSelectedTaskIds && typeof state.plannerSelectedTaskIds === "object"
-        ? state.plannerSelectedTaskIds
-        : {};
-
-      if (document.body) {
-        document.body.classList.toggle("planner-collapsed", Boolean(state.plannerCollapsed));
-        document.body.classList.toggle("planner-open", !Boolean(state.plannerCollapsed));
-      }
-      if (plannerToggleBtn) {
-        plannerToggleBtn.innerHTML = "<i class=\"fa-solid fa-bars\"></i>Tasks";
-        plannerToggleBtn.setAttribute("aria-expanded", state.plannerCollapsed ? "false" : "true");
-      }
-      if (plannerFocusOverlayEl) {
-        plannerFocusOverlayEl.hidden = false;
-      }
-      if (plannerSidebarEl) {
-        plannerSidebarEl.classList.toggle("compose-open", !Boolean(state.plannerComposeCollapsed));
-      }
-
-      if (plannerTaskTitleEl) plannerTaskTitleEl.disabled = false;
-      if (addPlannerTaskBtn) addPlannerTaskBtn.disabled = false;
-      if (plannerComposeSectionEl) {
-        plannerComposeSectionEl.hidden = Boolean(state.plannerComposeCollapsed);
-      }
-      if (plannerComposeHeaderEl) {
-        plannerComposeHeaderEl.setAttribute("aria-expanded", state.plannerComposeCollapsed ? "false" : "true");
-      }
-      if (submitPlannerTasksBtn) submitPlannerTasksBtn.disabled = !ensureArray(state.plannerDraftTasks).length;
-      if (clearPlannerDraftBtn) clearPlannerDraftBtn.disabled = !ensureArray(state.plannerDraftTasks).length;
-
-      plannerTasksEl.innerHTML = "";
-      if (!tasks.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.innerHTML = "<i class=\"fa-regular fa-rectangle-list\"></i>No planner tasks in backlog.";
-        plannerTasksEl.appendChild(empty);
-      } else {
-        tasks.forEach((task, idx) => {
-          const row = document.createElement("div");
-          row.className = "task-row";
-          const head = document.createElement("div");
-          head.className = "task-row-head";
-
-          const left = document.createElement("label");
-          left.className = "pending-select";
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.checked = Boolean(selected[String(task.taskId || "").trim()]);
-          checkbox.disabled = isPast || isLocked;
-          checkbox.addEventListener("change", () => {
-            const taskId = String(task.taskId || "").trim();
-            if (!taskId) return;
-            if (!state.plannerSelectedTaskIds || typeof state.plannerSelectedTaskIds !== "object") {
-              state.plannerSelectedTaskIds = {};
-            }
-            if (checkbox.checked) state.plannerSelectedTaskIds[taskId] = true;
-            else delete state.plannerSelectedTaskIds[taskId];
-            saveState();
-            renderPlannerTasks();
-          });
-          const sr = document.createElement("span");
-          sr.className = "sr-badge";
-          sr.textContent = `#${String(idx + 1).padStart(2, "0")}`;
-          const title = document.createElement("span");
-          title.className = "task-title";
-          title.textContent = String(task.title || "");
-          left.appendChild(checkbox);
-          left.appendChild(sr);
-          left.appendChild(title);
-          head.appendChild(left);
-
-          const actions = document.createElement("div");
-          actions.className = "task-actions-inline";
-          const edit = document.createElement("button");
-          edit.type = "button";
-          edit.className = "secondary icon-subtle";
-          edit.title = "Edit task";
-          edit.innerHTML = "<i class=\"fa-solid fa-pen\"></i>";
-          edit.addEventListener("click", () => {
-            updatePlannerTask_(task);
-          });
-          const remove = document.createElement("button");
-          remove.type = "button";
-          remove.className = "danger icon-danger";
-          remove.title = "Remove task";
-          remove.innerHTML = "<i class=\"fa-solid fa-xmark\"></i>";
-          remove.addEventListener("click", () => {
-            deletePlannerTask_(task);
-          });
-          actions.appendChild(edit);
-          actions.appendChild(remove);
-          head.appendChild(actions);
-
-          const tags = document.createElement("div");
-          tags.className = "task-tags";
-          const plannedH = Number(task.plannedHours || 0);
-          const plannedM = Number(task.plannedMinutes || 0);
-          if (plannedH > 0 || plannedM > 0) {
-            const planChip = document.createElement("span");
-            planChip.className = "meta-chip";
-            planChip.textContent = `Plan: ${plannedH}h ${plannedM}m`;
-            tags.appendChild(planChip);
-          }
-          row.appendChild(head);
-          row.appendChild(tags);
-          plannerTasksEl.appendChild(row);
-        });
-      }
-
-      renderPlannerDraftTasks_();
-      const selectedCount = Object.keys(selected).filter((taskId) => Boolean(selected[taskId])).length;
-      if (plannerCountCardEl) plannerCountCardEl.textContent = String(tasks.length);
-      if (plannerSelectedCountCardEl) plannerSelectedCountCardEl.textContent = String(selectedCount);
-      if (movePlannerToSodBtn) {
-        movePlannerToSodBtn.innerHTML = "<i class=\"fa-solid fa-arrow-right\"></i>Move To SOD";
-        movePlannerToSodBtn.disabled = isPast || (isLocked && !isSodSubmitted) || !selectedCount;
-      }
-      if (addPlannerToExtraBtn) {
-        const isEodSubmitted = isEodSubmittedForDate_(dateKey);
-        addPlannerToExtraBtn.innerHTML = "<i class=\"fa-solid fa-plus\"></i>EOD Extra";
-        addPlannerToExtraBtn.disabled = isPast || isEodSubmitted || !selectedCount;
-      }
+      return plannerManager.renderPlannerTasks();
     }
 
     async function fetchCarryoverWithRetry(payload, maxAttempts = 2, baseTimeoutMs = 5000, timeoutStepMs = 2000) {
@@ -2659,22 +2408,16 @@ const appEl = document.getElementById("app");
         } else {
           state.carryoverByDate[dateKey] = [];
           delete state.carryoverSourceByDate[dateKey];
-          mergeCarryoverIntoStartDraft(dateKey, []);
-          await syncSubmittedDetailsFromSheets(previousDateISO(dateKey), true);
-          const usedFallback = hydrateCarryoverFromUnsubmittedSod(dateKey);
-          if (usedFallback) {
-            state.carryoverSourceByDate[dateKey] = "local-storage";
-            state.startSourceByDate[dateKey] = "local-storage";
-            setSyncMeta(dateKey, {
-              status: "fallback",
-              attempts: attemptCount,
-              message: "Supabase returned no carryover. Using previous day SOD because EOD was not submitted."
-            });
-          } else {
+          await ensurePreviousDraftAvailableForCarryover_(dateKey);
+          const usedLocalDraft = hydrateCarryoverFromUnsubmittedSod(dateKey);
+          if (!usedLocalDraft) {
+            mergeCarryoverIntoStartDraft(dateKey, []);
             if (!state.startSourceByDate[dateKey]) {
               state.startSourceByDate[dateKey] = "new";
             }
             setSyncMeta(dateKey, { status: "success", attempts: attemptCount, message: "No carryover tasks found." });
+          } else {
+            setSyncMeta(dateKey, { status: "success", attempts: attemptCount, message: "Loaded from previous day's draft (SOD was not submitted)." });
           }
         }
 
@@ -2682,6 +2425,7 @@ const appEl = document.getElementById("app");
         saveState();
       } catch (err) {
         await syncSubmittedDetailsFromSheets(previousDateISO(dateKey), true);
+        await ensurePreviousDraftAvailableForCarryover_(dateKey);
         const usedFallback = hydrateCarryoverFromUnsubmittedSod(dateKey);
         const hasCarryoverFallback = Array.isArray(state.carryoverByDate[dateKey]) && state.carryoverByDate[dateKey].length > 0;
         if (Array.isArray(state.carryoverByDate[dateKey]) && state.carryoverByDate[dateKey].length) {
@@ -2730,127 +2474,90 @@ const appEl = document.getElementById("app");
     }
 
     function formatAttendanceClock12h_(hhmm) {
-      const raw = String(hhmm || "").trim();
-      const m = raw.match(/^(\d{1,2}):(\d{2})$/);
-      if (!m) return "--";
-      const h24 = Number(m[1]);
-      const min = Number(m[2]);
-      if (!Number.isFinite(h24) || !Number.isFinite(min) || h24 < 0 || h24 > 23 || min < 0 || min > 59) return "--";
-      const period = h24 >= 12 ? "PM" : "AM";
-      const h12 = h24 % 12 || 12;
-      return `${String(h12).padStart(2, "0")}:${String(min).padStart(2, "0")} ${period}`;
+      return attendanceManager.formatAttendanceClock12h_(hhmm);
     }
 
     function formatMinutesCompact_(minutes) {
-      const total = Math.max(0, Number(minutes || 0));
-      const h = Math.floor(total / 60);
-      const m = Math.floor(total % 60);
-      return `${h}h ${String(m).padStart(2, "0")}m`;
+      return attendanceManager.formatMinutesCompact_(minutes);
     }
 
     function getDayStatusForDate_(dateKey) {
-      return String(state && state.dayStatusByDate && state.dayStatusByDate[dateKey] || "").trim();
+      return attendanceManager.getDayStatusForDate_(dateKey);
     }
 
     function updateAttendanceMetaForDate_(dateKey) {
-      const rec = state && state.attendanceByDate ? state.attendanceByDate[dateKey] : null;
-      const loginLabel = rec && rec.loginTime ? formatAttendanceClock12h_(rec.loginTime) : "--";
-      const checkoutLabel = rec && rec.logoutTime ? formatAttendanceClock12h_(rec.logoutTime) : "--";
-      const hoursText = rec && Number.isFinite(Number(rec.workingMinutes))
-        ? `${formatMinutesCompact_(rec.workingMinutes)}`
-        : "--";
-      if (sodLoginTimeMetaEl) {
-        sodLoginTimeMetaEl.innerHTML = `<span class="chip-label">Login</span><span class="chip-value">${escapeHtml(loginLabel)}</span>`;
-      }
-      if (eodCheckoutTimeMetaEl) {
-        const checkoutValue = `${checkoutLabel}${hoursText !== "--" ? ` · ${hoursText}` : ""}`;
-        eodCheckoutTimeMetaEl.innerHTML = `<span class="chip-label">Checkout</span><span class="chip-value">${escapeHtml(checkoutValue)}</span>`;
-      }
+      return attendanceManager.updateAttendanceMetaForDate_(dateKey);
     }
 
     function getAttendancePayloadForDate_(dateKey) {
-      const rec = state && state.attendanceByDate ? state.attendanceByDate[dateKey] : null;
-      if (!rec || typeof rec !== "object") return null;
-      return {
-        loginTime: String(rec.loginTime || "").trim(),
-        logoutTime: String(rec.logoutTime || "").trim(),
-        workingMinutes: Number.isFinite(Number(rec.workingMinutes)) ? Number(rec.workingMinutes) : null
-      };
+      return attendanceManager.getAttendancePayloadForDate_(dateKey);
     }
 
     function renderDayStatusControls_(dateKey) {
-      if (!dayStatusRowEl || !dayStatusBtnEl || !dayStatusMetaEl) return;
-      const hasSubmission = isSodSubmittedForDate_(dateKey) || isEodSubmittedForDate_(dateKey);
-      if (hasSubmission) {
-        dayStatusRowEl.hidden = true;
-        dayStatusMetaEl.textContent = "";
-        return;
-      }
-      dayStatusRowEl.hidden = false;
-      const status = getDayStatusForDate_(dateKey);
-      const isLeave = status.toLowerCase() === "leave";
-      dayStatusBtnEl.classList.toggle("is-active", isLeave);
-      dayStatusBtnEl.innerHTML = isLeave
-        ? "<i class=\"fa-solid fa-check\"></i>Leave Marked"
-        : "<i class=\"fa-solid fa-umbrella-beach\"></i>Mark Leave";
-      dayStatusMetaEl.textContent = isLeave
-        ? "Leave is marked for this day. This day will not break your streak."
-        : "";
+      return attendanceManager.renderDayStatusControls_(dateKey);
     }
 
     async function syncAttendanceForDate_(dateKey, force = false) {
-      if (!identity || !dateKey) return;
-      if (!force && state.attendanceSyncedByDate && state.attendanceSyncedByDate[dateKey]) return;
-      const basePayload = {
-        workDate: dateKey,
-        department: identity.dept,
-        employeeName: identity.name,
-        accessCode: identity.code,
-        clientVersion: CLIENT_VERSION
-      };
-      attendanceDebugLog_("sync start", { dateKey, force, identity: { dept: identity.dept, name: identity.name } });
-      try {
-        attendanceDebugLog_("request getUserAttendance", basePayload);
-        const attendanceRes = await callApiJsonp("getUserAttendance", basePayload, 12000);
-        attendanceDebugLog_("response getUserAttendance", attendanceRes);
-        if (attendanceRes && attendanceRes.ok !== false && attendanceRes.attendance && typeof attendanceRes.attendance === "object") {
-          const a = attendanceRes.attendance;
-          state.attendanceByDate[dateKey] = {
-            loginTime: String(a.loginTime || "").trim(),
-            logoutTime: String(a.logoutTime || "").trim(),
-            workingMinutes: Number.isFinite(Number(a.workingMinutes)) ? Number(a.workingMinutes) : null
-          };
-          const fromAttendance = String(attendanceRes.dayStatus || (a && a.dayStatus) || "").trim();
-          if (fromAttendance) state.dayStatusByDate[dateKey] = fromAttendance;
-          attendanceDebugLog_("stored attendance", { dateKey, attendance: state.attendanceByDate[dateKey], dayStatus: fromAttendance || "" });
-        } else {
-          delete state.attendanceByDate[dateKey];
-          attendanceDebugLog_("cleared attendance for date", dateKey);
-        }
-      } catch (err) {
-        attendanceDebugError_("getUserAttendance failed", err);
-      }
-      try {
-        attendanceDebugLog_("request getUserDayStatus", basePayload);
-        const dayStatusRes = await callApiJsonp("getUserDayStatus", basePayload, 10000);
-        attendanceDebugLog_("response getUserDayStatus", dayStatusRes);
-        if (dayStatusRes && dayStatusRes.ok !== false) {
-          const status = String(dayStatusRes.status || "").trim();
-          if (status) state.dayStatusByDate[dateKey] = status;
-          else delete state.dayStatusByDate[dateKey];
-          attendanceDebugLog_("stored day status", { dateKey, status });
-        }
-      } catch (err) {
-        // Backward-compatible fallback when rpc_get_user_day_status is not deployed.
-        attendanceDebugError_("getUserDayStatus failed", err);
-      }
-      state.attendanceSyncedByDate[dateKey] = true;
-      attendanceDebugLog_("sync complete", {
-        dateKey,
-        attendance: state.attendanceByDate[dateKey] || null,
-        dayStatus: state.dayStatusByDate[dateKey] || ""
+      return attendanceManager.syncAttendanceForDate_(dateKey, force);
+    }
+
+    function clearScheduledAttendanceRefresh_(dateKey) {
+      return attendanceManager.clearScheduledAttendanceRefresh_(dateKey);
+    }
+
+    function scheduleAttendanceRefreshAfterEod_(dateKey, options) {
+      return attendanceManager.scheduleAttendanceRefreshAfterEod_(dateKey, options);
+    }
+
+    function getCurrentEodDraftSpentMinutes_(dateKey) {
+      const key = String(dateKey || workDateEl.value || "").trim();
+      if (!key) return 0;
+      const eodDraft = getOrCreateEodDraft(key);
+      const pending = getPendingTasksForDate(key);
+      let totalMinutes = 0;
+
+      pending.forEach((task) => {
+        if (!eodDraft.selectedTaskIds[task.taskId]) return;
+        const update = eodDraft.updatesByTaskId[task.taskId];
+        if (!update) return;
+        const parsedDuration = parseTimeHHMM(update.spentDuration);
+        const hours = parsedDuration.ok ? parsedDuration.hours : parseHours(update.spentHours);
+        const minutes = parsedDuration.ok ? parsedDuration.minutes : parseMinutes(update.spentMinutes);
+        if (hours === null || minutes === null) return;
+        totalMinutes += (Number(hours || 0) * 60) + Number(minutes || 0);
       });
-      saveState();
+
+      ensureArray(eodDraft.extras).forEach((extra) => {
+        const parsedDuration = parseTimeHHMM(extra && extra.spentDuration);
+        const hours = parsedDuration.ok ? parsedDuration.hours : parseHours(extra && extra.spentHours);
+        const minutes = parsedDuration.ok ? parsedDuration.minutes : parseMinutes(extra && extra.spentMinutes);
+        if (hours === null || minutes === null) return;
+        totalMinutes += (Number(hours || 0) * 60) + Number(minutes || 0);
+      });
+
+      return totalMinutes;
+    }
+
+    function scheduleAttendanceSyncFromEodEdit_(dateKey) {
+      const key = String(dateKey || workDateEl.value || "").trim();
+      if (!key) return;
+      if (String(state && state.taskTab || "submissions").trim() !== "submissions") return;
+      if (getDayEntryMode_(key) !== "EOD" || isEodSubmittedForDate_(key)) return;
+      if (getCurrentEodDraftSpentMinutes_(key) < (8 * 60)) return;
+      if (eodAttendanceEditSyncTimerByDate[key]) {
+        clearTimeout(eodAttendanceEditSyncTimerByDate[key]);
+      }
+      eodAttendanceEditSyncTimerByDate[key] = setTimeout(async () => {
+        delete eodAttendanceEditSyncTimerByDate[key];
+        try {
+          await syncAttendanceForDate_(key, true);
+          if (String(workDateEl && workDateEl.value || "").trim() === key) {
+            updateAttendanceMetaForDate_(key);
+          }
+        } catch (err) {
+          attendanceDebugError_("EOD edit attendance sync failed", { dateKey: key, err });
+        }
+      }, 1200);
     }
 
     function renderStartTasks() {
@@ -2865,32 +2572,18 @@ const appEl = document.getElementById("app");
         mergeAssignmentsIntoStartDraft(dateKey, assignedForDate);
       }
       const submittedTasks = Array.isArray(state.sodByDate[dateKey]) ? state.sodByDate[dateKey] : [];
-      let tasks = isSodSubmittedForSelectedDate ? submittedTasks : getOrCreateStartDraft(dateKey);
-      if (!state.sodPostponedByDate || typeof state.sodPostponedByDate !== "object") {
-        state.sodPostponedByDate = {};
-      }
-      if (!state.sodPostponeCountByTaskKey || typeof state.sodPostponeCountByTaskKey !== "object") {
-        state.sodPostponeCountByTaskKey = {};
-      }
-      if (!state.sodPostponedByDate[dateKey] || typeof state.sodPostponedByDate[dateKey] !== "object") {
-        state.sodPostponedByDate[dateKey] = {};
-      }
-      const sodPostponedMap = state.sodPostponedByDate[dateKey];
-      const validTaskIds = {};
-      tasks.forEach(function(t) {
-        const id = String(t && t.taskId || "").trim();
-        if (id) validTaskIds[id] = true;
-      });
-      Object.keys(sodPostponedMap).forEach(function(taskId) {
-        if (!validTaskIds[taskId]) delete sodPostponedMap[taskId];
-      });
-      const collapseState = getSectionCollapseState_(dateKey);
+      const pendingTasks = Array.isArray(state.sodPendingByDate && state.sodPendingByDate[dateKey]) ? state.sodPendingByDate[dateKey] : [];
+      const draftTasks = getOrCreateStartDraft(dateKey);
+      const tasks = isSodSubmittedForSelectedDate ? pendingTasks : draftTasks;
+      const selectedMap = syncSodSelectionForDate_(dateKey, draftTasks);
       if (sodPanelEl) {
         sodPanelEl.classList.toggle("sod-readonly", isSodSubmittedForSelectedDate || isSodLockedByMode);
       }
       renderNewTaskRecurrenceControls_();
+      renderNewTaskProjectControls_();
       newTaskTitleEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
       newTaskFrequencyEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
+      if (newTaskProjectEl) newTaskProjectEl.disabled = !isMarketingIdentity_() || isSodSubmittedForSelectedDate || isSodLockedByMode;
       if (newTaskWeeklyDayEl) newTaskWeeklyDayEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode || newTaskWeeklyDayEl.hidden;
       if (newTaskMonthlyDateEl) newTaskMonthlyDateEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode || newTaskMonthlyDateEl.hidden;
       newTaskPriorityEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
@@ -2903,23 +2596,18 @@ const appEl = document.getElementById("app");
       renderSodPrioritySegment_();
       newTaskPlannedTimeEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
       addTaskBtn.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
+      if (plannerTaskTitleEl) plannerTaskTitleEl.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
+      if (addPlannerTaskBtn) addPlannerTaskBtn.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
       submitSodBtn.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
-      updateSodSubmitMeta_(dateKey, tasks);
+      updateSodSubmitMeta_(dateKey, isSodSubmittedForSelectedDate ? submittedTasks : draftTasks);
+      renderSodSelectedPreview_(dateKey, draftTasks, selectedMap);
       if (plannedQuickChipsEl) {
         plannedQuickChipsEl.querySelectorAll(".quick-time-chip").forEach((chip) => {
           chip.disabled = isSodSubmittedForSelectedDate || isSodLockedByMode;
         });
       }
       sodTasksEl.innerHTML = "";
-
-      if (isSodSubmittedForSelectedDate) {
-        sodBucketsEl.innerHTML = "";
-        const doneBanner = document.createElement("div");
-        doneBanner.className = "submitted-lock-banner";
-        doneBanner.innerHTML = "<i class=\"fa-solid fa-circle-check\"></i>Start of Day tasks updated. All tasks moved to End of Day.";
-        sodTasksEl.appendChild(doneBanner);
-        return;
-      }
+      sodBucketsEl.innerHTML = "";
 
       if (isSodLockedByMode) {
         const lockBanner = document.createElement("div");
@@ -2951,8 +2639,8 @@ const appEl = document.getElementById("app");
       const assignedTasks = tasks.filter((t) => isAssignedTask(t));
       const carryoverTasks = tasks.filter((t) => isCarryoverTask(t));
       const recurringTasks = tasks.filter((t) => isRecurringTask(t));
-      const newTasks = tasks.filter((t) => !isCarryoverTask(t) && !isAssignedTask(t) && !isRecurringTask(t));
-      sodBucketsEl.innerHTML = "";
+      const plannerTasks = tasks.filter((t) => String(t && t.source || "").toLowerCase() === "planner");
+      const newTasks = tasks.filter((t) => !isCarryoverTask(t) && !isAssignedTask(t) && !isRecurringTask(t) && String(t && t.source || "").toLowerCase() !== "planner");
       const assignedChip = document.createElement("span");
       assignedChip.className = "bucket-chip";
       assignedChip.textContent = `Assigned ${assignedTasks.length}`;
@@ -2966,51 +2654,72 @@ const appEl = document.getElementById("app");
       const newChip = document.createElement("span");
       newChip.className = "bucket-chip";
       newChip.textContent = `New ${newTasks.length}`;
+      const plannerChip = document.createElement("span");
+      plannerChip.className = "bucket-chip";
+      plannerChip.textContent = `Planner ${plannerTasks.length}`;
       sodBucketsEl.appendChild(carryChip);
       sodBucketsEl.appendChild(recurringChip);
+      sodBucketsEl.appendChild(plannerChip);
       sodBucketsEl.appendChild(newChip);
+      if (!isSodSubmittedForSelectedDate) {
+        const selectedChip = document.createElement("span");
+        selectedChip.className = "bucket-chip";
+        selectedChip.textContent = `Selected ${Object.keys(selectedMap).filter((taskId) => Boolean(selectedMap[taskId])).length}`;
+        sodBucketsEl.appendChild(selectedChip);
+      } else {
+        const pendingChip = document.createElement("span");
+        pendingChip.className = "bucket-chip";
+        pendingChip.textContent = `Pending ${tasks.length}`;
+        sodBucketsEl.appendChild(pendingChip);
+      }
 
-      if (isSodSubmittedForSelectedDate && !tasks.length) {
-        const lockBanner = document.createElement("div");
-        lockBanner.className = "submitted-lock-banner";
-        lockBanner.innerHTML = "<i class=\"fa-solid fa-lock\"></i>Start of Day already submitted for this date. This section is locked.";
-        sodTasksEl.appendChild(lockBanner);
-
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.innerHTML = "<i class=\"fa-regular fa-note-sticky\"></i>Submitted Start-of-Day details are not available for this older submission.";
-        sodTasksEl.appendChild(empty);
-        return;
+      if (isSodSubmittedForSelectedDate) {
+        const doneBanner = document.createElement("div");
+        doneBanner.className = "submitted-lock-banner";
+        doneBanner.innerHTML = "<i class=\"fa-solid fa-circle-check\"></i>Start of Day submitted. Only the selected tasks moved to End of Day. Remaining pending tasks are shown below.";
+        sodTasksEl.appendChild(doneBanner);
       }
 
       if (!tasks.length) {
         const empty = document.createElement("div");
         empty.className = "empty";
-        empty.innerHTML = "<i class=\"fa-regular fa-square-plus\"></i>No tasks yet. Add your first task from the input above.";
+        empty.innerHTML = isSodSubmittedForSelectedDate
+          ? "<i class=\"fa-regular fa-calendar-check\"></i>No pending SOD tasks left for this date."
+          : "<i class=\"fa-regular fa-square-plus\"></i>No tasks yet. Add your first task from the input above.";
         sodTasksEl.appendChild(empty);
         return;
       }
 
       let srIndex = 0;
-      const renderTask = (task, index) => {
+      const renderTask = (task, index, readonly) => {
         const isCarryover = isCarryoverTask(task);
         const isAssigned = isAssignedTask(task);
+        const isRecurring = isRecurringTask(task);
+        const isPlannerTask = String(task && task.source || "").toLowerCase() === "planner";
         const prevCompletion = getCarryoverLastCompletion(task);
-        const isSodPostponed = Boolean(sodPostponedMap[String(task && task.taskId || "").trim()]);
-        const postponeKey = getSodPostponeTaskKey_(task);
-        const postponeCount = postponeKey ? Number(state.sodPostponeCountByTaskKey[postponeKey] || 0) : 0;
-        const postponeLimitReached = !isSodPostponed && postponeCount >= SOD_POSTPONE_LIMIT;
+        const taskId = String(task && task.taskId || "").trim();
         const row = document.createElement("div");
         row.className = "task-row";
-        if (isSodPostponed) {
-          row.classList.add("postponed-today");
-        }
 
         const head = document.createElement("div");
         head.className = "task-row-head";
 
         const titleWrap = document.createElement("div");
         titleWrap.className = "task-title-wrap";
+        if (!readonly) {
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.className = "sod-task-check";
+          checkbox.checked = Boolean(selectedMap[taskId]);
+          checkbox.setAttribute("aria-label", `Select task ${task.title}`);
+          checkbox.addEventListener("change", () => {
+            selectedMap[taskId] = Boolean(checkbox.checked);
+            saveState();
+            updateSummaryCards();
+            renderStartTasks();
+          });
+          titleWrap.appendChild(checkbox);
+        }
         const sr = document.createElement("span");
         sr.className = "sr-badge";
         sr.textContent = `#${String(index).padStart(2, "0")}`;
@@ -3031,17 +2740,8 @@ const appEl = document.getElementById("app");
         priority.textContent = normalizedPriority;
 
         tags.appendChild(priority);
-        if (isLockedStartTask(task)) {
-          const lockedChip = document.createElement("span");
-          lockedChip.className = "meta-chip locked";
-          const lockedLabel = isAssigned
-            ? "Locked assigned task"
-            : (isRecurringTask(task) ? "Locked recurring task" : "Locked carryover task");
-          lockedChip.title = lockedLabel;
-          lockedChip.setAttribute("aria-label", lockedLabel);
-          lockedChip.innerHTML = "<i class=\"fa-solid fa-lock\"></i>";
-          tags.appendChild(lockedChip);
-        }
+        const projectChip = buildProjectChip_(task && task.project);
+        if (projectChip) tags.appendChild(projectChip);
         if (isAssigned && task.assignedBy) {
           const assignChip = document.createElement("span");
           assignChip.className = "meta-chip";
@@ -3063,13 +2763,13 @@ const appEl = document.getElementById("app");
             tags.appendChild(deadlineChip);
           }
         }
-        if (isRecurringTask(task) && task.frequency) {
+        if (isRecurring && task.frequency) {
           const recurringTag = document.createElement("span");
           recurringTag.className = "meta-chip";
           recurringTag.textContent = `Recurring: ${getRecurringRuleLabel_(task)}`;
           tags.appendChild(recurringTag);
         }
-        if (String(task && task.source || "").toLowerCase() === "planner") {
+        if (isPlannerTask) {
           const plannerTag = document.createElement("span");
           plannerTag.className = "meta-chip";
           plannerTag.textContent = "Planner";
@@ -3098,45 +2798,7 @@ const appEl = document.getElementById("app");
             tags.appendChild(addedChip);
           }
         }
-        if (isCarryover && !isSodSubmittedForSelectedDate && !isSodLockedByMode) {
-          const postpone = document.createElement("button");
-          postpone.type = "button";
-          postpone.className = "apple-postpone-btn";
-          postpone.title = isSodPostponed ? "Undo postpone for today" : "Postpone this carryover task for today";
-          postpone.setAttribute("aria-label", postpone.title);
-          postpone.disabled = postponeLimitReached;
-          postpone.innerHTML = isSodPostponed
-            ? "<i class=\"fa-solid fa-rotate-left\"></i>Undo Postpone"
-            : "<i class=\"fa-regular fa-clock\"></i>Postpone Today";
-          if (!isSodPostponed) {
-            const countChip = document.createElement("span");
-            countChip.className = "apple-postpone-count";
-            countChip.textContent = `${Math.min(postponeCount, SOD_POSTPONE_LIMIT)}/${SOD_POSTPONE_LIMIT}`;
-            postpone.appendChild(countChip);
-          }
-          postpone.addEventListener("click", function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            const taskId = String(task && task.taskId || "").trim();
-            if (!taskId) return;
-            if (postponeLimitReached) {
-              setStatus(sodStatusEl, `Postpone limit reached (${SOD_POSTPONE_LIMIT}/${SOD_POSTPONE_LIMIT}) for this task.`, "error");
-              return;
-            }
-            if (sodPostponedMap[taskId]) {
-              delete sodPostponedMap[taskId];
-              setStatus(sodStatusEl, "Carryover task restored for today.", "info");
-            } else {
-              sodPostponedMap[taskId] = true;
-              setStatus(sodStatusEl, "Carryover task postponed for today.", "info");
-            }
-            saveState();
-            renderStartTasks();
-            updateSummaryCards();
-          });
-          tags.appendChild(postpone);
-        }
-        if (!isLockedStartTask(task) && !isSodSubmittedForSelectedDate) {
+        if (!isLockedStartTask(task)) {
           const edit = document.createElement("button");
           edit.type = "button";
           edit.className = "secondary icon-subtle";
@@ -3144,128 +2806,80 @@ const appEl = document.getElementById("app");
           edit.setAttribute("aria-label", "Edit task");
           edit.innerHTML = "<i class=\"fa-solid fa-pen\"></i>";
           edit.addEventListener("click", () => {
+            if (isPlannerTask) {
+              updatePlannerTask_(task);
+              return;
+            }
             openTaskTitleEditPrompt_(dateKey, task, sodStatusEl);
           });
           actions.appendChild(edit);
 
-          const remove = document.createElement("button");
-          remove.type = "button";
-          remove.className = "danger icon-danger";
-          remove.title = "Remove task";
-          remove.setAttribute("aria-label", "Remove task");
-          remove.innerHTML = "<i class=\"fa-solid fa-xmark\"></i>";
-          remove.addEventListener("click", async () => {
-            const taskId = String(task && task.taskId || "").trim();
-            const isPlannerTask = String(task && task.source || "").toLowerCase() === "planner";
-            if (isPlannerTask && taskId) {
-              try {
-                const returnRes = await callApi("returnPlannerTasks", {
-                  workDate: dateKey,
-                  department: identity.dept,
-                  employeeName: identity.name,
-                  accessCode: identity.code,
-                  taskIds: [taskId]
-                });
-                if (!returnRes || returnRes.ok === false) {
-                  throw new Error(returnRes && returnRes.message ? returnRes.message : "Could not return planner task.");
-                }
-              } catch (err) {
-                setStatus(sodStatusEl, `Could not return planner task: ${String(err && err.message ? err.message : err)}`, "error");
+          if (!readonly && !isPartiallyCompletedStartTask_(task)) {
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "danger icon-danger";
+            remove.title = "Remove task";
+            remove.setAttribute("aria-label", "Remove task");
+            remove.innerHTML = "<i class=\"fa-solid fa-xmark\"></i>";
+            remove.addEventListener("click", async () => {
+              if (isPlannerTask && taskId) {
+                await deletePlannerTask_(task);
                 return;
               }
-            }
 
-            const previousTasks = tasks.map((item) => Object.assign({}, item));
-            const idx = tasks.findIndex((t) => {
-              const aId = String(t && t.taskId || "").trim();
-              const bId = String(task && task.taskId || "").trim();
-              if (aId && bId) return aId === bId;
-              return String(t && t.title || "").trim() === String(task && task.title || "").trim();
-            });
-            if (idx > -1) tasks.splice(idx, 1);
-            state.startSourceByDate[dateKey] = "local-storage";
-            saveState();
-            renderStartTasks();
-            renderEodTasks();
-            updateSummaryCards();
-            if (isPlannerTask) {
-              syncPlannerFromSheets(dateKey, true).then(() => {
-                renderPlannerTasks();
+              const previousTasks = draftTasks.map((item) => Object.assign({}, item));
+              const previousCarryover = Array.isArray(state.carryoverByDate[dateKey])
+                ? state.carryoverByDate[dateKey].map((item) => Object.assign({}, item))
+                : [];
+              const previousCarryoverSource = String(state.carryoverSourceByDate[dateKey] || "").trim();
+              const idx = draftTasks.findIndex((t) => {
+                const aId = String(t && t.taskId || "").trim();
+                const bId = String(task && task.taskId || "").trim();
+                if (aId && bId) return aId === bId;
+                return String(t && t.title || "").trim() === String(task && task.title || "").trim();
               });
-              setStatus(sodStatusEl, "Planner task returned to backlog.", "success");
-              return;
-            }
-
-            showUndoToast_("Task removed.", () => {
-              state.startDraftByDate[dateKey] = previousTasks;
+              if (idx > -1) draftTasks.splice(idx, 1);
+              if (isCarryoverTask(task)) {
+                state.carryoverByDate[dateKey] = removeTaskFromListByIdentity_(previousCarryover, task);
+                if (!state.carryoverByDate[dateKey].length) {
+                  delete state.carryoverSourceByDate[dateKey];
+                }
+              }
+              delete selectedMap[taskId];
               state.startSourceByDate[dateKey] = "local-storage";
               saveState();
-              renderAll();
-              setStatus(sodStatusEl, "Task restored.", "success");
+              renderStartTasks();
+              renderEodTasks();
+              updateSummaryCards();
+              showUndoToast_("Task removed.", () => {
+                state.startDraftByDate[dateKey] = previousTasks;
+                if (isCarryoverTask(task)) {
+                  state.carryoverByDate[dateKey] = previousCarryover;
+                  if (previousCarryover.length) {
+                    state.carryoverSourceByDate[dateKey] = previousCarryoverSource || "local-storage";
+                  }
+                }
+                selectedMap[taskId] = true;
+                state.startSourceByDate[dateKey] = "local-storage";
+                saveState();
+                renderAll();
+                setStatus(sodStatusEl, "Task restored.", "success");
+              });
             });
-          });
-          actions.appendChild(remove);
+            actions.appendChild(remove);
+          }
         }
         head.appendChild(titleWrap);
         head.appendChild(actions);
         row.appendChild(head);
-        if (tags.children.length) {
-          row.appendChild(tags);
-        }
-        if (isSodPostponed) {
-          const hint = document.createElement("div");
-          hint.className = "progress-hint";
-          hint.textContent = "Postponed for today. This carryover task will not be included in today's SOD.";
-          row.appendChild(hint);
-        }
+        if (tags.children.length) row.appendChild(tags);
 
         return row;
       };
-
-      const renderCollapsibleSection = (sectionKey, titleText, list) => {
-        if (!list.length) return;
-        const section = document.createElement("section");
-        const collapsed = Boolean(collapseState[sectionKey]);
-        section.className = `collapsible-section${collapsed ? " collapsed" : ""}`;
-
-        const toggle = document.createElement("button");
-        toggle.type = "button";
-        toggle.className = "collapsible-toggle";
-        toggle.innerHTML = `<span>${titleText}</span><span class="label-count">${list.length} tasks <i class="fa-solid fa-chevron-down"></i></span>`;
-        toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-        toggle.addEventListener("click", () => {
-          collapseState[sectionKey] = !collapsed;
-          saveState();
-          renderStartTasks();
-        });
-        section.appendChild(toggle);
-
-        const content = document.createElement("div");
-        content.className = "collapsible-content";
-        list.forEach((task) => {
-          srIndex += 1;
-          content.appendChild(renderTask(task, srIndex));
-        });
-        section.appendChild(content);
-        sodTasksEl.appendChild(section);
-      };
-
-      const renderStaticSection = (titleText, list) => {
-        if (!list.length) return;
-        const section = document.createElement("div");
-        section.className = "task-section-title";
-        section.textContent = titleText;
-        sodTasksEl.appendChild(section);
-        list.forEach((task) => {
-          srIndex += 1;
-          sodTasksEl.appendChild(renderTask(task, srIndex));
-        });
-      };
-
-      renderStaticSection("Admin Assigned", assignedTasks);
-      renderStaticSection("Locked Carryover", carryoverTasks);
-      renderStaticSection("Recurring", recurringTasks);
-      renderCollapsibleSection("new", "Tasks Added Today", newTasks);
+      tasks.forEach((task) => {
+        srIndex += 1;
+        sodTasksEl.appendChild(renderTask(task, srIndex, isSodSubmittedForSelectedDate));
+      });
     }
 
     function getFieldError(eodDraft, editorId, field) {
@@ -3299,17 +2913,6 @@ const appEl = document.getElementById("app");
       textareaEl.style.height = "40px";
       const next = Math.max(40, textareaEl.scrollHeight);
       textareaEl.style.height = `${next}px`;
-    }
-
-    function formatDurationInput_(hours, minutes) {
-      const h = Number(hours);
-      const m = Number(minutes);
-      const safeH = Number.isFinite(h) && h > 0 ? Math.floor(h) : 0;
-      const safeM = Number.isFinite(m) && m > 0 ? Math.floor(m) : 0;
-      if (!safeH && !safeM) return "";
-      if (safeH && safeM) return `${safeH}h ${safeM}m`;
-      if (safeH) return `${safeH}h`;
-      return `${safeM}m`;
     }
 
     function buildDurationQuickChips_(inputEl) {
@@ -3794,10 +3397,25 @@ const appEl = document.getElementById("app");
           head.appendChild(pri);
           row.appendChild(head);
 
+          const projectChip = buildProjectChip_(u && u.project);
+          if (projectChip) {
+            const chipRow = document.createElement("div");
+            chipRow.className = "task-tags";
+            chipRow.appendChild(projectChip);
+            row.appendChild(chipRow);
+          }
+
           const hint = document.createElement("div");
           hint.className = "progress-hint";
           hint.textContent = `Completion: ${Number(u.completionPercent || 0)}% | Spent: ${Number(u.spentHours || 0)}h ${Number(u.spentMinutes || 0)}m${u.isExtra ? " | Extra task" : ""}`;
           row.appendChild(hint);
+
+          if (String(u.approvalStatus || "").trim()) {
+            const approvalLine = document.createElement("div");
+            approvalLine.className = "muted";
+            approvalLine.textContent = approvalStatusLabel_(u);
+            row.appendChild(approvalLine);
+          }
 
           const note = String(u.note || "").trim();
           if (note) {
@@ -3830,16 +3448,18 @@ const appEl = document.getElementById("app");
       }
 
       if (!activeEditorId) {
-        const firstSelectedPending = pending.find((t) => eodDraft.selectedTaskIds[t.taskId]);
+        const firstSelectedPending = pending.find((t) =>
+          eodDraft.selectedTaskIds[t.taskId] && !isApprovalTaskSubmittedLock_(eodDraft, t.taskId)
+        );
         if (firstSelectedPending) {
           activeEditorId = `pending:${firstSelectedPending.taskId}`;
         } else if (pending.length) {
-          const first = pending[0];
+          const first = pending.find((t) => !isApprovalTaskSubmittedLock_(eodDraft, t.taskId)) || pending[0];
           eodDraft.selectedTaskIds[first.taskId] = true;
           if (!eodDraft.updatesByTaskId[first.taskId]) {
             eodDraft.updatesByTaskId[first.taskId] = { completionPercent: "", spentHours: "", spentMinutes: "", spentDuration: "", note: "" };
           }
-          activeEditorId = `pending:${first.taskId}`;
+          activeEditorId = isApprovalTaskSubmittedLock_(eodDraft, first.taskId) ? "" : `pending:${first.taskId}`;
         } else if ((eodDraft.extras || []).length) {
           activeEditorId = `extra:${eodDraft.extras[0].taskId}`;
         }
@@ -3906,12 +3526,14 @@ const appEl = document.getElementById("app");
           head.appendChild(edit);
         }
         row.appendChild(head);
-        if (getCarryoverLastCompletion(task) !== null && !isRecurringTask(task)) {
-          const hint = document.createElement("div");
-          hint.className = "progress-hint";
-          hint.textContent = `Prev ${getCarryoverLastCompletion(task)}% | Allowed now: ${allowedCompletion.join(", ")}%`;
-          row.appendChild(hint);
-        } else if (isRecurringTask(task) && task.frequency) {
+        const projectChip = buildProjectChip_(task && task.project);
+        if (projectChip) {
+          const chipRow = document.createElement("div");
+          chipRow.className = "task-tags";
+          chipRow.appendChild(projectChip);
+          row.appendChild(chipRow);
+        }
+        if (isRecurringTask(task) && task.frequency) {
           const hint = document.createElement("div");
           hint.className = "progress-hint";
           const prev = getCarryoverLastCompletion(task);
@@ -4039,6 +3661,7 @@ const appEl = document.getElementById("app");
         meta.appendChild(percentField);
         meta.appendChild(noteField);
         meta.appendChild(timerControlRow);
+        meta.appendChild(buildApprovalControls_(dateKey, task.taskId, task.title, task.project, existing.note, editorId, eodDraft));
         if (isRecurringTask(task)) {
           meta.appendChild(recurringField);
         }
@@ -4071,6 +3694,7 @@ const appEl = document.getElementById("app");
             delete eodDraft.selectedTaskIds[task.taskId];
             delete eodDraft.updatesByTaskId[task.taskId];
             delete eodDraft.stopRecurringByTaskId[task.taskId];
+            clearApprovalDraftForTask_(eodDraft, task.taskId);
             if (eodDraft.activeEditorId === editorId) {
               eodDraft.activeEditorId = "";
             }
@@ -4091,6 +3715,7 @@ const appEl = document.getElementById("app");
           clearFieldVisualError_(percent);
           saveState();
           updateSummaryCards();
+          scheduleAttendanceSyncFromEodEdit_(dateKey);
         };
         percent.addEventListener("input", syncPendingCompletion);
         percent.addEventListener("change", syncPendingCompletion);
@@ -4113,6 +3738,7 @@ const appEl = document.getElementById("app");
           clearFieldVisualError_(spentDuration);
           saveState();
           updateSummaryCards();
+          scheduleAttendanceSyncFromEodEdit_(dateKey);
         });
 
         spentDuration.addEventListener("blur", () => {
@@ -4189,12 +3815,14 @@ const appEl = document.getElementById("app");
           }
 
           const previousExtras = (eodDraft.extras || []).map((item) => Object.assign({}, item));
+          const previousApprovalByTaskId = Object.assign({}, eodDraft.approvalByTaskId || {});
           if (timerState.editorId === editorId) {
             timerState.editorId = "";
             timerState.startedAtMs = 0;
             timerState.baseSeconds = 0;
           }
           delete timerState.savedSecondsByEditor[editorId];
+          clearApprovalDraftForTask_(eodDraft, extraId);
           eodDraft.extras.splice(index, 1);
           saveState();
           renderEodTasks();
@@ -4208,6 +3836,7 @@ const appEl = document.getElementById("app");
           }
           showUndoToast_("Extra task removed.", () => {
             eodDraft.extras = previousExtras;
+            eodDraft.approvalByTaskId = Object.assign({}, previousApprovalByTaskId);
             saveState();
             renderEodTasks();
             updateSummaryCards();
@@ -4286,6 +3915,22 @@ const appEl = document.getElementById("app");
           durationField.appendChild(error);
         }
 
+        const isMarketing = isMarketingIdentity_();
+
+        const projectSelect = document.createElement("select");
+        projectSelect.innerHTML = buildProjectOptionsMarkup();
+        projectSelect.value = extra.project || "";
+        projectSelect.dataset.editorId = editorId;
+        projectSelect.dataset.field = "project";
+
+        const projectField = document.createElement("div");
+        projectField.className = "meta-field";
+        projectField.hidden = !isMarketing;
+        const projectLabel = document.createElement("label");
+        projectLabel.textContent = "Project";
+        projectField.appendChild(projectLabel);
+        projectField.appendChild(projectSelect);
+
         const noteField = document.createElement("div");
         noteField.className = "meta-field note-field";
         const noteLabel = document.createElement("label");
@@ -4295,8 +3940,10 @@ const appEl = document.getElementById("app");
 
         meta.appendChild(durationField);
         meta.appendChild(percentField);
+        if (isMarketing) meta.appendChild(projectField);
         meta.appendChild(noteField);
         meta.appendChild(timerControlRow);
+        meta.appendChild(buildApprovalControls_(dateKey, extraId, extra.title || `Extra Task ${index + 1}`, extra.project, extra.note, editorId, eodDraft));
         row.appendChild(titleInput);
         row.appendChild(meta);
         row.appendChild(durationQuickRow);
@@ -4321,6 +3968,7 @@ const appEl = document.getElementById("app");
           clearFieldVisualError_(percent);
           saveState();
           updateSummaryCards();
+          scheduleAttendanceSyncFromEodEdit_(dateKey);
         };
         percent.addEventListener("input", syncExtraCompletion);
         percent.addEventListener("change", syncExtraCompletion);
@@ -4338,6 +3986,7 @@ const appEl = document.getElementById("app");
           clearFieldVisualError_(spentDuration);
           saveState();
           updateSummaryCards();
+          scheduleAttendanceSyncFromEodEdit_(dateKey);
         });
         spentDuration.addEventListener("blur", () => {
           const raw = String(spentDuration.value || "").trim();
@@ -4352,6 +4001,15 @@ const appEl = document.getElementById("app");
           autoResizeTextarea_(note);
           saveState();
         });
+        if (isMarketing) {
+          const syncExtraProject = () => {
+            extra.project = projectSelect.value;
+            eodDraft.activeEditorId = editorId;
+            saveState();
+          };
+          projectSelect.addEventListener("input", syncExtraProject);
+          projectSelect.addEventListener("change", syncExtraProject);
+        }
 
         extrasFrag.appendChild(row);
       });
@@ -4399,8 +4057,12 @@ const appEl = document.getElementById("app");
       if (!key) return "";
       const pending = getPendingTasksForDate(key);
       const eodDraft = getOrCreateEodDraft(key);
-      const firstSelectedPending = pending.find((task) => Boolean(eodDraft.selectedTaskIds[task.taskId]));
+      const firstSelectedPending = pending.find((task) =>
+        Boolean(eodDraft.selectedTaskIds[task.taskId]) && !isApprovalTaskSubmittedLock_(eodDraft, task.taskId)
+      );
       if (firstSelectedPending) return `pending:${firstSelectedPending.taskId}`;
+      const firstUnlockedPending = pending.find((task) => !isApprovalTaskSubmittedLock_(eodDraft, task.taskId));
+      if (firstUnlockedPending) return `pending:${firstUnlockedPending.taskId}`;
       const extras = ensureArray(eodDraft.extras);
       if (extras.length && extras[0] && extras[0].taskId) return `extra:${extras[0].taskId}`;
       return "";
@@ -4413,9 +4075,11 @@ const appEl = document.getElementById("app");
       renderSaveMeta();
       updateAttendanceMetaForDate_(workDateEl.value);
       renderDayStatusControls_(workDateEl.value);
+      renderTaskTabState_();
       renderPlannerTasks();
       renderStartTasks();
       renderEodTasks();
+      renderApprovalsPanel_();
       updateSummaryCards(true);
       updateCardMotionMode_();
     }
@@ -4489,6 +4153,7 @@ const appEl = document.getElementById("app");
     function addTaskToStartDraft() {
       const dateKey = workDateEl.value;
       const title = newTaskTitleEl.value.trim();
+      const project = normalizeTaskProject(newTaskProjectEl && newTaskProjectEl.value);
       const frequency = normalizeRecurringFrequency(newTaskFrequencyEl.value);
       const recurrenceWeekday = normalizeRecurringWeekday(newTaskWeeklyDayEl && !newTaskWeeklyDayEl.hidden ? newTaskWeeklyDayEl.value : null);
       const recurrenceDayOfMonth = normalizeRecurringDayOfMonth(newTaskMonthlyDateEl && !newTaskMonthlyDateEl.hidden ? newTaskMonthlyDateEl.value : null);
@@ -4503,6 +4168,11 @@ const appEl = document.getElementById("app");
         setStatus(sodStatusEl, "Planned time must be valid (example: 2h 30m, 2:30, or 150m).", "error");
         return;
       }
+      if (isMarketingIdentity_() && !project) {
+        setStatus(sodStatusEl, "Project is required for Marketing tasks.", "error");
+        if (newTaskProjectEl) newTaskProjectEl.focus();
+        return;
+      }
       if (frequency === "Weekly" && recurrenceWeekday === null) {
         setStatus(sodStatusEl, "Select a valid weekday for weekly recurring tasks.", "error");
         if (newTaskWeeklyDayEl) newTaskWeeklyDayEl.focus();
@@ -4515,9 +4185,11 @@ const appEl = document.getElementById("app");
       }
 
       const draft = getOrCreateStartDraft(dateKey);
+      const taskId = createTaskId();
       draft.push({
-        taskId: createTaskId(),
+        taskId: taskId,
         title,
+        project,
         priority: normalizePriority(newTaskPriorityEl.value),
         source: "sod",
         frequency: frequency,
@@ -4526,10 +4198,12 @@ const appEl = document.getElementById("app");
         plannedHours: parsedPlan.empty ? null : (plannedHours || 0),
         plannedMinutes: parsedPlan.empty ? null : (plannedMinutes || 0)
       });
+      getOrCreateSodSelectionByDate_(dateKey)[taskId] = true;
       state.startSourceByDate[dateKey] = "local-storage";
 
       newTaskTitleEl.value = "";
       newTaskFrequencyEl.value = "";
+      if (newTaskProjectEl) newTaskProjectEl.value = "";
       if (newTaskWeeklyDayEl) newTaskWeeklyDayEl.value = "";
       if (newTaskMonthlyDateEl) newTaskMonthlyDateEl.value = "";
       renderNewTaskRecurrenceControls_();
@@ -4603,6 +4277,18 @@ const appEl = document.getElementById("app");
       setStatus(sodStatusEl, "", "");
     }
 
+    function applyQuickMinutesToTaskEditPlanned_(minutesToAdd) {
+      const delta = Number(minutesToAdd || 0);
+      if (!Number.isFinite(delta) || delta <= 0) return;
+      const parsed = parseTimeHHMM(taskEditPlannedInputEl.value);
+      const currentMinutes = parsed.ok ? ((parsed.hours || 0) * 60 + (parsed.minutes || 0)) : 0;
+      const totalMinutes = Math.max(0, currentMinutes + delta);
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      taskEditPlannedInputEl.value = formatDurationInput_(h, m);
+      taskEditPlannedInputEl.focus();
+    }
+
     function getSectionCollapseState_(dateKey) {
       if (!state.collapsedSectionsByDate || typeof state.collapsedSectionsByDate !== "object") {
         state.collapsedSectionsByDate = {};
@@ -4619,6 +4305,157 @@ const appEl = document.getElementById("app");
       return normalizeRecurringFrequency(v);
     }
 
+    function updateTaskEditRecurrenceUi_() {
+      if (!taskEditFrequencyInputEl) return;
+      const frequency = normalizeRecurringFrequency(taskEditFrequencyInputEl.value);
+      if (taskEditWeeklyWrapEl) {
+        taskEditWeeklyWrapEl.hidden = frequency !== "Weekly";
+        taskEditWeeklyWrapEl.style.display = frequency === "Weekly" ? "" : "none";
+      }
+      if (taskEditWeeklyInputEl) {
+        taskEditWeeklyInputEl.disabled = frequency !== "Weekly";
+      }
+      if (taskEditMonthlyWrapEl) {
+        taskEditMonthlyWrapEl.hidden = frequency !== "Monthly";
+        taskEditMonthlyWrapEl.style.display = frequency === "Monthly" ? "" : "none";
+      }
+      if (taskEditMonthlyInputEl) {
+        taskEditMonthlyInputEl.disabled = frequency !== "Monthly";
+      }
+    }
+
+    function openTaskEditModal_(task, dateKey) {
+      if (!taskEditOverlayEl || !taskEditTitleInputEl || !taskEditPriorityInputEl || !taskEditFrequencyInputEl || !taskEditPlannedInputEl || !taskEditCancelBtn || !taskEditSaveBtn) {
+        return Promise.resolve({ ok: false, cancelled: true });
+      }
+
+      const current = task && typeof task === "object" ? task : {};
+      const currentRule = resolveRecurringRule_(current, dateKey);
+      const requiresProject = isMarketingIdentity_();
+      if (taskEditTitleEl) taskEditTitleEl.textContent = "Edit Task";
+      taskEditTitleInputEl.value = String(current.title || "").trim();
+      taskEditPriorityInputEl.value = normalizePriority(current.priority);
+      taskEditFrequencyInputEl.value = normalizeRecurringFrequency(current.frequency);
+      if (taskEditProjectWrapEl) taskEditProjectWrapEl.hidden = !requiresProject;
+      if (taskEditProjectInputEl) {
+        taskEditProjectInputEl.disabled = requiresProject ? false : true;
+        ensureProjectOptionValue_(taskEditProjectInputEl, current.project);
+      }
+      if (taskEditWeeklyInputEl) taskEditWeeklyInputEl.value = currentRule.recurrenceWeekday == null ? "" : String(currentRule.recurrenceWeekday);
+      if (taskEditMonthlyInputEl) taskEditMonthlyInputEl.value = currentRule.recurrenceDayOfMonth == null ? "" : String(currentRule.recurrenceDayOfMonth);
+      taskEditPlannedInputEl.value = formatTaskPlannedInput_(current);
+      if (taskEditErrorEl) {
+        taskEditErrorEl.textContent = "";
+        taskEditErrorEl.className = "status";
+      }
+      updateTaskEditRecurrenceUi_();
+
+      return new Promise((resolve) => {
+        let settled = false;
+        const cleanup = () => {
+          if (settled) return;
+          settled = true;
+          taskEditOverlayEl.classList.remove("active");
+          taskEditOverlayEl.setAttribute("aria-hidden", "true");
+          taskEditCancelBtn.removeEventListener("click", onCancel);
+          taskEditSaveBtn.removeEventListener("click", onSave);
+          taskEditOverlayEl.removeEventListener("click", onOverlayClick);
+          document.removeEventListener("keydown", onKeyDown);
+          if (taskEditFrequencyInputEl) taskEditFrequencyInputEl.removeEventListener("change", updateTaskEditRecurrenceUi_);
+        };
+        const onCancel = () => {
+          cleanup();
+          resolve({ ok: false, cancelled: true });
+        };
+        const onSave = () => {
+          const nextTitle = String(taskEditTitleInputEl.value || "").trim();
+          const nextProject = normalizeTaskProject(taskEditProjectInputEl && taskEditProjectInputEl.value);
+          if (!nextTitle) {
+            if (taskEditErrorEl) {
+              taskEditErrorEl.textContent = "Task title is required.";
+              taskEditErrorEl.className = "status error";
+            }
+            taskEditTitleInputEl.focus();
+            return;
+          }
+          if (requiresProject && !nextProject) {
+            if (taskEditErrorEl) {
+              taskEditErrorEl.textContent = "Project is required for Marketing tasks.";
+              taskEditErrorEl.className = "status error";
+            }
+            if (taskEditProjectInputEl) taskEditProjectInputEl.focus();
+            return;
+          }
+          const nextFrequency = normalizeRecurringFrequency(taskEditFrequencyInputEl.value);
+          let nextRecurrenceWeekday = null;
+          let nextRecurrenceDayOfMonth = null;
+          if (nextFrequency === "Weekly") {
+            nextRecurrenceWeekday = normalizeRecurringWeekday(taskEditWeeklyInputEl && taskEditWeeklyInputEl.value);
+            if (nextRecurrenceWeekday === null) {
+              if (taskEditErrorEl) {
+                taskEditErrorEl.textContent = "Select a valid weekday.";
+                taskEditErrorEl.className = "status error";
+              }
+              if (taskEditWeeklyInputEl) taskEditWeeklyInputEl.focus();
+              return;
+            }
+          }
+          if (nextFrequency === "Monthly") {
+            nextRecurrenceDayOfMonth = normalizeRecurringDayOfMonth(taskEditMonthlyInputEl && taskEditMonthlyInputEl.value);
+            if (nextRecurrenceDayOfMonth === null) {
+              if (taskEditErrorEl) {
+                taskEditErrorEl.textContent = "Choose a monthly date between 1 and 31.";
+                taskEditErrorEl.className = "status error";
+              }
+              if (taskEditMonthlyInputEl) taskEditMonthlyInputEl.focus();
+              return;
+            }
+          }
+          const nextPlan = parseTimeHHMM(taskEditPlannedInputEl.value);
+          if (!nextPlan.ok) {
+            if (taskEditErrorEl) {
+              taskEditErrorEl.textContent = "Planned time must be valid (example: 2h 30m, 2:30, or 150m).";
+              taskEditErrorEl.className = "status error";
+            }
+            taskEditPlannedInputEl.focus();
+            return;
+          }
+          cleanup();
+          resolve({
+            ok: true,
+            value: {
+              title: nextTitle,
+              project: nextProject,
+              priority: normalizePriority(taskEditPriorityInputEl.value),
+              frequency: nextFrequency,
+              recurrenceWeekday: nextFrequency === "Weekly" ? nextRecurrenceWeekday : null,
+              recurrenceDayOfMonth: nextFrequency === "Monthly" ? nextRecurrenceDayOfMonth : null,
+              plannedHours: nextPlan.hours || 0,
+              plannedMinutes: nextPlan.minutes || 0
+            }
+          });
+        };
+        const onOverlayClick = (event) => {
+          if (event.target === taskEditOverlayEl) onCancel();
+        };
+        const onKeyDown = (event) => {
+          if (event.key === "Escape") onCancel();
+        };
+
+        taskEditCancelBtn.addEventListener("click", onCancel);
+        taskEditSaveBtn.addEventListener("click", onSave);
+        taskEditOverlayEl.addEventListener("click", onOverlayClick);
+        document.addEventListener("keydown", onKeyDown);
+        if (taskEditFrequencyInputEl) taskEditFrequencyInputEl.addEventListener("change", updateTaskEditRecurrenceUi_);
+        taskEditOverlayEl.classList.add("active");
+        taskEditOverlayEl.setAttribute("aria-hidden", "false");
+        window.requestAnimationFrame(() => {
+          taskEditTitleInputEl.focus();
+          taskEditTitleInputEl.select();
+        });
+      });
+    }
+
     function openTaskTitleEditPrompt_(dateKey, task, statusEl) {
       const list = getOrCreateStartDraft(dateKey);
       const idx = findTaskIndexInList_(list, task);
@@ -4628,30 +4465,10 @@ const appEl = document.getElementById("app");
       }
 
       const current = list[idx] || {};
-      const previousTask = Object.assign({}, current);
-      const nextTitleRaw = window.prompt("Edit task title", String(current.title || ""));
-      if (nextTitleRaw === null) return;
-      const nextTitle = String(nextTitleRaw || "").trim();
-      if (!nextTitle) {
-        setStatus(statusEl, "Task title is required.", "error");
-        return;
-      }
-
-      list[idx] = Object.assign({}, current, { title: nextTitle });
-      state.startSourceByDate[dateKey] = "local-storage";
-      saveState();
-      renderAll();
-      setStatus(statusEl, "Task title updated.", "success");
-      showUndoToast_("Task title updated.", () => {
-        list[idx] = previousTask;
-        state.startSourceByDate[dateKey] = "local-storage";
-        saveState();
-        renderAll();
-        setStatus(statusEl, "Task title reverted.", "success");
-      });
+      openTaskEditPrompt_(dateKey, current, statusEl);
     }
 
-    function openTaskEditPrompt_(dateKey, task, statusEl) {
+    async function openTaskEditPrompt_(dateKey, task, statusEl) {
       const editable = getEditableTaskListForDate_(dateKey);
       const list = editable.list;
       const idx = findTaskIndexInList_(list, task);
@@ -4663,79 +4480,23 @@ const appEl = document.getElementById("app");
       const current = list[idx] || {};
       const previousTask = Object.assign({}, current);
       const previousTaskId = String(current.taskId || "").trim();
-      const nextTitleRaw = window.prompt("Edit task title", String(current.title || ""));
-      if (nextTitleRaw === null) return;
-      const nextTitle = String(nextTitleRaw || "").trim();
-      if (!nextTitle) {
-        setStatus(statusEl, "Task title is required.", "error");
+      const modalResult = await openTaskEditModal_(current, dateKey);
+      if (!modalResult || !modalResult.ok || !modalResult.value) {
         return;
       }
-
-      const nextPriorityRaw = window.prompt(
-        "Edit priority (Low / Medium / High)",
-        normalizePriority(current.priority)
-      );
-      if (nextPriorityRaw === null) return;
-      const nextPriority = normalizePriority(nextPriorityRaw);
-
-      const nextFreqRaw = window.prompt(
-        "Edit frequency (One-time / Daily / Weekly / Monthly)",
-        normalizeRecurringFrequency(current.frequency) || "One-time"
-      );
-      if (nextFreqRaw === null) return;
-      const nextFrequency = normalizePromptFrequency_(nextFreqRaw);
-      if (String(nextFreqRaw || "").trim() && !nextFrequency && String(nextFreqRaw || "").trim().toLowerCase() !== "one-time") {
-        setStatus(statusEl, "Frequency must be One-time, Daily, Weekly, or Monthly.", "error");
-        return;
-      }
-      const currentRule = resolveRecurringRule_(current, dateKey);
-      let nextRecurrenceWeekday = null;
-      let nextRecurrenceDayOfMonth = null;
-      if (nextFrequency === "Weekly") {
-        const nextWeekdayRaw = window.prompt(
-          "Edit weekly day (0=Sunday ... 6=Saturday)",
-          currentRule.recurrenceWeekday == null ? "" : String(currentRule.recurrenceWeekday)
-        );
-        if (nextWeekdayRaw === null) return;
-        nextRecurrenceWeekday = normalizeRecurringWeekday(nextWeekdayRaw);
-        if (nextRecurrenceWeekday === null) {
-          setStatus(statusEl, "Weekly day must be a number from 0 (Sunday) to 6 (Saturday).", "error");
-          return;
-        }
-      } else if (nextFrequency === "Monthly") {
-        const nextDayRaw = window.prompt(
-          "Edit monthly date (1-31)",
-          currentRule.recurrenceDayOfMonth == null ? "" : String(currentRule.recurrenceDayOfMonth)
-        );
-        if (nextDayRaw === null) return;
-        nextRecurrenceDayOfMonth = normalizeRecurringDayOfMonth(nextDayRaw);
-        if (nextRecurrenceDayOfMonth === null) {
-          setStatus(statusEl, "Monthly date must be a number between 1 and 31.", "error");
-          return;
-        }
-      }
-
-      const nextPlanRaw = window.prompt(
-        "Edit planned time (2h 30m, 2:30, or minutes, optional)",
-        formatTaskPlannedInput_(current)
-      );
-      if (nextPlanRaw === null) return;
-      const nextPlan = parseTimeHHMM(nextPlanRaw);
-      if (!nextPlan.ok) {
-        setStatus(statusEl, "Planned time must be valid (example: 2h 30m, 2:30, or 150m).", "error");
-        return;
-      }
+      const nextValue = modalResult.value;
 
       const resolvedTaskId = previousTaskId || String(task && task.taskId || "").trim() || createTaskId();
       list[idx] = Object.assign({}, current, {
         taskId: resolvedTaskId,
-        title: nextTitle,
-        priority: nextPriority,
-        frequency: nextFrequency,
-        recurrenceWeekday: nextFrequency === "Weekly" ? nextRecurrenceWeekday : null,
-        recurrenceDayOfMonth: nextFrequency === "Monthly" ? nextRecurrenceDayOfMonth : null,
-        plannedHours: nextPlan.hours || 0,
-        plannedMinutes: nextPlan.minutes || 0
+        title: nextValue.title,
+        project: nextValue.project,
+        priority: nextValue.priority,
+        frequency: nextValue.frequency,
+        recurrenceWeekday: nextValue.recurrenceWeekday,
+        recurrenceDayOfMonth: nextValue.recurrenceDayOfMonth,
+        plannedHours: nextValue.plannedHours,
+        plannedMinutes: nextValue.plannedMinutes
       });
       remapEodDraftTaskId_(dateKey, previousTaskId, resolvedTaskId);
       if (editable.source === "sod") {
@@ -4744,13 +4505,14 @@ const appEl = document.getElementById("app");
         if (draftIdx >= 0) {
           draftList[draftIdx] = Object.assign({}, draftList[draftIdx], {
             taskId: resolvedTaskId,
-            title: nextTitle,
-            priority: nextPriority,
-            frequency: nextFrequency,
-            recurrenceWeekday: nextFrequency === "Weekly" ? nextRecurrenceWeekday : null,
-            recurrenceDayOfMonth: nextFrequency === "Monthly" ? nextRecurrenceDayOfMonth : null,
-            plannedHours: nextPlan.hours || 0,
-            plannedMinutes: nextPlan.minutes || 0
+            title: nextValue.title,
+            project: nextValue.project,
+            priority: nextValue.priority,
+            frequency: nextValue.frequency,
+            recurrenceWeekday: nextValue.recurrenceWeekday,
+            recurrenceDayOfMonth: nextValue.recurrenceDayOfMonth,
+            plannedHours: nextValue.plannedHours,
+            plannedMinutes: nextValue.plannedMinutes
           });
         }
       }
@@ -4805,12 +4567,14 @@ const appEl = document.getElementById("app");
       const pendingTitle = String(newTaskTitleEl && newTaskTitleEl.value || "").trim();
       const pendingPlanned = String(newTaskPlannedTimeEl && newTaskPlannedTimeEl.value || "").trim();
       const pendingFrequency = normalizeRecurringFrequency(newTaskFrequencyEl && newTaskFrequencyEl.value);
+      const pendingProject = normalizeTaskProject(newTaskProjectEl && newTaskProjectEl.value);
       const pendingWeeklyDay = String(newTaskWeeklyDayEl && !newTaskWeeklyDayEl.hidden ? newTaskWeeklyDayEl.value : "").trim();
       const pendingMonthlyDate = String(newTaskMonthlyDateEl && !newTaskMonthlyDateEl.hidden ? newTaskMonthlyDateEl.value : "").trim();
       const pendingPriority = normalizePriority(newTaskPriorityEl && newTaskPriorityEl.value);
       const hasUnsavedAddTaskInput = Boolean(
         pendingTitle
         || pendingPlanned
+        || pendingProject
         || pendingFrequency
         || pendingWeeklyDay
         || pendingMonthlyDate
@@ -4834,10 +4598,12 @@ const appEl = document.getElementById("app");
       }
 
       const draftTasks = getOrCreateStartDraft(dateKey);
+      const selectedMap = getOrCreateSodSelectionByDate_(dateKey);
       const tasksForState = draftTasks
         .map((t) => ({
           taskId: t.taskId || createTaskId(),
           title: (t.title || "").trim(),
+          project: normalizeTaskProject(t.project),
           priority: normalizePriority(t.priority),
           source: (String(t && t.source || "").toLowerCase() === "planner")
             ? "planner"
@@ -4854,23 +4620,12 @@ const appEl = document.getElementById("app");
           assignedBy: isAssignedTask(t) ? String(t.assignedBy || "").trim() : ""
         }))
         .filter((t) => t.title.length > 0);
-      const sodPostponedMap = state.sodPostponedByDate && state.sodPostponedByDate[dateKey]
-        ? state.sodPostponedByDate[dateKey]
-        : {};
-      if (!state.sodPostponeCountByTaskKey || typeof state.sodPostponeCountByTaskKey !== "object") {
-        state.sodPostponeCountByTaskKey = {};
-      }
-      const postponedTasksForToday = tasksForState.filter((t) => {
-        if (t.source !== "carryover") return false;
-        return Boolean(sodPostponedMap && sodPostponedMap[t.taskId]);
-      });
-      const tasksForSubmission = tasksForState.filter((t) => {
-        if (t.source !== "carryover") return true;
-        return !Boolean(sodPostponedMap && sodPostponedMap[t.taskId]);
-      });
+      const tasksForSubmission = tasksForState.filter((t) => Boolean(selectedMap[String(t.taskId || "").trim()]));
+      const pendingTasksForSod = tasksForState.filter((t) => !Boolean(selectedMap[String(t.taskId || "").trim()]));
       const tasks = tasksForSubmission.map((t) => ({
         taskId: t.taskId,
         title: t.title,
+        project: t.project,
         priority: t.priority,
         source: t.source,
         frequency: t.frequency,
@@ -4880,9 +4635,26 @@ const appEl = document.getElementById("app");
         plannedMinutes: t.plannedMinutes,
         addedDate: t.addedDate
       }));
+      const pendingTasks = pendingTasksForSod.map((t) => ({
+        taskId: t.taskId,
+        title: t.title,
+        project: t.project,
+        priority: t.priority,
+        source: t.source,
+        frequency: t.frequency,
+        recurrenceWeekday: t.frequency === "Weekly" ? t.recurrenceWeekday : null,
+        recurrenceDayOfMonth: t.frequency === "Monthly" ? t.recurrenceDayOfMonth : null,
+        plannedHours: t.plannedHours,
+        plannedMinutes: t.plannedMinutes,
+        addedDate: t.addedDate,
+        carryoverOrigin: t.carryoverOrigin || "",
+        assignedBy: t.assignedBy || "",
+        lastCompletion: Number.isFinite(Number(t.lastCompletion)) ? Number(t.lastCompletion) : null,
+        lastNote: String(t.lastNote || "").trim()
+      }));
 
       if (!tasks.length) {
-        setStatus(sodStatusEl, "No tasks selected for today's SOD. Undo postpone or add at least one active task.", "error");
+        setStatus(sodStatusEl, "Select at least one task to submit Start of Day.", "error");
         return;
       }
       setStatus(sodStatusEl, "Submitting Start-of-Day...", "");
@@ -4904,6 +4676,7 @@ const appEl = document.getElementById("app");
           attendance: getAttendancePayloadForDate_(dateKey),
           dayStatus: getDayStatusForDate_(dateKey) || "",
           tasks,
+          pendingTasks,
           recurringTasks,
           clientVersion: CLIENT_VERSION
         };
@@ -4947,14 +4720,8 @@ const appEl = document.getElementById("app");
           }
         }
 
-        postponedTasksForToday.forEach((t) => {
-          const key = getSodPostponeTaskKey_(t);
-          if (!key) return;
-          const prev = Number(state.sodPostponeCountByTaskKey[key] || 0);
-          state.sodPostponeCountByTaskKey[key] = Math.min(SOD_POSTPONE_LIMIT, prev + 1);
-        });
-
         state.sodByDate[dateKey] = tasksForSubmission;
+        state.sodPendingByDate[dateKey] = pendingTasksForSod;
         state.sodSubmittedFlagByDate[dateKey] = true;
         state.eodSubmittedByDate[dateKey] = false;
         // Clear stale EOD payload for this date so EOD task list is driven by fresh SOD.
@@ -4964,6 +4731,7 @@ const appEl = document.getElementById("app");
         }
         state.eodUnlockedWithoutSodByDate[dateKey] = false;
         state.submissionDetailsSyncedByDate[dateKey] = true;
+        state.sodSelectedTaskIdsByDate[dateKey] = {};
         saveState();
         renderAll();
         if (result.transport === "no-cors" && submitWarnings.length) {
@@ -5063,102 +4831,12 @@ const appEl = document.getElementById("app");
       });
     }
 
-    function parsePercent(value) {
-      const n = Number(value);
-      const allowed = new Set(COMPLETION_OPTIONS);
-      if (!Number.isFinite(n)) return null;
-      return allowed.has(n) ? n : null;
-    }
-
-    function parseHours(value) {
-      if (value == null || String(value).trim() === "") return 0;
-      const n = Number(value);
-      if (!Number.isFinite(n) || n < 0) return null;
-      return Math.floor(n);
-    }
-
-    function parseMinutes(value) {
-      if (value == null || String(value).trim() === "") return 0;
-      const n = Number(value);
-      if (!Number.isFinite(n) || n < 0 || n > 59) return null;
-      return Math.floor(n);
-    }
-
-    function parseTimeHHMM(value) {
-      const raw = String(value || "").trim();
-      if (!raw) return { ok: true, empty: true, hours: 0, minutes: 0 };
-      const normalized = raw.toLowerCase().replace(/\s+/g, " ").trim();
-      const hms = raw.match(/^(\d{1,3})\s*:\s*([0-5]?\d)\s*:\s*([0-5]?\d)$/);
-      if (hms) {
-        const hh = Number(hms[1]);
-        const mm = Number(hms[2]);
-        const ss = Number(hms[3]);
-        const totalMinutes = Math.floor(((hh * 3600) + (mm * 60) + ss) / 60);
-        return {
-          ok: true,
-          empty: false,
-          hours: Math.floor(totalMinutes / 60),
-          minutes: totalMinutes % 60
-        };
-      }
-      const hm = raw.match(/^(\d{1,3})\s*:\s*([0-5]?\d)$/);
-      if (hm) {
-        return {
-          ok: true,
-          empty: false,
-          hours: Number(hm[1]),
-          minutes: Number(hm[2])
-        };
-      }
-      const hOnly = normalized.match(/^(\d{1,3})\s*(h|hr|hrs|hour|hours)$/i);
-      if (hOnly) {
-        return {
-          ok: true,
-          empty: false,
-          hours: Number(hOnly[1]),
-          minutes: 0
-        };
-      }
-      const hAndM = normalized.match(/^(\d{1,3})\s*(h|hr|hrs|hour|hours)\s*([0-5]?\d)\s*(m|min|mins|minute|minutes)$/i);
-      if (hAndM) {
-        return {
-          ok: true,
-          empty: false,
-          hours: Number(hAndM[1]),
-          minutes: Number(hAndM[3])
-        };
-      }
-      const minOnly = raw.match(/^(\d{1,4})\s*(m|min|mins|minute|minutes)?$/i);
-      if (!minOnly) return { ok: false, empty: false, hours: 0, minutes: 0 };
-      const totalMinutes = Number(minOnly[1]);
-      if (!Number.isFinite(totalMinutes) || totalMinutes < 0) {
-        return { ok: false, empty: false, hours: 0, minutes: 0 };
-      }
-      const hours = Math.floor(totalMinutes / 60);
-      const minutes = totalMinutes % 60;
-      return {
-        ok: true,
-        empty: false,
-        hours,
-        minutes
-      };
-    }
-
-    function formatMinutes(totalMinutes) {
-      const safe = Math.max(0, totalMinutes || 0);
-      const h = Math.floor(safe / 60);
-      const m = safe % 60;
-      return `${h}h ${m}m`;
-    }
-
     function confirmLowEodSubmission_(summary) {
       const info = summary || {};
       if (!confirmOverlayEl || !confirmBodyEl || !confirmDetailsEl || !confirmCancelBtn || !confirmProceedBtn) {
         return Promise.resolve(window.confirm("Submission looks low. Do you want to submit anyway?"));
       }
 
-      const submittedTasks = Number(info.submittedTasks || 0);
-      const plannedTasks = Number(info.plannedTasks || 0);
       const totalSpentMinutes = Number(info.totalSpentMinutes || 0);
       const minimumMinutes = Number(info.minimumMinutes || 0);
       confirmTitleEl.textContent = "Submit with low summary?";
@@ -5166,12 +4844,68 @@ const appEl = document.getElementById("app");
       confirmDetailsEl.innerHTML = "";
 
       const details = [
-        `Tasks submitted: ${submittedTasks}`,
-        `Planned/pending tasks: ${plannedTasks}`,
         `Logged time: ${formatMinutes(totalSpentMinutes)}`,
         `Expected minimum time: ${formatMinutes(minimumMinutes)}`
       ];
       details.forEach((text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        confirmDetailsEl.appendChild(li);
+      });
+
+      return new Promise((resolve) => {
+        let settled = false;
+        const cleanup = () => {
+          if (settled) return;
+          settled = true;
+          confirmOverlayEl.classList.remove("active");
+          confirmOverlayEl.setAttribute("aria-hidden", "true");
+          confirmCancelBtn.removeEventListener("click", onCancel);
+          confirmProceedBtn.removeEventListener("click", onProceed);
+          confirmOverlayEl.removeEventListener("click", onOverlayClick);
+          document.removeEventListener("keydown", onKeyDown);
+        };
+        const onCancel = () => {
+          cleanup();
+          resolve(false);
+        };
+        const onProceed = () => {
+          cleanup();
+          resolve(true);
+        };
+        const onOverlayClick = (event) => {
+          if (event.target === confirmOverlayEl) onCancel();
+        };
+        const onKeyDown = (event) => {
+          if (event.key === "Escape") onCancel();
+        };
+
+        confirmCancelBtn.addEventListener("click", onCancel);
+        confirmProceedBtn.addEventListener("click", onProceed);
+        confirmOverlayEl.addEventListener("click", onOverlayClick);
+        document.addEventListener("keydown", onKeyDown);
+
+        confirmOverlayEl.classList.add("active");
+        confirmOverlayEl.setAttribute("aria-hidden", "false");
+      });
+    }
+
+    function confirmMissingCheckoutForEod_(info) {
+      const details = info || {};
+      if (!confirmOverlayEl || !confirmBodyEl || !confirmDetailsEl || !confirmCancelBtn || !confirmProceedBtn) {
+        return Promise.resolve(window.confirm("It looks like you have not checked out yet. Submit End-of-Day anyway?"));
+      }
+
+      confirmTitleEl.textContent = "Checkout not found";
+      confirmBodyEl.textContent = "It seems like you have not checked out yet. You can still submit this End-of-Day entry if needed.";
+      confirmDetailsEl.innerHTML = "";
+
+      const lines = [
+        `Date: ${formatDateLabel(details.workDate || "")}`,
+        `Login: ${details.loginTime || "--"}`,
+        "Checkout: --"
+      ];
+      lines.forEach((text) => {
         const li = document.createElement("li");
         li.textContent = text;
         confirmDetailsEl.appendChild(li);
@@ -5235,8 +4969,9 @@ const appEl = document.getElementById("app");
       const msPerDay = 24 * 60 * 60 * 1000;
       const diffDays = Math.floor((ref.getTime() - added.getTime()) / msPerDay);
       if (diffDays < 0) return "";
-      const inclusiveDays = diffDays + 1; // include added date as day 1
-      return `Added ${inclusiveDays} day${inclusiveDays === 1 ? "" : "s"} ago`;
+      if (diffDays === 0) return "Added today";
+      if (diffDays === 1) return "Added yesterday";
+      return `Added ${diffDays} days ago`;
     }
 
     function getSubmitterEmailForCliq_(employeeName) {
@@ -5302,7 +5037,8 @@ const appEl = document.getElementById("app");
             Number(t && t.recurrenceWeekday != null ? t.recurrenceWeekday : -1),
             Number(t && t.recurrenceDayOfMonth != null ? t.recurrenceDayOfMonth : -1),
             Number(t && t.plannedHours || 0),
-            Number(t && t.plannedMinutes || 0)
+            Number(t && t.plannedMinutes || 0),
+            normalizeTaskProject(t && t.project).toLowerCase()
           ].join("|");
       }).filter((v) => v.length > 0).sort();
     }
@@ -5342,6 +5078,7 @@ const appEl = document.getElementById("app");
       const attendance = payload && payload.attendance && typeof payload.attendance === "object" ? payload.attendance : null;
       const loginText = attendance && attendance.loginTime ? formatAttendanceClock12h_(attendance.loginTime) : "";
       const checkoutText = attendance && attendance.logoutTime ? formatAttendanceClock12h_(attendance.logoutTime) : "";
+      const workingMinutes = Number(attendance && attendance.workingMinutes);
       const hoursText = attendance && Number.isFinite(Number(attendance.workingMinutes))
         ? formatMinutesCompact_(attendance.workingMinutes)
         : "";
@@ -5379,12 +5116,16 @@ const appEl = document.getElementById("app");
           "*New*",
           (newList.length ? newList.join("\n") : `${bullet} None`),
           "",
-          "*Admin Assigned*",
-          (assignedList.length ? assignedList.join("\n") : `${bullet} None`),
-          "",
           "*Carryover Tasks*",
           (carryoverList.length ? carryoverList.join("\n") : `${bullet} None`)
         ];
+        if (assignedList.length) {
+          lines.push(
+            "",
+            "*Admin Assigned*",
+            assignedList.join("\n")
+          );
+        }
         if (recurringList.length) {
           lines.push("", "*Recurring*", recurringList.join("\n"));
         }
@@ -5392,11 +5133,13 @@ const appEl = document.getElementById("app");
       }
 
       const updates = ensureArray(payload && payload.updates);
-      const completed = updates.filter((u) => Number(u && u.completionPercent || 0) === 100);
+      const approvalPendingTasks = updates.filter((u) => String(u && u.approvalStatus || "").trim().toLowerCase() === "pending");
+      const nonApprovalUpdates = updates.filter((u) => String(u && u.approvalStatus || "").trim().toLowerCase() !== "pending");
+      const completed = nonApprovalUpdates.filter((u) => Number(u && u.completionPercent || 0) === 100);
       const completedPlanned = completed.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() !== "assigned");
       const completedAssigned = completed.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() === "assigned");
-      const assignedTasks = updates.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() === "assigned");
-      const extraTasks = updates.filter((u) => Boolean(u && u.isExtra));
+      const assignedTasks = nonApprovalUpdates.filter((u) => !Boolean(u && u.isExtra) && String(u && u.source || "").toLowerCase() === "assigned");
+      const extraTasks = nonApprovalUpdates.filter((u) => Boolean(u && u.isExtra));
       const completedExtra = extraTasks.filter((u) => Number(u && u.completionPercent || 0) === 100);
 
       const summary = p && p.dailySummary ? p.dailySummary : {};
@@ -5431,7 +5174,7 @@ const appEl = document.getElementById("app");
       const areAllAssignedTasksCompleted = assignedTasks.length > 0 && completedAssigned.length === assignedTasks.length;
       const assignedList = assignedTasks.map((u) => formatEodTaskLine(u, !areAllAssignedTasksCompleted));
 
-      const pendingCarryforward = updates.filter((u) => !Boolean(u && u.isExtra) && Number(u && u.completionPercent || 0) < 100);
+      const pendingCarryforward = nonApprovalUpdates.filter((u) => !Boolean(u && u.isExtra) && Number(u && u.completionPercent || 0) < 100);
       const plannedCountRaw = Number(summary && summary.plannedCount);
       const plannedCountDen = Number.isFinite(plannedCountRaw) ? plannedCountRaw : updates.filter((u) => !Boolean(u && u.isExtra)).length;
       const extraDenRaw = Number(summary && summary.extraCount);
@@ -5447,7 +5190,7 @@ const appEl = document.getElementById("app");
         headline,
         meta,
         (checkoutText ? `Checkout: ${checkoutText}` : ""),
-        (hoursText ? `Attendance Hours: ${hoursText}` : ""),
+        (hoursText && workingMinutes > 0 ? `Attendance Hours: ${hoursText}` : ""),
         totalSpentLabel,
         "",
         `*${completedPlanned.length}/${Math.max(0, plannedDen)} Planned Tasks Completed*`,
@@ -5481,6 +5224,18 @@ const appEl = document.getElementById("app");
         );
       }
 
+      if (approvalPendingTasks.length) {
+        sections.push(
+          "",
+          `*Sent For Approval (${approvalPendingTasks.length})*`,
+          approvalPendingTasks.map((u) => {
+            const approver = String(u && u.approvalApprover || "").trim();
+            const baseLine = formatEodTaskLine(u, true);
+            return approver ? `${baseLine} | Approver: ${approver}` : baseLine;
+          }).join("\n")
+        );
+      }
+
       return sections.join("\n");
     }
 
@@ -5494,6 +5249,7 @@ const appEl = document.getElementById("app");
       const submitterEmail = getSubmitterEmailForCliq_(payload && payload.employeeName);
       const totalSpentMinutes = Number(payload && payload.totalSpentMinutes || 0);
       const flowPayload = {
+        category: "submission",
         stage: normalizedStage,
         employeeName: String(payload && payload.employeeName || "").trim(),
         submitterEmail,
@@ -5523,6 +5279,96 @@ const appEl = document.getElementById("app");
       }
     }
 
+    async function logCliqFailureForUser_(meta) {
+      if (!identity) return;
+      try {
+        await callApi("logCliqFailure", Object.assign({
+          department: identity.dept,
+          employeeName: identity.name,
+          accessCode: identity.code,
+          code: identity.code,
+          clientVersion: CLIENT_VERSION
+        }, meta || {}), { timeoutMs: 12000 });
+      } catch (err) {
+        console.warn("Failed to log approval Cliq failure:", err);
+      }
+    }
+
+    function buildApprovalRequestCliqMessage_(row) {
+      const request = row && typeof row === "object" ? row : {};
+      const taskTitle = String(request.title || "").trim() || "-";
+      const approver = String(request.approvalApprover || request.approverAdmin || "").trim() || "-";
+      const requestNote = String(request.requestNote || "").trim();
+      const sourceNote = String(request.sourceNote || "").trim();
+      return [
+        `*Approval Request for ${firstNameOnly(identity && identity.name) || String(identity && identity.name || "").trim() || "Employee"}*`,
+        `Department: ${String(identity && identity.dept || "").trim() || "-"}`,
+        `Work Date: ${formatCliqDate_(request.workDate || workDateEl.value || todayISO())}`,
+        `Approver: ${approver}`,
+        "",
+        `Task: ${taskTitle}`,
+        request.project ? `Project: ${String(request.project).trim()}` : "",
+        `Completion: ${Number(request.completionPercent || 0)}%`,
+        `Spent: ${formatCliqMinutes_(request.spentMinutes || 0)}`,
+        requestNote ? `Request note: ${requestNote}` : "",
+        sourceNote ? `Progress note: ${sourceNote}` : ""
+      ].filter(Boolean).join("\n");
+    }
+
+    async function sendApprovalRequestCliqNotifications_(requests) {
+      const rows = ensureArray(requests).filter((row) => row && row.approvalApprover);
+      if (!rows.length) return { ok: true, sent: 0 };
+      if (!ZOHO_SUBMISSION_WEBHOOK_URL) return { ok: false, message: "Submission webhook URL is not configured." };
+      for (const row of rows) {
+        const approverEmail = getCliqEmailForName_(row.approvalApprover);
+        if (!approverEmail) {
+          const errorMessage = `Cliq recipient is not mapped for approver ${String(row.approvalApprover || "").trim() || "-"}.`;
+          await logCliqFailureForUser_({
+            stage: "APPROVAL_REQUEST",
+            department: identity && identity.dept || "",
+            employeeName: identity && identity.name || "",
+            workDate: String(row.workDate || workDateEl.value || todayISO()).trim(),
+            error: errorMessage,
+            flowPayload: row || {}
+          });
+          return { ok: false, message: errorMessage };
+        }
+        const flowPayload = {
+          category: "approval",
+          stage: "APPROVAL_REQUEST",
+          employeeName: String(identity && identity.name || "").trim(),
+          submitterEmail: approverEmail,
+          department: String(identity && identity.dept || "").trim(),
+          workDate: String(row.workDate || workDateEl.value || todayISO()).trim(),
+          taskCount: 1,
+          totalSpentMinutes: Number(row.spentMinutes || 0),
+          cliq_message: buildApprovalRequestCliqMessage_(row),
+          payload_json: JSON.stringify(row || {})
+        };
+        try {
+          await fetch(ZOHO_SUBMISSION_WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+            body: toFormEncoded(flowPayload),
+            keepalive: true
+          });
+        } catch (err) {
+          const errorMessage = String(err && err.message ? err.message : err);
+          await logCliqFailureForUser_({
+            stage: "APPROVAL_REQUEST",
+            department: identity && identity.dept || "",
+            employeeName: identity && identity.name || "",
+            workDate: String(row.workDate || workDateEl.value || todayISO()).trim(),
+            error: errorMessage,
+            flowPayload: flowPayload
+          });
+          return { ok: false, message: errorMessage };
+        }
+      }
+      return { ok: true, sent: rows.length };
+    }
+
     function updateSummaryCardsNow_() {
       const dateKey = workDateEl.value;
       const startTasks = getOrCreateStartDraft(dateKey);
@@ -5531,13 +5377,6 @@ const appEl = document.getElementById("app");
 
       let selectedCount = 0;
       let totalSpent = 0;
-      const sodPostponedMap = state.sodPostponedByDate && state.sodPostponedByDate[dateKey]
-        ? state.sodPostponedByDate[dateKey]
-        : {};
-      const postponedCount = pending.filter((task) => {
-        if (!isCarryoverTask(task)) return false;
-        return Boolean(sodPostponedMap && sodPostponedMap[task.taskId]);
-      }).length;
 
       pending.forEach((task) => {
         if (!eodDraft.selectedTaskIds[task.taskId]) return;
@@ -5566,15 +5405,14 @@ const appEl = document.getElementById("app");
 
       startCountCardEl.textContent = String(startTasks.length);
       const submittedStartTasks = Array.isArray(state.sodByDate[dateKey]) ? state.sodByDate[dateKey] : [];
+      const sodPendingTasks = Array.isArray(state.sodPendingByDate && state.sodPendingByDate[dateKey]) ? state.sodPendingByDate[dateKey] : [];
       const sodViewTasks = (isSodSubmittedForDate_(dateKey) && submittedStartTasks.length)
         ? submittedStartTasks
         : startTasks;
       updateSodSubmitMeta_(dateKey, sodViewTasks);
-      endCountCardEl.textContent = String(selectedCount);
-      if (postponedCountCardEl) {
-        postponedCountCardEl.textContent = String(postponedCount);
-      }
+      if (postponedCountCardEl) postponedCountCardEl.textContent = String(sodPendingTasks.length);
       hoursSplitCardEl.textContent = formatMinutes(totalSpent);
+      updateEodElapsedTime_(dateKey);
       updateEodSubmitButtonState_(dateKey);
     }
 
@@ -5642,6 +5480,11 @@ const appEl = document.getElementById("app");
         if (!hasAnyTimeInput || (h === 0 && m === 0)) {
           return { ok: false, editorId, field: "spentDuration", message: "Dedicated time is required. Enter duration greater than zero." };
         }
+
+        const approvalDraft = getApprovalDraftForTask_(eodDraft, task.taskId);
+        if (approvalDraft.enabled && !String(approvalDraft.approverAdmin || "").trim()) {
+          return { ok: false, editorId, field: "approvalApprover", message: "Choose an approver for every task marked for approval." };
+        }
       }
 
       for (const extra of eodDraft.extras || []) {
@@ -5672,6 +5515,11 @@ const appEl = document.getElementById("app");
         const hasAnyTimeInput = durationRaw.length > 0 || String(hRaw ?? "").trim() !== "" || String(mRaw ?? "").trim() !== "";
         if (!hasAnyTimeInput || (h === 0 && m === 0)) {
           return { ok: false, editorId, field: "spentDuration", message: "Dedicated time is required for extra tasks." };
+        }
+
+        const approvalDraft = getApprovalDraftForTask_(eodDraft, extra.taskId);
+        if (approvalDraft.enabled && !String(approvalDraft.approverAdmin || "").trim()) {
+          return { ok: false, editorId, field: "approvalApprover", message: "Choose an approver for every task marked for approval." };
         }
       }
 
@@ -5718,6 +5566,7 @@ const appEl = document.getElementById("app");
           return {
             taskId: t.taskId,
             title: t.title,
+            project: normalizeTaskProject(t.project),
             completionPercent: parsePercent(update.completionPercent),
             spentHours: parsedDuration ? (parsedDuration.ok ? parsedDuration.hours : null) : parseHours(update.spentHours),
             spentMinutes: parsedDuration ? (parsedDuration.ok ? parsedDuration.minutes : null) : parseMinutes(update.spentMinutes),
@@ -5736,6 +5585,7 @@ const appEl = document.getElementById("app");
           return {
             taskId: e.taskId || createTaskId(),
             title: (e.title || "").trim(),
+            project: normalizeTaskProject(e.project),
             completionPercent: parsePercent(e.completionPercent),
             spentHours: parsedDuration ? (parsedDuration.ok ? parsedDuration.hours : null) : parseHours(e.spentHours),
             spentMinutes: parsedDuration ? (parsedDuration.ok ? parsedDuration.minutes : null) : parseMinutes(e.spentMinutes),
@@ -5762,23 +5612,76 @@ const appEl = document.getElementById("app");
         return;
       }
 
+      const approvalTaskPayloads = [];
+      const existingApprovalRequests = [];
+      const existingRequestIds = [];
+      updates.forEach((u) => {
+        const approvalDraft = getApprovalDraftForTask_(eodDraft, u.taskId);
+        if (!approvalDraft.enabled) return;
+        const existingRequestId = String(approvalDraft.requestId || "").trim();
+        const fallbackApprover = String(approvalDraft.approvalApprover || approvalDraft.approverAdmin || "").trim();
+        if (existingRequestId) {
+          existingRequestIds.push(existingRequestId);
+          existingApprovalRequests.push({
+            requestId: existingRequestId,
+            taskId: String(u.taskId || "").trim(),
+            title: String(u.title || "").trim(),
+            project: normalizeTaskProject(u.project),
+            approvalStatus: String(approvalDraft.approvalStatus || "pending").trim() || "pending",
+            approvalApprover: fallbackApprover,
+            requestNote: String(approvalDraft.requestNote || "").trim(),
+            sourceNote: String(u.note || "").trim(),
+            priority: normalizePriority(u.priority),
+            completionPercent: Number(u.completionPercent || 0),
+            spentMinutes: ((Number(u.spentHours || 0) * 60) + Number(u.spentMinutes || 0)),
+            isExtra: Boolean(u.isExtra),
+            source: String(u.source || "").trim().toLowerCase()
+          });
+          return;
+        }
+        approvalTaskPayloads.push({
+          requestId: createRequestId(),
+          taskId: String(u.taskId || "").trim(),
+          title: String(u.title || "").trim(),
+          project: normalizeTaskProject(u.project),
+          priority: normalizePriority(u.priority),
+          completionPercent: Number(u.completionPercent || 0),
+          spentMinutes: ((Number(u.spentHours || 0) * 60) + Number(u.spentMinutes || 0)),
+          sourceNote: String(u.note || "").trim(),
+          requestNote: String(approvalDraft.requestNote || "").trim(),
+          approverAdmin: String(approvalDraft.approverAdmin || "").trim(),
+          isExtra: Boolean(u.isExtra),
+          source: String(u.source || "").trim().toLowerCase()
+        });
+      });
+
       setStatus(eodStatusEl, "Submitting End-of-Day...", "");
       submitEodBtn.disabled = true;
       isEodSubmitting = true;
       try {
         await syncAttendanceForDate_(dateKey, true);
+        const attendanceForSubmit = getAttendancePayloadForDate_(dateKey);
+        const loginTimeForSubmit = String(attendanceForSubmit && attendanceForSubmit.loginTime || "").trim();
+        const logoutTimeForSubmit = String(attendanceForSubmit && attendanceForSubmit.logoutTime || "").trim();
+        if (loginTimeForSubmit && !logoutTimeForSubmit) {
+          const shouldProceedWithoutCheckout = await confirmMissingCheckoutForEod_({
+            workDate: dateKey,
+            loginTime: formatAttendanceClock12h_(loginTimeForSubmit)
+          });
+          if (!shouldProceedWithoutCheckout) {
+            setStatus(eodStatusEl, "End-of-Day submission canceled.", "info");
+            return;
+          }
+        }
         const submitWarnings = [];
         const totalSpentMinutes = updates.reduce(
           (sum, u) => sum + ((u.spentHours || 0) * 60) + (u.spentMinutes || 0),
           0
         );
         const minimumExpectedMinutes = (8 * 60) + 30;
-        const hasLowTaskCount = updates.length < pending.length;
         const hasLowHours = totalSpentMinutes < minimumExpectedMinutes;
-        if (hasLowTaskCount || hasLowHours) {
+        if (hasLowHours) {
           const shouldProceed = await confirmLowEodSubmission_({
-            submittedTasks: updates.length,
-            plannedTasks: pending.length,
             totalSpentMinutes,
             minimumMinutes: minimumExpectedMinutes
           });
@@ -5811,6 +5714,86 @@ const appEl = document.getElementById("app");
           extraCount,
           totalSpentMinutes
         };
+
+        let createdApprovalRequests = [];
+        let newlyCreatedApprovalRequests = [];
+        let newlySubmittedApprovalCount = 0;
+        if (existingRequestIds.length) {
+          await syncUserApprovals_(true).catch(() => {});
+        }
+        if (existingApprovalRequests.length) {
+          createdApprovalRequests = existingApprovalRequests.map((row) => {
+            const serverRow = findUserApprovalByRequestId_(row.requestId);
+            return Object.assign({}, row, {
+              approvalStatus: String((serverRow && serverRow.status) || row.approvalStatus || "pending").trim() || "pending",
+              approvalApprover: String(
+                (serverRow && serverRow.approverAdmin) || row.approvalApprover || row.approverAdmin || ""
+              ).trim()
+            });
+          });
+        }
+        if (approvalTaskPayloads.length) {
+          const approvalRes = await callApi("submitApprovalRequests", {
+            workDate: dateKey,
+            department: identity.dept,
+            employeeName: identity.name,
+            accessCode: identity.code,
+            tasks: approvalTaskPayloads,
+            clientVersion: CLIENT_VERSION
+          }, { timeoutMs: 15000 });
+          if (!approvalRes || approvalRes.ok === false) {
+            throw new Error(approvalRes && approvalRes.message ? approvalRes.message : "Approval request submit rejected.");
+          }
+          const approvalRows = Array.isArray(approvalRes.requests) ? approvalRes.requests : [];
+          const requestMap = {};
+          approvalRows.forEach((row) => {
+            const key = String(row && row.taskId || "").trim() || String(row && row.title || "").trim().toLowerCase();
+            if (key) requestMap[key] = row;
+          });
+          newlyCreatedApprovalRequests = approvalTaskPayloads.map((row) => {
+            const lookupKey = String(row.taskId || "").trim() || String(row.title || "").trim().toLowerCase();
+            const created = requestMap[lookupKey] || {};
+            return Object.assign({}, row, {
+              requestId: String(created.requestId || row.requestId || "").trim(),
+              approvalStatus: String(created.approvalStatus || "pending").trim() || "pending",
+              approvalApprover: String(created.approvalApprover || row.approverAdmin || "").trim()
+            });
+          });
+          newlySubmittedApprovalCount = newlyCreatedApprovalRequests.length;
+          createdApprovalRequests = createdApprovalRequests.concat(newlyCreatedApprovalRequests);
+          const createdMap = {};
+          createdApprovalRequests.forEach((row) => {
+            const key = String(row.taskId || "").trim() || String(row.title || "").trim().toLowerCase();
+            if (key) createdMap[key] = row;
+          });
+          updates.forEach((u) => {
+            const key = String(u.taskId || "").trim() || String(u.title || "").trim().toLowerCase();
+            const approvalRow = createdMap[key];
+            if (!approvalRow) return;
+            u.approvalRequestId = approvalRow.requestId;
+            u.approvalStatus = approvalRow.approvalStatus;
+            u.approvalApprover = approvalRow.approvalApprover;
+            const approvalDraft = getApprovalDraftForTask_(eodDraft, u.taskId);
+            approvalDraft.requestId = String(approvalRow.requestId || "").trim();
+            approvalDraft.approvalStatus = String(approvalRow.approvalStatus || "").trim();
+            approvalDraft.approvalApprover = String(approvalRow.approvalApprover || "").trim();
+          });
+        } else if (createdApprovalRequests.length) {
+          const createdMap = {};
+          createdApprovalRequests.forEach((row) => {
+            const key = String(row.taskId || "").trim() || String(row.title || "").trim().toLowerCase();
+            if (key) createdMap[key] = row;
+          });
+          updates.forEach((u) => {
+            const key = String(u.taskId || "").trim() || String(u.title || "").trim().toLowerCase();
+            const approvalRow = createdMap[key];
+            if (!approvalRow) return;
+            u.approvalRequestId = approvalRow.requestId;
+            u.approvalStatus = approvalRow.approvalStatus;
+            u.approvalApprover = approvalRow.approvalApprover;
+          });
+        }
+
         const payload = {
           stage: "EOD",
           requestId: createRequestId(),
@@ -5824,6 +5807,15 @@ const appEl = document.getElementById("app");
           dayStatus: getDayStatusForDate_(dateKey) || "",
           totalSpentMinutes,
           dailySummary,
+          approvalRequests: createdApprovalRequests.map((row) => ({
+            requestId: row.requestId,
+            taskId: row.taskId,
+            title: row.title,
+            project: normalizeTaskProject(row.project),
+            approvalStatus: row.approvalStatus,
+            approvalApprover: row.approvalApprover,
+            requestNote: row.requestNote
+          })),
           updates,
           stopRecurringTaskIds,
           clientVersion: CLIENT_VERSION
@@ -5833,6 +5825,9 @@ const appEl = document.getElementById("app");
         if (!result || result.ok === false) {
           throw new Error(result && result.message ? result.message : "End-of-Day submit rejected.");
         }
+        const attendanceExceptionSummary = result && result.attendanceException && typeof result.attendanceException === "object"
+          ? result.attendanceException
+          : null;
         if (result.streak && typeof result.streak === "object") {
           applyStreakResult_(result.streak, { animate: true });
         }
@@ -5879,13 +5874,17 @@ const appEl = document.getElementById("app");
         state.eodSubmittedUpdatesByDate[dateKey] = updates.map((u) => ({
           taskId: u.taskId,
           title: u.title,
+          project: normalizeTaskProject(u.project),
           completionPercent: Number(u.completionPercent || 0),
           spentHours: Number(u.spentHours || 0),
           spentMinutes: Number(u.spentMinutes || 0),
           note: String(u.note || "").trim(),
           priority: normalizePriority(u.priority),
           source: String(u.source || "").trim().toLowerCase(),
-          isExtra: Boolean(u.isExtra)
+          isExtra: Boolean(u.isExtra),
+          approvalRequestId: String(u.approvalRequestId || "").trim(),
+          approvalStatus: String(u.approvalStatus || "").trim(),
+          approvalApprover: String(u.approvalApprover || "").trim()
         }));
         state.carryoverSyncedByDate[nextDate] = false;
         state.carryoverSyncedByDate[dateKey] = true;
@@ -5894,7 +5893,7 @@ const appEl = document.getElementById("app");
         delete state.carryoverByDate[dateKey];
         delete state.carryoverSourceByDate[dateKey];
 
-        state.eodDraftByDate[dateKey] = { selectedTaskIds: {}, updatesByTaskId: {}, stopRecurringByTaskId: {}, extras: [], activeEditorId: "", fieldErrors: {} };
+        state.eodDraftByDate[dateKey] = { selectedTaskIds: {}, updatesByTaskId: {}, stopRecurringByTaskId: {}, extras: [], activeEditorId: "", fieldErrors: {}, approvalByTaskId: {} };
         state.workDate = dateKey;
         workDateEl.value = dateKey;
         getOrCreateEodDraft(dateKey);
@@ -5906,16 +5905,41 @@ const appEl = document.getElementById("app");
           setStatus(eodStatusEl, "End-of-Day request sent. Syncing next day in background.", "info");
         } else if (submitWarnings.length) {
           setStatus(eodStatusEl, `End-of-Day submitted with warnings. ${submitWarnings.join(" ")}`, "info");
+        } else if (attendanceExceptionSummary && attendanceExceptionSummary.missingCheckout) {
+          const usedCount = Number(attendanceExceptionSummary.usedCount || 0);
+          const limitCount = Number(attendanceExceptionSummary.limit || 2);
+          const remainingCount = Number(attendanceExceptionSummary.remainingCount || 0);
+          const overrideUsed = Boolean(attendanceExceptionSummary.overrideUsed);
+          setStatus(
+            eodStatusEl,
+            overrideUsed
+              ? "End-of-Day submitted using admin-approved missing checkout override."
+              : `End-of-Day submitted without checkout. Missing-checkout exception used ${usedCount}/${limitCount} for this month. Remaining: ${remainingCount}.`,
+            "info"
+          );
         } else {
-          setStatus(eodStatusEl, "End-of-Day submitted successfully.", "success");
+          setStatus(
+            eodStatusEl,
+            newlySubmittedApprovalCount
+              ? `End-of-Day submitted successfully. ${newlySubmittedApprovalCount} task(s) sent for approval.`
+              : "End-of-Day submitted successfully.",
+            "success"
+          );
         }
+        scheduleAttendanceRefreshAfterEod_(dateKey, {
+          initialDelayMs: 4000,
+          intervalMs: 15000,
+          maxAttempts: 8
+        });
 
         Promise.allSettled([
           syncCarryoverFromSheets(nextDate, true),
           syncRecurringFromSheets(nextDate, true),
           syncAssignmentsFromAdmin(nextDate, true),
           syncPlannerFromSheets(nextDate, true),
-          pushCliqWebhook("EOD", payload)
+          pushCliqWebhook("EOD", payload),
+          createdApprovalRequests.length ? syncUserApprovals_(true) : Promise.resolve(),
+          newlyCreatedApprovalRequests.length ? sendApprovalRequestCliqNotifications_(newlyCreatedApprovalRequests) : Promise.resolve({ ok: true })
         ]).then((settled) => {
           const webhookRes = settled[4];
           if (webhookRes && webhookRes.status === "fulfilled") {
@@ -5925,6 +5949,15 @@ const appEl = document.getElementById("app");
             }
           } else if (webhookRes && webhookRes.status === "rejected") {
             console.warn("EOD webhook failed.");
+          }
+          const approvalWebhookRes = settled[6];
+          if (approvalWebhookRes && approvalWebhookRes.status === "fulfilled") {
+            const approvalWebhook = approvalWebhookRes.value;
+            if (approvalWebhook && approvalWebhook.ok === false) {
+              console.warn("Approval request webhook failed:", String(approvalWebhook.message || "Unknown error"));
+            }
+          } else if (approvalWebhookRes && approvalWebhookRes.status === "rejected") {
+            console.warn("Approval request webhook failed.");
           }
           renderAll();
         });
@@ -5987,23 +6020,27 @@ const appEl = document.getElementById("app");
         code: String(params.code || "").trim()
       };
       try {
-        const result = await callApiJsonp("validateAccess", {
-          dept: localResolved.dept,
-          name: localResolved.name,
-          code: localResolved.code,
-          clientVersion: CLIENT_VERSION
-        }, 10000);
-        if (!result || result.ok === false) {
-          showBlocked("Invalid access link. Please use the latest link.");
-          return false;
+        const candidates = accessCodeCandidates_(localResolved.code);
+        for (let i = 0; i < candidates.length; i += 1) {
+          const candidateCode = candidates[i];
+          const result = await callApiJsonp("validateAccess", {
+            dept: localResolved.dept,
+            name: localResolved.name,
+            code: candidateCode,
+            clientVersion: CLIENT_VERSION
+          }, 10000);
+          if (result && result.ok !== false) {
+            identity = {
+              dept: String(result.dept || localResolved.dept || "").trim(),
+              name: String(result.name || localResolved.name || "").trim(),
+              code: candidateCode
+            };
+            setStatus(sodStatusEl, "", "");
+            return true;
+          }
         }
-        identity = {
-          dept: String(result.dept || localResolved.dept || "").trim(),
-          name: String(result.name || localResolved.name || "").trim(),
-          code: localResolved.code
-        };
-        setStatus(sodStatusEl, "", "");
-        return true;
+        showBlocked("Invalid access link. Please use the latest link.");
+        return false;
       } catch (err) {
         if ((isCorsLikeNetworkError(err) || isTimeoutLikeError(err)) && localVerified) {
           identity = {
@@ -6044,8 +6081,10 @@ const appEl = document.getElementById("app");
       workDateEl.addEventListener("change", async () => {
         state.workDate = workDateEl.value;
         renderDateNavigator_();
+        await loadRemoteStartDraft_(workDateEl.value);
         getOrCreateStartDraft(workDateEl.value);
         getOrCreateEodDraft(workDateEl.value);
+        await ensurePreviousDraftAvailableForCarryover_(workDateEl.value);
         hydrateCarryoverFromUnsubmittedSod(workDateEl.value);
         renderAll();
         Promise.allSettled([
@@ -6099,34 +6138,30 @@ const appEl = document.getElementById("app");
       if (clearPlannerDraftBtn) {
         clearPlannerDraftBtn.addEventListener("click", clearPlannerDraftTasks_);
       }
-      if (plannerToggleBtn) {
-        plannerToggleBtn.addEventListener("click", () => {
-          state.plannerCollapsed = false;
-          saveState();
-          renderPlannerTasks();
+      taskTabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          setTaskTab_(String(btn.dataset.taskTab || "submissions").trim() || "submissions");
         });
+      });
+      if (plannerToggleBtn) {
+        plannerToggleBtn.hidden = true;
       }
       if (plannerCloseBtn) {
         plannerCloseBtn.addEventListener("click", () => {
           state.plannerCollapsed = true;
           saveState();
-          renderPlannerTasks();
+          setTaskTab_("submissions");
         });
       }
       if (plannerFocusOverlayEl) {
-        plannerFocusOverlayEl.addEventListener("click", () => {
-          if (state.plannerCollapsed) return;
-          state.plannerCollapsed = true;
-          saveState();
-          renderPlannerTasks();
-        });
+        plannerFocusOverlayEl.hidden = true;
       }
       document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
-        if (!state || state.plannerCollapsed) return;
+        if (!state || state.taskTab !== "planner") return;
         state.plannerCollapsed = true;
-          saveState();
-          renderPlannerTasks();
+        saveState();
+        setTaskTab_("submissions");
       });
       if (newTaskPriorityGroupEl && newTaskPriorityEl) {
         newTaskPriorityGroupEl.addEventListener("click", (event) => {
@@ -6171,6 +6206,14 @@ const appEl = document.getElementById("app");
           if (!chip || chip.disabled) return;
           const minutes = Number(chip.dataset.minutes || 0);
           applyQuickMinutesToPlanned_(minutes);
+        });
+      }
+      if (taskEditQuickChipsEl) {
+        taskEditQuickChipsEl.addEventListener("click", (event) => {
+          const chip = event.target.closest(".quick-time-chip");
+          if (!chip || chip.disabled) return;
+          const minutes = Number(chip.dataset.minutes || 0);
+          applyQuickMinutesToTaskEditPlanned_(minutes);
         });
       }
       newTaskPlannedTimeEl.addEventListener("blur", () => {
@@ -6260,6 +6303,7 @@ const appEl = document.getElementById("app");
         const newExtra = {
           taskId: createTaskId(),
           title: "",
+          project: "",
           completionPercent: "",
           spentHours: "",
           spentMinutes: "",
@@ -6285,8 +6329,8 @@ const appEl = document.getElementById("app");
       renderStreak_();
       await refreshStreakLeaderboard_({ timeoutMs: 6000 });
       renderStreakLeaderboard_();
-      if (plannerToggleBtn) plannerToggleBtn.hidden = false;
-      if (plannerFocusOverlayEl) plannerFocusOverlayEl.hidden = false;
+      if (plannerToggleBtn) plannerToggleBtn.hidden = true;
+      if (plannerFocusOverlayEl) plannerFocusOverlayEl.hidden = true;
       if (plannerSidebarEl) plannerSidebarEl.hidden = false;
       state = loadState();
       state.workDate = resolveInitialWorkDate_(state.workDate);
@@ -6294,13 +6338,21 @@ const appEl = document.getElementById("app");
 
       await enforceStartupWorkDateRule_();
 
+      await loadRemoteStartDraft_(workDateEl.value);
       getOrCreateStartDraft(workDateEl.value);
       getOrCreateEodDraft(workDateEl.value);
+      await ensurePreviousDraftAvailableForCarryover_(workDateEl.value);
       hydrateCarryoverFromUnsubmittedSod(workDateEl.value);
       wireEvents();
+      startEodElapsedInterval_();
       appEl.hidden = false;
       renderAll();
       saveState();
+      if (state.taskTab === "approvals") {
+        syncUserApprovals_(true).then(() => {
+          renderApprovalsPanel_();
+        }).catch(() => {});
+      }
 
       Promise.allSettled([
         syncSubmittedDetailsFromSheets(workDateEl.value, true, { fast: true }),

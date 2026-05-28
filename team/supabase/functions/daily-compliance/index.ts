@@ -1,9 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-const MESSAGE_FORMAT_VERSION = "compact-v2";
-
 type UserRow = {
   department: string | null;
   employee_name: string | null;
+  created_at: string | null;
 };
 
 type SubmissionRow = {
@@ -12,10 +11,18 @@ type SubmissionRow = {
   stage: string | null;
 };
 
+type MonthlySubRow = {
+  department: string | null;
+  employee_name: string | null;
+  stage: string | null;
+  work_date: string | null;
+};
+
 type LeaveRow = {
   department: string | null;
   employee_name: string | null;
   leave_status: string | null;
+  leave_date: string | null;
 };
 
 function istDateISO(date = new Date()): string {
@@ -33,42 +40,67 @@ function key(v: string | null | undefined): string {
   return String(v || "").trim().toLowerCase();
 }
 
+const RED_FLAG_THRESHOLD = 0.60;
+
 function buildMessage(
   department: string,
   workDate: string,
-  rows: Array<{ name: string; sod: boolean; eod: boolean; leave: boolean }>,
+  rows: Array<{ name: string; sod: boolean; eod: boolean; leave: boolean; eodCount: number; personalDays: number }>,
 ): string {
   const total = rows.length;
-  const leaveCount = rows.filter((r) => r.leave).length;
-  const activeRows = rows.filter((r) => !r.leave);
-  const sodSubmitted = activeRows.filter((r) => r.sod).length;
-  const eodSubmitted = activeRows.filter((r) => r.eod).length;
-  const sodMissing = Math.max(0, activeRows.length - sodSubmitted);
-  const eodMissing = Math.max(0, activeRows.length - eodSubmitted);
-  const statusLines = rows.length
-    ? rows.map((r) => (r.leave
-      ? `🟡🟡 ${r.name} (Leave)`
-      : `${r.sod ? "✅" : "❌"}${r.eod ? "✅" : "❌"} ${r.name}`))
-    : ["-"];
+
+  // Sort non-leave rows by % descending, leave rows at bottom
+  const sorted = [
+    ...rows
+      .filter((r) => !r.leave)
+      .sort((a, b) => {
+        const pctA = a.personalDays > 0 ? a.eodCount / a.personalDays : 0;
+        const pctB = b.personalDays > 0 ? b.eodCount / b.personalDays : 0;
+        return pctB - pctA;
+      }),
+    ...rows.filter((r) => r.leave),
+  ];
+
+  const statusLines = sorted.map((r) => {
+    if (r.leave) return `🟡🟡 ${r.name} (On Leave)`;
+    const pct = r.personalDays > 0 ? Math.round((r.eodCount / r.personalDays) * 100) : 0;
+    return `${r.sod ? "✅" : "❌"}${r.eod ? "✅" : "❌"} ${r.name} (${r.eodCount}/${r.personalDays}) = ${pct}%`;
+  });
+
+  const redFlags = rows
+    .filter((r) => !r.leave && r.personalDays > 0 && r.eodCount / r.personalDays < RED_FLAG_THRESHOLD)
+    .sort((a, b) => {
+      const pctA = a.eodCount / a.personalDays;
+      const pctB = b.eodCount / b.personalDays;
+      return pctA - pctB;
+    });
+
   const dmy = (() => {
     const m = workDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!m) return workDate;
     return `${m[3]}-${m[2]}-${m[1]}`;
   })();
-  return [
+
+  const lines = [
     `*Daily Compliance - ${department}*`,
     `Date: ${dmy}`,
     `Total Members: ${total}`,
     "",
-    "*Legend:* SOD | EOD (🟡 = Leave)",
-    `Format: ${MESSAGE_FORMAT_VERSION}`,
-    statusLines.join("\n"),
-    "",
-    "*Summary*",
-    `Leave: ${leaveCount}`,
-    `SOD Submitted: ${sodSubmitted} | Missing: ${sodMissing}`,
-    `EOD Submitted: ${eodSubmitted} | Missing: ${eodMissing}`,
-  ].join("\n");
+    ...statusLines,
+  ];
+
+  if (redFlags.length > 0) {
+    lines.push(
+      "",
+      `*Warnings Triggered*`,
+      ...redFlags.map((r) => {
+        const missed = r.personalDays - r.eodCount;
+        return `${r.name} - Missed ${missed} submission${missed !== 1 ? "s" : ""}`;
+      }),
+    );
+  }
+
+  return lines.join("\n");
 }
 
 function formBody(payload: Record<string, string | number>): string {
@@ -130,37 +162,66 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { data: usersData, error: usersErr } = await supabase
-      .from("users_directory")
-      .select("department, employee_name")
-      .eq("active", true);
-    if (usersErr) throw new Error(`users_directory fetch failed: ${usersErr.message}`);
+    const monthStart = workDate.substring(0, 8) + "01"; // YYYY-MM-01
 
-    const { data: subsData, error: subsErr } = await supabase
-      .from("task_submissions")
-      .select("department, employee_name, stage")
-      .eq("work_date", workDate)
-      .in("stage", ["SOD", "EOD"]);
-    if (subsErr) throw new Error(`task_submissions fetch failed: ${subsErr.message}`);
+    const [usersRes, subsRes, monthlySubsRes, leaveRes] = await Promise.all([
+      supabase.from("users_directory").select("department, employee_name, created_at").eq("active", true),
+      supabase.from("task_submissions").select("department, employee_name, stage")
+        .eq("work_date", workDate).in("stage", ["SOD", "EOD"]),
+      supabase.from("task_submissions").select("department, employee_name, stage, work_date")
+        .in("stage", ["SOD", "EOD"]).gte("work_date", monthStart).lte("work_date", workDate),
+      supabase.from("leave_days").select("department, employee_name, leave_status, leave_date")
+        .gte("leave_date", monthStart).lte("leave_date", workDate).eq("leave_status", "Leave"),
+    ]);
 
-    const { data: leaveData, error: leaveErr } = await supabase
-      .from("leave_days")
-      .select("department, employee_name, leave_status")
-      .eq("leave_date", workDate)
-      .eq("leave_status", "Leave");
+    if (usersRes.error) throw new Error(`users_directory fetch failed: ${usersRes.error.message}`);
+    if (subsRes.error) throw new Error(`task_submissions fetch failed: ${subsRes.error.message}`);
+    if (monthlySubsRes.error) throw new Error(`monthly submissions fetch failed: ${monthlySubsRes.error.message}`);
+
     const ignoreMissingLeaveTable = Boolean(
-      leaveErr && (
-        String((leaveErr as { code?: string }).code || "") === "42P01"
-        || String((leaveErr as { message?: string }).message || "").toLowerCase().includes("relation")
-      )
+      leaveRes.error && (
+        String((leaveRes.error as { code?: string }).code || "") === "42P01"
+        || String((leaveRes.error as { message?: string }).message || "").toLowerCase().includes("relation")
+      ),
     );
-    if (leaveErr && !ignoreMissingLeaveTable) {
-      throw new Error(`leave_days fetch failed: ${leaveErr.message}`);
+    if (leaveRes.error && !ignoreMissingLeaveTable) {
+      throw new Error(`leave_days fetch failed: ${leaveRes.error.message}`);
     }
 
-    const users = (usersData || []) as UserRow[];
-    const submissions = (subsData || []) as SubmissionRow[];
-    const leaves = ignoreMissingLeaveTable ? [] as LeaveRow[] : (leaveData || []) as LeaveRow[];
+    const users = (usersRes.data || []) as UserRow[];
+    const submissions = (subsRes.data || []) as SubmissionRow[];
+    const monthlySubs = (monthlySubsRes.data || []) as MonthlySubRow[];
+    const leaves = ignoreMissingLeaveTable ? [] as LeaveRow[] : (leaveRes.data || []) as LeaveRow[];
+
+    // Working days this month = distinct dates where ≥3 different employees submitted
+    const submittersByDate = new Map<string, Set<string>>();
+    monthlySubs.forEach((s) => {
+      if (!s.work_date) return;
+      if (!submittersByDate.has(s.work_date)) submittersByDate.set(s.work_date, new Set());
+      submittersByDate.get(s.work_date)!.add(key(s.employee_name));
+    });
+    // Sorted list of org working days this month
+    const orgWorkingDays = Array.from(submittersByDate.entries())
+      .filter(([, v]) => v.size >= 3)
+      .map(([date]) => date)
+      .sort();
+
+    // Build month-to-date EOD count per employee (distinct work_dates)
+    const eodCountMap = new Map<string, Set<string>>();
+    monthlySubs.forEach((s) => {
+      if (key(s.stage) !== "eod" || !s.work_date) return;
+      const composite = `${key(s.department)}|${key(s.employee_name)}`;
+      if (!eodCountMap.has(composite)) eodCountMap.set(composite, new Set());
+      eodCountMap.get(composite)!.add(s.work_date);
+    });
+
+    // Build employee created_at map (date only, YYYY-MM-DD)
+    const userCreatedMap = new Map<string, string>();
+    users.forEach((u) => {
+      const composite = `${key(u.department)}|${key(u.employee_name)}`;
+      const createdDate = u.created_at ? String(u.created_at).substring(0, 10) : null;
+      if (createdDate) userCreatedMap.set(composite, createdDate);
+    });
 
     const deptUsers = new Map<string, string[]>();
     users.forEach((u) => {
@@ -174,7 +235,8 @@ Deno.serve(async (req) => {
 
     const sodSet = new Set<string>();
     const eodSet = new Set<string>();
-    const leaveSet = new Set<string>();
+    const leaveSet = new Set<string>(); // today's leave
+    const leaveMonthMap = new Map<string, Set<string>>(); // composite -> Set of leave dates this month
     submissions.forEach((s) => {
       const dep = key(s.department);
       const name = key(s.employee_name);
@@ -188,9 +250,13 @@ Deno.serve(async (req) => {
       const dep = key(l.department);
       const name = key(l.employee_name);
       if (!dep || !name) return;
-      const status = key(l.leave_status);
-      if (status === "leave") {
-        leaveSet.add(`${dep}|${name}`);
+      const composite = `${dep}|${name}`;
+      if (key(l.leave_status) === "leave") {
+        if (l.leave_date === workDate) leaveSet.add(composite);
+        if (l.leave_date) {
+          if (!leaveMonthMap.has(composite)) leaveMonthMap.set(composite, new Set());
+          leaveMonthMap.get(composite)!.add(l.leave_date);
+        }
       }
     });
 
@@ -206,19 +272,32 @@ Deno.serve(async (req) => {
       const rows = people.map((name) => {
         const composite = `${key(department)}|${key(name)}`;
         const onLeave = leaveSet.has(composite);
+        const eodCount = eodCountMap.get(composite)?.size ?? 0;
+
+        // Personal start: if account created this month, count working days from that date
+        const createdDate = userCreatedMap.get(composite);
+        const personalStart = createdDate && createdDate > monthStart ? createdDate : monthStart;
+        const employeeLeaveDates = leaveMonthMap.get(composite) || new Set<string>();
+        const personalDays = orgWorkingDays.filter((d) => d >= personalStart && !employeeLeaveDates.has(d)).length;
+
         return {
           name,
           sod: onLeave ? false : sodSet.has(composite),
           eod: onLeave ? false : eodSet.has(composite),
           leave: onLeave,
+          eodCount,
+          personalDays,
         };
       });
+
       const deptRows = rows.map((r) => ({
         department,
         employeeName: r.name,
         sodSubmittedDays: r.sod ? 1 : 0,
         eodSubmittedDays: r.eod ? 1 : 0,
         leave: r.leave,
+        eodCount: r.eodCount,
+        personalDays: r.personalDays,
       }));
 
       const message = buildMessage(department, workDate, rows);
@@ -229,6 +308,7 @@ Deno.serve(async (req) => {
         rows: deptRows,
       });
       const body = formBody({
+        category: "compliance",
         stage: "DAILY_COMPLIANCE",
         employeeName: senderName,
         submitterEmail,
@@ -247,9 +327,7 @@ Deno.serve(async (req) => {
           headers: { "content-type": "application/x-www-form-urlencoded;charset=UTF-8" },
           body,
         });
-        if (!webhookRes.ok) {
-          throw new Error(`HTTP ${webhookRes.status}`);
-        }
+        if (!webhookRes.ok) throw new Error(`HTTP ${webhookRes.status}`);
         sent += 1;
       } catch (err) {
         const messageErr = String(err instanceof Error ? err.message : err);
@@ -262,6 +340,7 @@ Deno.serve(async (req) => {
             workDate,
             error: messageErr,
             flowPayload: {
+              category: "compliance",
               stage: "DAILY_COMPLIANCE",
               employeeName: senderName,
               submitterEmail,
@@ -279,21 +358,12 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({
-        ok: true,
-        workDate,
-        sent,
-        failedCount: failed.length,
-        failed,
-      }),
+      JSON.stringify({ ok: true, workDate, sent, failedCount: failed.length, failed }),
       { status: 200, headers: { "content-type": "application/json" } },
     );
   } catch (err) {
     return new Response(
-      JSON.stringify({
-        ok: false,
-        message: String(err instanceof Error ? err.message : err),
-      }),
+      JSON.stringify({ ok: false, message: String(err instanceof Error ? err.message : err) }),
       { status: 500, headers: { "content-type": "application/json" } },
     );
   }

@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Read — Paramarsh 3 | FINNOVATE</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold" rel="stylesheet">
+<style>
+  :root {
+    --green:        #009356;
+    --green-dark:   #007544;
+    --green-hero:   #0a2818;
+    --black:        #0d1117;
+    --dark:         #1a1a1a;
+    --grey-700:     #4b5563;
+    --grey-500:     #6b7280;
+    --grey-400:     #9ca3af;
+    --grey-200:     #e5e7eb;
+    --grey-100:     #f9fafb;
+    --white:        #ffffff;
+    --border:       #e5e7eb;
+    --shadow-sm:    0 1px 2px rgba(0,0,0,.05);
+    --shadow:       0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+    --font-display: "Denton Bold", Georgia, serif;
+    --font-body:    'Manrope', sans-serif;
+    --max-w:        780px;
+    --pad-x:        32px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--black);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  .pr-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--green-hero);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 14px var(--pad-x);
+  }
+  .pr-nav-inner {
+    max-width: var(--max-w); margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .pr-nav-left {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .pr-nav-logo {
+    height: 30px; width: auto; display: block;
+  }
+  .pr-nav-links {
+    display: flex; gap: 28px;
+  }
+  .pr-nav-links a {
+    font-size: 12px; font-weight: 600; letter-spacing: .4px;
+    color: rgba(255,255,255,.6); text-decoration: none;
+    transition: color .15s;
+  }
+  .pr-nav-links a:hover { color: var(--white); }
+  .pr-nav-links a.active {
+    color: var(--white);
+    border-bottom: 1.5px solid var(--green);
+    padding-bottom: 2px;
+  }
+  .pr-nav-back {
+    font-size: 12px; font-weight: 600; letter-spacing: .4px;
+    color: rgba(255,255,255,.35); text-decoration: none;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .pr-nav-back:hover { color: rgba(255,255,255,.65); }
+
+  /* ── HERO ── */
+  .pr-hero {
+    background: var(--green-hero);
+    padding: 72px var(--pad-x) 64px;
+    position: relative; overflow: hidden;
+  }
+  .pr-hero::before {
+    content: '3';
+    position: absolute; right: -20px; top: -40px;
+    font-family: var(--font-display);
+    font-size: 280px; color: rgba(255,255,255,.04);
+    line-height: 1; pointer-events: none; user-select: none;
+  }
+  .pr-hero-inner {
+    max-width: var(--max-w); margin: 0 auto; position: relative;
+  }
+  .pr-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--green);
+    margin-bottom: 20px;
+  }
+  .pr-hero-eyebrow span {
+    width: 24px; height: 1.5px; background: var(--green); display: inline-block;
+  }
+  .pr-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    color: var(--white); line-height: 1.05;
+    margin-bottom: 18px;
+  }
+  .pr-hero-sub {
+    font-size: 15px; color: rgba(255,255,255,.55);
+    line-height: 1.6; max-width: 480px; margin-bottom: 32px;
+  }
+  .pr-hero-meta {
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .pr-hero-chip {
+    font-size: 11px; font-weight: 600; letter-spacing: .5px;
+    color: rgba(255,255,255,.45);
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 5px 12px; border-radius: 100px;
+  }
+  .pr-hero-chip strong { color: rgba(255,255,255,.8); font-weight: 700; }
+
+  /* ── SHARED SECTION STYLES ── */
+  .pr-section {
+    padding: 72px var(--pad-x);
+    border-bottom: 1px solid var(--border);
+  }
+  .pr-section:last-of-type { border-bottom: none; }
+  .pr-section-inner { max-width: var(--max-w); margin: 0 auto; }
+
+  .pr-section-eyebrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 18px;
+    color: var(--green);
+  }
+  .pr-section-num {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.6vw, 34px);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: .4px;
+    margin-bottom: 8px;
+  }
+  .pr-section-label {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4.2vw, 40px);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: .2px;
+    text-transform: uppercase;
+  }
+  .pr-section-title {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 30px);
+    color: var(--black); line-height: 1.12; margin-bottom: 14px;
+    text-align: center;
+  }
+  .pr-section-sub {
+    font-size: 15px; color: var(--grey-700);
+    line-height: 1.7; max-width: 620px; margin: 0 auto 42px;
+  }
+
+  /* Alternating background for sections */
+  .pr-section.alt { background: var(--grey-100); }
+
+  /* ── MILESTONE STATS ── */
+  .milestone-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .milestone-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 14px;
+    text-align: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .alt .milestone-card { background: var(--white); }
+  .milestone-num {
+    font-family: var(--font-display);
+    font-size: 32px; color: var(--green);
+    line-height: 1; margin-bottom: 8px;
+    white-space: nowrap;
+  }
+  .milestone-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .3px; color: var(--grey-700);
+    line-height: 1.4; text-align: center;
+  }
+
+  /* ── TIMELINE ── */
+  .milestone-timeline {
+    margin-top: 36px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .tl-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+  }
+  .tl-item:first-child { border-top: none; }
+  .tl-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--green); flex-shrink: 0; margin-top: 5px;
+  }
+  .tl-date {
+    font-size: 11px; font-weight: 700; color: var(--green);
+    letter-spacing: .5px; min-width: 80px; padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .tl-text {
+    font-size: 13px; color: var(--grey-700); line-height: 1.55; flex: 1;
+  }
+  .tl-text strong { color: var(--black); font-weight: 600; }
+
+  /* ── VIDEO ── */
+  .video-placeholder {
+    position: relative;
+    background: var(--green-hero);
+    border-radius: 12px; overflow: hidden;
+    margin-bottom: 36px;
+  }
+  .video-wrapper {
+    position: relative; padding-bottom: 56.25%; height: 0;
+  }
+  /* Replace the placeholder iframe src with your YouTube/Vimeo embed URL */
+  .video-wrapper iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: none; border-radius: 12px;
+  }
+
+  /* ── APP COMPARISON ── */
+  .app-compare {
+    display: flex; gap: 20px; align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .app-compare-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .phone-frame {
+    width: 100%; aspect-ratio: 9 / 19;
+    border-radius: 20px; overflow: hidden; height: auto;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; border: 2px solid transparent;
+  }
+  .phone-frame.old {
+    background: #e8e8e8; border-color: #d0d0d0;
+  }
+  .phone-frame.new {
+    background: var(--grey-100); border-color: var(--border);
+    aspect-ratio: unset; height: auto;
+  }
+  .phone-frame img { width: 100%; height: auto; display: block; border-radius: 18px; object-fit: contain; }
+  .phone-frame-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; padding: 20px; text-align: center;
+  }
+  .phone-frame-placeholder svg { opacity: .3; }
+  .phone-frame-placeholder p { font-size: 11px; color: var(--grey-400); line-height: 1.4; }
+  .app-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 3px 12px; border-radius: 100px;
+  }
+  .app-label.old { background: #e8e8e8; color: #888; }
+  .app-label.new { background: rgba(0,147,86,.1); color: var(--green); }
+  .app-compare-arrow {
+    display: flex; align-items: center; padding-top: 80px;
+    color: var(--grey-400);
+  }
+
+  /* ── BEFORE / AFTER CARD ── */
+  .before-after-card {
+    border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .before-after-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .before-after-header .info-card-eyebrow { margin-bottom: 4px; }
+  .before-after-header .info-card-title { margin-bottom: 0; }
+  .before-after-cols {
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .ba-col {
+    padding: 20px 24px;
+  }
+  .ba-col.before {
+    background: var(--grey-100); border-right: 1px solid var(--border);
+  }
+  .ba-col.after { background: var(--white); }
+  .ba-col-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .ba-col.before .ba-col-label { color: #999; }
+  .ba-col.after  .ba-col-label { color: var(--green); }
+  .ba-item {
+    font-size: 12.5px; line-height: 1.6;
+    padding-left: 14px; position: relative; margin-bottom: 6px;
+    color: var(--grey-700);
+  }
+  .ba-item::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 5px; height: 5px; border-radius: 50%;
+  }
+  .ba-col.before .ba-item::before { background: #bbb; }
+  .ba-col.after  .ba-item::before { background: var(--green); }
+  .ba-col.after  .ba-item { color: var(--black); font-weight: 500; }
+
+  /* ── FEATURE LIST ── */
+  .feature-list {
+    list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
+  }
+  .feature-list li {
+    font-size: 13px; color: var(--grey-700);
+    padding-left: 18px; position: relative; line-height: 1.6;
+  }
+  .feature-list li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  }
+  .feature-list li strong { color: var(--black); font-weight: 600; }
+
+  /* ── PRODUCT CARDS ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .product-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 20px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .product-icon {
+    width: 40px; height: 40px;
+    background: var(--grey-100);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    color: var(--green);
+  }
+  .product-card-title {
+    font-family: var(--font-display);
+    font-size: 16px; color: var(--black);
+    margin-bottom: 8px; line-height: 1.2;
+  }
+  .product-card-text {
+    font-size: 12.5px; color: var(--grey-700); line-height: 1.6;
+  }
+  .product-status {
+    display: inline-block; margin-top: 12px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 100px;
+  }
+  .status-live    { background: rgba(0,147,86,.1); color: var(--green); }
+  .status-beta    { background: rgba(251,191,36,.12); color: #b45309; }
+  .status-planned { background: rgba(0,0,0,.06); color: var(--grey-700); }
+
+  /* ── TIMELINE CATEGORY TAGS ── */
+  .tl-tag {
+    display: inline-block;
+    font-size: 9px; font-weight: 700; letter-spacing: .5px;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 3px;
+    margin-right: 5px; vertical-align: middle; flex-shrink: 0;
+  }
+  .tl-tag.podcast  { background: rgba(99,102,241,.1);  color: #4f46e5; }
+  .tl-tag.campaign { background: rgba(0,147,86,.08);    color: var(--green); }
+  .tl-tag.event    { background: rgba(234,88,12,.08);   color: #c2410c; }
+  .tl-tag.series   { background: rgba(168,85,247,.08);  color: #7c3aed; }
+  .tl-tag.brand    { background: rgba(0,0,0,.06);       color: var(--grey-500); }
+  .tl-tag.internal { background: rgba(0,0,0,.05);       color: var(--grey-400); }
+  .tl-tag.upcoming { background: rgba(251,191,36,.12);  color: #b45309; }
+
+  /* ── EVENTS / MARKETING CARDS ── */
+  .two-col-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .info-card {
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px 24px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .info-card-eyebrow {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--green); margin-bottom: 8px;
+  }
+  .info-card-title {
+    font-family: var(--font-display);
+    font-size: 18px; color: var(--black); margin-bottom: 12px;
+  }
+  .info-card-text {
+    font-size: 13px; color: var(--grey-700); line-height: 1.65;
+  }
+  .info-card-list {
+    list-style: none; margin-top: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .info-card-list li {
+    font-size: 12.5px; color: var(--grey-700);
+    display: block;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.65;
+  }
+  .info-card-list li::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    position: absolute; left: 0; top: 7px;
+  }
+
+  /* ── PMS LICENCE ── */
+  .pms-card {
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 36px;
+    background: var(--white);
+    display: flex; gap: 32px; align-items: flex-start;
+    box-shadow: var(--shadow);
+  }
+  .pms-icon {
+    width: 56px; height: 56px; border-radius: 10px;
+    background: var(--grey-100);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; color: var(--green);
+  }
+  .pms-body { flex: 1; }
+  .pms-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 12px;
+    padding: 4px 12px; border-radius: 100px;
+  }
+  .pms-status.in-progress {
+    background: rgba(251,191,36,.12); color: #b45309;
+  }
+  .pms-status.achieved {
+    background: rgba(0,147,86,.1); color: var(--green);
+  }
+  .pms-title {
+    font-family: var(--font-display);
+    font-size: 22px; color: var(--black); margin-bottom: 10px;
+  }
+  .pms-text {
+    font-size: 13.5px; color: var(--grey-700); line-height: 1.65;
+  }
+
+  /* ── FUNDRAISE ── */
+  .raise-row {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;
+  }
+  .raise-label { font-size: 12px; font-weight: 600; color: var(--grey-700); }
+  .raise-amount {
+    font-family: var(--font-display);
+    font-size: 32px; color: var(--green); line-height: 1;
+  }
+  .raise-target { font-size: 14px; color: var(--grey-400); }
+  .raise-bar-track {
+    width: 100%; height: 10px; background: rgba(0,0,0,.08);
+    border-radius: 100px; overflow: hidden; margin-bottom: 10px;
+  }
+  .raise-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--green-dark), var(--green));
+    border-radius: 100px;
+    /* Set width inline, e.g. style="width: 62%" */
+    width: 0%;
+    transition: width 1s ease;
+  }
+  .raise-bar-pct {
+    font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: .5px;
+  }
+  .raise-grid {
+    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .raise-stat {
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; text-align: center;
+    box-shadow: var(--shadow-sm);
+    background: var(--white);
+  }
+  .raise-stat-num {
+    font-family: var(--font-display);
+    font-size: 24px; color: var(--black); margin-bottom: 6px;
+  }
+  .raise-stat-label {
+    font-size: 11px; font-weight: 600; color: var(--grey-400);
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+
+  /* ── FOOTER ── */
+  .pr-footer {
+    background: var(--dark);
+    padding: 40px var(--pad-x) 32px;
+  }
+  .pr-footer-inner {
+    max-width: var(--max-w); margin: 0 auto;
+  }
+  .pr-footer-contact {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 24px;
+  }
+  .pr-footer-lbl {
+    font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 5px;
+  }
+  .pr-footer-name {
+    font-family: var(--font-display);
+    font-size: 18px; color: var(--white); line-height: 1.2;
+  }
+  .pr-footer-phone {
+    font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px;
+  }
+  .pr-footer-btns { display: flex; gap: 10px; }
+  .btn-call, .btn-wa {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 18px; border-radius: 100px;
+    font-size: 12px; font-weight: 700;
+    text-decoration: none; letter-spacing: .3px;
+  }
+  .btn-call {
+    background: rgba(255,255,255,.1); color: var(--white);
+    border: 1px solid rgba(255,255,255,.2);
+  }
+  .btn-wa { background: #25D366; color: var(--white); border: none; }
+  .pr-footer-conf {
+    font-size: 11px; color: rgba(255,255,255,.3); line-height: 1.5;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .pr-nav-links { display: none; }
+    .product-grid { grid-template-columns: 1fr; }
+    .two-col-grid  { grid-template-columns: 1fr; }
+    .raise-grid    { grid-template-columns: 1fr 1fr; }
+    .pms-card      { flex-direction: column; }
+    .milestone-grid { grid-template-columns: repeat(2, 1fr); }
+    .app-compare   { flex-direction: column; align-items: stretch; }
+    .app-compare-arrow { padding-top: 0; justify-content: center; transform: rotate(90deg); }
+    .before-after-cols { grid-template-columns: 1fr; }
+    .ba-col.before { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+  @media (max-width: 420px) {
+    .raise-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── LIGHTBOX ── */
+  .lb-overlay { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.88); align-items:center; justify-content:center; cursor:zoom-out; }
+  .lb-overlay.open { display:flex; }
+  .lb-img { max-width:92vw; max-height:92vh; border-radius:8px; box-shadow:0 24px 80px rgba(0,0,0,.6); object-fit:contain; cursor:default; }
+  .lb-close { position:fixed; top:18px; right:24px; font-size:38px; color:#fff; cursor:pointer; line-height:1; opacity:.65; user-select:none; }
+  .lb-close:hover { opacity:1; }
+  img:not(.pr-nav-logo) { cursor:zoom-in; }
+</style>
+</head>
+<body>
+
+<!-- ── STICKY NAV ── -->
+<nav class="pr-nav">
+  <div class="pr-nav-inner">
+    <img src="shareholderphoto/whiteforFinnovate.png" class="pr-nav-logo" alt="Finnovate">
+    <div class="pr-nav-links">
+      <a href="#milestones">Milestones</a>
+      <a href="#product">Product</a>
+      <a href="#business">Marketing</a>
+      <a href="#zoho">Zoho CRM</a>
+      <a href="#hr">People</a>
+      <a href="#pms">Way Forward</a>
+      <a href="#governance">Governance</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="pr-hero">
+  <div class="pr-hero-inner">
+    <div class="pr-hero-eyebrow"><span></span>Shareholder Pre-Read</div>
+    <h1 class="pr-hero-title">Before You<br>Arrive at Paramarsh 3</h1>
+    <p class="pr-hero-sub">A summary of where Finnovate stands today — our milestones, product progress, and what's ahead. Read this before 28 March 2026.</p>
+    <div class="pr-hero-meta">
+      <span class="pr-hero-chip"><strong>Paramarsh 3</strong></span>
+      <span class="pr-hero-chip"><strong>28 March 2026</strong> · Saturday</span>
+      <span class="pr-hero-chip">Hotel Sahara Star, Mumbai</span>
+      <span class="pr-hero-chip" style="color:rgba(255,255,255,.3);">Confidential · Shareholders Only</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SECTION 1 — KEY MILESTONES
+══════════════════════════════════ -->
+<section id="milestones" class="pr-section">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">01</span><span class="pr-section-label">Milestones</span></div>
+    <h2 class="pr-section-title">Where We Are Today</h2>
+    <p class="pr-section-sub">Key numbers comparing where we were in 2024 vs where we stand today.</p>
+
+    <!-- Stat cards -->
+    <div class="milestone-grid">
+
+      <div class="milestone-card">
+        <div class="milestone-num">2.3L</div>
+        <div class="milestone-label">Lead Touchpoints</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:5px;">
+          <span style="font-size:10px;color:var(--grey-400);">Was 50,000 in FY25</span>
+          <span style="font-size:11px;font-weight:700;color:#009356;background:rgba(0,147,86,.1);border-radius:20px;padding:2px 9px;">+360%</span>
+        </div>
+      </div>
+
+      <div class="milestone-card">
+        <div class="milestone-num">3,800</div>
+        <div class="milestone-label">Client Base</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:5px;">
+          <span style="font-size:10px;color:var(--grey-400);">Was 3,000 in FY25</span>
+          <span style="font-size:11px;font-weight:700;color:#009356;background:rgba(0,147,86,.1);border-radius:20px;padding:2px 9px;">+27%</span>
+        </div>
+      </div>
+
+      <div class="milestone-card">
+        <div class="milestone-num">₹1,200 Cr</div>
+        <div class="milestone-label">AUM</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:5px;">
+          <span style="font-size:10px;color:var(--grey-400);">Was ₹700 Cr in FY25</span>
+          <span style="font-size:11px;font-weight:700;color:#009356;background:rgba(0,147,86,.1);border-radius:20px;padding:2px 9px;">+71%</span>
+        </div>
+      </div>
+
+      <div class="milestone-card">
+        <div class="milestone-num">91</div>
+        <div class="milestone-label">Employees</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:5px;">
+          <span style="font-size:10px;color:var(--grey-400);">Was 63 in FY25</span>
+          <span style="font-size:11px;font-weight:700;color:#009356;background:rgba(0,147,86,.1);border-radius:20px;padding:2px 9px;">+44%</span>
+        </div>
+      </div>
+
+      <div class="milestone-card">
+        <div class="milestone-num">₹7 Cr</div>
+        <div class="milestone-label">SIP Book</div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:5px;">
+          <span style="font-size:10px;color:var(--grey-400);">Was ₹3.2 Cr in FY25</span>
+          <span style="font-size:11px;font-weight:700;color:#009356;background:rgba(0,147,86,.1);border-radius:20px;padding:2px 9px;">+119%</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Timeline of key milestones -->
+    <div class="milestone-timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2026</div>
+        <div class="tl-text"><strong>PMS Licence Applied</strong> — SEBI Portfolio Management Services registration applied. Dealing room being set up; Non-Discretionary PMS to launch upon approval.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">FY25</div>
+        <div class="tl-text"><strong>Zoho Rollout</strong> — Zoho became the internal operating layer for CRM, workflows, training, and reporting across teams.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2025</div>
+        <div class="tl-text"><strong>Medical Monarchs — 1M Views</strong> — Dr. Sushil Shah episode crossed 1 million views, cementing Finnovate's position in doctor-focused financial content.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2025</div>
+        <div class="tl-text"><strong>Finnovate App Live on Play Store and App Store</strong> — App opened to all users with full self-transaction capabilities — buy, sell, switch, payment &amp; mandate creation in-app.</div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 2 — PRODUCT & TECHNOLOGY
+══════════════════════════════════ -->
+<section id="product" class="pr-section alt">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">02</span><span class="pr-section-label">Product &amp; Technology</span></div>
+    <h2 class="pr-section-title">What We've Built</h2>
+    <p class="pr-section-sub">The platform is now open to all users, supports self-service transactions, and is moving toward a more complete app-led onboarding and investment journey over the next three months.</p>
+
+    <!-- App video -->
+    <div class="video-placeholder">
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/217zQOdBuCI" title="Finnovate Wealth App — Onboarding Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--grey-400);margin-top:-24px;margin-bottom:48px;text-align:center;">Finnovate App — Product Demo</p>
+
+    <!-- ── UPGRADE 1: UI/UX REDESIGN ── -->
+    <div style="margin-bottom:48px;">
+      <div class="info-card-eyebrow" style="margin-bottom:6px;">Upgrade 1</div>
+      <h3 style="font-family:var(--font-display);font-size:22px;color:var(--black);margin-bottom:6px;">Old App → New UI/UX</h3>
+      <p style="font-size:13px;color:var(--grey-700);margin-bottom:24px;">A complete redesign of the Finnovate app — launched this year. Cleaner navigation, modern interface, and a significantly better experience for clients.</p>
+
+      <div class="app-compare" style="align-items:stretch;">
+        <!-- OLD APP -->
+        <div class="app-compare-col">
+          <span class="app-label old">Old App</span>
+          <div class="phone-frame old" style="aspect-ratio:unset;height:auto;">
+            <img src="shareholderphoto/oldmobileui.jpg" alt="Old Finnovate App" style="width:100%;height:auto;display:block;border-radius:inherit;">
+          </div>
+        </div>
+
+        <!-- ARROW -->
+        <div class="app-compare-arrow">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+
+        <!-- NEW APP -->
+        <div class="app-compare-col" style="flex:1;">
+          <span class="app-label new">New App — 2025</span>
+          <div class="phone-frame new" style="flex:1;overflow:hidden;border-radius:20px;">
+            <img src="shareholderphoto/newmobileappui.png" alt="New Finnovate App" style="width:100%;height:100%;display:block;object-fit:cover;object-position:bottom;border-radius:inherit;">
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--grey-400);text-align:center;margin-top:8px;">Complete UI/UX redesign — launched 2025</p>
+    </div>
+
+    <!-- ── UPGRADE 2: APP AVAILABILITY ── -->
+    <div style="margin-bottom:48px;">
+      <div class="info-card-eyebrow" style="margin-bottom:6px;">Upgrade 2</div>
+      <h3 style="font-family:var(--font-display);font-size:22px;color:var(--black);margin-bottom:6px;">Customer-Only → Open to Everyone</h3>
+      <p style="font-size:13px;color:var(--grey-700);margin-bottom:20px;">The app was previously restricted to existing Finnovate clients. It is now open for anyone to download — making it lead-facing for the first time.</p>
+
+      <div class="before-after-card">
+        <div class="before-after-header">
+          <div class="info-card-eyebrow">App Availability</div>
+          <div class="info-card-title">Who Can Use the Finnovate App</div>
+        </div>
+        <div class="before-after-cols">
+          <div class="ba-col before">
+            <div class="ba-col-label">Before</div>
+            <div class="ba-item">Existing customers only</div>
+            <div class="ba-item">No public download</div>
+            <div class="ba-item">No portfolio import for leads</div>
+          </div>
+          <div class="ba-col after">
+            <div class="ba-col-label">Now — Live</div>
+            <div class="ba-item"><strong>Anyone can download</strong> the app</div>
+            <div class="ba-item"><strong>Import existing portfolio</strong> via MF Central</div>
+            <div class="ba-item"><strong>Full onboarding</strong> journey on mobile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── UPGRADE 3: SELF-TRANSACTION SYSTEM ── -->
+    <div style="margin-bottom:48px;">
+      <div class="info-card-eyebrow" style="margin-bottom:6px;">Upgrade 3 — Major</div>
+      <h3 style="font-family:var(--font-display);font-size:22px;color:var(--black);margin-bottom:6px;">Full Self-Transaction System</h3>
+      <p style="font-size:13px;color:var(--grey-700);margin-bottom:20px;">Clients can now manage their entire MF journey independently on the app — from discovering the right fund to completing a transaction, all without calling an advisor.</p>
+
+      <div class="info-card">
+        <div class="info-card-eyebrow">What Clients Can Now Do</div>
+        <div class="info-card-title">Complete Transaction Access</div>
+        <ul class="feature-list">
+          <li><strong>Buy, Sell &amp; Switch</strong> mutual funds directly on the app</li>
+          <li><strong>Scheme search</strong> — discover and compare funds</li>
+          <li><strong>Payment &amp; mandate creation</strong> — fully in-app</li>
+          <li><strong>SIP setup</strong> and management</li>
+          <li><strong>Full onboarding</strong> for new clients on mobile</li>
+          <li><strong>Investment Baskets</strong> — browse Finnovate's curated baskets, review the strategy, and invest in one tap</li>
+        </ul>
+        <span class="product-status status-live" style="margin-top:20px;">Live</span>
+      </div>
+    </div>
+
+    <!-- ── PRODUCT FEATURE CARDS ── -->
+    <div class="pr-section-eyebrow" style="margin-bottom:16px;">Integrations &amp; Platform</div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="product-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="product-card-title">MF Central</div>
+        <div class="product-card-text">Fully integrated — clients can view and consolidate their entire MF portfolio from any AMC in one place. Also enables portfolio import for new users during onboarding.</div>
+        <span class="product-status status-live">Live</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <div class="product-card-title">Account Aggregator (AA)</div>
+        <div class="product-card-text">With client consent, AA automatically pulls all financial data into Finnovate — giving advisors a complete financial picture instantly.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;">
+          <span style="font-size:10px;font-weight:600;background:rgba(0,147,86,.08);color:var(--green);padding:2px 9px;border-radius:100px;">Mutual Funds</span>
+          <span style="font-size:10px;font-weight:600;background:rgba(0,147,86,.08);color:var(--green);padding:2px 9px;border-radius:100px;">Equity &amp; Stocks</span>
+          <span style="font-size:10px;font-weight:600;background:rgba(0,147,86,.08);color:var(--green);padding:2px 9px;border-radius:100px;">NPS</span>
+          <span style="font-size:10px;font-weight:600;background:rgba(0,147,86,.08);color:var(--green);padding:2px 9px;border-radius:100px;">Bank Accounts</span>
+          <span style="font-size:10px;font-weight:600;background:rgba(0,147,86,.08);color:var(--green);padding:2px 9px;border-radius:100px;">Insurance</span>
+        </div>
+        <span class="product-status status-beta">Advanced Beta</span>
+      </div>
+
+    </div>
+
+    <div class="info-card" style="margin-top:36px;">
+      <div class="info-card-eyebrow">Security &amp; Compliance</div>
+      <div class="info-card-title">Technology Readiness and Control Layer</div>
+      <ul class="info-card-list">
+        <li>Hosted on <strong>CtrlS Tier-1 data centre infrastructure</strong>, giving the platform a strong reliability and hosting backbone</li>
+        <li><strong>Internal access controls</strong> and internal admin governance are in place to restrict and monitor sensitive access</li>
+        <li><strong>Zoho CRM</strong> is being operated within a structured compliance-led workflow environment</li>
+        <li>Complied with <strong>IRDAI cybersecurity guidelines</strong>, including the required certification framework</li>
+        <li>Aligned with <strong>SEBI digital accessibility compliance</strong> expectations as part of platform readiness</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 3 — MARKETING & EVENTS
+══════════════════════════════════ -->
+<section id="business" class="pr-section">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">03</span><span class="pr-section-label">Marketing &amp; Events</span></div>
+    <h2 class="pr-section-title">A Year of Building &amp; Growing</h2>
+    <p class="pr-section-sub">Original content series, targeted campaigns, on-ground events, and community building — along with the next set of focused growth priorities.</p>
+
+    <!-- ── BRAND IP ── -->
+    <div style="margin-bottom:48px;">
+      <div class="info-card-eyebrow" style="margin-bottom:6px;">Brand IP</div>
+      <h3 style="font-family:var(--font-display);font-size:20px;color:var(--black);margin-bottom:6px;">Original Content Series</h3>
+      <p style="font-size:13px;color:var(--grey-700);margin-bottom:24px;">Proprietary formats that build long-term authority and trust with India's medical community.</p>
+
+      <!-- Medical Monarchs -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+          <div style="font-family:var(--font-display);font-size:17px;color:var(--black);">Medical Monarchs</div>
+          <a href="https://youtube.com/playlist?list=PLyA-3G7RPcAVmaVUbCyRN_VQwOL_ber6t" target="_blank" style="font-size:11px;font-weight:600;color:var(--green);text-decoration:none;">Playlist ↗</a>
+        </div>
+        <p style="font-size:12.5px;color:var(--grey-700);margin-bottom:12px;">Long-form video podcast featuring doctors who built extraordinary practices and businesses. YouTube &amp; Spotify.</p>
+        <div style="border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+          <!-- Header -->
+          <div style="display:grid;grid-template-columns:1fr 2fr 90px;background:var(--grey-100);padding:9px 16px;gap:8px;">
+            <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.5px;">Guest</div>
+            <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.5px;">Theme</div>
+            <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.5px;text-align:right;">Views</div>
+          </div>
+          <!-- Ep 1 — Dr. Ramakant Deshpande (277K) -->
+          <div style="display:grid;grid-template-columns:1fr 2fr 90px;padding:11px 16px;gap:8px;border-top:1px solid var(--border);align-items:center;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--black);">Dr. Ramakant Deshpande</div>
+              <span style="font-size:10px;font-weight:600;color:var(--grey-400);">Padma Shri</span>
+            </div>
+            <div style="font-size:12px;color:var(--grey-700);">From small-town practice to national recognition — 40+ years in surgical oncology</div>
+            <div style="text-align:right;"><span style="font-size:11px;font-weight:700;color:#4f46e5;background:rgba(99,102,241,.08);padding:3px 8px;border-radius:20px;">277K views</span></div>
+          </div>
+          <!-- Ep 2 — Dr. Nayan Shah -->
+          <div style="display:grid;grid-template-columns:1fr 2fr 90px;padding:11px 16px;gap:8px;border-top:1px solid var(--border);background:rgba(0,0,0,.015);align-items:center;">
+            <div style="font-size:13px;font-weight:600;color:var(--black);">Dr. Nayan Shah</div>
+            <div style="font-size:12px;color:var(--grey-700);">Healthcare innovator — two-part episode on creating new pathways in India's healthcare landscape</div>
+            <div style="text-align:right;"><span style="font-size:10px;color:var(--grey-400);">—</span></div>
+          </div>
+          <!-- Ep 3 — Dr. Vikram Shah -->
+          <div style="display:grid;grid-template-columns:1fr 2fr 90px;padding:11px 16px;gap:8px;border-top:1px solid var(--border);align-items:center;">
+            <div style="font-size:13px;font-weight:600;color:var(--black);">Dr. Vikram Shah</div>
+            <div style="font-size:12px;color:var(--grey-700);">Founder &amp; Chairman, Shalby Hospitals — orthopedic surgeon who scaled to a ₹504.8 Cr IPO</div>
+            <div style="text-align:right;"><span style="font-size:10px;color:var(--grey-400);">—</span></div>
+          </div>
+          <!-- Ep 4 — Dr. Sushil Shah (1M) -->
+          <div style="display:grid;grid-template-columns:1fr 2fr 90px;padding:11px 16px;gap:8px;border-top:1px solid var(--border);background:rgba(0,0,0,.015);align-items:center;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--black);">Dr. Sushil Shah</div>
+              <a href="https://youtu.be/L-ClFR4MHPI" target="_blank" style="font-size:10px;font-weight:600;color:var(--green);text-decoration:none;">Watch ↗</a>
+            </div>
+            <div style="font-size:12px;color:var(--grey-700);">Founder-Chairman, Metropolis Healthcare — building India's first specialised referral lab</div>
+            <div style="text-align:right;"><span style="font-size:11px;font-weight:700;color:var(--green);background:rgba(0,147,86,.08);padding:3px 8px;border-radius:20px;">1M views</span></div>
+          </div>
+          <!-- Ep 5 — Dr. Hrishikesh Pai -->
+          <div style="display:grid;grid-template-columns:1fr 2fr 90px;padding:11px 16px;gap:8px;border-top:1px solid var(--border);align-items:center;">
+            <div style="font-size:13px;font-weight:600;color:var(--black);">Dr. Hrishikesh Pai</div>
+            <div style="font-size:12px;color:var(--grey-700);">Fertility medicine pioneer — building one of India's leading fertility chains</div>
+            <div style="text-align:right;"><span style="font-size:10px;color:var(--grey-400);">—</span></div>
+          </div>
+          <!-- Upcoming -->
+          <div style="padding:10px 16px;border-top:1px solid var(--border);background:var(--grey-100);">
+            <span style="font-size:11px;color:var(--grey-400);">Upcoming — Dr. Velumani &amp; Mr. Nilesh Shah, Kotak AMC (Compounding Mindset)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fund ka Funda -->
+      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--grey-100);border:1px solid var(--border);border-radius:10px;padding:16px 20px;">
+        <div>
+          <div style="font-family:var(--font-display);font-size:15px;color:var(--black);margin-bottom:4px;">Fund ka Funda</div>
+          <div style="font-size:12px;color:var(--grey-700);">YouTube series demystifying mutual funds — concise, jargon-free, built for people who want clarity without complexity. Launched Jan 2026.</div>
+        </div>
+        <a href="https://youtube.com/playlist?list=PLyA-3G7RPcAXmKE1vV8mGeDijGm1M5MH1" target="_blank" style="font-size:11px;font-weight:600;color:var(--green);text-decoration:none;white-space:nowrap;margin-left:20px;">Playlist ↗</a>
+      </div>
+    </div>
+
+    <!-- ── FLAGSHIP CAMPAIGNS ── -->
+    <div style="margin-bottom:48px;">
+      <div class="info-card-eyebrow" style="margin-bottom:6px;">Paid &amp; Organic Campaigns</div>
+      <h3 style="font-family:var(--font-display);font-size:20px;color:var(--black);margin-bottom:24px;">Flagship Campaigns</h3>
+
+      <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:20px;">
+
+        <!-- FinnFit -->
+        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white);display:flex;gap:0;">
+          <div style="padding:20px 22px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:6px;">FinnFit Quiz</div>
+            <p style="font-size:12.5px;color:var(--grey-700);line-height:1.6;margin-bottom:12px;">A quick financial health diagnostic built for busy professionals — 5 minutes to assess where you stand across savings, insurance, investments, and retirement. Acts as the entry point into Finnovate's advisory funnel.</p>
+            <span style="font-size:11px;font-weight:700;color:var(--black);">Top-of-funnel <span style="font-weight:400;color:var(--grey-500);">lead qualifier</span></span>
+          </div>
+        </div>
+
+        <!-- FIRE -->
+        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white);display:flex;gap:0;">
+          <div style="width:220px;flex-shrink:0;background:var(--grey-100);">
+            <img src="Marekting%20recap/images/image10.jpg" alt="FIRE Campaign" style="width:100%;height:100%;display:block;object-fit:contain;">
+          </div>
+          <div style="padding:20px 22px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:6px;">FIRE Campaign</div>
+            <p style="font-size:12.5px;color:var(--grey-700);line-height:1.6;margin-bottom:12px;">Targeted paid campaign for professionals exploring Financial Independence &amp; Retire Early — routed to Finnovate's FIRE Calculator. Meta + LinkedIn with full UTM-to-CRM tracking.</p>
+            <div style="display:flex;gap:20px;">
+              <span style="font-size:11px;font-weight:700;color:var(--black);">2.65 Cr <span style="font-weight:400;color:var(--grey-500);">impressions</span></span>
+              <span style="font-size:11px;font-weight:700;color:var(--green);">3,195 <span style="font-weight:400;color:var(--grey-500);">leads</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Retire Rich -->
+        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white);display:flex;gap:0;">
+          <div style="width:220px;flex-shrink:0;background:var(--grey-100);">
+            <img src="Marekting%20recap/images/image11.jpg" alt="Retire Rich" style="width:100%;height:100%;display:block;object-fit:contain;">
+          </div>
+          <div style="padding:20px 22px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:6px;">Retire Rich</div>
+            <p style="font-size:12.5px;color:var(--grey-700);line-height:1.6;margin-bottom:12px;">Paid webinar programme on retirement planning — built for high earners at peak earning years who haven't yet structured their wealth exit.</p>
+            <span style="font-size:11px;font-weight:700;color:var(--black);">467 <span style="font-weight:400;color:var(--grey-500);">paid attendees</span></span>
+          </div>
+        </div>
+
+        <!-- MF Mastery -->
+        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white);display:flex;gap:0;">
+          <div style="width:220px;flex-shrink:0;background:var(--grey-100);">
+            <img src="Marekting%20recap/images/image22.jpg" alt="Mutual Fund Mastery" style="width:100%;height:100%;display:block;object-fit:contain;">
+          </div>
+          <div style="padding:20px 22px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:6px;">Mutual Fund Mastery</div>
+            <p style="font-size:12.5px;color:var(--grey-700);line-height:1.6;">Educational campaign and webinar on mutual fund investing — simplified, structured, and built for first-time investors.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Events -->
+    <div>
+      <h3 style="font-family:var(--font-display);font-size:18px;color:var(--black);margin-bottom:6px;">Events &amp; On-Ground Presence</h3>
+      <p style="font-size:13px;color:var(--grey-700);margin-bottom:20px;">Taking Finnovate beyond digital — building trust face-to-face with India's medical community.</p>
+
+      <!-- Event summary stats -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;">
+        <div style="padding:18px 14px;background:var(--grey-100);border-radius:10px;text-align:center;border:1px solid var(--border);">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);line-height:1;">1,148</div>
+          <div style="font-size:11px;font-weight:600;color:var(--grey-700);margin-top:6px;">Total Touchpoints</div>
+        </div>
+        <div style="padding:18px 14px;background:var(--grey-100);border-radius:10px;text-align:center;border:1px solid var(--border);">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);line-height:1;">467</div>
+          <div style="font-size:11px;font-weight:600;color:var(--grey-700);margin-top:6px;">Paid Webinar Attendees</div>
+        </div>
+        <div style="padding:18px 14px;background:var(--grey-100);border-radius:10px;text-align:center;border:1px solid var(--border);">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);line-height:1;">2,000+</div>
+          <div style="font-size:11px;font-weight:600;color:var(--grey-700);margin-top:6px;">Doctors Engaged</div>
+        </div>
+        <div style="padding:18px 14px;background:var(--grey-100);border-radius:10px;text-align:center;border:1px solid var(--border);">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);line-height:1;">5</div>
+          <div style="font-size:11px;font-weight:600;color:var(--grey-700);margin-top:6px;">Cities Active</div>
+        </div>
+      </div>
+
+      <!-- City-wise breakdown -->
+      <div style="margin-bottom:24px;border-radius:12px;overflow:hidden;border:1px solid var(--border);">
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;background:var(--grey-100);padding:10px 16px;gap:6px;">
+          <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.4px;">City</div>
+          <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-align:center;text-transform:uppercase;letter-spacing:.4px;">Organised</div>
+          <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-align:center;text-transform:uppercase;letter-spacing:.4px;">Participated</div>
+          <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-align:center;text-transform:uppercase;letter-spacing:.4px;">Core Web.</div>
+          <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-align:center;text-transform:uppercase;letter-spacing:.4px;">Free Web.</div>
+          <div style="font-size:10px;font-weight:700;color:var(--grey-700);text-align:center;text-transform:uppercase;letter-spacing:.4px;">RTMs</div>
+          <div style="font-size:10px;font-weight:700;color:var(--green);text-align:center;text-transform:uppercase;letter-spacing:.4px;">Total</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 16px;gap:6px;border-top:1px solid var(--grey-100);align-items:center;">
+          <div style="font-size:12px;font-weight:600;color:var(--black);">HO (Paid Web.)</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;font-weight:600;color:var(--black);text-align:center;">467</div>
+          <div style="font-size:12px;font-weight:600;color:var(--black);text-align:center;">182</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:center;">649</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 16px;gap:6px;border-top:1px solid var(--grey-100);background:rgba(0,0,0,.015);align-items:center;">
+          <div style="font-size:12px;font-weight:600;color:var(--black);">Mumbai</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">128</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">43</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:center;">171</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 16px;gap:6px;border-top:1px solid var(--grey-100);align-items:center;">
+          <div style="font-size:12px;font-weight:600;color:var(--black);">Pune</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">62</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">31</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">26</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:center;">119</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 16px;gap:6px;border-top:1px solid var(--grey-100);background:rgba(0,0,0,.015);align-items:center;">
+          <div style="font-size:12px;font-weight:600;color:var(--black);">Nashik</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">90</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">13</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:center;">103</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 16px;gap:6px;border-top:1px solid var(--grey-100);align-items:center;">
+          <div style="font-size:12px;font-weight:600;color:var(--black);">Ahmedabad</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">46</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">40</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">7</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:center;">93</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 16px;gap:6px;border-top:1px solid var(--grey-100);background:rgba(0,0,0,.015);align-items:center;">
+          <div style="font-size:12px;font-weight:600;color:var(--black);">Kutch</div>
+          <div style="font-size:12px;color:var(--black);text-align:center;">13</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;">—</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:center;">13</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:12px 16px;gap:6px;border-top:2px solid var(--border);background:var(--grey-100);align-items:center;">
+          <div style="font-size:13px;font-weight:700;color:var(--black);">Grand Total</div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;"></div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;"></div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;"></div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;"></div>
+          <div style="font-size:12px;color:var(--grey-400);text-align:center;"></div>
+          <div style="font-size:14px;font-weight:700;color:var(--green);text-align:center;">1,148</div>
+        </div>
+      </div>
+
+      <div class="two-col-grid">
+        <div class="info-card">
+          <div class="info-card-eyebrow">Flagship Events</div>
+          <div class="info-card-title">FinCon 2025 &amp; Hospex 2026</div>
+          <div class="info-card-text">Finnovate's signature finance conference in Mumbai (Nov 2025) and a major presence at Hospex 2026, the mega medical event in Ahmedabad (Feb 2026).</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+            <img src="Marekting%20recap/images/image3.png" alt="FinCon 2025 Panel" style="width:100%;border-radius:8px;display:block;">
+            <img src="Marekting%20recap/images/image19.png" alt="FinCon 2025 Team" style="width:100%;border-radius:8px;display:block;">
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-eyebrow">Branch Events</div>
+          <div class="info-card-title">Wealth Creation Chapters</div>
+          <div class="info-card-text">Online webinars, offline events, joint events, RTMs &amp; corporate tie-ups across key markets.</div>
+          <ul class="info-card-list">
+            <li><strong>Mumbai</strong> — Multiple webinars &amp; RTMs</li>
+            <li><strong>Pune</strong> — Wealth Creation Chapters + RTM</li>
+            <li><strong>Ahmedabad</strong> — incl. <strong>HitCon Event</strong></li>
+            <li><strong>Nashik &amp; Kutch</strong> — Community events</li>
+          </ul>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+            <img src="Marekting%20recap/images/image9.jpg" alt="Branch Event" style="width:100%;border-radius:8px;display:block;">
+            <img src="Marekting%20recap/images/image5.jpg" alt="Branch Event" style="width:100%;border-radius:8px;display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 4 — FINANCIAL OPD
+══════════════════════════════════ -->
+<section id="opd" class="pr-section alt">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">04</span><span class="pr-section-label">Financial OPD Community</span></div>
+    <h2 class="pr-section-title">India's First Personal Finance Community for Doctors</h2>
+    <p class="pr-section-sub">Structured like a medical OPD — doctors walk in with financial problems and walk out with clarity, a plan, and a community that understands them. Platform: <strong>financialopd.com</strong></p>
+
+    <!-- 3-stage funnel -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:40px;border-radius:10px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);">
+      <div style="padding:24px 20px;background:var(--grey-100);border-right:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:10px;">Stage 1 — Awareness</div>
+        <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:10px;">Content</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Medical Monarchs</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Fund ka Funda</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Newsletters</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Events</span>
+        </div>
+        <div style="font-size:11px;color:var(--grey-500);margin-top:12px;">Recognition &amp; trust — Finnovate as the credible, doctor-first voice on money.</div>
+      </div>
+      <div style="padding:24px 20px;background:var(--white);border-right:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:10px;">Stage 2 — Intent</div>
+        <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:10px;">Community</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">FinancialOPD</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">FinnFit Quiz</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">FinnFit Webinars</span>
+        </div>
+        <div style="font-size:11px;color:var(--grey-500);margin-top:12px;">Converts awareness into belonging — engagement without sales pressure.</div>
+      </div>
+      <div style="padding:24px 20px;background:var(--white);">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:10px;">Stage 3 — Conversion</div>
+        <div style="font-family:var(--font-display);font-size:16px;color:var(--black);margin-bottom:10px;">Client</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Financial Plan</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Paid Webinars</span>
+          <span style="font-size:11px;background:rgba(0,147,86,.08);color:var(--green);font-weight:600;padding:3px 9px;border-radius:20px;width:fit-content;">Wealth Management</span>
+        </div>
+        <div style="font-size:11px;color:var(--grey-500);margin-top:12px;">Natural next step — no cold pitch. Finnovate earns the relationship before asking for it.</div>
+      </div>
+    </div>
+
+    <!-- Key stats -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;">
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px 16px;text-align:center;box-shadow:var(--shadow-sm);">
+        <div style="font-family:var(--font-display);font-size:40px;color:var(--green);line-height:1;">1,103</div>
+        <div style="font-size:12px;font-weight:700;color:var(--grey-700);margin-top:8px;">Total Sign-ups</div>
+        <div style="font-size:11px;color:var(--grey-400);margin-top:4px;">Doctors joined the community</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px 16px;text-align:center;box-shadow:var(--shadow-sm);">
+        <div style="font-family:var(--font-display);font-size:40px;color:var(--green);line-height:1;">50+</div>
+        <div style="font-size:12px;font-weight:700;color:var(--grey-700);margin-top:8px;">Monthly New Members</div>
+        <div style="font-size:11px;color:var(--grey-400);margin-top:4px;">Consistent organic growth</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px 16px;text-align:center;box-shadow:var(--shadow-sm);">
+        <div style="font-family:var(--font-display);font-size:40px;color:var(--green);line-height:1;">3</div>
+        <div style="font-size:12px;font-weight:700;color:var(--grey-700);margin-top:8px;">Courses Launched</div>
+        <div style="font-size:11px;color:var(--grey-400);margin-top:4px;">Including Wealth Rx Course</div>
+      </div>
+    </div>
+
+    <!-- What's inside -->
+    <div class="two-col-grid" style="margin-bottom:40px;">
+      <div class="info-card">
+        <div class="info-card-eyebrow">Community Offerings</div>
+        <div class="info-card-title">What Members Get</div>
+        <ul class="info-card-list" style="margin-top:12px;">
+          <li>Learn the <strong>right concepts and habits</strong> at one place — no noise, no mis-selling</li>
+          <li><strong>Save millions</strong> by avoiding costly financial mistakes early</li>
+          <li><strong>Preserve compounding years</strong> — start structured investing before it's too late</li>
+          <li><strong>Wealth Rx Course</strong> · <strong>41+ Webinars</strong> · <strong>Newsletter</strong> · Advisory access</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-eyebrow">Why It Matters</div>
+        <div class="info-card-title">The Gap We're Filling</div>
+        <ul class="info-card-list" style="margin-top:12px;">
+          <li>Doctors earn high but start late — no financial curriculum in medicine</li>
+          <li>Highly vulnerable to mis-selling and wrong products</li>
+          <li>Financial OPD is India's <strong>first community</strong> addressing this at scale</li>
+          <li>Top-of-funnel into Finnovate's wealth management services</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Visual — community + newsletter + webinar -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Community</div>
+        <img src="shareholderphoto/financialopdcommunity.png" alt="Financial OPD community" style="width:100%;border-radius:10px;display:block;border:1px solid var(--border);">
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Doctor's Financial Digest</div>
+        <img src="Marekting%20recap/images/image7.png" alt="Doctor's Financial Digest editions" style="width:100%;border-radius:10px;display:block;border:1px solid var(--border);">
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--grey-700);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">FinnFit Wednesday Webinar Series</div>
+        <img src="Marekting%20recap/images/image1.png" alt="FinnFit Wednesdays" style="width:100%;border-radius:10px;display:block;border:1px solid var(--border);">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 5 — ZOHO CRM
+══════════════════════════════════ -->
+<section id="zoho" class="pr-section alt">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">05</span><span class="pr-section-label">Operations</span></div>
+    <h2 class="pr-section-title">Zoho CRM — Technology Backbone</h2>
+    <p class="pr-section-sub">Finnovate went live on Zoho in March 2026 — centralising lead management, customer service, people workflows, training, and reporting into one operating layer.</p>
+
+    <div class="two-col-grid" style="margin-bottom:36px;">
+      <div class="info-card">
+        <div class="info-card-eyebrow">Client Management</div>
+        <div class="info-card-title">Centralised CRM</div>
+        <ul class="info-card-list">
+          <li>Every client lead, onboarding step, and follow-up tracked in one place</li>
+          <li>New client intake flow built end-to-end inside Zoho</li>
+          <li>Automated reminders, task assignments, and pipeline stages</li>
+          <li>Full visibility for leadership on team activity and conversion rates</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-eyebrow">Customer Service</div>
+        <div class="info-card-title">Service and Resolution Tracking</div>
+        <ul class="info-card-list">
+          <li>Customer requests and follow-ups can now be tracked in a more structured workflow</li>
+          <li>Clear ownership and status visibility reduce manual coordination across teams</li>
+          <li>Creates a stronger internal operating rhythm as the business scales</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col-grid">
+      <div class="info-card">
+        <div class="info-card-eyebrow">People &amp; Training</div>
+        <div class="info-card-title">Zoho Learn — Team Upskilling</div>
+        <ul class="info-card-list">
+          <li>Internal training modules created on Zoho Learn</li>
+          <li>New joiner onboarding, product knowledge, and compliance training digitalised</li>
+          <li>Progress tracked per employee — no more offline spreadsheets</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-eyebrow">Reporting &amp; Analytics</div>
+        <div class="info-card-title">Real-Time Dashboards</div>
+        <ul class="info-card-list">
+          <li>Sales pipeline, lead conversion, and AUM dashboards live for management</li>
+          <li>Campaign-to-client attribution tracked from first touch to onboarding</li>
+          <li>Weekly automated reports distributed to team leads</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 6 — HR
+══════════════════════════════════ -->
+<section id="hr" class="pr-section alt">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">06</span><span class="pr-section-label">People &amp; Organisation</span></div>
+    <h2 class="pr-section-title">People Update</h2>
+    <p class="pr-section-sub">Team headcount moved from 63 in FY24 to 91 in FY26, while the organisation structure has been refined across leadership, branch, research, and advisory functions.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
+      <div class="info-card" style="padding:24px 18px;text-align:center;">
+        <div class="info-card-eyebrow">FY24</div>
+        <div style="font-family:var(--font-display);font-size:38px;color:var(--black);line-height:1;">63</div>
+        <div style="font-size:12px;color:var(--grey-500);margin-top:6px;">Team headcount</div>
+      </div>
+      <div class="info-card" style="padding:24px 18px;text-align:center;">
+        <div class="info-card-eyebrow">FY26</div>
+        <div style="font-family:var(--font-display);font-size:38px;color:var(--green);line-height:1;">91</div>
+        <div style="font-size:12px;color:var(--grey-500);margin-top:6px;">Team headcount</div>
+      </div>
+      <div class="info-card" style="padding:24px 18px;text-align:center;">
+        <div class="info-card-eyebrow">Growth</div>
+        <div style="font-family:var(--font-display);font-size:30px;color:var(--black);line-height:1;">+28</div>
+        <div style="font-size:12px;color:var(--grey-500);margin-top:6px;">Net increase in headcount</div>
+      </div>
+    </div>
+
+
+    <div class="two-col-grid" style="margin-bottom:24px;">
+      <div class="info-card">
+        <div class="info-card-eyebrow">Talent Acquisition</div>
+        <div class="info-card-title">Hiring Built In-House</div>
+        <ul class="info-card-list">
+          <li><strong>95% of all hiring is now done in-house</strong> — no external recruitment consultants</li>
+          <li>Structured evaluation process with technical and behavioural screening for every role</li>
+          <li>Result: Reduced hiring errors, lower cost per hire, improved retention</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-eyebrow">Role Clarity & Onboarding</div>
+        <div class="info-card-title">Structure for Every Role</div>
+        <ul class="info-card-list">
+          <li>Standardised job descriptions and KRAs / KPIs defined for all business units</li>
+          <li><strong>30-60-90 day mentoring and assimilation plan</strong> for every new joiner</li>
+          <li>Result: Eliminated confusion in responsibilities, every employee knows their career path</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:24px;">
+      <div class="info-card">
+        <div class="info-card-eyebrow">People Systems</div>
+        <div class="info-card-title">Fully on Zoho</div>
+        <ul class="info-card-list">
+          <li>Zoho People, Payroll, and Workdrive fully integrated — HR ops on cloud</li>
+          <li>All employee records, policies, and documents centralised with controlled access</li>
+          <li>Automated routine processes — reduced manual effort and improved tracking</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-eyebrow">Employee Wellbeing</div>
+        <div class="info-card-title">Culture of Care</div>
+        <ul class="info-card-list">
+          <li>Enhanced <strong>Mediclaim cover</strong> and <strong>Bespoke Health Check</strong> at discounted pricing</li>
+          <li>Extended weekends introduced for work-life balance</li>
+          <li>Structured employee engagement calendar launched</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <div>
+        <div class="info-card-eyebrow">Organisation Chart</div>
+        <div class="info-card-title" style="margin-bottom:0;">Updated Reporting View</div>
+      </div>
+      <a href="orgchart.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:12px;font-weight:600;color:var(--green);text-decoration:none;border:1.5px solid var(--green);border-radius:6px;padding:8px 14px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Org Chart
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 7 — WAY FORWARD (PMS)
+══════════════════════════════════ -->
+<section id="pms" class="pr-section">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">07</span><span class="pr-section-label">Way Forward</span></div>
+    <h2 class="pr-section-title">PMS Licence</h2>
+    <p class="pr-section-sub">Finnovate has applied for its SEBI Portfolio Management Services licence — a significant step toward a regulated, fee-based, unbiased wealth management platform.</p>
+
+    <div class="pms-card">
+      <div class="pms-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      </div>
+      <div class="pms-body">
+        <span class="pms-status in-progress">
+          <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>
+          Licence Applied — Awaiting SEBI Approval
+        </span>
+        <div class="pms-title">SEBI Portfolio Management Services Registration</div>
+        <div class="pms-text">Finnovate has applied for its SEBI PMS licence. <strong>Non-Discretionary PMS</strong> will launch upon approval, enabling Finnovate to operate as a fully regulated wealth management firm.</div>
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--grey-100);border-radius:8px;padding:14px 16px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--green);margin-bottom:6px;">What is Non-Discretionary PMS?</div>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;">
+              <li style="font-size:13px;color:var(--grey-700);padding-left:14px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Each client holds a <strong>dedicated regulated account in their own name</strong></li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:14px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Finnovate advises on <strong>direct MFs, ETFs, bonds, and stocks</strong> — client retains final decision authority</li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:14px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span><strong>Pre-agreed fee</strong>, zero-commission products only</li>
+            </ul>
+          </div>
+          <div style="background:var(--grey-100);border-radius:8px;padding:14px 16px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--green);margin-bottom:6px;">Fee Model and Operating Flow</div>
+            <div style="font-size:13px;color:var(--grey-700);line-height:1.6;">The fee calculation and fee deduction are done by the <strong>custodian</strong>. The custodian debits the client's account and credits Finovate's account as per the agreed fee structure. This creates a transparent operating model with no separate collection friction for the client or the team.</div>
+          </div>
+          <div style="background:var(--grey-100);border-radius:8px;padding:14px 16px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--green);margin-bottom:6px;">Why This Matters</div>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+              <li style="font-size:13px;color:var(--grey-700);padding-left:16px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Client assets held in their own NSDL/CDSL custodian account — <strong>full transparency, full ownership</strong></li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:16px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Finnovate acts in a <strong>truly fiduciary capacity</strong> with fee-based, unbiased advice and <strong>no commission conflict</strong></li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:16px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Enables advice across <strong>direct MFs, ETFs, bonds and stocks</strong> in one regulated account</li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:16px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Custodian-led fee deduction creates <strong>zero collection friction</strong> and <strong>zero operational bottleneck</strong></li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:16px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>This is an easier operational setup that helps Finovate <strong>scale faster</strong> while also <strong>establishing trust</strong></li>
+              <li style="font-size:13px;color:var(--grey-700);padding-left:16px;position:relative;"><span style="position:absolute;left:0;top:7px;width:5px;height:5px;background:var(--green);border-radius:50%;display:block;"></span>Positions Finnovate as a fully regulated wealth manager with a <strong>significant competitive differentiator</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+══════════════════════════════════
+     SECTION 8 — CORPORATE GOVERNANCE
+══════════════════════════════════ -->
+<section id="governance" class="pr-section alt">
+  <div class="pr-section-inner">
+    <div class="pr-section-eyebrow"><span class="pr-section-num">08</span><span class="pr-section-label">Corporate Governance</span></div>
+    <h2 class="pr-section-title">Governance & Compliance</h2>
+    <p class="pr-section-sub">Finnovate is built on a rigorous governance framework — regulated, independently audited, and professionally certified at every client-facing level.</p>
+
+    <div class="info-card">
+      <ul class="info-card-list" style="display:flex;flex-direction:column;gap:14px;">
+        <li>
+          <strong>3-Level Accounting System</strong> — Finnovate maintains a structured three-tier accounting framework ensuring financial integrity, segregation of duties, and complete traceability across all transactions.
+        </li>
+        <li>
+          <strong>Audit by KDA</strong> — Accounts are independently audited by KDA, a recognised external audit firm, ensuring full compliance with statutory and regulatory requirements.
+        </li>
+        <li>
+          <strong>Half-Yearly & Annual Audits</strong> — In addition to the annual audit, a mid-year review is conducted every six months to maintain continuous oversight and early identification of any compliance gaps.
+        </li>
+        <li>
+          <strong>Ex-SEBI Officer for Compliance</strong> — Finnovate's compliance function is overseen by a former SEBI officer, bringing deep regulatory expertise and institutional-grade governance to the firm.
+        </li>
+        <li>
+          <strong>Certified Client-Facing Team</strong> — Every team member involved in client advisory holds active <strong>CFP (Certified Financial Planner)</strong>, <strong>NISM Series 21A</strong>, and <strong>NISM Series 21B</strong> certifications — ensuring advice is delivered only by qualified professionals.
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="pr-footer">
+  <div class="pr-footer-inner">
+    <div class="pr-footer-contact">
+      <div>
+        <div class="pr-footer-lbl">For Queries</div>
+        <div class="pr-footer-name">Neha Sanghrajka</div>
+        <div class="pr-footer-phone">+91 98206 18785</div>
+      </div>
+      <div class="pr-footer-btns">
+        <a href="tel:+919820618785" class="btn-call">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          Call
+        </a>
+        <a href="https://wa.me/919820618785" class="btn-wa" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+    <div class="pr-footer-conf">
+      CONFIDENTIAL &nbsp;·&nbsp; For Shareholders Only &nbsp;·&nbsp; Paramarsh 3 &nbsp;·&nbsp; © 2026 Finnovate
+    </div>
+  </div>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.pr-nav-links a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.pr-nav-links a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+<div class="lb-overlay" id="lightbox">
+  <span class="lb-close" id="lbClose">&times;</span>
+  <img class="lb-img" id="lbImg" src="" alt="">
+</div>
+
+<script>
+  // Lightbox
+  const lb    = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  document.querySelectorAll('img:not(.pr-nav-logo)').forEach(img => {
+    img.addEventListener('click', () => { lbImg.src = img.src; lbImg.alt = img.alt; lb.classList.add('open'); });
+  });
+  function closeLb() { lb.classList.remove('open'); lbImg.src = ''; }
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+</script>
+
+</body>
+</html>

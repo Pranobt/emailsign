@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organization Chart | FINNOVATE</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://db.onlinewebfonts.com/c/e373b099e1b8f8973fec8aac136a4c9f?family=Denton+Bold" rel="stylesheet">
+<style>
+  :root {
+    --green: #009356;
+    --green-dark: #007544;
+    --green-hero: #0a2818;
+    --black: #0d1117;
+    --dark: #1a1a1a;
+    --grey-700: #4b5563;
+    --grey-500: #6b7280;
+    --grey-400: #9ca3af;
+    --grey-300: #d1d5db;
+    --grey-200: #e5e7eb;
+    --grey-100: #f9fafb;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+    --font-display: "Denton Bold", Georgia, serif;
+    --font-body: "Manrope", sans-serif;
+    --page-w: 1180px;
+    --pad-x: 32px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--black);
+    background: linear-gradient(180deg, #f6fbf8 0%, #ffffff 220px);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-shell {
+    width: min(var(--page-w), calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .hero {
+    padding: 56px var(--pad-x) 32px;
+  }
+
+  .hero-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 44px;
+    background: linear-gradient(135deg, var(--green-hero) 0%, #103321 60%, #0f2418 100%);
+    box-shadow: var(--shadow);
+  }
+
+  .hero-card::before {
+    content: "ORG";
+    position: absolute;
+    right: 24px;
+    top: -12px;
+    font-family: var(--font-display);
+    font-size: clamp(84px, 12vw, 160px);
+    line-height: 1;
+    color: rgba(255,255,255,.04);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 18px;
+  }
+
+  .eyebrow span {
+    width: 24px;
+    height: 1.5px;
+    background: var(--green);
+    display: inline-block;
+  }
+
+  .hero h1 {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    font-family: var(--font-display);
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.02;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .hero p {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,.72);
+  }
+
+  .hero-meta {
+    position: relative;
+    z-index: 1;
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,.72);
+  }
+
+  .section {
+    padding: 0 var(--pad-x) 32px;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.08;
+    color: var(--black);
+  }
+
+  .section-sub {
+    max-width: 580px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--grey-700);
+  }
+
+  .leaders-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .person-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .person-card.leader {
+    padding: 22px;
+    border-color: rgba(0,147,86,.18);
+    box-shadow: var(--shadow);
+  }
+
+  .person-card.head {
+    background: linear-gradient(180deg, #f8fffb 0%, #ffffff 100%);
+    border: 1px solid rgba(0,147,86,.2);
+  }
+
+  .person-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .avatar,
+  .avatar img {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+    flex-shrink: 0;
+  }
+
+  .avatar {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0,147,86,.16), rgba(0,117,68,.08));
+    color: var(--green-dark);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+  }
+
+  .avatar img {
+    display: block;
+    object-fit: cover;
+  }
+
+  .person-name {
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--black);
+  }
+
+  .person-role {
+    margin-top: 4px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--grey-700);
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(0,147,86,.08);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+  }
+
+  .badge.secondary {
+    background: var(--grey-100);
+    color: var(--grey-700);
+  }
+
+  .notes {
+    padding: 0 var(--pad-x) 38px;
+  }
+
+  .notes-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--white);
+    padding: 18px 20px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--grey-700);
+  }
+
+  .notes-card strong { color: var(--black); }
+
+  .departments {
+    padding-bottom: 48px;
+  }
+
+  .department-card {
+    margin-bottom: 18px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .department-top {
+    padding: 22px 24px;
+    background: linear-gradient(180deg, #fbfdfc 0%, #f7fbf9 100%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .department-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .department-name {
+    font-family: var(--font-display);
+    font-size: 26px;
+    line-height: 1.1;
+    color: var(--black);
+  }
+
+  .department-count {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--grey-500);
+  }
+
+  .department-sub {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--grey-700);
+    max-width: 720px;
+  }
+
+  .department-body {
+    padding: 24px;
+  }
+
+  .head-wrap {
+    position: relative;
+    max-width: 440px;
+    margin: 0 auto 28px;
+  }
+
+  .head-wrap::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--grey-300);
+  }
+
+  .head-wrap.no-tail::after {
+    display: none;
+  }
+
+  .hierarchy-stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .hierarchy-stack::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -18px;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 18px;
+    background: var(--grey-300);
+  }
+
+  .hierarchy-node {
+    position: relative;
+    width: min(440px, 100%);
+  }
+
+  .hierarchy-node::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+    width: 1px;
+    height: 18px;
+    background: var(--grey-300);
+  }
+
+  .hierarchy-node:last-child::after {
+    display: none;
+  }
+
+  .marketing-card {
+    margin-bottom: 18px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .marketing-body {
+    padding: 24px;
+  }
+
+  .marketing-pill-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .marketing-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: rgba(0,147,86,.1);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .9px;
+    text-transform: uppercase;
+  }
+
+  .marketing-overall {
+    position: relative;
+    max-width: 440px;
+    margin: 0 auto 34px;
+  }
+
+  .marketing-overall::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--grey-300);
+  }
+
+  .marketing-branches {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    padding-top: 26px;
+  }
+
+  .marketing-branches::before {
+    content: "";
+    position: absolute;
+    left: 16%;
+    right: 16%;
+    top: 0;
+    height: 1px;
+    background: var(--grey-300);
+  }
+
+  .marketing-branches::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -20px;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--grey-300);
+  }
+
+  .marketing-branch {
+    position: relative;
+    padding-top: 26px;
+  }
+
+  .marketing-branch::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 26px;
+    background: var(--grey-300);
+  }
+
+  .branch-label {
+    text-align: center;
+    margin-bottom: 14px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--grey-500);
+  }
+
+  .branch-head {
+    max-width: 360px;
+    margin: 0 auto 16px;
+  }
+
+  .branch-members {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .members-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    position: relative;
+    padding-top: 18px;
+  }
+
+  .members-grid > .person-card,
+  .members-grid > .dept-empty {
+    flex: 0 1 calc((100% - 42px) / 4);
+    max-width: calc((100% - 42px) / 4);
+  }
+
+  .members-grid.has-parent-line {
+    padding-top: 28px;
+  }
+
+  .members-grid.has-parent-line::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 28px;
+    background: var(--grey-300);
+  }
+
+  .members-grid::before {
+    content: "";
+    position: absolute;
+    left: max(24px, 8%);
+    right: max(24px, 8%);
+    top: 0;
+    height: 1px;
+    background: var(--grey-300);
+  }
+
+  .members-grid.empty::before {
+    display: none;
+  }
+
+  .members-grid.two-up > .person-card,
+  .members-grid.two-up > .dept-empty {
+    flex-basis: calc((100% - 14px) / 2);
+    max-width: calc((100% - 14px) / 2);
+  }
+
+  .members-grid.no-line {
+    padding-top: 0;
+    margin-top: 14px;
+  }
+
+  .members-grid.no-line::before,
+  .members-grid.no-line::after {
+    display: none;
+  }
+
+  .dept-empty {
+    text-align: center;
+    padding: 18px;
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    color: var(--grey-500);
+    font-size: 13px;
+    background: var(--grey-100);
+  }
+
+  .footer {
+    padding: 0 var(--pad-x) 48px;
+  }
+
+  .footer-text {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--grey-500);
+  }
+
+  @media (max-width: 1080px) {
+    .leaders-grid,
+    .members-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .members-grid > .person-card,
+    .members-grid > .dept-empty {
+      flex-basis: calc((100% - 28px) / 3);
+      max-width: calc((100% - 28px) / 3);
+    }
+  }
+
+  @media (max-width: 840px) {
+    .hero,
+    .section,
+    .notes,
+    .footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .hero-card {
+      padding: 28px 24px;
+      border-radius: 20px;
+    }
+
+    .section-head,
+    .department-topline {
+      display: block;
+    }
+
+    .leaders-grid,
+    .members-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .members-grid > .person-card,
+    .members-grid > .dept-empty {
+      flex-basis: calc((100% - 14px) / 2);
+      max-width: calc((100% - 14px) / 2);
+    }
+
+    .department-body {
+      padding: 18px;
+    }
+
+    .marketing-branches {
+      grid-template-columns: 1fr;
+    }
+
+    .marketing-branches::before,
+    .marketing-branches::after,
+    .marketing-overall::after,
+    .marketing-branch::before {
+      display: none;
+    }
+
+    .marketing-branch {
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .leaders-grid,
+    .members-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .members-grid > .person-card,
+    .members-grid > .dept-empty {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+
+    .hero {
+      padding-top: 24px;
+    }
+
+    .department-name {
+      font-size: 22px;
+    }
+  }
+
+  @media print {
+    body {
+      background: #fff;
+    }
+
+    .hero,
+    .section,
+    .notes,
+    .footer {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .hero-card,
+    .department-card,
+    .person-card,
+    .notes-card {
+      box-shadow: none;
+    }
+
+    .department-card,
+    .person-card {
+      break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-card">
+        <div class="eyebrow"><span></span>Finnovate Team Structure</div>
+        <h1>Organization Chart</h1>
+        <p>
+          Finnovate's operating structure across leadership, business verticals, advisory, marketing, technology, and support functions.
+        </p>
+        <div class="hero-meta">
+          <div class="chip">Top Leadership</div>
+          <div class="chip">Department Teams</div>
+          <div class="chip">Paramarsh 3 · March 2026</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span></span>Leadership</div>
+          <h2 class="section-title">Top Leadership</h2>
+        </div>
+      </div>
+      <div id="leaders" class="leaders-grid"></div>
+    </section>
+
+    <section class="section departments">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span></span>Departments</div>
+          <h2 class="section-title">Department-Wise Chart</h2>
+        </div>
+      </div>
+      <div id="departments"></div>
+    </section>
+
+  </div>
+
+<script>
+  const TEAM_PICTURES_BASE = "https://www.finnovate.in/assets/images/team-pictures";
+
+  const TEAM_PICTURE_FILES = [
+    "AakankshaP.webp",
+    "AasthaT.webp",
+    "AishwaryaK.webp",
+    "Ajay_C.webp",
+    "ANOJ.webp",
+    "ChetanV.webp",
+    "DavidF.webp",
+    "DimpleJ.webp",
+    "GauravK.webp",
+    "JayZ.webp",
+    "KainazT.webp",
+    "KashinS.webp",
+    "KrutiP.webp",
+    "MansiG.webp",
+    "NakulG.webp",
+    "NeelO.webp",
+    "NikitaF.webp",
+    "NimishaG.webp",
+    "OnkarR.webp",
+    "OveshK.webp",
+    "PavanD.webp",
+    "PrernaA.webp",
+    "PriyankaM.webp",
+    "PriyankaS.webp",
+    "RajviG.webp",
+    "RashiP.webp",
+    "RenuA.webp",
+    "RiyaJ.webp",
+    "Rushikeshs.webp",
+    "SangeetaS.webp",
+    "SatvikYadav.webp",
+    "ShraddhaU.webp",
+    "ShrutiW.webp",
+    "TusharParmar.webp",
+    "VinjalR.webp",
+    "VivekG.webp",
+    "ajayc.webp",
+    "ajayj.webp",
+    "ajinkya.webp",
+    "akshatap.webp",
+    "amitlad.webp",
+    "anasA.webp",
+    "anoj.jpg",
+    "artish-more.webp",
+    "avinash.webp",
+    "chintan.webp",
+    "deepti.webp",
+    "drishti.webp",
+    "gauravp.webp",
+    "gosal.webp",
+    "jayant.webp",
+    "jignesh-gajjar.webp",
+    "jinals.webp",
+    "milind-jain.webp",
+    "nagma2.webp",
+    "naveen-singh.webp",
+    "neha.webp",
+    "nehal-mota.webp",
+    "omkar.webp",
+    "pradnya.webp",
+    "pranob-thachanthara.webp",
+    "pravin.webp",
+    "preshita.webp",
+    "priyanka.webp",
+    "rahul-meher.webp",
+    "ranjeet.webp",
+    "rekha-mohnot.webp",
+    "sagar.webp",
+    "santosh.webp",
+    "sushantb.webp",
+    "sushil-asrani.webp",
+    "tanvi.webp",
+    "thakur.webp",
+    "vandana.webp",
+    "vibhav.webp"
+  ];
+
+  const photoMap = {
+    "Ajay Chariya": "ajayc.webp",
+    "Ajay Jadeja": "ajayj.webp",
+    "Ajinkya Jadhav": "ajinkya.webp",
+    "Akshata Kochrekar": "akshatap.webp",
+    "Amit Lad": "amitlad.webp",
+    "Anas Ansari": "anasA.webp",
+    "Anoj Tambe": "ANOJ.webp",
+    "Artish More": "artish-more.webp",
+    "Avinash Tiwari": "avinash.webp",
+    "Chintan Dudhela": "chintan.webp",
+    "Deepti Baria": "deepti.webp",
+    "Drishti Bellani": "drishti.webp",
+    "Gaurav Prasad": "gauravp.webp",
+    "Gaurav Haldankar": "gaurav.webp",
+    "Gosal Sangole": "gosal.webp",
+    "Himanshi Makhe": "https://www.finnovate.in/assets/images/himanshi.png",
+    "Jayant Furia": "jayant.webp",
+    "Jignesh Gajjar": "jignesh-gajjar.webp",
+    "Jinal Shah": "jinals.webp",
+    "Kainaz Tata": "KainazT.webp",
+    "Milind Jain": "milind-jain.webp",
+    "Mayuri Verma": "mayuriv.webp",
+    "Nagma Shaikh": "nagma2.webp",
+    "Naveen Singh": "naveen-singh.webp",
+    "Neha Sanghrajka": "neha.webp",
+    "Nehal Mota": "nehal-mota.webp",
+    "Nimisha Gaonkar": "NimishaG.webp",
+    "Omkar Kandalekar": "omkarsk.webp",
+    "Pradnya Patil": "pradnya.webp",
+    "Pranav Kumar": "https://www.finnovate.in/assets/images/pranavkumar.png",
+    "Pranob T": "pranob-thachanthara.webp",
+    "Pravin Mayekar": "pravin.webp",
+    "Preshita Jadhav": "preshita.webp",
+    "Priyanka Kelkar": "priyanka.webp",
+    "Priyanka Malviya": "PriyankaM.webp",
+    "Priyanka Shahane": "PriyankaS.webp",
+    "Rahul Meher": "rahul-meher.webp",
+    "Ranjeet Waje": "ranjeet.webp",
+    "Rekha Mohnot": "rekha-mohnot.webp",
+    "Rushabh Dugad": "https://www.finnovate.in/assets/images/rushab.webp",
+    "Sagar Maheshwari": "sagar.webp",
+    "Santosh Mistry": "santosh.webp",
+    "Siddhesh Pathar": "Siddhesh.webp",
+    "Swapnil Bhagwat": "SwapnilB.webp",
+    "Swapnil Kansara": "Swapnil.webp",
+    "Sushant Bandewar": "sushantb.webp",
+    "Sushil Asrani": "sushil-asrani.webp",
+    "Tanvi": "tanvi.webp",
+    "Thakur Prasad Sahni": "thakur.webp",
+    "Akshay Jadhav": "https://www.finnovate.in/assets/images/akshayjadhav.webp",
+    "Vandana Manwani": "vandana.webp",
+    "Vibha Vashistha": "vibhav.webp"
+  };
+
+  function normalizePhotoKey(value) {
+    return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+  }
+
+  function resolvePhotoInput(value) {
+    if (!value) return "";
+    if (/^https?:\/\//i.test(value)) return value;
+    return `${TEAM_PICTURES_BASE}/${value}`;
+  }
+
+  function getPhotoUrl(name) {
+    const explicit = photoMap[name];
+    if (explicit) {
+      return resolvePhotoInput(explicit);
+    }
+
+    const parts = name.split(/\s+/).filter(Boolean);
+    const first = parts[0] || "";
+    const last = parts[parts.length - 1] || "";
+    const firstNorm = normalizePhotoKey(first);
+    const lastNorm = normalizePhotoKey(last);
+    const fullNorm = normalizePhotoKey(name);
+    const stemMatches = TEAM_PICTURE_FILES.find((file) => {
+      const stem = normalizePhotoKey(file.replace(/\.[^.]+$/, ""));
+      return (
+        stem === fullNorm ||
+        stem === `${firstNorm}${lastNorm}` ||
+        stem === `${firstNorm}${lastNorm.slice(0, 1)}` ||
+        stem.startsWith(`${firstNorm}${lastNorm.slice(0, 1)}`) ||
+        stem.startsWith(firstNorm) && lastNorm && stem.includes(lastNorm.slice(0, 1))
+      );
+    });
+
+    return stemMatches ? `${TEAM_PICTURES_BASE}/${stemMatches}` : "";
+  }
+
+  const leaders = [
+    {
+      name: "Nehal Mota",
+      role: "Founder & CEO",
+      note: "Top Leadership",
+      photo: photoMap["Nehal Mota"]
+    },
+    {
+      name: "Naveen Singh",
+      role: "Director — Technology",
+      note: "Top Leadership",
+      photo: photoMap["Naveen Singh"]
+    },
+    {
+      name: "Kainaz Tata",
+      role: "Head — HR",
+      note: "Top Leadership",
+      photo: photoMap["Kainaz Tata"]
+    },
+    {
+      name: "Neha Sanghrajka",
+      role: "Head — Accounts",
+      note: "Top Leadership",
+      photo: photoMap["Neha Sanghrajka"]
+    },
+    {
+      name: "Chintan Dudhela",
+      role: "Heading — Ahmedabad & Marketing",
+      note: "Top Leadership",
+      photo: photoMap["Chintan Dudhela"]
+    },
+    {
+      name: "Sagar Maheshwari",
+      role: "Head — Pune & Nashik",
+      note: "Top Leadership",
+      photo: photoMap["Sagar Maheshwari"]
+    },
+    {
+      name: "Pranob T",
+      role: "Head — Digital Marketing",
+      note: "Top Leadership",
+      photo: photoMap["Pranob T"]
+    },
+    {
+      name: "Jignesh Gajjar",
+      role: "Branch Head — Mumbai",
+      note: "Top Leadership",
+      photo: photoMap["Jignesh Gajjar"]
+    },
+    {
+      name: "Jayant Furia",
+      displayName: "CA Jayant Furia",
+      role: "Taxation Expert",
+      note: "Top Leadership",
+      photo: photoMap["Jayant Furia"]
+    }
+  ];
+
+  const departmentHeads = {
+    "Advisory & Wealth": "Vandana Manwani",
+    "Mumbai - Business and Lead Gen Team": "Jignesh Gajjar",
+    "Pune & Nashik - Business and Lead Gen Team": "Sagar Maheshwari",
+    "Ahmedabad - Business and Lead Gen Team": "Chintan Dudhela",
+    "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team": "Jayant Furia",
+    "Digital Marketing": "Pranob T",
+    "Content & Communications": "Aishwarya Krishnan",
+    "Events": "Anas Ansari",
+    "HR": "Kainaz Tata",
+    "Operations & Customer Excellence": "Pravin Mayekar"
+  };
+
+  const employees = [
+    { firstName: "Vandana", lastName: "Manwani", department: "Advisory & Wealth", designation: "Senior Manager - Wealth Advisory" },
+    { firstName: "Mansi", lastName: "Gangani", department: "Advisory & Wealth", designation: "Financial Fitness Expert" },
+    { firstName: "Aakansha", lastName: "Padwal", department: "Advisory & Wealth", designation: "Digital Financial Fitness Expert" },
+    { firstName: "Kruti", lastName: "Parekh", department: "Advisory & Wealth", designation: "Digital Finnfit Expert" },
+    { firstName: "Pradnya", lastName: "Patil", department: "Advisory & Wealth", designation: "Account Manager", photo: photoMap["Pradnya Patil"] },
+    { firstName: "Sushant", lastName: "Bandewar", department: "Advisory & Wealth", designation: "Manager - Wealth Advisory" },
+    { firstName: "Rashi", lastName: "Panchal", department: "Advisory & Wealth", designation: "Paraplanner" },
+    { firstName: "Preshita", lastName: "Jadhav", department: "Advisory & Wealth", designation: "Paraplanner" },
+    { firstName: "Avani", lastName: "Bazaz", department: "Advisory & Wealth", designation: "Junior Advisor" },
+    { firstName: "Kavya", lastName: "Shah", department: "Advisory & Wealth", designation: "Paraplanner" },
+    { firstName: "Kashin", lastName: "Shetty", department: "Advisory & Wealth", designation: "Account Manager" },
+
+    { firstName: "Jignesh", lastName: "Gajjar", department: "Mumbai - Business and Lead Gen Team", designation: "VP", photo: photoMap["Jignesh Gajjar"] },
+    { firstName: "Rekha", lastName: "Mohnot", department: "Mumbai - Business and Lead Gen Team", designation: "Sr. Client Relationship Manager", photo: photoMap["Rekha Mohnot"] },
+
+    { firstName: "Sagar", lastName: "Maheshwari", department: "Pune & Nashik - Business and Lead Gen Team", designation: "AVP - Growth", photo: photoMap["Sagar Maheshwari"] },
+
+    { firstName: "Chintan", lastName: "Dudhela", department: "Ahmedabad - Business and Lead Gen Team", designation: "Business Head - Ahmedabad" },
+
+    { firstName: "Jayant", lastName: "Furia", department: "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team", designation: "Business Head - Kutch", photo: photoMap["Jayant Furia"] },
+
+    { firstName: "Jay", lastName: "Zaveri", department: "Ahmedabad - Business and Lead Gen Team", designation: "Senior Business Development Specialist" },
+    { firstName: "Avinash", lastName: "Tiwari", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Sr Sales Manager" },
+    { firstName: "Ajinkya", lastName: "Jadhav", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Sr. Business Development Executive" },
+    { firstName: "Gosal", lastName: "Sangole", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Senior Manager - Business Development" },
+    { firstName: "Gaurav", lastName: "Prasad", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Business Development Manager" },
+    { firstName: "Rushikesh", lastName: "Shivgan", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Financial Fitness Expert" },
+    { firstName: "Chetan", lastName: "Vadnere", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Alliance Specialist" },
+    { firstName: "Prerna", lastName: "Amrutkar", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Alliance Specialist" },
+    { firstName: "Nakul", lastName: "Ghodke", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Business Development Manager" },
+    { firstName: "Shraddha", lastName: "Udage", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Senior Manager - Business Development" },
+    { firstName: "Priyanka", lastName: "Shahane", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Finfit Expert", photo: photoMap["Priyanka Shahane"] },
+    { firstName: "Neel", lastName: "Oza", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Assistant Para-planner" },
+    { firstName: "Artish", lastName: "More", department: "Mumbai - Business and Lead Gen Team", designation: "Sr. Business Development Executive" },
+    { firstName: "Siddhesh", lastName: "Pathar", department: "Mumbai - Business and Lead Gen Team", designation: "Account Manager" },
+    { firstName: "Vivek", lastName: "Rajesh Gupta", department: "Mumbai - Business and Lead Gen Team", designation: "Alliance Executive" },
+    { firstName: "Rajvi", lastName: "Gori", department: "Mumbai - Business and Lead Gen Team", designation: "Financial Fitness Specialist" },
+    { firstName: "Dimple", lastName: "Jagwani", department: "Ahmedabad - Business and Lead Gen Team", designation: "Financial Fitness Expert" },
+    { firstName: "Mayuri", lastName: "Verma", department: "Business Development - Ahmedabad", designation: "Senior Business Development Specialist" },
+    { firstName: "Tushar", lastName: "Parmar", department: "Mumbai - Business and Lead Gen Team", designation: "Business Development Executive" },
+    { firstName: "Ajay", lastName: "Jadeja", department: "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team", designation: "Business Development Manager - Gandhidham", photo: photoMap["Ajay Jadeja"] },
+    { firstName: "Priyanka", lastName: "Malviya", department: "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team", designation: "Business Development Executive" },
+    { firstName: "Drishti", lastName: "Bellani", department: "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team", designation: "Business Development Executive" },
+    { firstName: "Sushil", lastName: "Asrani", department: "Mumbai - Business and Lead Gen Team", designation: "Sr. Business Development Executive" },
+
+    { firstName: "Sumit", lastName: "Bari", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Alliance Specialist" },
+    { firstName: "Satvik", lastName: "Yadav", department: "Ahmedabad - Business and Lead Gen Team", designation: "Alliance Executive" },
+    { firstName: "Swapnil", lastName: "Kansara", department: "Ahmedabad - Business and Lead Gen Team", designation: "Alliance Specialist" },
+    { firstName: "Swapnil", lastName: "Kshirsagar", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Alliance Executive" },
+    { firstName: "Gaurav", lastName: "Khode", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Alliance Executive" },
+    { firstName: "Nikita", lastName: "Fichadiya", department: "Ahmedabad - Business and Lead Gen Team", designation: "Alliance Executive" },
+
+    { firstName: "Swapnil", lastName: "Bhagwat", department: "Mumbai - Business and Lead Gen Team", designation: "Lead Outreach Specialist" },
+    { firstName: "Onkar", lastName: "Rathod", department: "Pune & Nashik - Business and Lead Gen Team", designation: "Alliance Specialist" },
+    { firstName: "Sangeeta", lastName: "Singh", department: "Ahmedabad - Business and Lead Gen Team", designation: "Lead Outreach Specialist" },
+    { firstName: "Vishal", lastName: "Kadganchi", department: "Ahmedabad - Business and Lead Gen Team", designation: "Lead Outreach Specialist" },
+
+    { firstName: "Pranob", lastName: "T", department: "Digital Marketing", designation: "AVP - Product & Marketing", photo: photoMap["Pranob T"] },
+    { firstName: "Renu", lastName: "Agarwal", department: "Digital Marketing", designation: "Digital Marketing Specialist" },
+    { firstName: "Pavan", lastName: "Dhake", department: "Digital Marketing", designation: "SEO Specialist" },
+    { firstName: "Omkar", lastName: "Kandalekar", department: "Digital Marketing", designation: "Visual Designer Specialist" },
+    { firstName: "David", lastName: "Fernandes", department: "Digital Marketing", designation: "Lead Outreach Specialist", photo: photoMap["David Fernandes"] },
+    { firstName: "Pranav", lastName: "Kumar", department: "Digital Marketing", designation: "Lead Outreach Executive" },
+    { firstName: "Himanshi", lastName: "Makhe", department: "Digital Marketing", designation: "Graphic Designer" },
+
+    { firstName: "Aishwarya", lastName: "Krishnan", department: "Content & Communications", designation: "Content Strategist" },
+    { firstName: "Deepti", lastName: "Baria", department: "Content & Communications", designation: "Marketing and Communications Coordinator" },
+    { firstName: "Shruti", lastName: "Wagaralkar", department: "Content & Communications", designation: "Content Writer" },
+    { firstName: "Aastha", lastName: "Tiwari", department: "Content & Communications", designation: "Content Writer" },
+
+    { firstName: "Anas", lastName: "Ansari", department: "Events", designation: "Executive - Marketing and Communications" },
+
+    { firstName: "Neha", lastName: "Sanghrajka", department: "HR", designation: "Head - Accounts", photo: photoMap["Neha Sanghrajka"] },
+    { firstName: "Akshata", lastName: "Kochrekar", department: "HR", designation: "Recruitment Manager", photo: photoMap["Akshata Kochrekar"] },
+    { firstName: "Priyanka", lastName: "Kelkar", department: "HR", designation: "Senior Executive - Accounts", photo: photoMap["Priyanka Kelkar"] },
+    { firstName: "Vibha", lastName: "Vashistha", department: "HR", designation: "Assistant Manager - HR", photo: photoMap["Vibha Vashistha"] },
+    { firstName: "Ajay", lastName: "Chariya", department: "HR", designation: "Executive - HR", photo: photoMap["Ajay Chariya"] },
+    { firstName: "Nimisha", lastName: "Gaonkar", department: "HR", designation: "Executive - HR", photo: photoMap["Nimisha Gaonkar"] },
+    { firstName: "Sanjana", lastName: "Kadam", department: "HR", designation: "HR Recruiter" },
+
+    { firstName: "Riya", lastName: "Jain", department: "Equity & Research", designation: "Senior Investment Analyst" },
+    { firstName: "Rushabh", lastName: "Dugad", department: "Equity & Research", designation: "Analyst" },
+    { firstName: "Jinal", lastName: "Malviya", department: "Equity & Research", designation: "Manager - Equity Dealing" },
+    { firstName: "Ovesh", lastName: "Khatri", department: "Equity & Research", designation: "Relationship Manager - Equity" },
+    { firstName: "Gaurav", lastName: "Haldankar", department: "Equity & Research", designation: "Relationship Manager - Equity" },
+    { firstName: "Milind", lastName: "Jain", department: "Equity & Research", designation: "Relationship Manager - Equity" },
+    { firstName: "Vinjal", lastName: "Rao", department: "Equity & Research", designation: "Junior Analyst" },
+    { firstName: "Anoj", lastName: "Tambe", department: "Technology & Product", designation: "AVP - Technology", photo: photoMap["Anoj Tambe"] },
+    { firstName: "Shalin", lastName: "Bhavsar", department: "Technology & Product", designation: "Lead Software Engineer" },
+    { firstName: "Gunjan", lastName: "Rusia", department: "Technology & Product", designation: "Senior Software Developer" },
+    { firstName: "Thakur Prasad", lastName: "Sahni", department: "Technology & Product", designation: "Software Developer" },
+
+    { firstName: "Akshay", lastName: "Jadhav", department: "Operations & Customer Excellence", designation: "Senior Executive" },
+    { firstName: "Amit", lastName: "Lad", department: "Operations & Customer Excellence", designation: "Senior Executive" },
+    { firstName: "Rahul", lastName: "Meher", department: "Operations & Customer Excellence", designation: "Assistant Manager-Operations", photo: photoMap["Rahul Meher"] },
+    { firstName: "Pravin", lastName: "Mayekar", department: "Operations & Customer Excellence", designation: "Head - Operations", photo: photoMap["Pravin Mayekar"] },
+    { firstName: "Santosh", lastName: "Mistry", department: "Operations & Customer Excellence", designation: "Senior Executive", photo: photoMap["Santosh Mistry"] },
+    { firstName: "Ranjeet", lastName: "Waje", department: "Operations & Customer Excellence", designation: "Senior Executive", photo: photoMap["Ranjeet Waje"] },
+    { firstName: "Nagma", lastName: "Shaikh", department: "Operations & Customer Excellence", designation: "Account Executive" }
+  ];
+
+  const departmentDescriptions = {
+    "Advisory & Wealth": "Client advisory, planning, and wealth management capability under Vandana, including client relationship support.",
+    "Mumbai - Business and Lead Gen Team": "Mumbai business and lead generation team led by Jignesh.",
+    "Pune & Nashik - Business and Lead Gen Team": "Pune and Nashik business and lead generation team led by Sagar.",
+    "Ahmedabad - Business and Lead Gen Team": "Ahmedabad business and lead generation team led by Chintan.",
+    "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team": "Kutch region business and lead generation team led by Jayant.",
+    "Digital Marketing": "Digital marketing division led by Pranob, with Chintan also looking after overall marketing.",
+    "Content & Communications": "Content and communications team focused on messaging, copy, and communication output.",
+    "Events": "Events support team. Anas is handling this for now, without a fixed department head structure yet.",
+    "HR": "HR function led by Kainaz, with accounts handled by Neha.",
+    "Equity & Research": "Research, dealing, and equity-led investment support.",
+    "Technology & Product": "Engineering, product systems, and design support. All members in this section report to Naveen.",
+    "Operations & Customer Excellence": "Execution, operations, and customer excellence under Pravin."
+  };
+
+  const departmentBadges = {
+    "Events": "Currently Handling"
+  };
+
+  const departmentDisplayNames = {
+    "HR": "HR"
+  };
+
+  const departmentHierarchy = {
+    "HR": ["Neha Sanghrajka"]
+  };
+
+  const departmentReportLeads = {
+    "Equity & Research": {
+      name: "Nehal Mota",
+      role: "Founder & Leadership"
+    },
+    "Technology & Product": {
+      name: "Naveen Singh",
+      role: "Director"
+    }
+  };
+
+  const departmentsWithoutHead = new Set([
+    "Equity & Research",
+    "Technology & Product"
+  ]);
+
+  const departmentOrder = [
+    "Mumbai - Business and Lead Gen Team",
+    "Pune & Nashik - Business and Lead Gen Team",
+    "Ahmedabad - Business and Lead Gen Team",
+    "Kutch (Bhuj / Gandhidham) - Business and Lead Gen Team",
+    "Advisory & Wealth",
+    "Marketing",
+    "HR",
+    "Equity & Research",
+    "Technology & Product",
+    "Operations & Customer Excellence"
+  ];
+
+  function fullName(person) {
+    return [person.firstName, person.lastName].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  }
+
+  function getInitials(name) {
+    return name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(part => part[0].toUpperCase())
+      .join("");
+  }
+
+  function renderAvatar(name, photo) {
+    if (photo) {
+      return `
+        <div class="avatar">
+          <img src="${photo}" alt="${name}" loading="lazy" onerror="this.parentElement.innerHTML='${getInitials(name)}'">
+        </div>
+      `;
+    }
+
+    return `<div class="avatar">${getInitials(name)}</div>`;
+  }
+
+  function personCard(person, options = {}) {
+    const name = person.name || fullName(person);
+    const displayName = person.displayName || name;
+    const role = person.role || person.designation || "";
+    const photo = resolvePhotoInput(person.photo) || getPhotoUrl(name);
+    const classes = ["person-card"];
+
+    if (options.isLeader) classes.push("leader");
+    if (options.isHead) classes.push("head");
+
+    const badges = [];
+    if (options.badge) badges.push(`<span class="badge">${options.badge}</span>`);
+    if (options.department) badges.push(`<span class="badge secondary">${options.department}</span>`);
+
+    return `
+      <article class="${classes.join(" ")}">
+        <div class="person-top">
+          ${renderAvatar(name, photo)}
+          <div>
+            <div class="person-name">${displayName}</div>
+            <div class="person-role">${role}</div>
+          </div>
+        </div>
+        <div class="badge-row">
+          ${badges.join("")}
+        </div>
+      </article>
+    `;
+  }
+
+  function renderLeaders() {
+    const root = document.getElementById("leaders");
+    root.innerHTML = leaders
+      .map(person => personCard(person, { isLeader: true, badge: person.note }))
+      .join("");
+  }
+
+  function renderMarketingSection() {
+    const overallLead = { name: "Chintan Dudhela", role: "Heading — Ahmedabad & Marketing" };
+    const branchConfigs = [
+      { department: "Digital Marketing", head: "Pranob T" },
+      { department: "Content & Communications", head: "Aishwarya Krishnan" },
+      { department: "Events", head: "Anas Ansari" }
+    ];
+    const marketingTeamStrength = 1 + branchConfigs.reduce((count, { department }) => {
+      return count + employees.filter(person => person.department === department).length;
+    }, 0);
+
+    const branchesMarkup = branchConfigs.map(({ department, head }) => {
+      const roster = employees.filter(person => person.department === department);
+      const headPerson = roster.find(person => fullName(person) === head) || {
+        firstName: head,
+        lastName: "",
+        designation: "Department Head"
+      };
+      const members = roster.filter(person => fullName(person) !== head);
+
+      return `
+        <div class="marketing-branch">
+          <div class="branch-label">${department}</div>
+          <div class="branch-head">
+            ${personCard(headPerson, { isHead: true, badge: department === "Digital Marketing" ? "Digital Marketing Head" : (departmentBadges[department] || "Department Head") })}
+          </div>
+          ${
+            members.length
+              ? `<div class="branch-members">${members.map(member => personCard(member)).join("")}</div>`
+              : ``
+          }
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <section class="marketing-card">
+        <div class="department-top">
+          <div class="department-topline">
+            <h3 class="department-name">Marketing</h3>
+            <div class="department-count">${marketingTeamStrength} team members</div>
+          </div>
+          <p class="department-sub">Overall marketing is led by Chintan Dudhela and branches into Digital Marketing, Content & Communications, and Events.</p>
+        </div>
+        <div class="marketing-body">
+          <div class="marketing-pill-row">
+            <div class="marketing-pill">Marketing</div>
+          </div>
+          <div class="marketing-overall">
+            ${personCard(overallLead, { isHead: true, badge: "Marketing Head" })}
+          </div>
+          <div class="marketing-branches">
+            ${branchesMarkup}
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderDepartments() {
+    const root = document.getElementById("departments");
+
+    root.innerHTML = departmentOrder.map((department) => {
+      if (department === "Marketing") {
+        return renderMarketingSection();
+      }
+      const departmentLabel = departmentDisplayNames[department] || department;
+      const roster = employees.filter(person => person.department === department);
+      const showHead = !departmentsWithoutHead.has(department);
+      const reportLead = departmentReportLeads[department];
+      const headName = departmentHeads[department];
+      const hierarchyNames = departmentHierarchy[department] || [];
+      const head = roster.find(person => fullName(person) === headName) || {
+        firstName: headName || "TBD",
+        lastName: "",
+        designation: "Department Head"
+      };
+      const hierarchyPeople = showHead ? hierarchyNames
+        .map(name => roster.find(person => fullName(person) === name))
+        .filter(Boolean) : [];
+      const members = showHead ? roster.filter(person => {
+        const name = fullName(person);
+        return name !== headName && !hierarchyNames.includes(name);
+      }) : roster;
+      const isHrDepartment = department === "HR";
+      const hrTopMembers = isHrDepartment ? members.slice(0, 2) : [];
+      const hrBottomMembers = isHrDepartment ? members.slice(2) : [];
+      const headWrapClass = hierarchyPeople.length ? "head-wrap no-tail" : "head-wrap";
+      const hierarchyMarkup = hierarchyPeople.length
+        ? `<div class="hierarchy-stack">${hierarchyPeople.map((person, index) => `
+            <div class="hierarchy-node">
+              ${personCard(person, {
+                isHead: true,
+                badge: index === 0 ? "Reports To Head" : "Reports To " + fullName(hierarchyPeople[index - 1]),
+                department: department === "HR" && fullName(person) === "Neha Sanghrajka" ? "Accounts" : departmentLabel
+              })}
+            </div>
+          `).join("")}</div>`
+        : "";
+      const reportLeadMarkup = reportLead
+        ? `<div class="head-wrap">
+              ${personCard(reportLead, { isHead: true, badge: "Heads", department: departmentLabel })}
+            </div>`
+        : "";
+      const membersMarkup = isHrDepartment
+        ? `
+            <div class="members-grid two-up ${hierarchyPeople.length ? "has-parent-line" : ""}">
+              ${hrTopMembers.map(member => personCard(member)).join("")}
+            </div>
+            ${
+              hrBottomMembers.length
+                ? `<div class="members-grid no-line">${hrBottomMembers.map(member => personCard(member)).join("")}</div>`
+                : ``
+            }
+          `
+        : (
+          members.length
+            ? `<div class="members-grid ${hierarchyPeople.length ? "has-parent-line" : ""}">${members.map(member => personCard(member)).join("")}</div>`
+            : `<div class="members-grid empty"><div class="dept-empty">No additional team members mapped yet.</div></div>`
+        );
+
+      return `
+        <section class="department-card">
+          <div class="department-top">
+            <div class="department-topline">
+              <h3 class="department-name">${departmentLabel}</h3>
+              <div class="department-count">${roster.length} team members</div>
+            </div>
+            <p class="department-sub">${departmentDescriptions[department] || ""}</p>
+          </div>
+          <div class="department-body">
+            ${reportLeadMarkup}
+            ${showHead ? `
+            <div class="${headWrapClass}">
+              ${personCard(head, { isHead: true, badge: departmentBadges[department] || "Department Head", department: departmentLabel })}
+            </div>` : ""}
+            ${hierarchyMarkup}
+            ${membersMarkup}
+          </div>
+        </section>
+      `;
+    }).join("");
+  }
+
+  renderLeaders();
+  renderDepartments();
+</script>
+</body>
+</html>

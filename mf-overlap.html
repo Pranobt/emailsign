@@ -593,6 +593,8 @@ function renderDd(slot,funds,q){
 function hideDd(slot){document.getElementById('dropdown'+slot).style.display='none';}
 
 function selectFund(slot,fund){
+  // Cancel any pending debounce timer so it can't re-open the dropdown after selection
+  if(slot==='A'){clearTimeout(timerA);timerA=null;}else{clearTimeout(timerB);timerB=null;}
   if(slot==='A')selA=fund;else selB=fund;
   document.getElementById('search'+slot).style.display='none';
   hideDd(slot);

@@ -108,18 +108,18 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .ov-fund-bar-name{font-size:.82rem;font-weight:600;color:#2a3b35;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ov-bar-track{display:flex;border-radius:8px;overflow:hidden;height:52px;background:#dce8d8}
 .ov-bar-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px}
-.ov-bar-common{background:#c8e6a0;transition:width .7s cubic-bezier(.4,0,.2,1)}
-.ov-bar-unique{background:#eef2ee;flex:1}
+.ov-bar-common{background:rgba(0,147,86,.18);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.ov-bar-unique{background:#f0f2f0;flex:1}
 .ov-bar-num{font-size:.95rem;font-weight:700;line-height:1.1}
-.ov-bar-common .ov-bar-num{color:#1a5a20}
-.ov-bar-unique .ov-bar-num{color:#4a5e50}
+.ov-bar-common .ov-bar-num{color:#007040}
+.ov-bar-unique .ov-bar-num{color:#4a5a55}
 .ov-bar-lbl{font-size:.64rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.ov-bar-common .ov-bar-lbl{color:#2a7030}
-.ov-bar-unique .ov-bar-lbl{color:#6a7e70}
+.ov-bar-common .ov-bar-lbl{color:#009356}
+.ov-bar-unique .ov-bar-lbl{color:#6a7e78}
 
 /* Venn */
 .ov-venn-col{display:flex;flex-direction:column;align-items:center}
-.ov-venn-card{background:#fff;border-radius:20px;padding:20px 16px 16px;box-shadow:0 8px 32px rgba(0,0,0,.1);width:100%;isolation:isolate}
+.ov-venn-card{background:#fff;border-radius:20px;padding:24px 20px 16px;box-shadow:0 8px 32px rgba(0,0,0,.1);width:100%}
 .ov-venn-svg{display:block;width:100%;height:auto}
 .ov-venn-legend{display:flex;flex-direction:column;gap:10px;padding:14px 8px 4px;border-top:1px solid #eef0ec;margin-top:8px}
 .ov-legend-item{display:flex;align-items:flex-start;gap:10px;font-size:.82rem;font-weight:500;color:#2a3b35;line-height:1.4}
@@ -216,6 +216,62 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
   .ov-big-pct{font-size:2.6rem}
   .fn-nav-inner{padding:0 12px}
 }
+
+/* ---- APP DOWNLOAD BANNER ---- */
+.app-banner{
+  background:#e5ece3;
+  padding:0 24px 40px;
+  margin-top:0;
+}
+.app-banner-inner{
+  max-width:1100px;margin:0 auto;
+  background:#f0f0f0;
+  border-radius:20px;
+  padding:24px 28px;
+  display:flex;align-items:center;gap:28px;
+}
+.app-logo-wrap{flex-shrink:0}
+.app-logo-img{
+  width:90px;height:90px;border-radius:16px;
+  object-fit:cover;display:block;
+}
+.app-content{flex:1;min-width:0}
+.app-headline{
+  font-size:1.35rem;font-weight:700;color:#111;
+  letter-spacing:-.02em;line-height:1.2;margin-bottom:4px;
+}
+.app-sub{font-size:.88rem;color:#555;line-height:1.5;margin-bottom:12px}
+.app-rating-row{display:flex;align-items:center;gap:10px}
+.app-rating-badge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#fff;border-radius:8px;padding:4px 10px;min-width:52px;
+}
+.app-rating-num{font-size:1.05rem;font-weight:700;color:#111;line-height:1.1}
+.app-rating-label{font-size:.62rem;color:#777;text-transform:uppercase;letter-spacing:.04em}
+.app-stars{display:flex;gap:1px;font-size:1.3rem;color:#f5a623}
+.app-stars .star-half{position:relative;color:#ddd}
+.app-stars .star-half::before{
+  content:'★';position:absolute;left:0;top:0;
+  color:#f5a623;width:50%;overflow:hidden;
+}
+.app-download{flex-shrink:0;text-align:left}
+.app-download-label{
+  font-size:.82rem;font-weight:700;color:#111;
+  margin-bottom:10px;letter-spacing:.01em;
+}
+.app-store-btns{display:flex;flex-direction:column;gap:8px}
+.store-link{display:block}
+.store-btn-img{height:40px;width:auto;display:block;border-radius:6px}
+
+@media(max-width:760px){
+  .app-banner{padding:16px 14px 20px}
+  .app-banner-inner{flex-direction:column;align-items:flex-start;gap:16px;padding:20px}
+  .app-logo-img{width:64px;height:64px;border-radius:12px}
+  .app-headline{font-size:1.1rem}
+  .app-store-btns{flex-direction:row}
+  .store-btn-img{height:36px}
+  .app-download{width:100%}
+}
 </style>
 </head>
 <body>
@@ -277,11 +333,22 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 
     <!-- Placeholder -->
     <div id="placeholderState" class="ov-placeholder">
-      <svg class="ov-venn-svg" viewBox="0 0 520 300" style="max-width:380px;display:block;margin:0 auto;opacity:.22">
-        <rect width="520" height="300" fill="white"/>
-        <circle cx="185" cy="145" r="105" fill="#6b9e5e" style="mix-blend-mode:multiply"/>
-        <circle cx="370" cy="145" r="105" fill="#c9a07a" style="mix-blend-mode:multiply"/>
-      </svg>
+      <div class="ov-venn-card" style="max-width:440px;margin:0 auto 12px;">
+        <svg class="ov-venn-svg" viewBox="0 0 560 310">
+          <circle cx="195" cy="150" r="120" fill="#009356" opacity="0.25"/>
+          <circle cx="375" cy="150" r="120" fill="#1A2044" opacity="0.18"/>
+        </svg>
+        <div style="text-align:center;padding:0 8px 8px;display:flex;flex-direction:column;gap:10px">
+          <div class="ov-legend-item" style="justify-content:center">
+            <span class="ov-legend-dot" style="background:#009356"></span>
+            <span style="color:#a0b0a8;font-size:.82rem">Fund A</span>
+          </div>
+          <div class="ov-legend-item" style="justify-content:center">
+            <span class="ov-legend-dot" style="background:#1A2044"></span>
+            <span style="color:#a0b0a8;font-size:.82rem">Fund B</span>
+          </div>
+        </div>
+      </div>
       <p class="ov-placeholder-hint">Select two funds above and click <strong>Check Overlap</strong></p>
     </div>
 
@@ -308,12 +375,11 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
       <!-- Right: Venn diagram -->
       <div class="ov-venn-col">
         <div class="ov-venn-card">
-          <svg id="vennSvg" class="ov-venn-svg" viewBox="0 0 520 300">
-            <rect width="520" height="300" fill="white"/>
-            <circle id="vennCircleA" cx="185" cy="145" r="105" fill="#6b9e5e" style="mix-blend-mode:multiply"/>
-            <circle id="vennCircleB" cx="370" cy="145" r="105" fill="#c9a07a" style="mix-blend-mode:multiply"/>
-            <text id="vennPct" x="277" y="148" text-anchor="middle" dominant-baseline="middle"
-              font-family="Inter,sans-serif" font-size="30" font-weight="800" fill="#1a1a1a"></text>
+          <svg id="vennSvg" class="ov-venn-svg" viewBox="0 0 560 310">
+            <circle id="vennCircleA" cx="195" cy="150" r="120" fill="#009356"/>
+            <circle id="vennCircleB" cx="415" cy="150" r="120" fill="#1A2044" opacity="0.82"/>
+            <text id="vennPct" x="305" y="153" text-anchor="middle" dominant-baseline="middle"
+              font-family="Inter,sans-serif" font-size="32" font-weight="800" fill="#ffffff" letter-spacing="-1"></text>
           </svg>
           <div id="vennLegend" class="ov-venn-legend"></div>
         </div>
@@ -351,6 +417,46 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
   </div>
 
 </div><!-- end .ov-page -->
+
+<!-- APP DOWNLOAD BANNER -->
+<section class="app-banner">
+  <div class="app-banner-inner">
+
+    <!-- F logo -->
+    <div class="app-logo-wrap">
+      <img src="https://www.finnovate.in/assets/images/Finnovate-logo-F.png" alt="Finnovate Wealth" class="app-logo-img">
+    </div>
+
+    <!-- Headline + sub + rating -->
+    <div class="app-content">
+      <h2 class="app-headline">All your investments, one clear view</h2>
+      <p class="app-sub">Track, analyse and manage your portfolio with the Finnovate Wealth App</p>
+      <div class="app-rating-row">
+        <div class="app-rating-badge">
+          <span class="app-rating-num">4.5</span>
+          <span class="app-rating-label">Rating</span>
+        </div>
+        <div class="app-stars" aria-label="4.5 out of 5 stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span class="star-half">★</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download -->
+    <div class="app-download">
+      <p class="app-download-label">Download the App</p>
+      <div class="app-store-btns">
+        <a href="https://apps.apple.com/in/app/finnovate-wealth-app/id6740236625" target="_blank" rel="noopener" class="store-link">
+          <img src="https://www.finnovate.in/assets/images/appstore.png" alt="Download on App Store" class="store-btn-img">
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.finnovate.wealthtrack" target="_blank" rel="noopener" class="store-link">
+          <img src="https://www.finnovate.in/assets/images/playstore.png" alt="Get it on Google Play" class="store-btn-img">
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <script>
 const API='https://finapi.upvaly.com';
@@ -528,8 +634,8 @@ function hideResults(){
   document.getElementById('errorState').style.display='none';
   document.getElementById('detailSection').style.display='none';
   document.getElementById('placeholderState').style.display='block';
-  // Reset Venn
-  document.getElementById('vennCircleB').setAttribute('cx','370');
+  // Reset Venn to no-overlap position
+  document.getElementById('vennCircleB').setAttribute('cx','415');
   document.getElementById('vennPct').textContent='';
 }
 
@@ -611,8 +717,8 @@ function renderScore(pct,nCommon){
 
 /* Animate Venn circles to reflect overlap */
 function updateVenn(pct){
-  const r=105,cxA=185,cy=145;
-  // d decreases as overlap increases
+  const r=120,cxA=195,cy=150;
+  // At 0 % circles barely touch (d=2r); at 100 % nearly coincident (d≈0.05*2r)
   const d=r*2*Math.max(0.05,1-(pct/100)*0.95);
   const targetCxB=cxA+d;
 
@@ -620,13 +726,14 @@ function updateVenn(pct){
   const vennPct=document.getElementById('vennPct');
   const startX=parseFloat(circleB.getAttribute('cx'));
   const t0=performance.now();
-  const dur=700;
+  const dur=750;
 
   function step(now){
     const t=Math.min((now-t0)/dur,1);
     const ease=1-Math.pow(1-t,3);
     const cx=startX+(targetCxB-startX)*ease;
     circleB.setAttribute('cx',cx);
+    // Text sits at the horizontal centre of the lens
     vennPct.setAttribute('x',(cxA+cx)/2);
     if(t<1)requestAnimationFrame(step);
   }
@@ -663,11 +770,11 @@ function buildFundBar(name,nCommon,nUnique,pct){
 function setVennLegend(fA,fB){
   document.getElementById('vennLegend').innerHTML=`
     <div class="ov-legend-item">
-      <span class="ov-legend-dot" style="background:#6b9e5e"></span>
+      <span class="ov-legend-dot" style="background:#009356"></span>
       <span>${shortName(fA.schemeName)}</span>
     </div>
     <div class="ov-legend-item">
-      <span class="ov-legend-dot" style="background:#c9a07a"></span>
+      <span class="ov-legend-dot" style="background:#1A2044"></span>
       <span>${shortName(fB.schemeName)}</span>
     </div>`;
 }

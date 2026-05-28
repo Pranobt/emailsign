@@ -44,7 +44,7 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .ov-hero-title em{color:#009356;font-style:italic}
 .ov-hero-sub{color:#516a5e;font-size:.95rem;line-height:1.6;margin-bottom:36px}
 
-.ov-inputs-wrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:24px}
+.ov-inputs-wrap{display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .ov-slot{flex:1;position:relative}
 .ov-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #c8d8c4;border-radius:10px;font-size:.95rem;font-family:'Inter',sans-serif;color:#1a1a1a;outline:none;transition:border-color .2s,box-shadow .2s}
 .ov-input:focus{border-color:rgba(0,147,86,.6);box-shadow:0 0 0 4px rgba(0,147,86,.1)}
@@ -59,14 +59,13 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .dd-msg{padding:12px 14px;font-size:.875em;color:#6a8070;font-style:italic}
 .dd-name mark{background:rgba(0,147,86,.15);color:inherit;border-radius:2px;padding:0 1px;font-weight:700}
 
-.ov-chip{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:#e8f5ee;border:1.5px solid #b6ddc6;border-radius:9px;padding:10px 12px;margin-top:8px;text-align:left}
+.ov-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#e8f5ee;border:1.5px solid #b6ddc6;border-radius:10px;padding:14px 18px;text-align:left}
 .ov-chip-b{background:#f5eeff;border-color:#d8b4fe}
-.ov-chip-name{font-size:.875em;font-weight:600;color:#1a1a1a;line-height:1.35}
-.ov-chip-meta{font-size:.75em;color:#51636f;margin-top:2px}
+.ov-chip-name{font-size:.95em;font-weight:600;color:#1a1a1a;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ov-chip-x{background:none;border:none;cursor:pointer;color:#a0b0aa;font-size:1em;padding:2px;line-height:1;flex-shrink:0;transition:color .15s}
 .ov-chip-x:hover{color:#c0392b}
 
-.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:2px solid #009356;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:#009356;margin-top:2px;background:rgba(0,147,86,.04)}
+.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:2px solid #009356;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:#009356;background:rgba(0,147,86,.04)}
 
 .ov-same-warn{margin-bottom:16px;padding:9px 14px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.82em;color:#92400e}
 
@@ -600,10 +599,7 @@ function selectFund(slot,fund){
   const chip=document.getElementById('chip'+slot);
   const isB=slot==='B';
   chip.innerHTML=`<div class="ov-chip${isB?' ov-chip-b':''}">
-    <div>
-      <div class="ov-chip-name">${shortName(fund.schemeName)}</div>
-      <div class="ov-chip-meta">${fund.fundHouse||''} &middot; ${fund.schemeCategory||''}</div>
-    </div>
+    <div class="ov-chip-name">${shortName(fund.schemeName)}</div>
     <button class="ov-chip-x" onclick="clearFund('${slot}')" title="Remove">&#x2715;</button>
   </div>`;
   chip.style.display='block';

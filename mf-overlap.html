@@ -8,91 +8,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-:root{
-  --brand-700:#00844a;
-  --brand-600:#009356;
-  --brand-500:#00a35d;
-  --ink-900:#111111;
-  --ink-700:#2a3b35;
-  --ink-500:#51636f;
-  --ink-300:#9aa8a3;
-  --paper-100:#f6f7f4;
-  --paper-200:#eef1ed;
-  --paper-0:#ffffff;
-  --shadow-soft:0 18px 50px rgba(9,28,20,.12);
-  --shadow-surface:0 4px 16px rgba(15,45,30,.08);
-  --shadow-sm:0 1px 4px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.06);
-  --radius-xxl:28px;
-  --radius-xl:20px;
-  --radius-lg:16px;
-  --radius-md:12px;
-  --radius-sm:10px;
-  /* Legacy aliases for calculator components */
-  --green:#009356;
-  --green-light:#e8f5ee;
-  --green-mid:#c3e8d5;
-  --blue:#1a6fbf;
-  --purple:#7b3fa0;
-  --ink:#111111;
-  --ink-2:#2a3b35;
-  --ink-3:#51636f;
-  --border:rgba(15,111,74,.12);
-  --surface:#f6f7f4;
-  --white:#ffffff;
-  --radius:var(--radius-md);
-  --shadow:var(--shadow-sm);
-  --shadow-lg:0 8px 32px rgba(9,28,20,.12);
-}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter','Segoe UI',Tahoma,sans-serif;background:#f2f5f7;color:var(--ink-900);-webkit-font-smoothing:antialiased;scroll-padding-top:72px}
+body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;-webkit-font-smoothing:antialiased}
 
 /* ---- NAVBAR ---- */
-.fn-header{
-  position:sticky;top:0;z-index:1000;
-  background:#fff;
-  box-shadow:0 2px 12px rgba(12,28,20,.08);
-  border-bottom:1px solid rgba(15,111,74,.06);
-}
-.fn-nav-inner{
-  max-width:1200px;margin:0 auto;padding:0 20px;
-  height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;
-}
+.fn-header{position:sticky;top:0;z-index:1000;background:#fff;box-shadow:0 2px 12px rgba(12,28,20,.08);border-bottom:1px solid rgba(15,111,74,.06)}
+.fn-nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .fn-logo{display:flex;align-items:center;flex-shrink:0;text-decoration:none}
 .fn-logo img{height:28px;width:auto;display:block}
-.fn-nav-links{
-  display:flex;align-items:center;gap:2px;
-  list-style:none;margin:0;padding:0;
-}
-.fn-nav-links li a{
-  display:block;font-size:12.5px;font-weight:500;color:var(--ink-500);
-  text-decoration:none;padding:7px 11px;border-radius:8px;
-  text-transform:uppercase;letter-spacing:.06em;
-  transition:color .18s,background .18s;white-space:nowrap;
-}
-.fn-nav-links li a:hover{color:var(--brand-600);background:rgba(0,147,86,.06)}
-.fn-nav-links li a.fn-active{color:var(--brand-600)}
-.fn-nav-cta a{
-  background:var(--brand-600)!important;color:#fff!important;
-  padding:8px 20px!important;border-radius:10px!important;font-weight:600!important;
-}
-.fn-nav-cta a:hover{background:var(--brand-700)!important}
-.fn-hamburger{
-  display:none;flex-direction:column;gap:5px;cursor:pointer;
-  background:none;border:none;padding:8px;
-}
-.fn-hamburger span{
-  display:block;width:22px;height:2px;background:#2a3b35;border-radius:1px;
-  transition:all .3s;
-}
+.fn-nav-links{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}
+.fn-nav-links li a{display:block;font-size:12.5px;font-weight:500;color:#51636f;text-decoration:none;padding:7px 11px;border-radius:8px;text-transform:uppercase;letter-spacing:.06em;transition:color .18s,background .18s;white-space:nowrap}
+.fn-nav-links li a:hover{color:#009356;background:rgba(0,147,86,.06)}
+.fn-nav-links li a.fn-active{color:#009356}
+.fn-nav-cta a{background:#009356!important;color:#fff!important;padding:8px 20px!important;border-radius:10px!important;font-weight:600!important}
+.fn-nav-cta a:hover{background:#00844a!important}
+.fn-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px}
+.fn-hamburger span{display:block;width:22px;height:2px;background:#2a3b35;border-radius:1px;transition:all .3s}
 @media(max-width:991px){
-  .fn-nav-links{
-    display:none;flex-direction:column;align-items:flex-start;
-    position:fixed;top:64px;left:0;right:0;
-    background:#fff;padding:12px 20px 20px;
-    box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:999;gap:2px;
-  }
+  .fn-nav-links{display:none;flex-direction:column;align-items:flex-start;position:fixed;top:64px;left:0;right:0;background:#fff;padding:12px 20px 20px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:999;gap:2px}
   .fn-nav-links.fn-open{display:flex}
   .fn-hamburger{display:flex}
   .fn-nav-links li{width:100%}
@@ -100,181 +34,193 @@ body{font-family:'Inter','Segoe UI',Tahoma,sans-serif;background:#f2f5f7;color:v
   .fn-nav-cta a{margin-top:6px}
 }
 
-/* ---- LAYOUT ---- */
-.calc-page{max-width:1080px;margin:0 auto;padding:28px 20px 56px;position:relative;overflow:hidden}
-.calc-page::before{
-  content:'';position:absolute;top:-200px;right:-140px;
-  width:480px;height:480px;
-  background:radial-gradient(circle,rgba(0,147,86,.13),rgba(0,147,86,0));
-  filter:blur(8px);pointer-events:none;
-}
-.calc-header{margin-bottom:28px;position:relative;z-index:1}
-.calc-header h1{font-size:clamp(1.5rem,2vw,2.1rem);font-weight:700;color:var(--ink-900);line-height:1.2;margin-bottom:6px;letter-spacing:-.02em}
-.calc-header h1 em{color:var(--brand-600);font-style:italic}
-.calc-header p{color:var(--ink-500);font-size:.95rem;line-height:1.6;max-width:520px}
+/* ---- PAGE ---- */
+.ov-page{min-height:calc(100vh - 64px);background:#e5ece3}
 
-/* Two-column layout */
-.calc-body{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start;position:relative;z-index:1}
+/* ---- HERO ---- */
+.ov-hero{max-width:860px;margin:0 auto;padding:52px 24px 44px;text-align:center}
+.dd-item{text-align:left}
+.ov-hero-title{font-size:clamp(1.7rem,2.4vw,2.2rem);font-weight:700;color:#1a1a1a;margin-bottom:8px;letter-spacing:-.02em}
+.ov-hero-title em{color:#009356;font-style:italic}
+.ov-hero-sub{color:#516a5e;font-size:.95rem;line-height:1.6;margin-bottom:36px}
 
-/* ---- LEFT PANEL ---- */
-.left-panel{display:flex;flex-direction:column;gap:14px;position:sticky;top:80px}
-.panel-card{background:var(--paper-0);border-radius:var(--radius-xl);border:1px solid var(--border);box-shadow:var(--shadow-soft)}
+.ov-inputs-wrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:24px}
+.ov-slot{flex:1;position:relative}
+.ov-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #c8d8c4;border-radius:10px;font-size:.95rem;font-family:'Inter',sans-serif;color:#1a1a1a;outline:none;transition:border-color .2s,box-shadow .2s}
+.ov-input:focus{border-color:rgba(0,147,86,.6);box-shadow:0 0 0 4px rgba(0,147,86,.1)}
+.ov-input::placeholder{color:#a0b0a8}
 
-.fund-slot{padding:18px}
-.fund-slot-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.fund-badge{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75em;font-weight:700;color:#fff;flex-shrink:0}
-.fund-badge.a{background:var(--blue)}
-.fund-badge.b{background:var(--purple)}
-.fund-slot-head span{font-size:.82em;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
-
-.search-wrap{position:relative}
-.search-input{width:100%;padding:10px 14px;border:1px solid rgba(45,58,53,.15);border-radius:var(--radius-md);font-size:.9em;font-family:'Inter',sans-serif;color:var(--ink-900);background:var(--paper-0);outline:none;transition:border-color .2s,box-shadow .2s}
-.search-input:focus{border-color:rgba(0,147,86,.5);box-shadow:0 0 0 4px rgba(0,147,86,.12);background:var(--paper-0)}
-.search-input::placeholder{color:var(--ink-300)}
-
-.dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--paper-0);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);z-index:200;}
-.dd-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid #f3f4f6;transition:background .12s;min-height:44px;display:flex;flex-direction:column;justify-content:center}
+.ov-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid #c8d8c4;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:200}
+.dd-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f4f0;transition:background .12s;min-height:44px;display:flex;flex-direction:column;justify-content:center}
 .dd-item:last-child{border-bottom:none}
-.dd-item:hover{background:var(--green-light)}
-.dd-item .dd-name{font-size:.875em;font-weight:500;color:var(--ink);line-height:1.35}
-.dd-item .dd-meta{font-size:.76em;color:var(--ink-3);margin-top:2px}
-.dd-msg{padding:12px 14px;font-size:.875em;color:var(--ink-3);font-style:italic}
+.dd-item:hover{background:#e8f5ee}
+.dd-item .dd-name{font-size:.875em;font-weight:500;color:#1a1a1a;line-height:1.35}
+.dd-item .dd-meta{font-size:.76em;color:#51636f;margin-top:2px}
+.dd-msg{padding:12px 14px;font-size:.875em;color:#6a8070;font-style:italic}
+.dd-name mark{background:rgba(0,147,86,.15);color:inherit;border-radius:2px;padding:0 1px;font-weight:700}
 
-.chip{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:9px;padding:10px 12px}
-.chip.b-chip{background:#f5eeff;border-color:#d8b4fe}
-.chip-info .chip-name{font-size:.875em;font-weight:600;color:var(--ink);line-height:1.35}
-.chip-info .chip-meta{font-size:.76em;color:var(--ink-3);margin-top:2px}
-.chip-x{background:none;border:none;cursor:pointer;color:#b0b8c4;font-size:1em;padding:1px 2px;line-height:1;flex-shrink:0;transition:color .15s}
-.chip-x:hover{color:#c0392b}
+.ov-chip{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:#e8f5ee;border:1.5px solid #b6ddc6;border-radius:9px;padding:10px 12px;margin-top:8px;text-align:left}
+.ov-chip-b{background:#f5eeff;border-color:#d8b4fe}
+.ov-chip-name{font-size:.875em;font-weight:600;color:#1a1a1a;line-height:1.35}
+.ov-chip-meta{font-size:.75em;color:#51636f;margin-top:2px}
+.ov-chip-x{background:none;border:none;cursor:pointer;color:#a0b0aa;font-size:1em;padding:2px;line-height:1;flex-shrink:0;transition:color .15s}
+.ov-chip-x:hover{color:#c0392b}
 
-.divider-line{height:1px;background:var(--border);margin:0 18px}
+.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:2px solid #009356;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:#009356;margin-top:2px;background:rgba(0,147,86,.04)}
 
-.calc-btn{margin:16px 18px 18px;width:calc(100% - 36px);padding:13px;background:linear-gradient(120deg,var(--brand-600),var(--brand-700));color:#fff;font-family:'Inter',sans-serif;font-size:.95em;font-weight:600;border:none;border-radius:999px;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s;letter-spacing:.01em;box-shadow:0 12px 24px rgba(15,111,74,.22)}
-.calc-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 16px 28px rgba(15,111,74,.3)}
-.calc-btn:active:not(:disabled){transform:translateY(0);box-shadow:0 6px 14px rgba(15,111,74,.2)}
-.calc-btn:disabled{opacity:.38;cursor:not-allowed;box-shadow:none}
+.ov-same-warn{margin-bottom:16px;padding:9px 14px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.82em;color:#92400e}
 
-.same-warn{margin:0 18px 14px;padding:9px 12px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.8em;color:#92400e;display:none}
+.ov-check-btn{background:#1a4a2e;color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:background .18s,transform .15s,box-shadow .18s;box-shadow:0 8px 24px rgba(26,74,46,.3);letter-spacing:.01em}
+.ov-check-btn:hover:not(:disabled){background:#0f3020;transform:translateY(-1px);box-shadow:0 12px 30px rgba(26,74,46,.38)}
+.ov-check-btn:active:not(:disabled){transform:translateY(0)}
+.ov-check-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 
+/* ---- DIVIDER ---- */
+.ov-divider{height:3px;background:linear-gradient(90deg,#009356 65%,transparent);max-width:1100px;margin:0 auto;border-radius:2px}
 
+/* ---- RESULT AREA ---- */
+.ov-result-area{max-width:1100px;margin:0 auto;padding:40px 24px 48px}
 
-/* ---- RIGHT PANEL ---- */
-.right-panel{}
-.placeholder-state{background:var(--paper-0);border-radius:var(--radius-xl);border:1px solid var(--border);box-shadow:var(--shadow-surface);padding:48px 32px;text-align:center}
-.placeholder-state .ph-icon{font-size:2.5em;margin-bottom:12px;opacity:.3}
-.placeholder-state p{color:var(--ink-500);font-size:.9em;line-height:1.6}
+.ov-placeholder{text-align:center;padding:8px 0 24px}
+.ov-placeholder-hint{color:#7a9080;font-size:.9rem;margin-top:4px}
 
-/* Loader */
-.loader-state{background:var(--paper-0);border-radius:var(--radius-xl);border:1px solid var(--border);padding:48px 32px;text-align:center;display:none}
-.spinner{width:36px;height:36px;border:3px solid var(--paper-200);border-top-color:var(--brand-600);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+.ov-loader{text-align:center;padding:60px 0}
+.ov-spin{width:36px;height:36px;border:3px solid #c8d8c4;border-top-color:#009356;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loader-state p{color:var(--ink-500);font-size:.9em}
+.ov-loader p{color:#516a5e;font-size:.9rem}
 
-/* Error */
-.error-state{background:#fff5f5;border:1px solid #fecaca;border-radius:var(--radius-lg);padding:16px 20px;color:#b91c1c;font-size:.875em;display:none;line-height:1.5}
+.ov-error{background:#fff5f5;border:1px solid #fecaca;border-radius:14px;padding:16px 20px;color:#b91c1c;font-size:.875em;line-height:1.5}
 
-/* Results */
-.results-wrap{display:flex;flex-direction:column;gap:16px;display:none}
+/* ---- RESULTS GRID ---- */
+.ov-results{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
 
-/* Score card */
-.score-card{background:var(--paper-0);border-radius:var(--radius-xl);border:1px solid var(--border);box-shadow:var(--shadow-soft);padding:28px 24px}
-.score-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px}
-.score-left .score-num{font-size:3.4em;font-weight:800;line-height:1;color:var(--ink-900);letter-spacing:-.03em}
-.score-right{text-align:right;max-width:220px}
-.score-label{font-size:.9em;font-weight:500;color:var(--ink-700);line-height:1.5}
-.overlap-bar-track{height:8px;background:var(--paper-200);border-radius:20px;overflow:hidden;margin-bottom:8px}
-.overlap-bar-fill{height:100%;border-radius:20px;transition:width .9s cubic-bezier(.4,0,.2,1)}
-.bar-ticks{display:flex;justify-content:space-between;font-size:.72em;color:var(--ink-300)}
+/* Left stats */
+.ov-overlap-tag{display:inline-block;padding:6px 14px;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;color:#fff}
+.ov-overlap-tag.low{background:#009356}
+.ov-overlap-tag.moderate{background:#d97706}
+.ov-overlap-tag.high{background:#e85030}
+.ov-overlap-tag.very-high{background:#b91c1c}
 
-/* Stat row */
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
-.stat-item{text-align:center}
-.stat-item .sv{font-size:1.25em;font-weight:700;color:var(--ink-900)}
-.stat-item .sl{font-size:.74em;color:var(--ink-500);margin-top:2px}
-.cmp-divider{height:1px;background:var(--paper-200);margin:10px 0}
+.ov-big-pct{font-size:clamp(3rem,5vw,4.2rem);font-weight:800;letter-spacing:-.04em;color:#1a1a1a;line-height:1;margin-bottom:10px}
+.ov-pct-desc{font-size:.95rem;color:#516a5e;line-height:1.6;margin-bottom:28px;max-width:380px}
 
-/* Holdings section */
-.section-card{background:var(--paper-0);border-radius:var(--radius-xl);border:1px solid var(--border);box-shadow:var(--shadow-surface);overflow:hidden}
-.section-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.section-head h3{font-size:.9em;font-weight:700;color:var(--ink-900)}
-.section-head p{font-size:.78em;color:var(--ink-500)}
+.ov-fund-bars{display:flex;flex-direction:column;gap:14px}
+.ov-fund-bar-name{font-size:.82rem;font-weight:600;color:#2a3b35;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-bar-track{display:flex;border-radius:8px;overflow:hidden;height:52px;background:#dce8d8}
+.ov-bar-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px}
+.ov-bar-common{background:#c8e6a0;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.ov-bar-unique{background:#eef2ee;flex:1}
+.ov-bar-num{font-size:.95rem;font-weight:700;line-height:1.1}
+.ov-bar-common .ov-bar-num{color:#1a5a20}
+.ov-bar-unique .ov-bar-num{color:#4a5e50}
+.ov-bar-lbl{font-size:.64rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.ov-bar-common .ov-bar-lbl{color:#2a7030}
+.ov-bar-unique .ov-bar-lbl{color:#6a7e70}
 
-/* Tabs */
-.tab-bar{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;background:var(--paper-100);border-bottom:1px solid var(--border)}
+/* Venn */
+.ov-venn-col{display:flex;flex-direction:column;align-items:center}
+.ov-venn-card{background:#fff;border-radius:20px;padding:20px 16px 16px;box-shadow:0 8px 32px rgba(0,0,0,.1);width:100%;isolation:isolate}
+.ov-venn-svg{display:block;width:100%;height:auto}
+.ov-venn-legend{display:flex;flex-direction:column;gap:10px;padding:14px 8px 4px;border-top:1px solid #eef0ec;margin-top:8px}
+.ov-legend-item{display:flex;align-items:flex-start;gap:10px;font-size:.82rem;font-weight:500;color:#2a3b35;line-height:1.4}
+.ov-legend-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;margin-top:2px}
+
+/* ---- DETAIL SECTION ---- */
+.ov-detail{max-width:1100px;margin:0 auto;padding:0 24px 60px}
+
+.ov-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.ov-stat-item{text-align:center}
+.ov-sv{font-size:1.4em;font-weight:700;color:#1a1a1a}
+.ov-sl{font-size:.74em;color:#516a5e;margin-top:3px}
+
+.ov-section-card{background:#fff;border-radius:18px;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.ov-section-head{padding:14px 20px;border-bottom:1px solid #eef0ec}
+.ov-section-head h3{font-size:.9em;font-weight:700;color:#1a1a1a}
+.ov-disclaimer{font-size:.74em;color:#6a8070;line-height:1.7}
+
+/* Tab bar (reuse across detail) */
+.tab-bar{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;background:#f6f7f4;border-bottom:1px solid #eaece8}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{padding:11px 18px;font-family:'Inter',sans-serif;font-size:.83em;font-weight:600;color:var(--ink-500);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-1px;transition:color .15s,border-color .15s;min-height:44px}
-.tab-btn.active{color:var(--brand-600);border-bottom-color:var(--brand-600);background:var(--paper-0)}
-.tab-count{display:inline-block;background:var(--paper-200);color:var(--ink-500);font-size:.75em;border-radius:20px;padding:1px 6px;margin-left:4px;font-weight:600;transition:background .15s,color .15s}
-.tab-btn.active .tab-count{background:var(--brand-600);color:#fff}
+.tab-btn{padding:11px 18px;font-family:'Inter',sans-serif;font-size:.83em;font-weight:600;color:#516a5e;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-1px;transition:color .15s,border-color .15s;min-height:44px}
+.tab-btn.active{color:#009356;border-bottom-color:#009356;background:#fff}
+.tab-count{display:inline-block;background:#e8eae6;color:#516a5e;font-size:.75em;border-radius:20px;padding:1px 6px;margin-left:4px;font-weight:600;transition:background .15s,color .15s}
+.tab-btn.active .tab-count{background:#009356;color:#fff}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
 /* Tables */
 .tsc{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tsc table{width:100%;border-collapse:collapse;min-width:400px;font-size:.845em}
-.tsc th{background:var(--brand-600);color:#fff;font-weight:600;padding:9px 14px;text-align:left;white-space:nowrap;font-size:.8em;text-transform:uppercase;letter-spacing:.04em}
-.tsc td{padding:9px 14px;border-bottom:1px solid var(--paper-200);vertical-align:middle;color:var(--ink-900)}
+.tsc table{width:100%;border-collapse:collapse;min-width:360px;font-size:.845em}
+.tsc th{background:#009356;color:#fff;font-weight:600;padding:9px 14px;text-align:left;white-space:nowrap;font-size:.8em;text-transform:uppercase;letter-spacing:.04em}
+.tsc td{padding:9px 14px;border-bottom:1px solid #f0f4f0;vertical-align:middle;color:#1a1a1a}
 .tsc tr:last-child td{border-bottom:none}
-.tsc tr:nth-child(odd) td{background:var(--paper-100)}
-.tsc tr:nth-child(even) td{background:var(--paper-0)}
-.tsc tr:hover td{background:var(--green-light)}
-.w-a{color:var(--blue);font-weight:600;white-space:nowrap}
-.w-b{color:var(--purple);font-weight:600;white-space:nowrap}
-.sector-tag{display:inline-block;font-size:.75em;background:#f0f1f3;color:var(--ink-2);border-radius:5px;padding:2px 7px;white-space:nowrap}
-.rank-num{color:#b0b8c4;font-size:.8em;font-weight:500}
+.tsc tr:nth-child(odd) td{background:#f6f7f4}
+.tsc tr:nth-child(even) td{background:#fff}
+.tsc tr:hover td{background:#e8f5ee}
+.w-a{color:#1a6fbf;font-weight:600;white-space:nowrap}
+.w-b{color:#7b3fa0;font-weight:600;white-space:nowrap}
+.sector-tag{display:inline-block;font-size:.75em;background:#f0f2f0;color:#3a4a40;border-radius:5px;padding:2px 7px;white-space:nowrap}
+.rank-num{color:#a0b0a8;font-size:.8em;font-weight:500}
 .stock-name{font-weight:500}
-.table-empty{padding:24px 20px;text-align:center;font-size:.875em;color:var(--ink-3)}
+.table-empty{padding:24px 20px;text-align:center;font-size:.875em;color:#6a8070}
 
-/* Fund comparison cards */
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border)}
+/* Fund comparison */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #eaece8}
 .compare-col{padding:18px}
-.compare-col:first-child{border-right:1px solid var(--border)}
-.cmp-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.compare-col:first-child{border-right:1px solid #eaece8}
+.cmp-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #eaece8}
 .cmp-badge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7em;font-weight:700;color:#fff;flex-shrink:0}
-.cmp-badge.a{background:var(--blue)}
-.cmp-badge.b{background:var(--purple)}
-.cmp-name{font-size:.82em;font-weight:600;color:var(--ink-900);line-height:1.3}
-.cmp-cat{font-size:.74em;color:var(--ink-500);margin-top:1px}
-.cmp-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--paper-200);gap:8px}
+.cmp-badge.a{background:#1a6fbf}
+.cmp-badge.b{background:#7b3fa0}
+.cmp-name{font-size:.82em;font-weight:600;color:#1a1a1a;line-height:1.3}
+.cmp-cat{font-size:.74em;color:#516a5e;margin-top:1px}
+.cmp-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f5f6f4;gap:8px}
 .cmp-row:last-child{border-bottom:none}
-.cmp-label{font-size:.78em;color:var(--ink-500);flex-shrink:0}
-.cmp-val{font-size:.82em;font-weight:600;color:var(--ink-900);text-align:right}
+.cmp-label{font-size:.78em;color:#516a5e;flex-shrink:0}
+.cmp-val{font-size:.82em;font-weight:600;color:#1a1a1a;text-align:right}
+.cmp-divider{height:1px;background:#f0f2f0;margin:10px 0}
 .returns-mini{display:flex;gap:6px;margin:10px 0 6px}
-.ret-pill{flex:1;text-align:center;background:var(--paper-100);border-radius:var(--radius-sm);padding:6px 4px;border:1px solid var(--border)}
-.ret-pill span:first-child{display:block;font-size:.68em;color:var(--ink-500)}
+.ret-pill{flex:1;text-align:center;background:#f6f7f4;border-radius:7px;padding:6px 4px;border:1px solid #eaece8}
+.ret-pill span:first-child{display:block;font-size:.68em;color:#516a5e}
 .ret-pill span:last-child{display:block;font-size:.84em;font-weight:700;margin-top:2px}
-.pos{color:var(--brand-600)}
+.pos{color:#009356}
 .neg{color:#dc2626}
-.na-val{color:var(--ink-300);font-weight:400}
+.na-val{color:#a0b0a8;font-weight:400}
 .sector-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.sector-chip{font-size:.72em;background:var(--paper-100);border:1px solid var(--border);color:var(--ink-700);border-radius:5px;padding:2px 7px}
+.sector-chip{font-size:.72em;background:#f6f7f4;border:1px solid #eaece8;color:#3a4a40;border-radius:5px;padding:2px 7px}
 
-/* Disclaimer */
-.disclaimer{font-size:.74em;color:var(--ink-500);line-height:1.65;padding:14px 0 0;border-top:1px solid var(--border);margin-top:4px}
-
-/* Fuzzy highlight */
-.dd-name mark{background:rgba(0,147,86,.15);color:inherit;border-radius:2px;padding:0 1px;font-weight:700;}
-
-/* ---- MOBILE ---- */
-@media(max-width:767px){
-  .calc-page{padding:20px 14px 40px}
-  .calc-body{grid-template-columns:1fr;gap:14px}
-  .left-panel{position:static}
-  .score-top{flex-direction:column;gap:8px}
-  .score-right{text-align:left}
-  .stat-row{grid-template-columns:repeat(3,1fr)}
+/* ---- RESPONSIVE ---- */
+@media(max-width:900px){
+  .ov-results{grid-template-columns:1fr;gap:28px}
+  .ov-venn-col{order:-1}
+  .ov-venn-card{max-width:440px;margin:0 auto}
+  .ov-pct-desc{max-width:none}
   .compare-grid{grid-template-columns:1fr}
-  .compare-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
-  .score-left .score-num{font-size:2.6em}
+  .compare-col:first-child{border-right:none;border-bottom:1px solid #eaece8}
 }
-@media(min-width:768px) and (max-width:899px){
-  .calc-body{grid-template-columns:300px 1fr}
+@media(max-width:640px){
+  .ov-hero{padding:32px 16px 28px}
+  .ov-inputs-wrap{flex-direction:column;gap:10px}
+  .ov-vs-btn{align-self:center;margin-top:0}
+  .ov-slot{width:100%}
+  .ov-big-pct{font-size:3rem}
+  .ov-result-area{padding:28px 16px 40px}
+  .ov-detail{padding:0 16px 48px}
+  .ov-stat-row{gap:8px;padding:14px}
+  .ov-sv{font-size:1.2em}
+  .tsc td,.tsc th{padding:8px 10px}
+  .tsc table{font-size:.8em}
+}
+@media(max-width:400px){
+  .ov-check-btn{padding:13px 40px;font-size:.95rem}
+  .ov-big-pct{font-size:2.6rem}
+  .fn-nav-inner{padding:0 12px}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== FINNOVATE NAVBAR ===== -->
+<!-- NAVBAR -->
 <header class="fn-header">
   <div class="fn-nav-inner">
     <a href="https://www.finnovate.in" class="fn-logo" target="_blank" rel="noopener">
@@ -288,133 +234,123 @@ body{font-family:'Inter','Segoe UI',Tahoma,sans-serif;background:#f2f5f7;color:v
       <li><a href="https://www.finnovate.in/learn/finnversity" target="_blank" rel="noopener">Learn</a></li>
       <li class="fn-nav-cta"><a href="https://calendly.com/finnovate/financial-fitness-consultation" target="_blank" rel="noopener">Schedule Call</a></li>
     </ul>
-    <button class="fn-hamburger" id="fnHamburger" aria-label="Toggle menu" onclick="document.getElementById('fnNavLinks').classList.toggle('fn-open')">
+    <button class="fn-hamburger" id="fnHamburger" aria-label="Toggle menu"
+      onclick="document.getElementById('fnNavLinks').classList.toggle('fn-open')">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
-<!-- ===== END NAVBAR ===== -->
 
-<div class="calc-page">
+<div class="ov-page">
 
-  <div class="calc-header">
-    <h1>MF Overlap <em>Calculator</em></h1>
-    <p>Find out how much your two mutual funds share the same stocks. Spot hidden redundancy before it quietly reduces your diversification.</p>
-  </div>
+  <!-- HERO: Inputs -->
+  <section class="ov-hero">
+    <h1 class="ov-hero-title">MF Overlap <em>Calculator</em></h1>
+    <p class="ov-hero-sub">Find out how much your two mutual funds share the same stocks.</p>
 
-  <div class="calc-body">
-
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-      <div class="panel-card">
-
-        <!-- Fund A -->
-        <div class="fund-slot">
-          <div class="fund-slot-head">
-            <div class="fund-badge a">A</div>
-            <span>Fund A</span>
-          </div>
-          <div class="search-wrap">
-            <input type="text" class="search-input" id="searchA" placeholder="Search e.g. Parag Parikh" autocomplete="off" aria-label="Search Fund A">
-            <div class="dropdown" id="dropdownA" style="display:none"></div>
-          </div>
-          <div id="chipA" style="display:none;margin-top:8px"></div>
-        </div>
-
-        <div class="divider-line"></div>
-
-        <!-- Fund B -->
-        <div class="fund-slot">
-          <div class="fund-slot-head">
-            <div class="fund-badge b">B</div>
-            <span>Fund B</span>
-          </div>
-          <div class="search-wrap">
-            <input type="text" class="search-input" id="searchB" placeholder="Search e.g. Mirae Asset" autocomplete="off" aria-label="Search Fund B">
-            <div class="dropdown" id="dropdownB" style="display:none"></div>
-          </div>
-          <div id="chipB" style="display:none;margin-top:8px"></div>
-        </div>
-
-        <div class="same-warn" id="sameWarn">Both funds are the same. Please select two different funds.</div>
-
-        <button class="calc-btn" id="calcBtn" disabled onclick="calculateOverlap()">Calculate Overlap</button>
-
-
-
+    <div class="ov-inputs-wrap">
+      <!-- Fund A -->
+      <div class="ov-slot">
+        <input class="ov-input" id="searchA" type="text" placeholder="Type Scheme 1 Name" autocomplete="off" aria-label="Search Fund A">
+        <div class="ov-dropdown" id="dropdownA" style="display:none"></div>
+        <div id="chipA" style="display:none"></div>
+      </div>
+      <!-- Vs -->
+      <div class="ov-vs-btn">Vs</div>
+      <!-- Fund B -->
+      <div class="ov-slot">
+        <input class="ov-input" id="searchB" type="text" placeholder="Type Scheme 2 Name" autocomplete="off" aria-label="Search Fund B">
+        <div class="ov-dropdown" id="dropdownB" style="display:none"></div>
+        <div id="chipB" style="display:none"></div>
       </div>
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="right-panel" id="rightPanel">
+    <div id="sameWarn" class="ov-same-warn" style="display:none">Both funds are the same. Please select two different funds.</div>
+    <button class="ov-check-btn" id="calcBtn" disabled onclick="calculateOverlap()">Check Overlap</button>
+  </section>
 
-      <!-- Placeholder -->
-      <div class="placeholder-state" id="placeholderState">
-        <div class="ph-icon">⊕</div>
-        <p>Select two mutual funds on the left and click <strong>Calculate Overlap</strong> to see the full holdings comparison.</p>
-      </div>
+  <!-- DIVIDER -->
+  <div class="ov-divider"></div>
 
-      <!-- Loader -->
-      <div class="loader-state" id="loaderState">
-        <div class="spinner"></div>
-        <p>Fetching holdings data...</p>
-      </div>
+  <!-- RESULTS AREA -->
+  <div class="ov-result-area">
 
-      <!-- Error -->
-      <div class="error-state" id="errorState"></div>
-
-      <!-- Results -->
-      <div class="results-wrap" id="resultsWrap">
-
-        <!-- Score Card -->
-        <div class="score-card">
-          <div class="score-top">
-            <div class="score-left">
-              <div class="score-num" id="scoreNum">--</div>
-            </div>
-            <div class="score-right">
-              <div class="score-label" id="scoreLabel"></div>
-            </div>
-          </div>
-          <div class="overlap-bar-track">
-            <div class="overlap-bar-fill" id="barFill" style="width:0%"></div>
-          </div>
-          <div class="bar-ticks"><span>0%</span><span>100%</span></div>
-          <div class="stat-row">
-            <div class="stat-item"><div class="sv" id="statCommon">0</div><div class="sl">Common stocks</div></div>
-            <div class="stat-item"><div class="sv" id="statA">0</div><div class="sl">Only in Fund A</div></div>
-            <div class="stat-item"><div class="sv" id="statB">0</div><div class="sl">Only in Fund B</div></div>
-          </div>
-        </div>
-
-        <!-- Holdings Breakdown -->
-        <div class="section-card">
-          <div class="tab-bar" id="tabBar">
-            <button class="tab-btn active" id="tabCommon" onclick="switchTab('common')">Common <span class="tab-count" id="cntCommon">0</span></button>
-            <button class="tab-btn" id="tabOnlyA" onclick="switchTab('onlyA')">Only Fund A <span class="tab-count" id="cntA">0</span></button>
-            <button class="tab-btn" id="tabOnlyB" onclick="switchTab('onlyB')">Only Fund B <span class="tab-count" id="cntB">0</span></button>
-          </div>
-          <div class="tab-panel active" id="panelCommon"><div class="tsc" id="tableCommon"></div></div>
-          <div class="tab-panel" id="panelOnlyA"><div class="tsc" id="tableOnlyA"></div></div>
-          <div class="tab-panel" id="panelOnlyB"><div class="tsc" id="tableOnlyB"></div></div>
-        </div>
-
-        <!-- Fund Comparison -->
-        <div class="section-card">
-          <div class="section-head">
-            <h3>Fund Comparison</h3>
-          </div>
-          <div class="compare-grid" id="compareGrid"></div>
-        </div>
-
-        <!-- Disclaimer -->
-        <p class="disclaimer">Holdings data is sourced from publicly available AMFI disclosures. This tool is for informational purposes only and does not constitute investment advice. Please consult a SEBI-registered investment adviser before making any investment decision.</p>
-
-      </div>
+    <!-- Placeholder -->
+    <div id="placeholderState" class="ov-placeholder">
+      <svg class="ov-venn-svg" viewBox="0 0 520 300" style="max-width:380px;display:block;margin:0 auto;opacity:.22">
+        <rect width="520" height="300" fill="white"/>
+        <circle cx="185" cy="145" r="105" fill="#6b9e5e" style="mix-blend-mode:multiply"/>
+        <circle cx="370" cy="145" r="105" fill="#c9a07a" style="mix-blend-mode:multiply"/>
+      </svg>
+      <p class="ov-placeholder-hint">Select two funds above and click <strong>Check Overlap</strong></p>
     </div>
 
+    <!-- Loader -->
+    <div id="loaderState" class="ov-loader" style="display:none">
+      <div class="ov-spin"></div>
+      <p>Fetching holdings data…</p>
+    </div>
+
+    <!-- Error -->
+    <div id="errorState" class="ov-error" style="display:none"></div>
+
+    <!-- Results -->
+    <div id="resultsWrap" class="ov-results" style="display:none">
+
+      <!-- Left: stats -->
+      <div class="ov-stats-col">
+        <div id="overlapTag" class="ov-overlap-tag"></div>
+        <div id="scoreNum" class="ov-big-pct"></div>
+        <div id="scoreLabel" class="ov-pct-desc"></div>
+        <div id="fundBars" class="ov-fund-bars"></div>
+      </div>
+
+      <!-- Right: Venn diagram -->
+      <div class="ov-venn-col">
+        <div class="ov-venn-card">
+          <svg id="vennSvg" class="ov-venn-svg" viewBox="0 0 520 300">
+            <rect width="520" height="300" fill="white"/>
+            <circle id="vennCircleA" cx="185" cy="145" r="105" fill="#6b9e5e" style="mix-blend-mode:multiply"/>
+            <circle id="vennCircleB" cx="370" cy="145" r="105" fill="#c9a07a" style="mix-blend-mode:multiply"/>
+            <text id="vennPct" x="277" y="148" text-anchor="middle" dominant-baseline="middle"
+              font-family="Inter,sans-serif" font-size="30" font-weight="800" fill="#1a1a1a"></text>
+          </svg>
+          <div id="vennLegend" class="ov-venn-legend"></div>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
+
+  <!-- DETAIL: stats + tabs + comparison -->
+  <div id="detailSection" class="ov-detail" style="display:none">
+
+    <div class="ov-stat-row">
+      <div class="ov-stat-item"><div class="ov-sv" id="statCommon">0</div><div class="ov-sl">Common stocks</div></div>
+      <div class="ov-stat-item"><div class="ov-sv" id="statA">0</div><div class="ov-sl">Only in Fund A</div></div>
+      <div class="ov-stat-item"><div class="ov-sv" id="statB">0</div><div class="ov-sl">Only in Fund B</div></div>
+    </div>
+
+    <div class="ov-section-card">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="tabCommon" onclick="switchTab('common')">Common <span class="tab-count" id="cntCommon">0</span></button>
+        <button class="tab-btn" id="tabOnlyA" onclick="switchTab('onlyA')">Only Fund A <span class="tab-count" id="cntA">0</span></button>
+        <button class="tab-btn" id="tabOnlyB" onclick="switchTab('onlyB')">Only Fund B <span class="tab-count" id="cntB">0</span></button>
+      </div>
+      <div class="tab-panel active" id="panelCommon"><div class="tsc" id="tableCommon"></div></div>
+      <div class="tab-panel" id="panelOnlyA"><div class="tsc" id="tableOnlyA"></div></div>
+      <div class="tab-panel" id="panelOnlyB"><div class="tsc" id="tableOnlyB"></div></div>
+    </div>
+
+    <div class="ov-section-card">
+      <div class="ov-section-head"><h3>Fund Comparison</h3></div>
+      <div class="compare-grid" id="compareGrid"></div>
+    </div>
+
+    <p class="ov-disclaimer">Holdings data is sourced from publicly available AMFI disclosures. This tool is for informational purposes only and does not constitute investment advice. Please consult a SEBI-registered investment adviser before making any investment decision.</p>
+  </div>
+
+</div><!-- end .ov-page -->
 
 <script>
 const API='https://finapi.upvaly.com';
@@ -431,23 +367,25 @@ function cleanName(s){
 }
 
 function shortName(s){
-  return cleanName(s)
-    .replace(/\s*-\s*Direct Plan\s*-?\s*/i,' - Direct - ')
-    .replace(/\s*-\s*Regular Plan\s*-?\s*/i,' - Regular - ')
-    .replace(/\s*-\s*(Growth Option|Growth)\s*$/i,' Growth')
-    .replace(/\s*-\s*IDCW\s*$/i,' IDCW')
-    .replace(/\s{2,}/g,' ').trim();
+  const n=cleanName(s);
+  const isDirect=/direct/i.test(n);
+  // Strip all plan/option/growth markers to get the base fund name
+  const base=n
+    .replace(/\s*-?\s*(direct|regular)\s*(plan)?\s*-?\s*/gi,' ')
+    .replace(/\s*-?\s*(growth(\s+option)?|idcw|dividend)\s*-?\s*/gi,' ')
+    .replace(/\s*-\s*/g,' ')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+  return base+(isDirect?' Direct Growth':' Regular Growth');
 }
 
-// Fuzzy score: 0 = no match, higher = better match
+/* ---- Fuzzy search ---- */
 function fuzzyScore(q,text){
   if(!q||!text)return 0;
-  const ql=q.toLowerCase();
-  const tl=text.toLowerCase();
+  const ql=q.toLowerCase(),tl=text.toLowerCase();
   if(tl===ql)return 10000;
   if(tl.startsWith(ql))return 9000;
   if(tl.includes(ql))return 8000-tl.indexOf(ql);
-  // All query words match word-starts in text
   const qWords=ql.split(/\s+/).filter(Boolean);
   const tWords=tl.split(/\W+/).filter(Boolean);
   let wm=0;
@@ -457,10 +395,8 @@ function fuzzyScore(q,text){
   }
   if(wm>=qWords.length*2)return 7000+wm*50;
   if(wm>=qWords.length)return 5000+wm*50;
-  // Acronym: initials of words match query (e.g. "ppfas"→"Parag Parikh…")
   const initials=tWords.map(w=>w[0]).join('');
   if(initials.includes(ql.replace(/\s/g,'')))return 4000;
-  // Subsequence: all chars of query appear in order
   let qi=0,consec=0,maxC=0,gaps=0;
   for(let i=0;i<tl.length&&qi<ql.length;i++){
     if(tl[i]===ql[qi]){qi++;consec++;maxC=Math.max(maxC,consec);}
@@ -470,7 +406,6 @@ function fuzzyScore(q,text){
   return 0;
 }
 
-// Bold the first occurrence of each query word in the display name
 function fuzzyHighlight(q,text){
   if(!q)return text;
   const words=q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -486,9 +421,8 @@ function fuzzyHighlight(q,text){
 function doSearch(slot){
   const q=document.getElementById('search'+slot).value.trim();
   if(q.length<2){hideDd(slot);return;}
-  // For multi-word queries ("Parag flexi"), search each word in parallel then merge+rank
   const words=q.split(/\s+/).filter(w=>w.length>=2);
-  const terms=words.length>1?[...new Set(words.slice(0,3))]: [q];
+  const terms=words.length>1?[...new Set(words.slice(0,3))]:[q];
   Promise.all(terms.map(t=>
     fetch(`${API}/api/mf/search?schemeName=${encodeURIComponent(t)}`)
       .then(r=>r.json())
@@ -499,23 +433,54 @@ function doSearch(slot){
     for(const funds of sets)
       for(const f of funds)
         if(!seen.has(f.schemeCode)){seen.add(f.schemeCode);merged.push(f);}
-    renderDd(slot,merged,q);
+    // For multi-word queries, keep only funds whose name contains ALL query words
+    const qWords=q.toLowerCase().split(/\s+/).filter(w=>w.length>=2);
+    const filtered=qWords.length>1
+      ? merged.filter(f=>qWords.every(w=>(f.schemeName||'').toLowerCase().includes(w)))
+      : merged;
+    renderDd(slot,filtered.length?filtered:merged,q);
   });
+}
+
+// Keep only Direct Growth and Regular Growth — two clean options per scheme
+function filterGrowthOnly(funds){
+  const isGrowth=n=>{
+    const u=n.toUpperCase();
+    // must contain GROWTH and not IDCW/DIVIDEND
+    return /GROWTH/i.test(u) && !/IDCW|DIVIDEND/i.test(u);
+  };
+  // Group by base scheme name (strip plan/option suffix for grouping)
+  const baseName=n=>n.replace(/\s*-?\s*(direct|regular)\s*(plan)?\s*-?\s*(growth(\s+option)?)?$/i,'').replace(/\s*\(.*\)/g,'').trim().toLowerCase();
+  const groups={};
+  for(const f of funds){
+    if(!isGrowth(f.schemeName))continue;
+    const base=baseName(f.schemeName);
+    if(!groups[base])groups[base]=[];
+    groups[base].push(f);
+  }
+  // For each group pick at most one Direct Growth and one Regular Growth
+  const out=[];
+  for(const grp of Object.values(groups)){
+    const direct=grp.find(f=>/direct/i.test(f.schemeName));
+    const regular=grp.find(f=>/regular/i.test(f.schemeName));
+    if(direct)out.push(direct);
+    if(regular)out.push(regular);
+    // if neither label found, push first entry
+    if(!direct&&!regular&&grp[0])out.push(grp[0]);
+  }
+  return out;
 }
 
 function renderDd(slot,funds,q){
   const dd=document.getElementById('dropdown'+slot);
-  if(!funds.length){dd.innerHTML='<div class="dd-msg">No funds found. Try a different name.</div>';dd.style.display='block';return;}
-  // Score and re-rank
-  const scored=funds
-    .map(f=>({f,score:fuzzyScore(q||'',f.schemeName||'')}))
-    .sort((a,b)=>b.score-a.score);
+  const filtered=filterGrowthOnly(funds);
+  if(!filtered.length){dd.innerHTML='<div class="dd-msg">No funds found. Try a different name.</div>';dd.style.display='block';return;}
+  const scored=filtered.map(f=>({f,score:fuzzyScore(q||'',f.schemeName||'')})).sort((a,b)=>b.score-a.score);
   dd.innerHTML=scored.map(({f})=>`
     <div class="dd-item" tabindex="0" role="option"
       onmousedown="selectFund('${slot}',${JSON.stringify(f).replace(/"/g,'&quot;')})"
       onkeydown="if(event.key==='Enter')selectFund('${slot}',${JSON.stringify(f).replace(/"/g,'&quot;')})">
-      <span class="dd-name">${fuzzyHighlight(q,cleanName(f.schemeName))}</span>
-      <span class="dd-meta">${f.fundHouse||''} &middot; ${f.schemeCategory||''}</span>
+      <span class="dd-name">${shortName(f.schemeName)}</span>
     </div>`).join('');
   dd.style.display='block';
 }
@@ -527,13 +492,13 @@ function selectFund(slot,fund){
   document.getElementById('search'+slot).style.display='none';
   hideDd(slot);
   const chip=document.getElementById('chip'+slot);
-  const isBslot=slot==='B';
-  chip.innerHTML=`<div class="chip${isBslot?' b-chip':''}">
-    <div class="chip-info">
-      <div class="chip-name">${shortName(fund.schemeName)}</div>
-      <div class="chip-meta">${fund.fundHouse||''} &middot; ${fund.schemeCategory||''}</div>
+  const isB=slot==='B';
+  chip.innerHTML=`<div class="ov-chip${isB?' ov-chip-b':''}">
+    <div>
+      <div class="ov-chip-name">${shortName(fund.schemeName)}</div>
+      <div class="ov-chip-meta">${fund.fundHouse||''} &middot; ${fund.schemeCategory||''}</div>
     </div>
-    <button class="chip-x" onclick="clearFund('${slot}')" title="Remove">&#x2715;</button>
+    <button class="ov-chip-x" onclick="clearFund('${slot}')" title="Remove">&#x2715;</button>
   </div>`;
   chip.style.display='block';
   checkSame();updateBtn();
@@ -561,7 +526,11 @@ function updateBtn(){
 function hideResults(){
   document.getElementById('resultsWrap').style.display='none';
   document.getElementById('errorState').style.display='none';
+  document.getElementById('detailSection').style.display='none';
   document.getElementById('placeholderState').style.display='block';
+  // Reset Venn
+  document.getElementById('vennCircleB').setAttribute('cx','370');
+  document.getElementById('vennPct').textContent='';
 }
 
 function showEl(id){document.getElementById(id).style.display='block';}
@@ -569,7 +538,7 @@ function hideEl(id){document.getElementById(id).style.display='none';}
 
 function calculateOverlap(){
   if(!selA||!selB)return;
-  hideEl('placeholderState');hideEl('resultsWrap');hideEl('errorState');
+  hideEl('placeholderState');hideEl('resultsWrap');hideEl('errorState');hideEl('detailSection');
   showEl('loaderState');
   fetch(`${API}/api/mf/compare?funds=${selA.schemeCode},${selB.schemeCode}`)
     .then(r=>r.json())
@@ -586,6 +555,7 @@ function showError(msg){
   el.textContent=msg;el.style.display='block';
 }
 
+/* ---- Main render ---- */
 function renderResults(fA,fB){
   const hA=(fA.holdings||[]).filter(h=>h.weightage);
   const hB=(fB.holdings||[]).filter(h=>h.weightage);
@@ -606,42 +576,107 @@ function renderResults(fA,fB){
   common.sort((a,b)=>Math.min(b.wA,b.wB)-Math.min(a.wA,a.wB));
 
   renderScore(pct,common.length,onlyA.length,onlyB.length);
+  renderFundBars(fA,fB,common.length,onlyA.length,onlyB.length);
+  setVennLegend(fA,fB);
   renderCommonTable(common);
   renderExTable('OnlyA',onlyA,'w-a');
   renderExTable('OnlyB',onlyB,'w-b');
   renderCompare(fA,fB);
 
-  document.getElementById('cntCommon').textContent=common.length;
-  document.getElementById('cntA').textContent=onlyA.length;
-  document.getElementById('cntB').textContent=onlyB.length;
-  document.getElementById('statCommon').textContent=common.length;
-  document.getElementById('statA').textContent=onlyA.length;
-  document.getElementById('statB').textContent=onlyB.length;
+  ['cntCommon','cntA','cntB','statCommon','statA','statB'].forEach((id,i)=>{
+    document.getElementById(id).textContent=[common.length,onlyA.length,onlyB.length,common.length,onlyA.length,onlyB.length][i];
+  });
 
   switchTab('common');
-  document.getElementById('resultsWrap').style.display='flex';
+  document.getElementById('resultsWrap').style.display='grid';
+  document.getElementById('detailSection').style.display='block';
 }
 
-function renderScore(pct,nCommon,nA,nB){
-  const r=pct.toFixed(1);
-  document.getElementById('scoreNum').textContent=r+'%';
-  const barColor=pct<20?'#009356':pct<40?'#f59e0b':'#dc2626';
-  const label=pct<20?'Low overlap. Good diversification between these two funds.'
-    :pct<40?'Moderate overlap. Some redundancy exists between these funds.'
-    :pct<60?'High overlap. Significant redundancy between the two funds.'
-    :'Very high overlap. These funds hold largely the same stocks.';
-  document.getElementById('scoreLabel').textContent=label;
-  const bar=document.getElementById('barFill');
-  bar.style.background=barColor;
-  setTimeout(()=>bar.style.width=Math.min(pct,100)+'%',120);
+function renderScore(pct,nCommon){
+  document.getElementById('scoreNum').textContent=pct.toFixed(1)+'%';
+
+  let cls,label,desc;
+  if(pct<20){cls='low';label='LOW OVERLAP';desc='Good diversification between these two funds.';}
+  else if(pct<40){cls='moderate';label='MODERATE OVERLAP';desc='Some redundancy exists between these funds.';}
+  else if(pct<60){cls='high';label='HIGH OVERLAP';desc=`Overlap % with ${nCommon} Common Holdings between these two schemes`;}
+  else{cls='very-high';label='VERY HIGH OVERLAP';desc=`Very high overlap — ${nCommon} common holdings. Significant redundancy.`;}
+
+  const tag=document.getElementById('overlapTag');
+  tag.textContent=label;
+  tag.className='ov-overlap-tag '+cls;
+  document.getElementById('scoreLabel').textContent=desc;
+
+  setTimeout(()=>updateVenn(pct),120);
 }
 
+/* Animate Venn circles to reflect overlap */
+function updateVenn(pct){
+  const r=105,cxA=185,cy=145;
+  // d decreases as overlap increases
+  const d=r*2*Math.max(0.05,1-(pct/100)*0.95);
+  const targetCxB=cxA+d;
+
+  const circleB=document.getElementById('vennCircleB');
+  const vennPct=document.getElementById('vennPct');
+  const startX=parseFloat(circleB.getAttribute('cx'));
+  const t0=performance.now();
+  const dur=700;
+
+  function step(now){
+    const t=Math.min((now-t0)/dur,1);
+    const ease=1-Math.pow(1-t,3);
+    const cx=startX+(targetCxB-startX)*ease;
+    circleB.setAttribute('cx',cx);
+    vennPct.setAttribute('x',(cxA+cx)/2);
+    if(t<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  vennPct.textContent=Math.round(pct)+'%';
+}
+
+function renderFundBars(fA,fB,nCommon,nA,nB){
+  const totalA=nCommon+nA,totalB=nCommon+nB;
+  const pA=totalA?Math.round(nCommon/totalA*100):0;
+  const pB=totalB?Math.round(nCommon/totalB*100):0;
+  document.getElementById('fundBars').innerHTML=
+    buildFundBar(shortName(fA.schemeName),nCommon,nA,pA)+
+    buildFundBar(shortName(fB.schemeName),nCommon,nB,pB);
+}
+
+function buildFundBar(name,nCommon,nUnique,pct){
+  const w=Math.max(pct,14);
+  return`<div>
+    <div class="ov-fund-bar-name">${name}</div>
+    <div class="ov-bar-track">
+      <div class="ov-bar-seg ov-bar-common" style="width:${w}%">
+        <span class="ov-bar-num">${nCommon}</span>
+        <span class="ov-bar-lbl">Common</span>
+      </div>
+      <div class="ov-bar-seg ov-bar-unique">
+        <span class="ov-bar-num">${nUnique}</span>
+        <span class="ov-bar-lbl">Unique</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setVennLegend(fA,fB){
+  document.getElementById('vennLegend').innerHTML=`
+    <div class="ov-legend-item">
+      <span class="ov-legend-dot" style="background:#6b9e5e"></span>
+      <span>${shortName(fA.schemeName)}</span>
+    </div>
+    <div class="ov-legend-item">
+      <span class="ov-legend-dot" style="background:#c9a07a"></span>
+      <span>${shortName(fB.schemeName)}</span>
+    </div>`;
+}
+
+/* ---- Tables ---- */
 function renderCommonTable(common){
-  if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found between these two funds.</div>';return;}
-  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Sector</th><th>Fund A %</th><th>Fund B %</th></tr></thead><tbody>`;
-  common.forEach((s,i)=>{
-    h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td><span class="sector-tag">${s.sector||'N/A'}</span></td><td class="w-a">${s.wA.toFixed(2)}%</td><td class="w-b">${s.wB.toFixed(2)}%</td></tr>`;
-  });
+  if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found.</div>';return;}
+  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Fund A %</th><th>Fund B %</th></tr></thead><tbody>`;
+  common.forEach((s,i)=>{h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="w-a">${s.wA.toFixed(2)}%</td><td class="w-b">${s.wB.toFixed(2)}%</td></tr>`;});
   h+='</tbody></table>';
   document.getElementById('tableCommon').innerHTML=h;
 }
@@ -650,10 +685,8 @@ function renderExTable(which,holdings,wcls){
   const el=document.getElementById('table'+which);
   if(!holdings.length){el.innerHTML='<div class="table-empty">No exclusive holdings in this fund.</div>';return;}
   const sorted=[...holdings].sort((a,b)=>parseFloat(b.weightage)-parseFloat(a.weightage));
-  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Sector</th><th>Weight</th></tr></thead><tbody>`;
-  sorted.forEach((s,i)=>{
-    h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td><span class="sector-tag">${s.sector||'N/A'}</span></td><td class="${wcls}">${parseFloat(s.weightage).toFixed(2)}%</td></tr>`;
-  });
+  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Weight</th></tr></thead><tbody>`;
+  sorted.forEach((s,i)=>{h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="${wcls}">${parseFloat(s.weightage).toFixed(2)}%</td></tr>`;});
   h+='</tbody></table>';
   el.innerHTML=h;
 }
@@ -672,8 +705,7 @@ function buildCol(f,cls,slot){
   }
   const secHtml=sectors.length
     ?sectors.map(s=>`<span class="sector-chip">${s.sectorName||s.sector||''} ${parseFloat(s.percentage||s.weightage||0).toFixed(1)}%</span>`).join('')
-    :'<span style="color:#b0b8c4;font-size:.78em">Not available</span>';
-
+    :'<span style="color:#a0b0a8;font-size:.78em">Not available</span>';
   return`<div class="compare-col">
     <div class="cmp-head">
       <div class="cmp-badge ${cls}">${slot}</div>
@@ -693,16 +725,16 @@ function buildCol(f,cls,slot){
 
 function switchTab(tab){
   ['common','onlyA','onlyB'].forEach(t=>{
-    const pid='panel'+t.charAt(0).toUpperCase()+t.slice(1);
-    const tid='tab'+t.charAt(0).toUpperCase()+t.slice(1);
-    document.getElementById(pid).classList.remove('active');
-    document.getElementById(tid).classList.remove('active');
+    const P='panel'+t.charAt(0).toUpperCase()+t.slice(1);
+    const T='tab'+t.charAt(0).toUpperCase()+t.slice(1);
+    document.getElementById(P).classList.remove('active');
+    document.getElementById(T).classList.remove('active');
   });
   document.getElementById('panel'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
 }
 
-// Events
+/* ---- Events ---- */
 ['A','B'].forEach(slot=>{
   document.getElementById('search'+slot).addEventListener('input',function(){
     clearTimeout(slot==='A'?timerA:timerB);

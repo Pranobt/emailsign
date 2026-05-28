@@ -1,5 +1,29 @@
 window.SIGNATURES = [
   {
+    "name": "Veenie Shah",
+    "url": "https://pranobt.github.io/emailsign/VeenieS.html"
+  },
+  {
+    "name": "Nikhil Ambep",
+    "url": "https://pranobt.github.io/emailsign/NikhilA.html"
+  },
+  {
+    "name": "Vrushali Zawar",
+    "url": "https://pranobt.github.io/emailsign/VrushaliZ.html"
+  },
+  {
+    "name": "Hitesh Nagvekar",
+    "url": "https://pranobt.github.io/emailsign/HiteshN.html"
+  },
+  {
+    "name": "Melitta Coutinho",
+    "url": "https://pranobt.github.io/emailsign/MelittaC.html"
+  },
+  {
+    "name": "Humaid Khot",
+    "url": "https://pranobt.github.io/emailsign/HumaidK.html"
+  },
+  {
     "name": "Anuj Rane",
     "url": "https://pranobt.github.io/emailsign/AnujR.html"
   },

@@ -9,6 +9,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+:root{
+  --brand:#009356;
+  --brand-dark:#00723f;
+  --neon:#00e676;
+  --neon-bright:#1fff8f;
+  --neon-soft:#d6ffe8;
+  --navy:#1a2044;
+  --ink:#1a1a1a;
+  --sage:#e5ece3;
+  /* Strong easing curves (Emil) */
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;-webkit-font-smoothing:antialiased}
 
@@ -24,7 +37,7 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .fn-nav-cta a{background:#009356!important;color:#fff!important;padding:8px 20px!important;border-radius:10px!important;font-weight:600!important}
 .fn-nav-cta a:hover{background:#00844a!important}
 .fn-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px}
-.fn-hamburger span{display:block;width:22px;height:2px;background:#2a3b35;border-radius:1px;transition:all .3s}
+.fn-hamburger span{display:block;width:22px;height:2px;background:#2a3b35;border-radius:1px;transition:transform .3s var(--ease-out),opacity .3s}
 @media(max-width:991px){
   .fn-nav-links{display:none;flex-direction:column;align-items:flex-start;position:fixed;top:64px;left:0;right:0;background:#fff;padding:12px 20px 20px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:999;gap:2px}
   .fn-nav-links.fn-open{display:flex}
@@ -46,12 +59,14 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 
 .ov-inputs-wrap{display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .ov-slot{flex:1;position:relative;min-width:0}
-.ov-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #c8d8c4;border-radius:10px;font-size:.95rem;font-family:'Inter',sans-serif;color:#1a1a1a;outline:none;transition:border-color .2s,box-shadow .2s}
-.ov-input:focus{border-color:rgba(0,147,86,.6);box-shadow:0 0 0 4px rgba(0,147,86,.1)}
+.ov-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #c8d8c4;border-radius:10px;font-size:.95rem;font-family:'Inter',sans-serif;color:#1a1a1a;outline:none;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out)}
+.ov-input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(0,230,118,.18)}
 .ov-input::placeholder{color:#a0b0a8}
 
-.ov-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid #c8d8c4;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:200}
+.ov-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #c8d8c4;border-radius:10px;box-shadow:0 12px 36px rgba(8,40,24,.16);z-index:200;transform-origin:top center;animation:ddIn .16s var(--ease-out)}
+@keyframes ddIn{from{opacity:0;transform:scale(.97) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .dd-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f4f0;transition:background .12s;min-height:44px;display:flex;align-items:center;gap:10px}
+.dd-item:active{background:var(--neon-soft)}
 .dd-item:last-child{border-bottom:none}
 .dd-item:hover{background:#e8f5ee}
 .dd-item .dd-name{font-size:.875em;font-weight:500;color:#1a1a1a;line-height:1.35}
@@ -63,20 +78,21 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .ov-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#e8f5ee;border:1.5px solid #b6ddc6;border-radius:10px;padding:14px 18px;text-align:left}
 .ov-chip-b{background:#f5eeff;border-color:#d8b4fe}
 .ov-chip-name{font-size:.95em;font-weight:600;color:#1a1a1a;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
-.ov-chip-x{background:none;border:none;cursor:pointer;color:#a0b0aa;font-size:1em;padding:2px;line-height:1;flex-shrink:0;transition:color .15s}
+.ov-chip-x{background:none;border:none;cursor:pointer;color:#a0b0aa;font-size:1em;padding:2px;line-height:1;flex-shrink:0;transition:color .15s,transform .15s var(--ease-out)}
 .ov-chip-x:hover{color:#c0392b}
+.ov-chip-x:active{transform:scale(.85)}
 
-.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:2px solid #009356;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:#009356;background:rgba(0,147,86,.04)}
+.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:2px solid var(--brand);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:var(--brand);background:rgba(0,230,118,.08)}
 
 .ov-same-warn{margin-bottom:16px;padding:9px 14px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.82em;color:#92400e}
 
-.ov-check-btn{background:#1a4a2e;color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:background .18s,transform .15s,box-shadow .18s;box-shadow:0 8px 24px rgba(26,74,46,.3);letter-spacing:.01em}
-.ov-check-btn:hover:not(:disabled){background:#0f3020;transform:translateY(-1px);box-shadow:0 12px 30px rgba(26,74,46,.38)}
-.ov-check-btn:active:not(:disabled){transform:translateY(0)}
+.ov-check-btn{background:linear-gradient(135deg,#0f3a24,#1a4a2e);color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:transform .16s var(--ease-out),box-shadow .2s var(--ease-out),background .2s;box-shadow:0 8px 24px rgba(26,74,46,.28);letter-spacing:.01em}
+.ov-check-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,230,118,.32),0 0 0 1px rgba(0,230,118,.4) inset}
+.ov-check-btn:active:not(:disabled){transform:scale(.97)}
 .ov-check-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 
 /* ---- DIVIDER ---- */
-.ov-divider{height:3px;background:linear-gradient(90deg,#009356 65%,transparent);max-width:1100px;margin:0 auto;border-radius:2px}
+.ov-divider{height:3px;background:linear-gradient(90deg,var(--neon),var(--brand) 55%,transparent);max-width:1100px;margin:0 auto;border-radius:2px}
 
 /* ---- RESULT AREA ---- */
 .ov-result-area{max-width:1100px;margin:0 auto;padding:40px 24px 48px}
@@ -93,28 +109,37 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 
 /* ---- RESULTS GRID ---- */
 .ov-results{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+/* Staggered entrance on reveal */
+.ov-results.is-in .ov-stats-col,
+.ov-results.is-in .ov-venn-col{opacity:0;animation:ovReveal .55s var(--ease-out) forwards}
+.ov-results.is-in .ov-stats-col{animation-delay:.04s}
+.ov-results.is-in .ov-venn-col{animation-delay:.14s}
+@keyframes ovReveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.ov-detail.is-in{animation:ovReveal .55s var(--ease-out) .2s both}
 
 /* Left stats */
 .ov-overlap-tag{display:inline-block;padding:6px 14px;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;color:#fff}
-.ov-overlap-tag.low{background:#009356}
+.ov-overlap-tag.low{background:var(--neon);color:#063d27}
 .ov-overlap-tag.moderate{background:#d97706}
 .ov-overlap-tag.high{background:#e85030}
 .ov-overlap-tag.very-high{background:#b91c1c}
 
-.ov-big-pct{font-size:clamp(3rem,5vw,4.2rem);font-weight:800;letter-spacing:-.04em;color:#1a1a1a;line-height:1;margin-bottom:10px}
+.ov-big-pct{font-size:clamp(3rem,5vw,4.4rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:10px;
+  background:linear-gradient(115deg,var(--brand) 10%,var(--neon) 90%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--brand)}
 .ov-pct-desc{font-size:.95rem;color:#516a5e;line-height:1.6;margin-bottom:28px;max-width:380px}
 
 .ov-fund-bars{display:flex;flex-direction:column;gap:14px}
 .ov-fund-bar-name{font-size:.82rem;font-weight:600;color:#2a3b35;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ov-bar-track{display:flex;border-radius:8px;overflow:hidden;height:52px;background:#dce8d8}
-.ov-bar-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px}
-.ov-bar-common{background:rgba(0,147,86,.18);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.ov-bar-track{display:flex;border-radius:10px;overflow:hidden;height:54px;background:#eef2ee}
+.ov-bar-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px;overflow:hidden}
+.ov-bar-common{background:linear-gradient(135deg,var(--brand),var(--neon));transition:width .8s var(--ease-out);min-width:0}
 .ov-bar-unique{background:#f0f2f0;flex:1}
-.ov-bar-num{font-size:.95rem;font-weight:700;line-height:1.1}
-.ov-bar-common .ov-bar-num{color:#007040}
+.ov-bar-num{font-size:1rem;font-weight:800;line-height:1.1}
+.ov-bar-common .ov-bar-num{color:#fff}
 .ov-bar-unique .ov-bar-num{color:#4a5a55}
-.ov-bar-lbl{font-size:.64rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.ov-bar-common .ov-bar-lbl{color:#009356}
+.ov-bar-lbl{font-size:.64rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;font-weight:600}
+.ov-bar-common .ov-bar-lbl{color:rgba(255,255,255,.92)}
 .ov-bar-unique .ov-bar-lbl{color:#6a7e78}
 
 /* Venn */
@@ -215,6 +240,17 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
   .ov-check-btn{padding:13px 40px;font-size:.95rem}
   .ov-big-pct{font-size:2.6rem}
   .fn-nav-inner{padding:0 12px}
+}
+
+/* ---- REDUCED MOTION ---- */
+@media(prefers-reduced-motion:reduce){
+  .ov-results.is-in .ov-stats-col,
+  .ov-results.is-in .ov-venn-col,
+  .ov-detail.is-in,
+  .ov-dropdown{animation:none!important;opacity:1!important;transform:none!important}
+  .ov-bar-common{transition:none!important}
+  .ov-check-btn:hover:not(:disabled),
+  .ov-check-btn:active:not(:disabled){transform:none}
 }
 
 /* ---- APP DOWNLOAD BANNER ---- */
@@ -376,10 +412,16 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
       <div class="ov-venn-col">
         <div class="ov-venn-card">
           <svg id="vennSvg" class="ov-venn-svg" viewBox="0 0 560 310">
-            <circle id="vennCircleA" cx="195" cy="150" r="120" fill="#009356"/>
+            <defs>
+              <linearGradient id="vennGradA" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#009356"/>
+                <stop offset="100%" stop-color="#00e676"/>
+              </linearGradient>
+            </defs>
+            <circle id="vennCircleA" cx="195" cy="150" r="120" fill="url(#vennGradA)"/>
             <circle id="vennCircleB" cx="415" cy="150" r="120" fill="#1A2044" opacity="0.82"/>
             <text id="vennPct" x="305" y="153" text-anchor="middle" dominant-baseline="middle"
-              font-family="Inter,sans-serif" font-size="32" font-weight="800" fill="#ffffff" letter-spacing="-1"></text>
+              font-family="Inter,sans-serif" font-size="34" font-weight="800" fill="#ffffff" letter-spacing="-1"></text>
           </svg>
           <div id="vennLegend" class="ov-venn-legend"></div>
         </div>
@@ -399,9 +441,9 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 
     <div class="ov-section-card">
       <div class="tab-bar">
-        <button class="tab-btn active" id="tabCommon" onclick="switchTab('common')">Common <span class="tab-count" id="cntCommon">0</span></button>
-        <button class="tab-btn" id="tabOnlyA" onclick="switchTab('onlyA')">Only Fund A <span class="tab-count" id="cntA">0</span></button>
-        <button class="tab-btn" id="tabOnlyB" onclick="switchTab('onlyB')">Only Fund B <span class="tab-count" id="cntB">0</span></button>
+        <button class="tab-btn active" id="tabCommon" onclick="switchTab('common')"><span class="tab-label">Common</span> <span class="tab-count" id="cntCommon">0</span></button>
+        <button class="tab-btn" id="tabOnlyA" onclick="switchTab('onlyA')"><span class="tab-label" id="tabLabelA">Only Fund A</span> <span class="tab-count" id="cntA">0</span></button>
+        <button class="tab-btn" id="tabOnlyB" onclick="switchTab('onlyB')"><span class="tab-label" id="tabLabelB">Only Fund B</span> <span class="tab-count" id="cntB">0</span></button>
       </div>
       <div class="tab-panel active" id="panelCommon"><div class="tsc" id="tableCommon"></div></div>
       <div class="tab-panel" id="panelOnlyA"><div class="tsc" id="tableOnlyA"></div></div>
@@ -463,42 +505,40 @@ const API='https://finapi.upvaly.com';
 const ACRONYMS=new Set(['ELSS','SIP','NAV','NFO','IDCW','ETF','FOF','PSU','FMP','CEF','NRI','SBI','HDFC','ICICI','HSBC','DSP','ITI','LIC','UTI','JM','ESG','MNC','IT','BFSI','CRISIL','BSE','NSE']);
 
 /* AMC logo map: keyword → Clearbit domain */
+/* AMC logos — keyword → local file in assets/amc-logos/ */
 const AMC_DOMAINS={
-  'hdfc':'hdfcfund.com',
-  'sbi':'sbimf.com',
-  'icici':'icicipruamc.com',
-  'nippon':'nipponindiamf.com',
-  'aditya birla':'mutualfund.adityabirlacapital.com',
-  'kotak':'kotakmf.com',
-  'axis':'axismf.com',
-  'uti':'utimf.com',
-  'dsp':'dspim.com',
-  'mirae':'miraeassetmf.co.in',
-  'ppfas':'ppfas.com',
-  'parag parikh':'ppfas.com',
-  'tata':'tatamutualfund.com',
-  'franklin':'franklintempletonindia.com',
-  'quant':'quantmutual.com',
-  'edelweiss':'edelweissmf.com',
-  'bandhan':'bandhanmf.com',
-  'motilal':'motilaloswalmf.com',
-  'whiteoak':'whiteoakcapital.com',
-  'navi':'navi.com',
-  'canara':'canararobeco.com',
-  'invesco':'invescomf.com',
-  'baroda':'barodabnpparibasmf.com',
-  'pgim':'pgimindiamf.com',
-  'sundaram':'sundarammutual.com',
-  'hsbc':'assetmanagement.hsbc.co.in',
-  'jm':'jmfinancialmf.com',
-  'zerodha':'zerodhamf.com',
-  'groww':'growwmf.com',
-  'lt ':'lntmf.com',
-  'samco':'samcomf.com',
-  'trust':'trustmf.com',
+  'hdfc':'hdfc',
+  'sbi':'sbi',
+  'icici':'icici',
+  'nippon':'nippon',
+  'aditya birla':'adityabirla',
+  'kotak':'kotak',
+  'axis':'axis',
+  'uti':'uti',
+  'dsp':'dsp',
+  'mirae':'mirae',
+  'ppfas':'ppfas',
+  'parag parikh':'ppfas',
+  'tata':'tata',
+  'franklin':'franklin',
+  'quant':'quant',
+  'edelweiss':'edelweiss',
+  'bandhan':'bandhan',
+  'motilal':'motilal',
+  'whiteoak':'whiteoak',
+  'navi':'navi',
+  'canara':'canara',
+  'invesco':'invesco',
+  'baroda':'baroda',
+  'pgim':'pgim',
+  'sundaram':'sundaram',
+  'hsbc':'hsbc',
+  'jm':'jm',
+  'zerodha':'zerodha',
+  'groww':'groww',
+  'samco':'samco',
+  'trust':'trust',
 };
-
-const LOGO_DEV_TOKEN='pk_OREYY6HZRlKwkx8TEKDyhQ';
 
 /* AMC primary brand colors (keyword → hex) */
 const AMC_COLORS={
@@ -550,12 +590,12 @@ function tintHex(hex,opacity){
   return`rgb(${lr},${lg},${lb})`;
 }
 
-/* Returns a logo.dev URL or null */
+/* Returns local logo path or null */
 function amcLogoUrl(fundHouse){
   if(!fundHouse)return null;
   const h=fundHouse.toLowerCase();
-  for(const[kw,domain]of Object.entries(AMC_DOMAINS)){
-    if(h.includes(kw))return`https://img.logo.dev/${domain}?token=${LOGO_DEV_TOKEN}`;
+  for(const[kw,file]of Object.entries(AMC_DOMAINS)){
+    if(h.includes(kw))return`assets/amc-logos/${file}.png`;
   }
   return null;
 }
@@ -590,6 +630,11 @@ function shortName(s){
     .replace(/\s{2,}/g,' ')
     .trim();
   return base+(isDirect?' Direct Growth':' Regular Growth');
+}
+
+/* Compact name for tab labels: drop the plan/growth suffix */
+function tabName(s){
+  return shortName(s).replace(/\s+(Direct|Regular)\s+Growth$/i,'').trim();
 }
 
 /* ---- Fuzzy search ---- */
@@ -810,13 +855,37 @@ function renderResults(fA,fB){
     document.getElementById(id).textContent=[common.length,onlyA.length,onlyB.length,common.length,onlyA.length,onlyB.length][i];
   });
 
+  // Tab labels → actual fund names
+  document.getElementById('tabLabelA').textContent='Only '+tabName(fA.schemeName);
+  document.getElementById('tabLabelB').textContent='Only '+tabName(fB.schemeName);
+
   switchTab('common');
-  document.getElementById('resultsWrap').style.display='grid';
-  document.getElementById('detailSection').style.display='block';
+  const rw=document.getElementById('resultsWrap');
+  const ds=document.getElementById('detailSection');
+  rw.classList.remove('is-in');ds.classList.remove('is-in');
+  rw.style.display='grid';ds.style.display='block';
+  // Force reflow so the entrance animation re-fires on every calculation
+  void rw.offsetWidth;
+  rw.classList.add('is-in');ds.classList.add('is-in');
+}
+
+const REDUCE_MOTION=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* Count up a number to its value with ease-out */
+function countUp(el,target,suffix){
+  if(REDUCE_MOTION){el.textContent=target.toFixed(1)+suffix;return;}
+  const t0=performance.now(),dur=900;
+  function step(now){
+    const t=Math.min((now-t0)/dur,1);
+    const ease=1-Math.pow(1-t,3);
+    el.textContent=(target*ease).toFixed(1)+suffix;
+    if(t<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 function renderScore(pct,nCommon){
-  document.getElementById('scoreNum').textContent=pct.toFixed(1)+'%';
+  countUp(document.getElementById('scoreNum'),pct,'%');
 
   let cls,label,desc;
   if(pct<20){cls='low';label='LOW OVERLAP';desc='Good diversification between these two funds.';}
@@ -865,6 +934,12 @@ function renderFundBars(fA,fB,nCommon,nA,nB){
   document.getElementById('fundBars').innerHTML=
     buildFundBar(shortName(fA.schemeName),nCommon,nA,pA)+
     buildFundBar(shortName(fB.schemeName),nCommon,nB,pB);
+  // Animate the common segments from 0 → target width after paint
+  const segs=document.querySelectorAll('#fundBars .ov-bar-common');
+  if(REDUCE_MOTION){segs.forEach(s=>s.style.width=s.dataset.w);return;}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    segs.forEach(s=>{s.style.width=s.dataset.w;});
+  }));
 }
 
 function buildFundBar(name,nCommon,nUnique,pct){
@@ -872,7 +947,7 @@ function buildFundBar(name,nCommon,nUnique,pct){
   return`<div>
     <div class="ov-fund-bar-name">${name}</div>
     <div class="ov-bar-track">
-      <div class="ov-bar-seg ov-bar-common" style="width:${w}%">
+      <div class="ov-bar-seg ov-bar-common" data-w="${w}%" style="width:0%">
         <span class="ov-bar-num">${nCommon}</span>
         <span class="ov-bar-lbl">Common</span>
       </div>

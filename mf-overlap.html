@@ -76,6 +76,9 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .ov-slot{flex:1;position:relative;min-width:0}
 .ov-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #c8d8c4;border-radius:10px;font-size:.95rem;font-family:'Inter',sans-serif;color:#1a1a1a;outline:none;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out)}
 .ov-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(11,102,214,.14)}
+/* Scheme-coloured focus: A = rose, B = tan (ties each input to its Venn circle) */
+#searchA:focus{border-color:#86b39a;box-shadow:0 0 0 4px rgba(134,179,154,.24)}
+#searchB:focus{border-color:#d9a86d;box-shadow:0 0 0 4px rgba(217,168,109,.24)}
 .ov-input::placeholder{color:#a0b0a8}
 
 .ov-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #c8d8c4;border-radius:10px;box-shadow:0 12px 36px rgba(8,40,24,.16);z-index:200;transform-origin:top center;animation:ddIn .16s var(--ease-out)}
@@ -101,8 +104,8 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 
 .ov-same-warn{margin-bottom:16px;padding:9px 14px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.82em;color:#92400e}
 
-.ov-check-btn{background:var(--blue);color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:transform .16s var(--ease-out),box-shadow .2s var(--ease-out),background .2s;box-shadow:0 8px 22px rgba(11,102,214,.28);letter-spacing:.01em}
-.ov-check-btn:hover:not(:disabled){background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 14px 32px rgba(11,102,214,.34)}
+.ov-check-btn{background:var(--brand);color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:transform .16s var(--ease-out),box-shadow .2s var(--ease-out),background .2s;box-shadow:0 8px 22px rgba(0,147,86,.28);letter-spacing:.01em}
+.ov-check-btn:hover:not(:disabled){background:var(--brand-dark);transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,147,86,.34)}
 .ov-check-btn:active:not(:disabled){transform:scale(.97)}
 .ov-check-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 
@@ -143,10 +146,12 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .ov-pct-desc{font-size:.95rem;color:#516a5e;line-height:1.6;margin-bottom:28px;max-width:380px}
 
 .ov-fund-bars{display:flex;flex-direction:column;gap:14px}
-.ov-fund-bar-name{font-size:.82rem;font-weight:600;color:#2a3b35;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-fund-bar-name{font-size:.82rem;font-weight:600;color:#2a3b35;margin-bottom:6px;display:flex;align-items:baseline;gap:8px;overflow:hidden;white-space:nowrap}
+.ov-fund-bar-name>span:first-child{overflow:hidden;text-overflow:ellipsis}
+.ov-fund-bar-count{flex-shrink:0;font-size:.72rem;font-weight:600;color:#8a949e;font-family:var(--font-num)}
 .ov-bar-track{display:flex;border-radius:10px;overflow:hidden;height:54px;background:#eef2ee}
 .ov-bar-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px;overflow:hidden}
-.ov-bar-common{background:var(--brand);transition:width .8s var(--ease-out);min-width:0}
+.ov-bar-common{background:#009356;transition:width .8s var(--ease-out);min-width:0}
 .ov-bar-unique{background:#f0f2f0;flex:1}
 .ov-bar-num{font-size:1rem;font-weight:800;line-height:1.1}
 .ov-bar-common .ov-bar-num{color:#fff}
@@ -162,6 +167,7 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .ov-venn-legend{display:flex;flex-direction:column;gap:10px;padding:14px 8px 4px;border-top:1px solid #eef0ec;margin-top:8px}
 .ov-legend-item{display:flex;align-items:flex-start;gap:10px;font-size:.82rem;font-weight:500;color:#2a3b35;line-height:1.4}
 .ov-legend-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.ov-legend-common span:last-child{margin-left:32px}
 
 /* ---- DETAIL SECTION ---- */
 .ov-detail{max-width:1100px;margin:0 auto;padding:0 24px 60px}
@@ -186,27 +192,29 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
-/* Tables */
-.tsc{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tsc table{width:100%;border-collapse:collapse;min-width:360px;font-size:.845em}
-.tsc th{background:#009356;color:#fff;font-weight:600;padding:9px 14px;text-align:left;white-space:nowrap;font-size:.8em;text-transform:uppercase;letter-spacing:.04em}
-.tsc td{padding:9px 14px;border-bottom:1px solid #f0f4f0;vertical-align:middle;color:#1a1a1a}
-.tsc tr:last-child td{border-bottom:none}
-.tsc tr:nth-child(odd) td{background:#f6f7f4}
-.tsc tr:nth-child(even) td{background:#fff}
-.tsc tr:hover td{background:#e8f5ee}
-.w-a{color:#1a6fbf;font-weight:600;white-space:nowrap}
-.w-b{color:#7b3fa0;font-weight:600;white-space:nowrap}
-.sector-tag{display:inline-block;font-size:.75em;background:#f0f2f0;color:#3a4a40;border-radius:5px;padding:2px 7px;white-space:nowrap}
-.rank-num{color:#a0b0a8;font-size:.8em;font-weight:500}
-.stock-name{font-weight:500}
-.table-empty{padding:24px 20px;text-align:center;font-size:.875em;color:#6a8070}
-.tsc tr.tr-hidden{display:none}
-.tsc.show-all tr.tr-hidden{display:table-row}
+/* Holdings tables — airy "Scheme Breakup" style */
+.tsc{padding:2px 0}
+.htbl{width:100%}
+.htbl-head,.htbl-row{display:grid;align-items:center;gap:10px}
+.htbl-common .htbl-head,.htbl-common .htbl-row{grid-template-columns:34px minmax(0,1fr) 84px 84px}
+.htbl-ex .htbl-head,.htbl-ex .htbl-row{grid-template-columns:34px minmax(0,1fr) 96px}
+.htbl-head{margin:6px 14px 4px;padding:11px 8px;background:#f1f4f1;border-radius:10px}
+.htbl-head span{font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;color:#7e8a82;font-weight:600;display:flex;align-items:center;gap:5px}
+.htbl-head .h-r{justify-content:flex-end}
+.htbl-head .h-dot{width:8px;height:8px;border-radius:50%}
+.htbl-row{padding:13px 22px;border-bottom:1px solid #f3f5f3;transition:background .15s var(--ease-out)}
+.htbl-row:last-child{border-bottom:none}
+.htbl-row:hover{background:#f6f8f6}
+.h-rank{color:#aeb8b0;font-size:.82rem;font-weight:600;font-family:var(--font-num)}
+.h-name{font-weight:600;color:#1a1a1a;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-num{text-align:right;font-family:var(--font-num);font-weight:700;font-size:.9rem;color:#1f2a25;font-variant-numeric:tabular-nums}
+.table-empty{padding:24px 22px;text-align:center;font-size:.875em;color:#6a8070}
+.htbl-row.tr-hidden{display:none}
+.htbl.show-all .htbl-row.tr-hidden{display:grid}
 .see-more{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;background:#fff;border:none;border-top:1px solid #eef0ec;color:var(--blue);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s var(--ease-out)}
 .see-more:hover{background:#f3f8fd}
 .see-more .chev{display:block;transition:transform .25s var(--ease-out)}
-.tsc.show-all .see-more .chev{transform:rotate(180deg)}
+.htbl.show-all .see-more .chev{transform:rotate(180deg)}
 
 /* Fund comparison — head-to-head */
 .cmp2{padding:22px 24px 24px}
@@ -406,17 +414,23 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
     <div id="placeholderState" class="ov-placeholder">
       <div class="ov-venn-card" style="max-width:440px;margin:0 auto 12px;">
         <svg class="ov-venn-svg" viewBox="0 0 560 310">
-          <circle cx="195" cy="150" r="120" fill="#009356" opacity="0.25"/>
-          <circle cx="375" cy="150" r="120" fill="#1A2044" opacity="0.18"/>
+          <defs><clipPath id="phClipA"><circle cx="210" cy="150" r="120"/></clipPath></defs>
+          <circle cx="210" cy="150" r="120" fill="#86b39a" opacity="0.55"/>
+          <circle cx="350" cy="150" r="120" fill="#d9a86d" opacity="0.55"/>
+          <circle cx="350" cy="150" r="120" fill="#009356" opacity="0.6" clip-path="url(#phClipA)"/>
         </svg>
-        <div style="text-align:center;padding:0 8px 8px;display:flex;flex-direction:column;gap:10px">
+        <div style="text-align:center;padding:0 8px 8px;display:flex;flex-direction:column;gap:9px">
           <div class="ov-legend-item" style="justify-content:center">
-            <span class="ov-legend-dot" style="background:#009356"></span>
-            <span style="color:#a0b0a8;font-size:.82rem">Fund A</span>
+            <span class="ov-legend-dot" style="background:#86b39a"></span>
+            <span style="color:#a0b0a8;font-size:.82rem">Scheme 1</span>
           </div>
           <div class="ov-legend-item" style="justify-content:center">
-            <span class="ov-legend-dot" style="background:#1A2044"></span>
-            <span style="color:#a0b0a8;font-size:.82rem">Fund B</span>
+            <span class="ov-legend-dot" style="background:#d9a86d"></span>
+            <span style="color:#a0b0a8;font-size:.82rem">Scheme 2</span>
+          </div>
+          <div class="ov-legend-item" style="justify-content:center">
+            <span class="ov-legend-dot" style="background:#009356"></span>
+            <span style="color:#a0b0a8;font-size:.82rem">Common</span>
           </div>
         </div>
       </div>
@@ -448,13 +462,12 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
         <div class="ov-venn-card">
           <svg id="vennSvg" class="ov-venn-svg" viewBox="0 0 560 310">
             <defs>
-              <linearGradient id="vennGradA" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#00713f"/>
-                <stop offset="100%" stop-color="#00a35d"/>
-              </linearGradient>
+              <clipPath id="vennClipA"><circle cx="195" cy="150" r="120"/></clipPath>
             </defs>
-            <circle id="vennCircleA" cx="195" cy="150" r="120" fill="url(#vennGradA)"/>
-            <circle id="vennCircleB" cx="415" cy="150" r="120" fill="#1A2044" opacity="0.82"/>
+            <!-- Scheme 1 (rose) · Scheme 2 (tan) · Common overlap (sage) -->
+            <circle id="vennCircleA" cx="195" cy="150" r="120" fill="#86b39a"/>
+            <circle id="vennCircleB" cx="415" cy="150" r="120" fill="#d9a86d"/>
+            <circle id="vennLensB" cx="415" cy="150" r="120" fill="#009356" clip-path="url(#vennClipA)"/>
             <text id="vennPct" x="305" y="153" text-anchor="middle" dominant-baseline="middle"
               font-family="'Aeonik',Inter,sans-serif" font-size="34" font-weight="700" fill="#ffffff" letter-spacing="-1"></text>
           </svg>
@@ -467,12 +480,6 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 
   <!-- DETAIL: stats + tabs + comparison -->
   <div id="detailSection" class="ov-detail" style="display:none">
-
-    <div class="ov-stat-row">
-      <div class="ov-stat-item"><div class="ov-sv" id="statCommon">0</div><div class="ov-sl">Common stocks</div></div>
-      <div class="ov-stat-item"><div class="ov-sv" id="statA">0</div><div class="ov-sl">Only in Fund A</div></div>
-      <div class="ov-stat-item"><div class="ov-sv" id="statB">0</div><div class="ov-sl">Only in Fund B</div></div>
-    </div>
 
     <div class="ov-section-card">
       <div class="tab-bar">
@@ -795,9 +802,10 @@ function selectFund(slot,fund){
   const isB=slot==='B';
   const _logo=amcLogoUrl(fund.fundHouse);
   const _fb=amcInitialSvg(fund.fundHouse);
-  const _brand=amcBrandColor(fund.fundHouse);
-  const _bg=_brand?tintHex(_brand,.1):(isB?'#f5eeff':'#e8f5ee');
-  const _border=_brand?tintHex(_brand,.28):(isB?'#d8b4fe':'#b6ddc6');
+  // Scheme colour: A = rose, B = tan (matches the Venn circles)
+  const _scheme=isB?'#d9a86d':'#86b39a';
+  const _bg=tintHex(_scheme,.16);
+  const _border=tintHex(_scheme,.45);
   chip.innerHTML=`<div class="ov-chip" style="background:${_bg};border-color:${_border}">
     <img class="dd-amc-logo" src="${_logo||_fb}" alt="" onerror="this.src='${_fb}'">
     <div class="ov-chip-name">${shortName(fund.schemeName)}</div>
@@ -833,6 +841,7 @@ function hideResults(){
   document.getElementById('placeholderState').style.display='block';
   // Reset Venn to no-overlap position
   document.getElementById('vennCircleB').setAttribute('cx','415');
+  document.getElementById('vennLensB').setAttribute('cx','415');
   document.getElementById('vennPct').textContent='';
 }
 
@@ -886,8 +895,8 @@ function renderResults(fA,fB){
   renderExTable('OnlyB',onlyB,'w-b');
   renderCompare(fA,fB);
 
-  ['cntCommon','cntA','cntB','statCommon','statA','statB'].forEach((id,i)=>{
-    document.getElementById(id).textContent=[common.length,onlyA.length,onlyB.length,common.length,onlyA.length,onlyB.length][i];
+  ['cntCommon','cntA','cntB'].forEach((id,i)=>{
+    document.getElementById(id).textContent=[common.length,onlyA.length,onlyB.length][i];
   });
 
   // Tab labels → actual fund names
@@ -944,6 +953,7 @@ function updateVenn(pct){
   const targetCxB=cxA+d;
 
   const circleB=document.getElementById('vennCircleB');
+  const lensB=document.getElementById('vennLensB');
   const vennPct=document.getElementById('vennPct');
   const startX=parseFloat(circleB.getAttribute('cx'));
   const t0=performance.now();
@@ -954,7 +964,8 @@ function updateVenn(pct){
     const ease=1-Math.pow(1-t,3);
     const cx=startX+(targetCxB-startX)*ease;
     circleB.setAttribute('cx',cx);
-    // Text sits at the horizontal centre of the lens
+    lensB.setAttribute('cx',cx);          // sage overlap lens follows circle B
+    // Text sits at the midpoint of the two centres = centre of the lens
     vennPct.setAttribute('x',(cxA+cx)/2);
     if(t<1)requestAnimationFrame(step);
   }
@@ -979,8 +990,9 @@ function renderFundBars(fA,fB,nCommon,nA,nB){
 
 function buildFundBar(name,nCommon,nUnique,pct){
   const w=Math.max(pct,14);
+  const total=nCommon+nUnique;
   return`<div>
-    <div class="ov-fund-bar-name">${name}</div>
+    <div class="ov-fund-bar-name"><span>${name}</span><span class="ov-fund-bar-count">${total} stocks</span></div>
     <div class="ov-bar-track">
       <div class="ov-bar-seg ov-bar-common" data-w="${w}%" style="width:0%">
         <span class="ov-bar-num">${nCommon}</span>
@@ -1005,47 +1017,53 @@ function legendRow(fund,dotColor){
 }
 function setVennLegend(fA,fB){
   document.getElementById('vennLegend').innerHTML=
-    legendRow(fA,'#009356')+legendRow(fB,'#1A2044');
+    legendRow(fA,'#86b39a')+legendRow(fB,'#d9a86d')+
+    `<div class="ov-legend-item ov-legend-common">
+      <span class="ov-legend-dot" style="background:#009356"></span>
+      <span>Common holdings</span>
+    </div>`;
 }
 
 /* ---- Tables ---- */
 const TABLE_LIMIT=15;
 
-// Build a table from row strings; rows beyond TABLE_LIMIT collapse behind "See all"
-function buildTable(elId,headHtml,rows){
+const CHEV='<svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6.5L8 10.5L12 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+// Build an airy div-grid table; rows beyond TABLE_LIMIT collapse behind "See all"
+function buildTable(elId,cls,headHtml,rows){
   const el=document.getElementById(elId);
-  el.classList.remove('show-all');
   const total=rows.length;
-  const body=rows.map((r,i)=>i<TABLE_LIMIT?r:r.replace('<tr','<tr class="tr-hidden"')).join('');
-  let h=`<table>${headHtml}<tbody>${body}</tbody></table>`;
+  const body=rows.map((r,i)=>i<TABLE_LIMIT?r:r.replace('<div class="htbl-row"','<div class="htbl-row tr-hidden"')).join('');
+  let h=`<div class="htbl ${cls}">${headHtml}${body}`;
   if(total>TABLE_LIMIT){
-    h+=`<button class="see-more" onclick="toggleTable('${elId}',this,${total})"><span>See all ${total}</span>${CHEV}</button>`;
+    h+=`<button class="see-more" onclick="toggleTable(this,${total})"><span>See all ${total}</span>${CHEV}</button>`;
   }
+  h+=`</div>`;
   el.innerHTML=h;
 }
 
-const CHEV='<svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6.5L8 10.5L12 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-function toggleTable(elId,btn,total){
-  const el=document.getElementById(elId);
-  const open=el.classList.toggle('show-all');
+function toggleTable(btn,total){
+  const htbl=btn.closest('.htbl');
+  const open=htbl.classList.toggle('show-all');
   btn.innerHTML=`<span>${open?'Show top '+TABLE_LIMIT:'See all '+total}</span>${CHEV}`;
 }
 
 function renderCommonTable(common){
   if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found.</div>';return;}
-  const head=`<thead><tr><th>#</th><th>Stock</th><th>Fund A %</th><th>Fund B %</th></tr></thead>`;
-  const rows=common.map((s,i)=>`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="w-a">${s.wA.toFixed(2)}%</td><td class="w-b">${s.wB.toFixed(2)}%</td></tr>`);
-  buildTable('tableCommon',head,rows);
+  const head=`<div class="htbl-head"><span></span><span>Stock</span>`+
+    `<span class="h-r"><i class="h-dot" style="background:#86b39a"></i>Fund A %</span>`+
+    `<span class="h-r"><i class="h-dot" style="background:#d9a86d"></i>Fund B %</span></div>`;
+  const rows=common.map((s,i)=>`<div class="htbl-row"><span class="h-rank">${i+1}</span><span class="h-name">${s.name}</span><span class="h-num">${s.wA.toFixed(2)}%</span><span class="h-num">${s.wB.toFixed(2)}%</span></div>`);
+  buildTable('tableCommon','htbl-common',head,rows);
 }
 
 function renderExTable(which,holdings,wcls){
   const elId='table'+which;
   if(!holdings.length){document.getElementById(elId).innerHTML='<div class="table-empty">No exclusive holdings in this fund.</div>';return;}
   const sorted=[...holdings].sort((a,b)=>parseFloat(b.weightage)-parseFloat(a.weightage));
-  const head=`<thead><tr><th>#</th><th>Stock</th><th>Weight</th></tr></thead>`;
-  const rows=sorted.map((s,i)=>`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="${wcls}">${parseFloat(s.weightage).toFixed(2)}%</td></tr>`);
-  buildTable(elId,head,rows);
+  const head=`<div class="htbl-head"><span></span><span>Stock</span><span class="h-r">Weight</span></div>`;
+  const rows=sorted.map((s,i)=>`<div class="htbl-row"><span class="h-rank">${i+1}</span><span class="h-name">${s.name}</span><span class="h-num">${parseFloat(s.weightage).toFixed(2)}%</span></div>`);
+  buildTable(elId,'htbl-ex',head,rows);
 }
 
 function renderCompare(fA,fB){
@@ -1089,6 +1107,7 @@ function renderCompare(fA,fB){
   };
   const nav=f=>f.latestNav?'₹'+f.latestNav:'N/A';
   const er=f=>f.expenseRatio!=null?f.expenseRatio+'%':'N/A';
+  const count=f=>{const n=(f.holdings||[]).filter(h=>h.weightage).length;return n?n+' stocks':'N/A';};
 
   const secList=f=>{
     const s=(f.sectors||[]).slice(0,5);
@@ -1104,6 +1123,7 @@ function renderCompare(fA,fB){
         <div class="cmp2-head b">${head(fB)}</div>
       </div>
       <div class="cmp2-rows">
+        ${row('No. of holdings',count(fA),count(fB))}
         ${row('AUM',aum(fA),aum(fB))}
         ${row('Expense Ratio',er(fA),er(fB),false)}
         ${row('Risk',fA.schemeRisk||'N/A',fB.schemeRisk||'N/A')}

@@ -182,12 +182,13 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .ov-section-head h3{font-size:.9em;font-weight:700;color:#1a1a1a}
 .ov-disclaimer{font-size:.74em;color:#6a8070;line-height:1.7}
 
-/* Tab bar (reuse across detail) */
-.tab-bar{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;background:#f6f7f4;border-bottom:1px solid #eaece8}
+/* Tab bar — segmented box control on a grey track (sits in the table card) */
+.tab-bar{display:flex;gap:5px;padding:6px;margin:14px 16px 8px;background:#f1f4f1;border-radius:12px;overflow-x:auto;scrollbar-width:none}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{padding:11px 18px;font-family:'Inter',sans-serif;font-size:.83em;font-weight:600;color:#516a5e;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;margin-bottom:-1px;transition:color .15s,border-color .15s;min-height:44px}
-.tab-btn.active{color:#009356;border-bottom-color:#009356;background:#fff}
-.tab-count{display:inline-block;background:#e8eae6;color:#516a5e;font-size:.75em;border-radius:20px;padding:1px 6px;margin-left:4px;font-weight:600;transition:background .15s,color .15s}
+.tab-btn{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:9px 15px;font-family:'Inter',sans-serif;font-size:.83rem;font-weight:600;color:#5e6f66;background:transparent;border:none;border-radius:9px;cursor:pointer;white-space:nowrap;transition:background .18s var(--ease-out),color .18s var(--ease-out),box-shadow .18s var(--ease-out)}
+.tab-btn:hover:not(.active){color:#1a1a1a;background:rgba(255,255,255,.5)}
+.tab-btn.active{background:#fff;color:#009356;box-shadow:0 1px 4px rgba(12,28,20,.1)}
+.tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 6px;background:#e2e7e2;color:#6a7670;font-size:.72rem;border-radius:20px;font-weight:700;font-family:var(--font-num);transition:background .18s,color .18s}
 .tab-btn.active .tab-count{background:#009356;color:#fff}
 .tab-panel{display:none}
 .tab-panel.active{display:block}

@@ -203,34 +203,36 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .table-empty{padding:24px 20px;text-align:center;font-size:.875em;color:#6a8070}
 .tsc tr.tr-hidden{display:none}
 .tsc.show-all tr.tr-hidden{display:table-row}
-.see-more{display:block;width:100%;padding:12px;background:#fff;border:none;border-top:1px solid #eef0ec;color:var(--blue);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s var(--ease-out)}
+.see-more{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;background:#fff;border:none;border-top:1px solid #eef0ec;color:var(--blue);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s var(--ease-out)}
 .see-more:hover{background:#f3f8fd}
-.see-more .chev{display:inline-block;margin-left:4px;transition:transform .2s var(--ease-out)}
+.see-more .chev{display:block;transition:transform .25s var(--ease-out)}
 .tsc.show-all .see-more .chev{transform:rotate(180deg)}
 
 /* Fund comparison — head-to-head */
-.cmp2{padding:20px 22px 22px}
-.cmp2-heads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px}
-.cmp2-head{display:flex;align-items:center;gap:10px;min-width:0;padding-left:11px;border-left:3px solid #ddd}
-.cmp2-head.a{border-color:var(--brand)}
-.cmp2-head.b{border-color:var(--navy)}
-.cmp2-head.b{justify-content:flex-end;flex-direction:row-reverse;padding-left:0;padding-right:11px;border-left:none;border-right:3px solid var(--navy);text-align:right}
+.cmp2{padding:22px 24px 24px}
+/* Content sits in a centered column so paired values stay close & scannable */
+.cmp2-heads,.cmp2-rows,.cmp2-sectors{max-width:720px;margin-left:auto;margin-right:auto}
+.cmp2-heads{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:4px}
+.cmp2-head{display:flex;align-items:center;gap:10px;min-width:0}
+.cmp2-head.b{flex-direction:row-reverse;text-align:right}
+.cmp2-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cmp2-head.a .cmp2-dot{background:var(--brand)}
+.cmp2-head.b .cmp2-dot{background:var(--navy)}
 .cmp2-logo{width:34px;height:34px;border-radius:8px;object-fit:contain;background:#f5f5f5;border:1px solid #eee;flex-shrink:0}
 .cmp2-name{font-size:.9rem;font-weight:700;color:#1a1a1a;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cmp2-cat{font-size:.72rem;color:#516a5e;margin-top:1px}
-.cmp2-rows{margin-top:14px}
-.cmp2-row{display:grid;grid-template-columns:1fr minmax(104px,auto) 1fr;align-items:center;padding:10px 0;border-bottom:1px solid #f1f4f1}
+.cmp2-rows{margin-top:16px}
+.cmp2-row{display:grid;grid-template-columns:1fr minmax(112px,auto) 1fr;align-items:center;padding:11px 0;border-bottom:1px solid #f1f4f1}
 .cmp2-row:last-child{border-bottom:none}
-.cmp2-label{text-align:center;font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:#8a9a90;font-weight:600;white-space:nowrap}
-.cmp2-a{text-align:right;padding-right:14px}
-.cmp2-b{text-align:left;padding-left:14px}
-.cmp2-val{font-size:.92rem;font-weight:600;color:#2a3b35}
+.cmp2-label{text-align:center;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:#9aa4ac;font-weight:600;white-space:nowrap}
+.cmp2-a{text-align:right;padding-right:20px}
+.cmp2-b{text-align:left;padding-left:20px}
+.cmp2-val{font-size:.95rem;font-weight:600;color:#2a3b35}
 .cmp2-val.win{color:var(--brand);font-weight:800}
 .cmp2-val.muted{color:#aab6b0;font-weight:500}
-.cmp2-val .tick{font-size:.7em;margin:0 3px;color:var(--brand)}
 .cmp2-mgr{font-size:.72rem;font-weight:500;color:#516a5e;line-height:1.4}
-.cmp2-sectors{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #eef0ec}
-.cmp2-sec-h{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:#8a9a90;font-weight:700;margin-bottom:8px}
+.cmp2-sectors{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;padding-top:18px;border-top:1px solid #eef0ec}
+.cmp2-sec-h{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:#9aa4ac;font-weight:700;margin-bottom:9px}
 .sector-chips{display:flex;flex-wrap:wrap;gap:5px}
 .sector-chip{font-size:.72em;background:#f3f6f3;border:1px solid #e6ebe6;color:#3a4a40;border-radius:6px;padding:3px 8px}
 .cmp2-b .sector-chips{justify-content:flex-end}
@@ -1017,15 +1019,17 @@ function buildTable(elId,headHtml,rows){
   const body=rows.map((r,i)=>i<TABLE_LIMIT?r:r.replace('<tr','<tr class="tr-hidden"')).join('');
   let h=`<table>${headHtml}<tbody>${body}</tbody></table>`;
   if(total>TABLE_LIMIT){
-    h+=`<button class="see-more" onclick="toggleTable('${elId}',this,${total})">See all ${total}<span class="chev">&#9660;</span></button>`;
+    h+=`<button class="see-more" onclick="toggleTable('${elId}',this,${total})"><span>See all ${total}</span>${CHEV}</button>`;
   }
   el.innerHTML=h;
 }
 
+const CHEV='<svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6.5L8 10.5L12 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
 function toggleTable(elId,btn,total){
   const el=document.getElementById(elId);
   const open=el.classList.toggle('show-all');
-  btn.innerHTML=(open?'Show top '+TABLE_LIMIT:'See all '+total)+'<span class="chev">&#9660;</span>';
+  btn.innerHTML=`<span>${open?'Show top '+TABLE_LIMIT:'See all '+total}</span>${CHEV}`;
 }
 
 function renderCommonTable(common){
@@ -1047,7 +1051,8 @@ function renderExTable(which,holdings,wcls){
 function renderCompare(fA,fB){
   const head=f=>{
     const logo=amcLogoUrl(f.fundHouse),fb=amcInitialSvg(f.fundHouse);
-    return`<img class="cmp2-logo" src="${logo||fb}" alt="" onerror="this.src='${fb}'">
+    return`<span class="cmp2-dot"></span>
+      <img class="cmp2-logo" src="${logo||fb}" alt="" onerror="this.src='${fb}'">
       <div style="min-width:0"><div class="cmp2-name">${shortName(f.schemeName)}</div>
       <div class="cmp2-cat">${f.schemeCategory||''}</div></div>`;
   };

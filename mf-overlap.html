@@ -796,26 +796,31 @@ function renderDd(slot,funds,q){
 
 function hideDd(slot){document.getElementById('dropdown'+slot).style.display='none';}
 
-function selectFund(slot,fund){
-  // Cancel any pending debounce timer so it can't re-open the dropdown after selection
-  if(slot==='A'){clearTimeout(timerA);timerA=null;}else{clearTimeout(timerB);timerB=null;}
-  if(slot==='A')selA=fund;else selB=fund;
-  document.getElementById('search'+slot).style.display='none';
-  hideDd(slot);
-  const chip=document.getElementById('chip'+slot);
+// Render the selected-fund chip (used by selectFund and URL auto-load)
+function showChip(slot,fund){
   const isB=slot==='B';
   const _logo=amcLogoUrl(fund.fundHouse);
   const _fb=amcInitialSvg(fund.fundHouse);
-  // Scheme colour: A = rose, B = tan (matches the Venn circles)
+  // Scheme colour: A = sage, B = tan (matches the Venn circles)
   const _scheme=isB?'#d9a86d':'#86b39a';
   const _bg=tintHex(_scheme,.16);
   const _border=tintHex(_scheme,.45);
+  document.getElementById('search'+slot).style.display='none';
+  const chip=document.getElementById('chip'+slot);
   chip.innerHTML=`<div class="ov-chip" style="background:${_bg};border-color:${_border}">
     <img class="dd-amc-logo" src="${_logo||_fb}" alt="" onerror="this.src='${_fb}'">
     <div class="ov-chip-name">${shortName(fund.schemeName)}</div>
     <button class="ov-chip-x" onclick="clearFund('${slot}')" title="Remove">&#x2715;</button>
   </div>`;
   chip.style.display='block';
+}
+
+function selectFund(slot,fund){
+  // Cancel any pending debounce timer so it can't re-open the dropdown after selection
+  if(slot==='A'){clearTimeout(timerA);timerA=null;}else{clearTimeout(timerB);timerB=null;}
+  if(slot==='A')selA=fund;else selB=fund;
+  hideDd(slot);
+  showChip(slot,fund);
   checkSame();updateBtn();
 }
 
@@ -825,6 +830,7 @@ function clearFund(slot){
   const inp=document.getElementById('search'+slot);
   inp.style.display='block';inp.value='';inp.focus();
   document.getElementById('sameWarn').style.display='none';
+  history.replaceState(null,'',location.pathname); // drop shareable params
   hideResults();updateBtn();
 }
 
@@ -852,8 +858,26 @@ function hideResults(){
 function showEl(id){document.getElementById(id).style.display='block';}
 function hideEl(id){document.getElementById(id).style.display='none';}
 
+/* ---- Shareable URL (fund names + codes) ---- */
+function fundSlug(fund){
+  const slug=shortName(fund.schemeName).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  return slug+'-'+fund.schemeCode;
+}
+function codeFromSlug(s){
+  const m=String(s||'').match(/(\d+)$/);
+  return m?m[1]:'';
+}
+function updateURL(){
+  if(!selA||!selB)return;
+  const p=new URLSearchParams();
+  p.set('a',fundSlug(selA));
+  p.set('b',fundSlug(selB));
+  history.replaceState(null,'',location.pathname+'?'+p.toString());
+}
+
 function calculateOverlap(){
   if(!selA||!selB)return;
+  updateURL();
   hideEl('placeholderState');hideEl('resultsWrap');hideEl('errorState');hideEl('detailSection');
   showEl('loaderState');
   fetch(`${API}/api/mf/compare?funds=${selA.schemeCode},${selB.schemeCode}`)
@@ -864,6 +888,27 @@ function calculateOverlap(){
       renderResults(d.data[0],d.data[1]);
     })
     .catch(()=>{hideEl('loaderState');showError('Network error. Please check your connection and try again.');});
+}
+
+// Auto-load a comparison from ?a=…&b=… on page load
+function loadFromURL(){
+  const p=new URLSearchParams(location.search);
+  const ca=codeFromSlug(p.get('a')),cb=codeFromSlug(p.get('b'));
+  if(!ca||!cb||ca===cb)return;
+  hideEl('placeholderState');showEl('loaderState');
+  fetch(`${API}/api/mf/compare?funds=${ca},${cb}`)
+    .then(r=>r.json())
+    .then(d=>{
+      hideEl('loaderState');
+      if(d.status!=='success'||!d.data||d.data.length<2){showEl('placeholderState');return;}
+      const fA=d.data[0],fB=d.data[1];
+      selA={schemeCode:fA.schemeCode||ca,schemeName:fA.schemeName,fundHouse:fA.fundHouse,schemeCategory:fA.schemeCategory};
+      selB={schemeCode:fB.schemeCode||cb,schemeName:fB.schemeName,fundHouse:fB.fundHouse,schemeCategory:fB.schemeCategory};
+      showChip('A',selA);showChip('B',selB);
+      updateBtn();
+      renderResults(fA,fB);
+    })
+    .catch(()=>{hideEl('loaderState');showEl('placeholderState');});
 }
 
 function showError(msg){
@@ -1191,6 +1236,9 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('#searchA')&&!e.target.closest('#dropdownA'))hideDd('A');
   if(!e.target.closest('#searchB')&&!e.target.closest('#dropdownB'))hideDd('B');
 });
+
+// Auto-load comparison if the URL carries ?a=…&b=…
+loadFromURL();
 </script>
 </body>
 </html>

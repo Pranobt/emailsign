@@ -208,6 +208,7 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 .h-rank{color:#aeb8b0;font-size:.82rem;font-weight:600;font-family:var(--font-num)}
 .h-name{font-weight:600;color:#1a1a1a;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h-num{text-align:right;font-family:var(--font-num);font-weight:700;font-size:.9rem;color:#1f2a25;font-variant-numeric:tabular-nums}
+.h-na{color:#c4ccc6;font-weight:600}
 .table-empty{padding:24px 22px;text-align:center;font-size:.875em;color:#6a8070}
 .htbl-row.tr-hidden{display:none}
 .htbl.show-all .htbl-row.tr-hidden{display:grid}
@@ -483,11 +484,13 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 
     <div class="ov-section-card">
       <div class="tab-bar">
-        <button class="tab-btn active" id="tabCommon" onclick="switchTab('common')"><span class="tab-label">Common</span> <span class="tab-count" id="cntCommon">0</span></button>
+        <button class="tab-btn active" id="tabAll" onclick="switchTab('all')"><span class="tab-label">All</span> <span class="tab-count" id="cntAll">0</span></button>
+        <button class="tab-btn" id="tabCommon" onclick="switchTab('common')"><span class="tab-label">Common</span> <span class="tab-count" id="cntCommon">0</span></button>
         <button class="tab-btn" id="tabOnlyA" onclick="switchTab('onlyA')"><span class="tab-label" id="tabLabelA">Only Fund A</span> <span class="tab-count" id="cntA">0</span></button>
         <button class="tab-btn" id="tabOnlyB" onclick="switchTab('onlyB')"><span class="tab-label" id="tabLabelB">Only Fund B</span> <span class="tab-count" id="cntB">0</span></button>
       </div>
-      <div class="tab-panel active" id="panelCommon"><div class="tsc" id="tableCommon"></div></div>
+      <div class="tab-panel active" id="panelAll"><div class="tsc" id="tableAll"></div></div>
+      <div class="tab-panel" id="panelCommon"><div class="tsc" id="tableCommon"></div></div>
       <div class="tab-panel" id="panelOnlyA"><div class="tsc" id="tableOnlyA"></div></div>
       <div class="tab-panel" id="panelOnlyB"><div class="tsc" id="tableOnlyB"></div></div>
     </div>
@@ -887,23 +890,31 @@ function renderResults(fA,fB){
   hB.forEach(h=>{if(!mA[h.name])onlyB.push(h);});
   common.sort((a,b)=>Math.min(b.wA,b.wB)-Math.min(a.wA,a.wB));
 
+  // Union of both funds — every stock with its weight in each (null where absent)
+  const all=[]
+    .concat(common.map(s=>({name:s.name,wA:s.wA,wB:s.wB})))
+    .concat(onlyA.map(h=>({name:h.name,wA:parseFloat(h.weightage),wB:null})))
+    .concat(onlyB.map(h=>({name:h.name,wA:null,wB:parseFloat(h.weightage)})));
+  all.sort((a,b)=>Math.max(b.wA||0,b.wB||0)-Math.max(a.wA||0,a.wB||0));
+
   renderScore(pct,common.length,onlyA.length,onlyB.length);
   renderFundBars(fA,fB,common.length,onlyA.length,onlyB.length);
   setVennLegend(fA,fB);
+  renderAllTable(all);
   renderCommonTable(common);
   renderExTable('OnlyA',onlyA,'w-a');
   renderExTable('OnlyB',onlyB,'w-b');
   renderCompare(fA,fB);
 
-  ['cntCommon','cntA','cntB'].forEach((id,i)=>{
-    document.getElementById(id).textContent=[common.length,onlyA.length,onlyB.length][i];
+  ['cntAll','cntCommon','cntA','cntB'].forEach((id,i)=>{
+    document.getElementById(id).textContent=[all.length,common.length,onlyA.length,onlyB.length][i];
   });
 
   // Tab labels → actual fund names
   document.getElementById('tabLabelA').textContent='Only '+tabName(fA.schemeName);
   document.getElementById('tabLabelB').textContent='Only '+tabName(fB.schemeName);
 
-  switchTab('common');
+  switchTab('all');
   const rw=document.getElementById('resultsWrap');
   const ds=document.getElementById('detailSection');
   rw.classList.remove('is-in');ds.classList.remove('is-in');
@@ -1048,13 +1059,21 @@ function toggleTable(btn,total){
   btn.innerHTML=`<span>${open?'Show top '+TABLE_LIMIT:'See all '+total}</span>${CHEV}`;
 }
 
+const COMMON_HEAD=`<div class="htbl-head"><span></span><span>Stock</span>`+
+  `<span class="h-r"><i class="h-dot" style="background:#86b39a"></i>Fund A %</span>`+
+  `<span class="h-r"><i class="h-dot" style="background:#d9a86d"></i>Fund B %</span></div>`;
+const pctCell=v=>(v==null?'<span class="h-na">–</span>':v.toFixed(2)+'%');
+
+function renderAllTable(all){
+  if(!all.length){document.getElementById('tableAll').innerHTML='<div class="table-empty">No holdings found.</div>';return;}
+  const rows=all.map((s,i)=>`<div class="htbl-row"><span class="h-rank">${i+1}</span><span class="h-name">${s.name}</span><span class="h-num">${pctCell(s.wA)}</span><span class="h-num">${pctCell(s.wB)}</span></div>`);
+  buildTable('tableAll','htbl-common',COMMON_HEAD,rows);
+}
+
 function renderCommonTable(common){
   if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found.</div>';return;}
-  const head=`<div class="htbl-head"><span></span><span>Stock</span>`+
-    `<span class="h-r"><i class="h-dot" style="background:#86b39a"></i>Fund A %</span>`+
-    `<span class="h-r"><i class="h-dot" style="background:#d9a86d"></i>Fund B %</span></div>`;
   const rows=common.map((s,i)=>`<div class="htbl-row"><span class="h-rank">${i+1}</span><span class="h-name">${s.name}</span><span class="h-num">${s.wA.toFixed(2)}%</span><span class="h-num">${s.wB.toFixed(2)}%</span></div>`);
-  buildTable('tableCommon','htbl-common',head,rows);
+  buildTable('tableCommon','htbl-common',COMMON_HEAD,rows);
 }
 
 function renderExTable(which,holdings,wcls){
@@ -1144,7 +1163,7 @@ function renderCompare(fA,fB){
 }
 
 function switchTab(tab){
-  ['common','onlyA','onlyB'].forEach(t=>{
+  ['all','common','onlyA','onlyB'].forEach(t=>{
     const P='panel'+t.charAt(0).toUpperCase()+t.slice(1);
     const T='tab'+t.charAt(0).toUpperCase()+t.slice(1);
     document.getElementById(P).classList.remove('active');

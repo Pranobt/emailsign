@@ -9,21 +9,36 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* Aeonik — Finnovate's own licensed font (self-hosted, same as wealth.finnovate.in) */
+@font-face{font-family:'Aeonik';src:url('assets/fonts/Aeonik-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Aeonik';src:url('assets/fonts/Aeonik-Medium.ttf') format('truetype');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Aeonik';src:url('assets/fonts/Aeonik-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
 :root{
-  --brand:#009356;
+  --brand:#009356;        /* brand green — logo, active states, data */
   --brand-dark:#00723f;
-  --neon:#00e676;
-  --neon-bright:#1fff8f;
-  --neon-soft:#d6ffe8;
+  --brand-soft:#e6f4ee;
+  --blue:#0b66d6;         /* primary action — buttons, links, focus */
+  --blue-dark:#0a55b3;
+  --blue-soft:#e8f1fc;
   --navy:#1a2044;
   --ink:#1a1a1a;
-  --sage:#e5ece3;
+  --muted:#6b7280;
+  --page:#f5f6f8;
+  --card:#ffffff;
+  --font-num:'Aeonik','Inter','Segoe UI',sans-serif;  /* numbers */
   /* Strong easing curves (Emil) */
   --ease-out:cubic-bezier(.23,1,.32,1);
   --ease-in-out:cubic-bezier(.77,0,.175,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1a1a;-webkit-font-smoothing:antialiased}
+
+/* All numbers in General Sans (Aeonik-style) */
+.ov-big-pct,.ov-bar-num,.ov-sv,.cmp2-val,.w-a,.w-b,.rank-num,
+.tab-count,.app-rating-num,.ret-pill span:last-child,
+.tsc td:last-child{font-family:var(--font-num)}
+/* tabular figures so numbers align in columns */
+.ov-bar-num,.ov-sv,.cmp2-val,.w-a,.w-b,.tsc td{font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1}
 
 /* ---- NAVBAR ---- */
 .fn-header{position:sticky;top:0;z-index:1000;background:#fff;box-shadow:0 2px 12px rgba(12,28,20,.08);border-bottom:1px solid rgba(15,111,74,.06)}
@@ -48,7 +63,7 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 }
 
 /* ---- PAGE ---- */
-.ov-page{min-height:calc(100vh - 64px);background:#e5ece3}
+.ov-page{min-height:calc(100vh - 64px);background:var(--page)}
 
 /* ---- HERO ---- */
 .ov-hero{max-width:860px;margin:0 auto;padding:52px 24px 44px;text-align:center}
@@ -60,13 +75,13 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .ov-inputs-wrap{display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .ov-slot{flex:1;position:relative;min-width:0}
 .ov-input{width:100%;padding:14px 18px;background:#fff;border:1.5px solid #c8d8c4;border-radius:10px;font-size:.95rem;font-family:'Inter',sans-serif;color:#1a1a1a;outline:none;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out)}
-.ov-input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(0,230,118,.18)}
+.ov-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(11,102,214,.14)}
 .ov-input::placeholder{color:#a0b0a8}
 
 .ov-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #c8d8c4;border-radius:10px;box-shadow:0 12px 36px rgba(8,40,24,.16);z-index:200;transform-origin:top center;animation:ddIn .16s var(--ease-out)}
 @keyframes ddIn{from{opacity:0;transform:scale(.97) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .dd-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f4f0;transition:background .12s;min-height:44px;display:flex;align-items:center;gap:10px}
-.dd-item:active{background:var(--neon-soft)}
+.dd-item:active{background:var(--brand-soft)}
 .dd-item:last-child{border-bottom:none}
 .dd-item:hover{background:#e8f5ee}
 .dd-item .dd-name{font-size:.875em;font-weight:500;color:#1a1a1a;line-height:1.35}
@@ -82,17 +97,17 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .ov-chip-x:hover{color:#c0392b}
 .ov-chip-x:active{transform:scale(.85)}
 
-.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:2px solid var(--brand);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:var(--brand);background:rgba(0,230,118,.08)}
+.ov-vs-btn{flex-shrink:0;width:46px;height:46px;border:1.5px solid #d4dbe2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--muted);background:#fff;text-transform:uppercase;letter-spacing:.04em}
 
 .ov-same-warn{margin-bottom:16px;padding:9px 14px;background:#fffbea;border:1px solid #fcd34d;border-radius:8px;font-size:.82em;color:#92400e}
 
-.ov-check-btn{background:linear-gradient(135deg,#0f3a24,#1a4a2e);color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:transform .16s var(--ease-out),box-shadow .2s var(--ease-out),background .2s;box-shadow:0 8px 24px rgba(26,74,46,.28);letter-spacing:.01em}
-.ov-check-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,230,118,.32),0 0 0 1px rgba(0,230,118,.4) inset}
+.ov-check-btn{background:var(--blue);color:#fff;border:none;border-radius:999px;padding:15px 60px;font-size:1rem;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:transform .16s var(--ease-out),box-shadow .2s var(--ease-out),background .2s;box-shadow:0 8px 22px rgba(11,102,214,.28);letter-spacing:.01em}
+.ov-check-btn:hover:not(:disabled){background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 14px 32px rgba(11,102,214,.34)}
 .ov-check-btn:active:not(:disabled){transform:scale(.97)}
 .ov-check-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 
 /* ---- DIVIDER ---- */
-.ov-divider{height:3px;background:linear-gradient(90deg,var(--neon),var(--brand) 55%,transparent);max-width:1100px;margin:0 auto;border-radius:2px}
+.ov-divider{height:3px;background:linear-gradient(90deg,var(--brand) 55%,transparent);max-width:1100px;margin:0 auto;border-radius:2px}
 
 /* ---- RESULT AREA ---- */
 .ov-result-area{max-width:1100px;margin:0 auto;padding:40px 24px 48px}
@@ -119,21 +134,19 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 
 /* Left stats */
 .ov-overlap-tag{display:inline-block;padding:6px 14px;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;color:#fff}
-.ov-overlap-tag.low{background:var(--neon);color:#063d27}
+.ov-overlap-tag.low{background:var(--brand)}
 .ov-overlap-tag.moderate{background:#d97706}
 .ov-overlap-tag.high{background:#e85030}
 .ov-overlap-tag.very-high{background:#b91c1c}
 
-.ov-big-pct{font-size:clamp(3rem,5vw,4.4rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:10px;
-  background:linear-gradient(115deg,var(--brand) 10%,var(--neon) 90%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--brand)}
+.ov-big-pct{font-size:clamp(3rem,5vw,4.4rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:10px;color:var(--ink)}
 .ov-pct-desc{font-size:.95rem;color:#516a5e;line-height:1.6;margin-bottom:28px;max-width:380px}
 
 .ov-fund-bars{display:flex;flex-direction:column;gap:14px}
 .ov-fund-bar-name{font-size:.82rem;font-weight:600;color:#2a3b35;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ov-bar-track{display:flex;border-radius:10px;overflow:hidden;height:54px;background:#eef2ee}
 .ov-bar-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px;overflow:hidden}
-.ov-bar-common{background:linear-gradient(135deg,var(--brand),var(--neon));transition:width .8s var(--ease-out);min-width:0}
+.ov-bar-common{background:var(--brand);transition:width .8s var(--ease-out);min-width:0}
 .ov-bar-unique{background:#f0f2f0;flex:1}
 .ov-bar-num{font-size:1rem;font-weight:800;line-height:1.1}
 .ov-bar-common .ov-bar-num{color:#fff}
@@ -188,31 +201,42 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 .rank-num{color:#a0b0a8;font-size:.8em;font-weight:500}
 .stock-name{font-weight:500}
 .table-empty{padding:24px 20px;text-align:center;font-size:.875em;color:#6a8070}
+.tsc tr.tr-hidden{display:none}
+.tsc.show-all tr.tr-hidden{display:table-row}
+.see-more{display:block;width:100%;padding:12px;background:#fff;border:none;border-top:1px solid #eef0ec;color:var(--blue);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s var(--ease-out)}
+.see-more:hover{background:#f3f8fd}
+.see-more .chev{display:inline-block;margin-left:4px;transition:transform .2s var(--ease-out)}
+.tsc.show-all .see-more .chev{transform:rotate(180deg)}
 
-/* Fund comparison */
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #eaece8}
-.compare-col{padding:18px}
-.compare-col:first-child{border-right:1px solid #eaece8}
-.cmp-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #eaece8}
-.cmp-badge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7em;font-weight:700;color:#fff;flex-shrink:0}
-.cmp-badge.a{background:#1a6fbf}
-.cmp-badge.b{background:#7b3fa0}
-.cmp-name{font-size:.82em;font-weight:600;color:#1a1a1a;line-height:1.3}
-.cmp-cat{font-size:.74em;color:#516a5e;margin-top:1px}
-.cmp-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #f5f6f4;gap:8px}
-.cmp-row:last-child{border-bottom:none}
-.cmp-label{font-size:.78em;color:#516a5e;flex-shrink:0}
-.cmp-val{font-size:.82em;font-weight:600;color:#1a1a1a;text-align:right}
-.cmp-divider{height:1px;background:#f0f2f0;margin:10px 0}
-.returns-mini{display:flex;gap:6px;margin:10px 0 6px}
-.ret-pill{flex:1;text-align:center;background:#f6f7f4;border-radius:7px;padding:6px 4px;border:1px solid #eaece8}
-.ret-pill span:first-child{display:block;font-size:.68em;color:#516a5e}
-.ret-pill span:last-child{display:block;font-size:.84em;font-weight:700;margin-top:2px}
+/* Fund comparison — head-to-head */
+.cmp2{padding:20px 22px 22px}
+.cmp2-heads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px}
+.cmp2-head{display:flex;align-items:center;gap:10px;min-width:0;padding-left:11px;border-left:3px solid #ddd}
+.cmp2-head.a{border-color:var(--brand)}
+.cmp2-head.b{border-color:var(--navy)}
+.cmp2-head.b{justify-content:flex-end;flex-direction:row-reverse;padding-left:0;padding-right:11px;border-left:none;border-right:3px solid var(--navy);text-align:right}
+.cmp2-logo{width:34px;height:34px;border-radius:8px;object-fit:contain;background:#f5f5f5;border:1px solid #eee;flex-shrink:0}
+.cmp2-name{font-size:.9rem;font-weight:700;color:#1a1a1a;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmp2-cat{font-size:.72rem;color:#516a5e;margin-top:1px}
+.cmp2-rows{margin-top:14px}
+.cmp2-row{display:grid;grid-template-columns:1fr minmax(104px,auto) 1fr;align-items:center;padding:10px 0;border-bottom:1px solid #f1f4f1}
+.cmp2-row:last-child{border-bottom:none}
+.cmp2-label{text-align:center;font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:#8a9a90;font-weight:600;white-space:nowrap}
+.cmp2-a{text-align:right;padding-right:14px}
+.cmp2-b{text-align:left;padding-left:14px}
+.cmp2-val{font-size:.92rem;font-weight:600;color:#2a3b35}
+.cmp2-val.win{color:var(--brand);font-weight:800}
+.cmp2-val.muted{color:#aab6b0;font-weight:500}
+.cmp2-val .tick{font-size:.7em;margin:0 3px;color:var(--brand)}
+.cmp2-mgr{font-size:.72rem;font-weight:500;color:#516a5e;line-height:1.4}
+.cmp2-sectors{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #eef0ec}
+.cmp2-sec-h{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:#8a9a90;font-weight:700;margin-bottom:8px}
+.sector-chips{display:flex;flex-wrap:wrap;gap:5px}
+.sector-chip{font-size:.72em;background:#f3f6f3;border:1px solid #e6ebe6;color:#3a4a40;border-radius:6px;padding:3px 8px}
+.cmp2-b .sector-chips{justify-content:flex-end}
 .pos{color:#009356}
 .neg{color:#dc2626}
 .na-val{color:#a0b0a8;font-weight:400}
-.sector-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.sector-chip{font-size:.72em;background:#f6f7f4;border:1px solid #eaece8;color:#3a4a40;border-radius:5px;padding:2px 7px}
 
 /* ---- RESPONSIVE ---- */
 @media(max-width:900px){
@@ -220,8 +244,6 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
   .ov-venn-col{order:-1}
   .ov-venn-card{max-width:440px;margin:0 auto}
   .ov-pct-desc{max-width:none}
-  .compare-grid{grid-template-columns:1fr}
-  .compare-col:first-child{border-right:none;border-bottom:1px solid #eaece8}
 }
 @media(max-width:640px){
   .ov-hero{padding:32px 16px 28px}
@@ -235,6 +257,15 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
   .ov-sv{font-size:1.2em}
   .tsc td,.tsc th{padding:8px 10px}
   .tsc table{font-size:.8em}
+  .cmp2{padding:16px 14px 18px}
+  .cmp2-heads{gap:10px}
+  .cmp2-logo{width:28px;height:28px}
+  .cmp2-name{font-size:.8rem}
+  .cmp2-row{grid-template-columns:1fr minmax(78px,auto) 1fr;padding:9px 0}
+  .cmp2-a{padding-right:8px}
+  .cmp2-b{padding-left:8px}
+  .cmp2-val{font-size:.84rem}
+  .cmp2-label{font-size:.6rem}
 }
 @media(max-width:400px){
   .ov-check-btn{padding:13px 40px;font-size:.95rem}
@@ -255,15 +286,17 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
 
 /* ---- APP DOWNLOAD BANNER ---- */
 .app-banner{
-  background:#e5ece3;
+  background:var(--page);
   padding:0 24px 40px;
   margin-top:0;
 }
 .app-banner-inner{
   max-width:1100px;margin:0 auto;
-  background:#f0f0f0;
-  border-radius:20px;
+  background:#fff;
+  border:1px solid #eaecef;
+  border-radius:18px;
   padding:24px 28px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
   display:flex;align-items:center;gap:28px;
 }
 .app-logo-wrap{flex-shrink:0}
@@ -414,14 +447,14 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:#e5ece3;color:#1a1a1a;
           <svg id="vennSvg" class="ov-venn-svg" viewBox="0 0 560 310">
             <defs>
               <linearGradient id="vennGradA" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#009356"/>
-                <stop offset="100%" stop-color="#00e676"/>
+                <stop offset="0%" stop-color="#00713f"/>
+                <stop offset="100%" stop-color="#00a35d"/>
               </linearGradient>
             </defs>
             <circle id="vennCircleA" cx="195" cy="150" r="120" fill="url(#vennGradA)"/>
             <circle id="vennCircleB" cx="415" cy="150" r="120" fill="#1A2044" opacity="0.82"/>
             <text id="vennPct" x="305" y="153" text-anchor="middle" dominant-baseline="middle"
-              font-family="Inter,sans-serif" font-size="34" font-weight="800" fill="#ffffff" letter-spacing="-1"></text>
+              font-family="'Aeonik',Inter,sans-serif" font-size="34" font-weight="700" fill="#ffffff" letter-spacing="-1"></text>
           </svg>
           <div id="vennLegend" class="ov-venn-legend"></div>
         </div>
@@ -974,54 +1007,115 @@ function setVennLegend(fA,fB){
 }
 
 /* ---- Tables ---- */
-function renderCommonTable(common){
-  if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found.</div>';return;}
-  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Fund A %</th><th>Fund B %</th></tr></thead><tbody>`;
-  common.forEach((s,i)=>{h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="w-a">${s.wA.toFixed(2)}%</td><td class="w-b">${s.wB.toFixed(2)}%</td></tr>`;});
-  h+='</tbody></table>';
-  document.getElementById('tableCommon').innerHTML=h;
-}
+const TABLE_LIMIT=15;
 
-function renderExTable(which,holdings,wcls){
-  const el=document.getElementById('table'+which);
-  if(!holdings.length){el.innerHTML='<div class="table-empty">No exclusive holdings in this fund.</div>';return;}
-  const sorted=[...holdings].sort((a,b)=>parseFloat(b.weightage)-parseFloat(a.weightage));
-  let h=`<table><thead><tr><th>#</th><th>Stock</th><th>Weight</th></tr></thead><tbody>`;
-  sorted.forEach((s,i)=>{h+=`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="${wcls}">${parseFloat(s.weightage).toFixed(2)}%</td></tr>`;});
-  h+='</tbody></table>';
+// Build a table from row strings; rows beyond TABLE_LIMIT collapse behind "See all"
+function buildTable(elId,headHtml,rows){
+  const el=document.getElementById(elId);
+  el.classList.remove('show-all');
+  const total=rows.length;
+  const body=rows.map((r,i)=>i<TABLE_LIMIT?r:r.replace('<tr','<tr class="tr-hidden"')).join('');
+  let h=`<table>${headHtml}<tbody>${body}</tbody></table>`;
+  if(total>TABLE_LIMIT){
+    h+=`<button class="see-more" onclick="toggleTable('${elId}',this,${total})">See all ${total}<span class="chev">&#9660;</span></button>`;
+  }
   el.innerHTML=h;
 }
 
-function renderCompare(fA,fB){
-  document.getElementById('compareGrid').innerHTML=buildCol(fA,'a','A')+buildCol(fB,'b','B');
+function toggleTable(elId,btn,total){
+  const el=document.getElementById(elId);
+  const open=el.classList.toggle('show-all');
+  btn.innerHTML=(open?'Show top '+TABLE_LIMIT:'See all '+total)+'<span class="chev">&#9660;</span>';
 }
 
-function buildCol(f,cls,slot){
-  const c=f.cagr||{};
-  const sectors=(f.sectors||[]).slice(0,5);
-  function ret(label,val){
-    if(!val)return`<div class="ret-pill"><span>${label}</span><span class="na-val">N/A</span></div>`;
-    const v=parseFloat(val);
-    return`<div class="ret-pill"><span>${label}</span><span class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${v.toFixed(1)}%</span></div>`;
+function renderCommonTable(common){
+  if(!common.length){document.getElementById('tableCommon').innerHTML='<div class="table-empty">No common holdings found.</div>';return;}
+  const head=`<thead><tr><th>#</th><th>Stock</th><th>Fund A %</th><th>Fund B %</th></tr></thead>`;
+  const rows=common.map((s,i)=>`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="w-a">${s.wA.toFixed(2)}%</td><td class="w-b">${s.wB.toFixed(2)}%</td></tr>`);
+  buildTable('tableCommon',head,rows);
+}
+
+function renderExTable(which,holdings,wcls){
+  const elId='table'+which;
+  if(!holdings.length){document.getElementById(elId).innerHTML='<div class="table-empty">No exclusive holdings in this fund.</div>';return;}
+  const sorted=[...holdings].sort((a,b)=>parseFloat(b.weightage)-parseFloat(a.weightage));
+  const head=`<thead><tr><th>#</th><th>Stock</th><th>Weight</th></tr></thead>`;
+  const rows=sorted.map((s,i)=>`<tr><td class="rank-num">${i+1}</td><td class="stock-name">${s.name}</td><td class="${wcls}">${parseFloat(s.weightage).toFixed(2)}%</td></tr>`);
+  buildTable(elId,head,rows);
+}
+
+function renderCompare(fA,fB){
+  const head=f=>{
+    const logo=amcLogoUrl(f.fundHouse),fb=amcInitialSvg(f.fundHouse);
+    return`<img class="cmp2-logo" src="${logo||fb}" alt="" onerror="this.src='${fb}'">
+      <div style="min-width:0"><div class="cmp2-name">${shortName(f.schemeName)}</div>
+      <div class="cmp2-cat">${f.schemeCategory||''}</div></div>`;
+  };
+
+  // A metric row: values flank a centered label; winner emphasized
+  // winner: -1 = A better, 1 = B better, 0 = neutral
+  const num=v=>{const n=parseFloat(v);return isFinite(n)?n:null;};
+  function row(label,aRaw,bRaw,higherWins){
+    const a=num(aRaw),b=num(bRaw);
+    let aCls='',bCls='';
+    if(higherWins!==undefined&&a!==null&&b!==null&&a!==b){
+      const aWins=higherWins?a>b:a<b;
+      aCls=aWins?'win':'muted';bCls=aWins?'muted':'win';
+    }
+    return`<div class="cmp2-row">
+      <div class="cmp2-a"><span class="cmp2-val ${aCls}">${aRaw}</span></div>
+      <div class="cmp2-label">${label}</div>
+      <div class="cmp2-b"><span class="cmp2-val ${bCls}">${bRaw}</span></div>
+    </div>`;
   }
-  const secHtml=sectors.length
-    ?sectors.map(s=>`<span class="sector-chip">${s.sectorName||s.sector||''} ${parseFloat(s.percentage||s.weightage||0).toFixed(1)}%</span>`).join('')
-    :'<span style="color:#a0b0a8;font-size:.78em">Not available</span>';
-  return`<div class="compare-col">
-    <div class="cmp-head">
-      <div class="cmp-badge ${cls}">${slot}</div>
-      <div><div class="cmp-name">${shortName(f.schemeName)}</div><div class="cmp-cat">${f.schemeCategory||''}</div></div>
-    </div>
-    <div class="cmp-row"><span class="cmp-label">AUM</span><span class="cmp-val">&#8377;${f.aum||'N/A'} Cr</span></div>
-    <div class="cmp-row"><span class="cmp-label">Expense Ratio</span><span class="cmp-val">${f.expenseRatio||'N/A'}%</span></div>
-    <div class="cmp-row"><span class="cmp-label">Risk</span><span class="cmp-val">${f.schemeRisk||'N/A'}</span></div>
-    <div class="cmp-row"><span class="cmp-label">Latest NAV</span><span class="cmp-val">&#8377;${f.latestNav||'N/A'}</span></div>
-    <div class="cmp-row"><span class="cmp-label">Fund Manager</span><span class="cmp-val" style="font-size:.75em">${f.schemeFundManagers||'N/A'}</span></div>
-    <div class="cmp-divider"></div>
-    <div class="returns-mini">${ret('1Y',c['1y'])}${ret('3Y',c['3y'])}${ret('5Y',c['5y'])}</div>
-    <div class="cmp-divider"></div>
-    <div class="sector-chips">${secHtml}</div>
-  </div>`;
+
+  const ret=(label,va,vb)=>{ // returns row, higher wins
+    const fmt=v=>{const n=num(v);return n===null?'N/A':(n>=0?'+':'')+n.toFixed(1)+'%';};
+    return row(label,fmt(va),fmt(vb),true);
+  };
+
+  const cA=fA.cagr||{},cB=fB.cagr||{};
+  const aum=f=>{
+    if(f.aum==null||f.aum==='')return'N/A';
+    // API may return a plain number (140949) or a pre-formatted string ("140,949.13")
+    const raw=String(f.aum).replace(/,/g,'');
+    const n=parseFloat(raw);
+    return isFinite(n)?'₹'+n.toLocaleString('en-IN',{maximumFractionDigits:2})+' Cr':'₹'+f.aum+' Cr';
+  };
+  const nav=f=>f.latestNav?'₹'+f.latestNav:'N/A';
+  const er=f=>f.expenseRatio!=null?f.expenseRatio+'%':'N/A';
+
+  const secList=f=>{
+    const s=(f.sectors||[]).slice(0,5);
+    return s.length
+      ?s.map(x=>`<span class="sector-chip">${x.sectorName||x.sector||''} ${parseFloat(x.percentage||x.weightage||0).toFixed(1)}%</span>`).join('')
+      :'<span style="color:#a0b0a8;font-size:.78em">Not available</span>';
+  };
+
+  document.getElementById('compareGrid').innerHTML=`
+    <div class="cmp2">
+      <div class="cmp2-heads">
+        <div class="cmp2-head a">${head(fA)}</div>
+        <div class="cmp2-head b">${head(fB)}</div>
+      </div>
+      <div class="cmp2-rows">
+        ${row('AUM',aum(fA),aum(fB))}
+        ${row('Expense Ratio',er(fA),er(fB),false)}
+        ${row('Risk',fA.schemeRisk||'N/A',fB.schemeRisk||'N/A')}
+        ${row('Latest NAV',nav(fA),nav(fB))}
+        ${ret('1Y Return',cA['1y'],cB['1y'])}
+        ${ret('3Y Return',cA['3y'],cB['3y'])}
+        ${ret('5Y Return',cA['5y'],cB['5y'])}
+      </div>
+      <div class="cmp2-sectors">
+        <div><div class="cmp2-sec-h">Fund manager</div><div class="cmp2-mgr">${fA.schemeFundManagers||'N/A'}</div></div>
+        <div class="cmp2-b"><div class="cmp2-sec-h">Fund manager</div><div class="cmp2-mgr">${fB.schemeFundManagers||'N/A'}</div></div>
+      </div>
+      <div class="cmp2-sectors">
+        <div><div class="cmp2-sec-h">Top sectors</div><div class="sector-chips">${secList(fA)}</div></div>
+        <div class="cmp2-b"><div class="cmp2-sec-h">Top sectors</div><div class="sector-chips">${secList(fB)}</div></div>
+      </div>
+    </div>`;
 }
 
 function switchTab(tab){

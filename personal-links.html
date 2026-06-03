@@ -234,6 +234,7 @@
     .links-container.show .link-card:nth-child(3) { animation: cardIn .28s .10s ease both; }
     .links-container.show .link-card:nth-child(4) { animation: cardIn .28s .15s ease both; }
     .links-container.show .link-card:nth-child(5) { animation: cardIn .28s .20s ease both; }
+    .links-container.show .link-card:nth-child(6) { animation: cardIn .28s .25s ease both; }
 
     .link-card {
       background: var(--white);
@@ -265,6 +266,7 @@
     .card-icon.blue   { background: #dbeafe; }
     .card-icon.purple { background: #ede9fe; }
     .card-icon.orange { background: #ffedd5; }
+    .card-icon.sky    { background: #e0f2fe; }
 
     .card-meta { flex: 1; min-width: 0; }
     .card-title {
@@ -281,6 +283,12 @@
     .badge-blue   { background: #dbeafe; color: #1d4ed8; }
     .badge-purple { background: #ede9fe; color: #6d28d9; }
     .badge-orange { background: #ffedd5; color: #c2410c; }
+    .badge-sky    { background: #e0f2fe; color: #0369a1; }
+
+    .app-row { display: flex; flex-direction: column; gap: 5px; }
+    .app-row + .app-row { margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .app-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .app-row-label { font-size: 12.5px; font-weight: 600; color: var(--text); flex-shrink: 0; }
     .card-url {
       font-size: 11.5px;
       color: #5a6270;
@@ -531,6 +539,38 @@
           <div class="card-url" id="url-calendly"></div>
         </div>
 
+        <!-- Card 6: App Download -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon sky">📱</div>
+            <div class="card-meta">
+              <div class="card-title">
+                Finnovate · App Download
+                <span class="card-badge badge-sky">App</span>
+              </div>
+            </div>
+          </div>
+          <div class="app-row">
+            <div class="app-row-top">
+              <span class="app-row-label">🤖 Google Play Store</span>
+              <button class="copy-btn" onclick="copyLink('url-playstore', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+            </div>
+            <div class="card-url" id="url-playstore"></div>
+          </div>
+          <div class="app-row">
+            <div class="app-row-top">
+              <span class="app-row-label">🍎 Apple Store</span>
+              <button class="copy-btn" onclick="copyLink('url-appstore', this)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+            </div>
+            <div class="card-url" id="url-appstore"></div>
+          </div>
+        </div>
 
       </div><!-- /links-container -->
     </section>
@@ -617,8 +657,10 @@
       register:  buildUTM('https://www.financialopd.com/sign-up/',  { ...base, utm_campaign: 'Financialopd', utm_content: 'Register' }),
       finnfit50: buildUTM('https://plan.finnovate.in/finnfit',       { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Test' }),
       finnfit20: buildUTM('https://plan.finnovate.in/finnfit-quiz',  { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Quiz' }),
-      calendly:  buildUTM('https://calendly.com/finnovate/financial-fitness-consultation', { ...base, utm_campaign: 'Calendly', utm_content: 'Book a Meeting' }),
-      review:    'https://g.page/r/CZaNoptWqry6EBM/review',
+      calendly:   buildUTM('https://calendly.com/finnovate/financial-fitness-consultation', { ...base, utm_campaign: 'Calendly',     utm_content: 'Book a Meeting' }),
+      review:     'https://g.page/r/CZaNoptWqry6EBM/review',
+      playstore:  buildUTM('https://play.google.com/store/apps/details?id=com.finnovate.wealthtrack', { ...base, utm_campaign: 'App Download', utm_content: 'Google Play' }),
+      appstore:   buildUTM('https://apps.apple.com/in/app/finnovate-wealth-app/id6740236625',         { ...base, utm_campaign: 'App Download', utm_content: 'Apple Store' }),
     };
   }
 
@@ -691,7 +733,9 @@
     setCard('url-finnfit50', currentLinks.finnfit50,  currentLinks.finnfit50);
     setCard('url-finnfit20', currentLinks.finnfit20,  currentLinks.finnfit20);
     setCard('url-calendly',  currentLinks.calendly,   currentLinks.calendly);
-    setCard('url-review',    currentLinks.review,     currentLinks.review);
+    setCard('url-review',     currentLinks.review,      currentLinks.review);
+    setCard('url-playstore',  currentLinks.playstore,   currentLinks.playstore);
+    setCard('url-appstore',   currentLinks.appstore,    currentLinks.appstore);
 
     // update browser URL so the page is bookmarkable
     const pageUrl = new URL(window.location.href);

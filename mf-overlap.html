@@ -3,7 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mutual Fund Overlap Calculator | Finnovate</title>
+<title>Mutual Fund Overlap Calculator - Compare Any Two Funds | Finnovate</title>
+<meta name="description" content="Free mutual fund overlap calculator. Compare any two funds by stock holdings, see common positions, and check SEBI 2026 diversification thresholds. Powered by live AMFI data.">
+<link rel="canonical" href="https://www.finnovate.in/mutual-funds/overlap-calculator">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Mutual Fund Overlap Calculator","url":"https://www.finnovate.in/mutual-funds/overlap-calculator","applicationCategory":"FinanceApplication","description":"Free tool to check portfolio overlap between any two mutual funds. Compare holdings, see common stocks, and get SEBI-compliant diversification analysis.","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"provider":{"@type":"Organization","name":"Finnovate","url":"https://www.finnovate.in"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is mutual fund overlap?","acceptedAnswer":{"@type":"Answer","text":"Mutual fund overlap is the percentage of your investment that two funds allocate to the same stocks. High overlap means you are not getting true diversification. You are essentially buying the same basket twice."}},{"@type":"Question","name":"What is an acceptable overlap percentage between two funds?","acceptedAnswer":{"@type":"Answer","text":"Below 15% is ideal, 15-30% is acceptable, 30-50% warrants a review, and above 50% suggests near-identical portfolios. These thresholds vary by category, as some overlap in large-cap funds is unavoidable given the limited universe of top-100 stocks."}},{"@type":"Question","name":"Why do large-cap mutual funds always have high overlap?","acceptedAnswer":{"@type":"Answer","text":"SEBI mandates that large-cap funds invest at least 80% of their corpus in the top-100 companies by market capitalisation. Since this is a relatively small universe, it is structurally impossible for two large-cap funds to have very low overlap."}},{"@type":"Question","name":"Is it risky to hold two funds from the same AMC?","acceptedAnswer":{"@type":"Answer","text":"Not inherently, but same-AMC funds often share research teams and house views, leading to higher overlap. Always check overlap before combining same-AMC schemes."}},{"@type":"Question","name":"What changed with SEBI's 2026 mutual fund overlap rules?","acceptedAnswer":{"@type":"Answer","text":"In February 2026, SEBI introduced a 50% overlap cap for thematic and sectoral funds from the same AMC. From August 2026, all AMCs must publish monthly overlap disclosures. Full compliance is required by April 2029. Large-cap funds are exempt."}},{"@type":"Question","name":"How often should I check mutual fund overlap?","acceptedAnswer":{"@type":"Answer","text":"Check overlap whenever you plan to add a new fund to your portfolio, and at least once a year during your annual portfolio review. Fund holdings change quarterly as managers rebalance."}}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"How to Check Mutual Fund Overlap","description":"Step-by-step guide to using the Finnovate MF Overlap Calculator","step":[{"@type":"HowToStep","position":1,"name":"Select Fund A","text":"Type the name of your first mutual fund in the Scheme 1 search box and select it from the dropdown."},{"@type":"HowToStep","position":2,"name":"Select Fund B","text":"Type the name of your second mutual fund in the Scheme 2 search box. You can compare funds across different categories."},{"@type":"HowToStep","position":3,"name":"Click Check Overlap","text":"Click the green Check Overlap button to fetch the latest AMFI holdings data for both funds."},{"@type":"HowToStep","position":4,"name":"Interpret the overlap percentage","text":"Review the overlap percentage and zone label (Low / Moderate / High / Very High) to understand the level of duplication."},{"@type":"HowToStep","position":5,"name":"Review common stocks","text":"Explore the holdings table to see which specific stocks appear in both funds and their respective weightings."},{"@type":"HowToStep","position":6,"name":"Compare fund metrics","text":"Use the Fund Comparison section to evaluate AUM, expense ratio, returns, risk level, and sector allocation side by side."}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.finnovate.in"},{"@type":"ListItem","position":2,"name":"Mutual Funds","item":"https://www.finnovate.in/mutual-funds"},{"@type":"ListItem","position":3,"name":"MF Overlap Calculator","item":"https://www.finnovate.in/mutual-funds/overlap-calculator"}]}
+</script>
 <link rel="shortcut icon" type="image/png" href="https://www.finnovate.in/assets/images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -353,6 +367,109 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
   .store-btn-img{height:36px}
   .app-download{width:100%}
 }
+
+/* ---- EDUCATIONAL CONTENT SECTIONS ---- */
+.mf-content-area{background:linear-gradient(135deg,#f7fff9 0%,#f0fff7 100%);padding:40px 24px 48px}
+.mf-faq-area{background:#fff;padding:40px 24px 56px}
+.mf-content-inner{max-width:1100px;margin:0 auto}
+.mf-section{background:#fff;border-radius:16px;padding:28px 32px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.mf-section h2{font-size:1.35rem;font-weight:700;color:#053522;margin-bottom:16px;margin-top:0}
+.mf-section h3{font-size:1.15rem;font-weight:700;color:#053522;margin:20px 0 8px}
+.mf-disclaimer-link{font-size:.82rem;color:#6a8070;margin-top:14px;line-height:1.6}
+.mf-disclaimer-link a{color:var(--brand);text-decoration:underline;text-underline-offset:2px}
+/* 3-card grids for causes & effects */
+.mf-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.mf-card{background:#f8fbfa;border:1px solid #eef0ec;border-radius:12px;padding:18px 16px}
+.mf-card-num{width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;font-size:.74rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:10px;flex-shrink:0}
+.mf-card h3{font-size:.85rem;font-weight:700;color:#053522;margin:0 0 8px;letter-spacing:0}
+.mf-card p{font-size:.82rem;color:#26413c;line-height:1.6;margin:0}
+.mf-stat-pull{margin:10px 0 10px}
+.mf-stat-fig{display:block;font-size:1.55rem;font-weight:800;color:var(--brand);line-height:1;font-family:var(--font-num)}
+.mf-stat-sub{font-size:.7rem;color:#6a8070;line-height:1.4;display:block;margin-top:3px}
+@media(max-width:760px){.mf-card-grid{grid-template-columns:1fr}}
+.mf-section p{font-size:.9rem;color:#26413c;line-height:1.6;margin-bottom:10px}
+.mf-section p:last-child{margin-bottom:0}
+.mf-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.mf-list li{font-size:.9rem;color:#26413c;line-height:1.6;padding-left:18px;position:relative;margin-bottom:8px}
+.mf-list li::before{content:'';position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.mf-hr{border:none;border-top:1px solid #eef0ec;margin:28px 0}
+.mf-steps{padding-left:22px;margin:10px 0;display:flex;flex-direction:column;gap:9px}
+.mf-steps li{font-size:.9rem;color:#26413c;line-height:1.6;padding-left:4px;margin-bottom:8px}
+.mf-checklist{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:9px}
+.mf-checklist li{font-size:.9rem;color:#26413c;line-height:1.6;padding-left:28px;position:relative;margin-bottom:8px}
+.mf-checklist li::before{content:'☐';position:absolute;left:0;top:0;font-size:1rem;color:#009356;line-height:1.5}
+.mf-example-table .mf-total-row td{background:#f3fbf7;font-weight:700;color:#1a1a1a}
+.mf-formula-box{background:#f3fbf7;border:1px solid #b6ddc6;border-radius:10px;padding:14px 18px;margin:12px 0;font-size:.88rem;color:#1a1a1a;font-weight:600;text-align:center;letter-spacing:.01em}
+/* Overlap zone table */
+.mf-zone-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:.875rem}
+.mf-zone-table th{text-align:left;font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;color:#7e8a82;font-weight:600;padding:10px 14px;background:#f1f4f1}
+.mf-zone-table th:first-child{border-radius:8px 0 0 8px}
+.mf-zone-table th:last-child{border-radius:0 8px 8px 0}
+.mf-zone-table td{padding:12px 14px;border-bottom:1px solid #f3f5f3;color:#2a3b35;vertical-align:middle}
+.mf-zone-table tr:last-child td{border-bottom:none}
+.zone-badge{display:inline-block;padding:3px 10px;border-radius:5px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;white-space:nowrap}
+.zone-badge.low{background:var(--brand)}
+.zone-badge.moderate{background:#d97706}
+.zone-badge.high{background:#e85030}
+.zone-badge.very-high{background:#b91c1c}
+/* SEBI section */
+.mf-sebi-section{border-left:4px solid var(--brand)}
+.mf-sebi-badge{display:inline-block;background:var(--brand-soft);color:var(--brand);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:5px;margin-bottom:10px}
+.mf-sebi-note{font-size:.78rem!important;color:#8a9e94!important;margin-top:12px!important;font-style:italic}
+/* FAQ */
+.mf-faq-title{font-size:1.5rem;font-weight:700;color:#053522;margin-bottom:32px;letter-spacing:-.02em}
+.mf-faq-list{display:flex;flex-direction:column;gap:0;max-width:880px}
+.mf-faq-item{background:transparent;border-radius:0;overflow:visible;box-shadow:none;border-bottom:1px solid #e5e7eb}
+.mf-faq-item:first-child{border-top:1px solid #e5e7eb}
+.mf-faq-q{font-size:1rem;font-weight:700;color:#053522;padding:22px 0;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:color .15s}
+.mf-faq-q::after{content:'+';font-size:1.3rem;font-weight:300;color:#a0b0a8;flex-shrink:0;transition:transform .25s var(--ease-out)}
+details[open] .mf-faq-q{color:#053522}
+details[open] .mf-faq-q::after{transform:rotate(45deg);color:#6b7280}
+.mf-faq-q::-webkit-details-marker{display:none}
+.mf-faq-a{font-size:.93rem;color:#26413c;line-height:1.75;padding:0 0 22px 16px;max-width:740px}
+.mf-compliance-bar{max-width:1100px;margin:0 auto 48px;padding:16px 24px;background:#f5f6f8;border-radius:12px;border:1px solid #e2e8e4}
+.mf-compliance-bar p{font-size:.74rem;color:#6a8070;line-height:1.75;margin-bottom:5px}
+.mf-compliance-bar p:last-child{margin-bottom:0}
+@media(max-width:768px){.mf-section h2{font-size:1.2rem}}
+@media(max-width:480px){.mf-section h2{font-size:1.1rem}}
+@media(max-width:640px){
+  .mf-section{padding:20px 18px}
+  .mf-zone-table{font-size:.8rem}
+  .mf-zone-table th,.mf-zone-table td{padding:9px 10px}
+  .mf-faq-q{font-size:.9rem;padding:18px 0}
+  .mf-faq-a{padding:0 0 18px 14px;font-size:.85rem}
+  .mf-content-area,.mf-faq-area{padding-left:16px;padding-right:16px}
+  .mf-compliance-bar{margin-left:16px;margin-right:16px}
+  .mf-calc-chips{padding:0 2px}
+}
+/* Attribution bar */
+.mf-attrib-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:4px 0 16px;border-bottom:1px solid rgba(0,147,86,.12);margin-bottom:20px;font-size:.82rem;color:#4b5563}
+.mf-attrib-bar a{color:var(--brand);text-decoration:none}
+.mf-attrib-bar a:hover{text-decoration:underline}
+.mf-attrib-bar time{color:#6b7280;font-size:.78rem}
+/* Calc nav chips */
+.mf-calc-chips{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.mf-chip-label{font-size:.72rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.08em;margin-right:2px;white-space:nowrap}
+.mf-chip{display:inline-block;padding:6px 14px;border-radius:20px;border:1px solid #d1e8dc;background:#f8fbfa;color:#009356;font-size:.8rem;font-weight:500;text-decoration:none;transition:background .15s,border-color .15s;white-space:nowrap}
+.mf-chip:hover{background:#e6f4ee;border-color:#009356}
+/* Footer */
+.fn-footer{background:#1a2044;color:#8fa3b0;padding:48px 24px 28px}
+.fn-footer-inner{max-width:1100px;margin:0 auto}
+.fn-footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.fn-footer-brand img{height:26px;filter:brightness(0) invert(1);opacity:.85}
+.fn-footer-brand p{font-size:.8rem;line-height:1.8;color:#8fa3b0;margin-top:12px;max-width:280px}
+.fn-footer-col h4{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#b0c4cf;margin-bottom:14px}
+.fn-footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.fn-footer-col ul a{font-size:.8rem;color:#8fa3b0;text-decoration:none;transition:color .15s}
+.fn-footer-col ul a:hover{color:#fff}
+.fn-footer-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:0 0 24px}
+.fn-footer-bottom{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.fn-footer-legal{font-size:.72rem;line-height:1.85;color:#6b7e87;max-width:720px}
+.fn-footer-legal a{color:#8fa3b0;text-decoration:none}
+.fn-footer-legal a:hover{color:#fff}
+.fn-footer-logo img{height:22px;filter:brightness(0) invert(1);opacity:.5;margin-top:4px}
+@media(max-width:760px){.fn-footer-top{grid-template-columns:1fr 1fr;gap:28px}.fn-footer-bottom{flex-direction:column}}
+@media(max-width:480px){.fn-footer-top{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -501,10 +618,236 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
       <div class="compare-grid" id="compareGrid"></div>
     </div>
 
-    <p class="ov-disclaimer">Holdings data is sourced from publicly available AMFI disclosures. This tool is for informational purposes only and does not constitute investment advice. Please consult a SEBI-registered investment adviser before making any investment decision.</p>
+    <p class="ov-disclaimer">Holdings data is sourced from publicly available AMFI disclosures. This tool is for informational purposes only and does not constitute investment advice. Past performance is not indicative of future returns. Please consult a SEBI-registered investment adviser before making any investment decision.</p>
   </div>
 
 </div><!-- end .ov-page -->
+
+<!-- EDUCATIONAL CONTENT -->
+<section class="mf-content-area">
+  <div class="mf-content-inner">
+
+    <div class="mf-attrib-bar">
+      <span>SEBI Registered Investment Advisor &middot; Reg. No. <a href="https://www.sebi.gov.in" target="_blank" rel="noopener noreferrer">INA000013518</a></span>
+      <time datetime="2026-06">Updated June 2026</time>
+    </div>
+
+    <div class="mf-calc-chips">
+      <span class="mf-chip-label">More Calculators</span>
+      <a href="https://www.finnovate.in/sip-calculator" class="mf-chip">SIP Calculator</a>
+      <a href="https://www.finnovate.in/swp-calculator" class="mf-chip">SWP Calculator</a>
+      <a href="https://www.finnovate.in/fire-calculator" class="mf-chip">FIRE Calculator</a>
+<a href="https://www.finnovate.in/asset-allocation-calculator" class="mf-chip">Asset Allocation</a>
+    </div>
+
+    <div class="mf-section">
+
+      <h2>What is Mutual Fund Overlap?</h2>
+      <p>Mutual fund overlap is the percentage of shared stock exposure between two funds. If both hold HDFC Bank, Reliance, and Infosys, those common holdings drive the overlap score. High overlap means paying two expense ratios for largely the same portfolio, without the real diversification benefit of holding two.</p>
+      <p>Some overlap is normal, particularly across large-cap funds that draw from the same restricted universe. The concern begins when overlap crosses 30 to 40%, at which point two funds start behaving as one and the diversification you paid for begins to disappear.</p>
+
+      <hr class="mf-hr">
+
+      <h2>How is Overlap Calculated?</h2>
+      <p>This calculator uses the <strong>minimum-weight method</strong>:</p>
+      <div class="mf-formula-box">Overlap % = Σ min(weight of stock in Fund A, weight of stock in Fund B)</div>
+      <p>For each common stock, we take the lower of the two weights and sum them. If HDFC Bank is 8% in Fund A and 5% in Fund B, only 5% is counted toward overlap.</p>
+
+      <hr class="mf-hr">
+
+      <h2>How to Calculate Mutual Fund Overlap Step by Step</h2>
+      <p>Using the Finnovate MF Overlap Calculator takes under a minute:</p>
+      <ol class="mf-steps">
+        <li><strong>Type the first fund name</strong> in the Scheme 1 search box and select it from the dropdown. Both direct and regular plans are listed.</li>
+        <li><strong>Type the second fund name</strong> in the Scheme 2 search box and select it the same way.</li>
+        <li><strong>Click Check Overlap.</strong> The calculator instantly computes the overlap percentage using live AMFI holdings data.</li>
+        <li><strong>Read the result and zone label.</strong> The overlap score is shown alongside a zone: Low (under 15%), Moderate (15–30%), High (30–50%), or Very High (50%+).</li>
+        <li><strong>Switch to the Common tab</strong> to see every stock held by both funds, with its exact weight in each scheme side by side.</li>
+        <li><strong>Open Fund Comparison</strong> to review AUM, expense ratio, category, and trailing returns for both funds in one view.</li>
+      </ol>
+
+      <hr class="mf-hr">
+
+      <h2>Illustrative Example: HDFC Flexi Cap vs Parag Parikh Flexi Cap</h2>
+      <p>Parag Parikh Flexi Cap's international allocation (Alphabet, Meta) and concentrated domestic book keep its overlap with HDFC Flexi Cap well below what two mainstream large-cap funds would show.</p>
+      <table class="mf-zone-table mf-example-table">
+        <thead>
+          <tr><th>Common Stock</th><th>HDFC Flexi Cap</th><th>PPFAS Flexi Cap</th><th>Overlap Counted</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>HDFC Bank</td><td>8.6%</td><td>4.8%</td><td>4.8%</td></tr>
+          <tr><td>ICICI Bank</td><td>6.9%</td><td>3.2%</td><td>3.2%</td></tr>
+          <tr><td>Power Grid Corp</td><td>2.4%</td><td>4.1%</td><td>2.4%</td></tr>
+          <tr><td>Coal India</td><td>2.1%</td><td>3.4%</td><td>2.1%</td></tr>
+          <tr><td>Axis Bank</td><td>4.3%</td><td>1.9%</td><td>1.9%</td></tr>
+          <tr class="mf-total-row"><td><strong>Total (all common stocks)</strong></td><td></td><td></td><td><strong>22.3%</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="mf-sebi-note">Result: <span class="zone-badge moderate">Moderate</span> overlap. Holdings are illustrative based on publicly available AMFI quarterly disclosures. Actual figures change each quarter. Use the calculator above for live results.</p>
+
+      <hr class="mf-hr">
+
+      <h2>What Overlap Percentage is Acceptable?</h2>
+      <p>There is no universal rule, but these ranges serve as a practical guide for Indian equity funds:</p>
+      <table class="mf-zone-table">
+        <thead>
+          <tr><th>Overlap Range</th><th>Zone</th><th>Interpretation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0 – 15%</td><td><span class="zone-badge low">Low</span></td><td>Ideal diversification. Funds complement each other well</td></tr>
+          <tr><td>15 – 30%</td><td><span class="zone-badge moderate">Moderate</span></td><td>Standard for same-category funds, generally acceptable</td></tr>
+          <tr><td>30 – 50%</td><td><span class="zone-badge high">High</span></td><td>Significant duplication. Consider reviewing your allocation</td></tr>
+          <tr><td>50%+</td><td><span class="zone-badge very-high">Very High</span></td><td>Near-identical portfolios with little real diversification benefit</td></tr>
+        </tbody>
+      </table>
+
+      <hr class="mf-hr">
+
+      <h2>What Causes Mutual Fund Overlap?</h2>
+      <div class="mf-card-grid">
+        <div class="mf-card">
+          <div class="mf-card-num">1</div>
+          <h3>Category mandate</h3>
+          <p>SEBI requires large-cap funds to hold at least 80% in the top-100 companies. Every fund in this category draws from the same narrow universe, making overlap structural rather than a stock-picking failure.</p>
+        </div>
+        <div class="mf-card">
+          <div class="mf-card-num">2</div>
+          <h3>Manager style convergence</h3>
+          <p>HDFC Bank, Reliance, ICICI Bank, Infosys, and TCS appear in hundreds of schemes by collective professional preference, not mandate. Managers across categories gravitate to the same liquid, well-researched names.</p>
+        </div>
+        <div class="mf-card">
+          <div class="mf-card-num">3</div>
+          <h3>Same AMC stock picking</h3>
+          <p>Funds from the same AMC share research teams and house views. A conviction call flows into multiple schemes at once. Spreading across AMCs typically produces lower overlap than diversifying within one fund house.</p>
+        </div>
+      </div>
+
+      <hr class="mf-hr">
+
+      <h2>Effects of High Mutual Fund Overlap on Your Portfolio</h2>
+      <p>High overlap has three practical costs:</p>
+      <div class="mf-card-grid">
+        <div class="mf-card">
+          <div class="mf-card-num">1</div>
+          <h3>Reduced diversification</h3>
+          <p>Four funds at 60% average overlap are functionally one concentrated fund. You pay for the appearance of spread without the risk protection it implies.</p>
+        </div>
+        <div class="mf-card">
+          <div class="mf-card-num">2</div>
+          <h3>Hidden concentration risk</h3>
+          <p>A stock at 4% in Fund A and 5% in Fund B creates combined exposure larger than either shows. When it falls, both funds fall together: the risk is hidden inside a seemingly broad portfolio.</p>
+        </div>
+        <div class="mf-card">
+          <div class="mf-card-num">3</div>
+          <h3>Duplicate expense costs</h3>
+          <div class="mf-stat-pull">
+            <span class="mf-stat-fig">₹5,000</span>
+            <span class="mf-stat-sub">per year on a ₹10L corpus for every 0.5% extra in blended expense ratio</span>
+          </div>
+          <p>Two expense ratios for largely the same exposure: a drag that compounds significantly over 10+ years.</p>
+        </div>
+      </div>
+
+      <hr class="mf-hr">
+
+      <h2>How to Reduce Mutual Fund Overlap</h2>
+      <p>High overlap is a signal to review, not necessarily act. Start here:</p>
+      <ul class="mf-list">
+        <li><strong>Diversify across SEBI categories.</strong> A large-cap and a mid-cap cover different market segments by mandate. Two large-caps, even from different AMCs, will always share structural overlap.</li>
+        <li><strong>Diversify across AMCs.</strong> Different AMCs have independent research teams and sector views. Multiple funds within one AMC often reflect the same house-level conviction calls.</li>
+        <li><strong>Check before adding, not after.</strong> Run this calculator against your existing holdings before committing to a new fund.</li>
+        <li><strong>Review annually.</strong> Fund portfolios shift each quarter. An overlap check from six months ago may not reflect current holdings.</li>
+      </ul>
+      <p class="mf-disclaimer-link">Please <a href="https://www.finnovate.in/advisory" target="_blank" rel="noopener">consult a SEBI-registered investment adviser</a> before making portfolio changes based on overlap data alone.</p>
+
+      <hr class="mf-hr">
+
+      <h2>How to Build a Low-Overlap Mutual Fund Portfolio</h2>
+      <p>A few principles help structure a portfolio where funds genuinely complement each other rather than duplicate exposure:</p>
+      <ol class="mf-steps">
+        <li><strong>Limit your total to 4 to 6 funds.</strong> More funds create complexity without adding real diversification. Beyond six, incremental benefit shrinks rapidly while tracking and rebalancing overhead grows.</li>
+        <li><strong>Diversify by market cap and style.</strong> Combine funds across distinct SEBI categories: a large-cap or index fund for core stability, a mid-cap or small-cap for growth, and a value or contra fund for style diversity. Each category draws from a different stock universe by regulation.</li>
+        <li><strong>Mix active and passive strategies.</strong> Actively managed funds often cluster around the same blue-chip names. Pairing an active fund with a broad index fund dilutes this concentration and lowers overall overlap without sacrificing market coverage.</li>
+        <li><strong>Add an international fund for zero domestic overlap.</strong> Any fund investing in overseas equities carries no Indian stock overlap with domestic holdings by definition. Even a modest international allocation meaningfully reduces whole-portfolio overlap.</li>
+        <li><strong>Check overlap before every addition.</strong> Holdings shift each quarter as managers rebalance. Use this calculator before adding any new fund and revisit at least annually. Above 30% with any existing holding is a clear signal to look elsewhere.</li>
+      </ol>
+
+      <hr class="mf-hr">
+
+      <h2>Overlap Check Before Every SIP Top-Up: A Checklist</h2>
+      <p>Run through this before every SIP increase or new fund addition:</p>
+      <ul class="mf-checklist">
+        <li>Is the new fund in a different SEBI category from what I already hold?</li>
+        <li>Is it from a different AMC with an independent research team?</li>
+        <li>Does the calculator show below 30% overlap with each fund I hold?</li>
+        <li>Are the top holdings of the new fund different from my existing funds?</li>
+        <li>Has the fund manager changed recently?</li>
+        <li>Am I adding this for a specific reason, not just chasing recent returns?</li>
+      </ul>
+
+    </div>
+
+    <div class="mf-section mf-sebi-section">
+      <div class="mf-sebi-badge">SEBI 2026</div>
+      <h2>SEBI's New Overlap Regulations (2026)</h2>
+      <p>The Securities and Exchange Board of India introduced landmark overlap disclosure and concentration rules in February 2026:</p>
+      <ul class="mf-list">
+        <li><strong>50% overlap cap:</strong> Thematic and sectoral funds from the same AMC must not overlap by more than 50% in their stock holdings.</li>
+        <li><strong>Monthly disclosures:</strong> AMCs must publish fund-wise overlap data on a monthly basis, starting August 2026.</li>
+        <li><strong>3-year phase-in:</strong> Full compliance is required by April 2029, giving fund houses time to restructure existing portfolios without forced selling.</li>
+        <li><strong>Large-cap exemption:</strong> Large-cap funds are exempt given their structural mandate to track the top-100 universe. Elevated overlap in this category is expected and acceptable under regulation.</li>
+      </ul>
+      <p class="mf-sebi-note">This tool reflects current publicly available AMFI holdings data. As AMC disclosures evolve under SEBI's new framework, data quality and coverage will improve.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="mf-faq-area">
+  <div class="mf-content-inner">
+    <h2 class="mf-faq-title">Frequently Asked Questions</h2>
+    <div class="mf-faq-list">
+
+      <details class="mf-faq-item">
+        <summary class="mf-faq-q">1. What is mutual fund overlap?</summary>
+        <p class="mf-faq-a">Mutual fund overlap is the percentage of your investment that two funds allocate to the same stocks. If Fund A and Fund B both hold HDFC Bank, Reliance, and Infosys, those common holdings represent your overlap. High overlap means you are not getting true diversification. You are essentially buying the same basket twice and paying two expense ratios for it.</p>
+      </details>
+
+      <details class="mf-faq-item">
+        <summary class="mf-faq-q">2. What is an acceptable overlap percentage between two funds?</summary>
+        <p class="mf-faq-a">As a rule of thumb: below 15% is ideal, 15–30% is acceptable for same-category funds, 30–50% warrants a closer review, and above 50% suggests near-identical portfolios with little diversification benefit. These thresholds vary by category, as some overlap in large-cap funds is unavoidable given the limited universe of top-100 stocks mandated by SEBI.</p>
+      </details>
+
+      <details class="mf-faq-item">
+        <summary class="mf-faq-q">3. Why do large-cap mutual funds always have high overlap?</summary>
+        <p class="mf-faq-a">SEBI mandates that large-cap funds invest at least 80% of their corpus in the top-100 companies by market capitalisation. Since this is a relatively small universe dominated by 10–15 mega-cap stocks, it is structurally impossible for two large-cap funds to have very low overlap. This is also why SEBI's 2026 regulations explicitly exempt large-cap funds from the 50% overlap cap.</p>
+      </details>
+
+      <details class="mf-faq-item">
+        <summary class="mf-faq-q">4. Is it risky to hold two funds from the same AMC?</summary>
+        <p class="mf-faq-a">Not inherently, but same-AMC funds often share research teams, house views, and star fund managers across schemes. This can lead to higher overlap than if you picked funds from two different AMCs with fully independent investment processes. Always run an overlap check before combining same-AMC schemes, especially thematic or sectoral ones.</p>
+      </details>
+
+      <details class="mf-faq-item">
+        <summary class="mf-faq-q">5. What changed with SEBI's 2026 mutual fund overlap rules?</summary>
+        <p class="mf-faq-a">In February 2026, SEBI introduced a 50% overlap cap for thematic and sectoral funds from the same AMC. From August 2026, all AMCs must publish monthly overlap disclosures. Full compliance is required by April 2029. Large-cap funds are exempt from the cap. These rules aim to reduce stealth concentration risk and improve transparency for investors.</p>
+      </details>
+
+      <details class="mf-faq-item">
+        <summary class="mf-faq-q">6. How often should I check mutual fund overlap?</summary>
+        <p class="mf-faq-a">Check overlap whenever you plan to add a new fund to your portfolio, and at least once a year during your annual portfolio review. Fund holdings are disclosed quarterly by AMCs and change as managers rebalance, so overlap that was low when you first invested may have crept up over time. The Finnovate calculator always uses the latest AMFI-disclosed holdings for current results.</p>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE BAR -->
+<div class="mf-compliance-bar">
+  <p><strong>Mutual Funds are subject to market risks. Please read all scheme-related documents carefully before investing.</strong> Past performance is not indicative of future returns.</p>
+  <p>Finnovate Financial Services Pvt Ltd is a SEBI-registered investment adviser (Reg. No. INA000013518). This tool is provided for informational and educational purposes only. It does not constitute investment advice, a recommendation, or a solicitation to buy, sell, or hold any mutual fund scheme. Overlap data is derived from publicly available AMFI portfolio disclosures and is updated as disclosures are published. The information may not reflect real-time portfolio changes.</p>
+</div>
 
 <!-- APP DOWNLOAD BANNER -->
 <section class="app-banner">
@@ -517,7 +860,7 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 
     <!-- Headline + sub + rating -->
     <div class="app-content">
-      <h2 class="app-headline">All your investments, one clear view</h2>
+      <p class="app-headline">All your investments, one clear view</p>
       <p class="app-sub">Track, analyse and manage your portfolio with the Finnovate Wealth App</p>
       <div class="app-rating-row">
         <div class="app-rating-badge">
@@ -545,6 +888,58 @@ body{font-family:'Inter','Segoe UI',sans-serif;background:var(--page);color:#1a1
 
   </div>
 </section>
+
+<footer class="fn-footer">
+  <div class="fn-footer-inner">
+    <div class="fn-footer-top">
+      <div class="fn-footer-brand">
+        <a href="https://www.finnovate.in" rel="noopener"><img src="https://www.finnovate.in/assets/images/Finnovate-logo.png" alt="Finnovate"></a>
+        <p>SEBI Registered Investment Advisor &middot; Reg. No. INA000013518<br>Independent, unbiased financial advice for doctors and professionals across India.</p>
+      </div>
+      <div class="fn-footer-col">
+        <h4>Calculators</h4>
+        <ul>
+          <li><a href="https://www.finnovate.in/mutual-funds/overlap-calculator">MF Overlap</a></li>
+          <li><a href="https://www.finnovate.in/sip-calculator">SIP Calculator</a></li>
+          <li><a href="https://www.finnovate.in/swp-calculator">SWP Calculator</a></li>
+          <li><a href="https://www.finnovate.in/fire-calculator">FIRE Calculator</a></li>
+          <li><a href="https://www.finnovate.in/retirement-calculator">Retirement Planner</a></li>
+          <li><a href="https://www.finnovate.in/asset-allocation-calculator">Asset Allocation</a></li>
+        </ul>
+      </div>
+      <div class="fn-footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="https://www.finnovate.in/advisory">Investment Advisory</a></li>
+          <li><a href="https://www.finnovate.in/mutual-funds">Mutual Funds</a></li>
+          <li><a href="https://www.finnovate.in/insurance">Insurance</a></li>
+          <li><a href="https://www.finnovate.in/tax-planning">Tax Planning</a></li>
+          <li><a href="https://www.finnovate.in/estate-planning">Estate Planning</a></li>
+        </ul>
+      </div>
+      <div class="fn-footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="https://www.finnovate.in/about">About Us</a></li>
+          <li><a href="https://www.finnovate.in/team">Our Team</a></li>
+          <li><a href="https://www.finnovate.in/blog">Blog</a></li>
+          <li><a href="https://www.finnovate.in/contact">Contact</a></li>
+          <li><a href="https://www.finnovate.in/privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="fn-footer-divider">
+    <div class="fn-footer-bottom">
+      <p class="fn-footer-legal">
+        <strong style="color:#8fa3b0">Finnovate Financial Services Pvt Ltd</strong> &bull; SEBI Registered Investment Advisor &middot; Reg. No. INA000013518 &bull; Mutual Fund investments are subject to market risks. Read all scheme-related documents carefully before investing. Past performance is not indicative of future results. Content on this page is for educational purposes only and does not constitute investment advice.<br>
+        Mumbai: 703, The Summit Business Park, Andheri&ndash;Kurla Road, Andheri East, Mumbai 400093 &bull; Pune: 102, 2nd Floor, Fortune Plaza, Thube Park, Shivaji Nagar, Pune 411005 &bull; <a href="mailto:hello@finnovate.in">hello@finnovate.in</a> &bull; <a href="https://www.finnovate.in" target="_blank" rel="noopener">finnovate.in</a>
+      </p>
+      <div class="fn-footer-logo">
+        <a href="https://www.finnovate.in" rel="noopener"><img src="https://www.finnovate.in/assets/images/Finnovate-logo.png" alt="Finnovate"></a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script>
 const API='https://finapi.upvaly.com';
@@ -992,7 +1387,7 @@ function renderScore(pct,nCommon){
   if(pct<20){cls='low';label='LOW OVERLAP';desc='Good diversification between these two funds.';}
   else if(pct<40){cls='moderate';label='MODERATE OVERLAP';desc='Some redundancy exists between these funds.';}
   else if(pct<60){cls='high';label='HIGH OVERLAP';desc=`Overlap % with ${nCommon} Common Holdings between these two schemes`;}
-  else{cls='very-high';label='VERY HIGH OVERLAP';desc=`Very high overlap — ${nCommon} common holdings. Significant redundancy.`;}
+  else{cls='very-high';label='VERY HIGH OVERLAP';desc=`Very high overlap: ${nCommon} common holdings. Significant redundancy.`;}
 
   const tag=document.getElementById('overlapTag');
   tag.textContent=label;
@@ -1235,6 +1630,36 @@ function switchTab(tab){
 document.addEventListener('click',e=>{
   if(!e.target.closest('#searchA')&&!e.target.closest('#dropdownA'))hideDd('A');
   if(!e.target.closest('#searchB')&&!e.target.closest('#dropdownB'))hideDd('B');
+});
+
+// Smooth FAQ accordion — single-open
+const faqItems=Array.from(document.querySelectorAll('.mf-faq-item'));
+function closeItem(item){
+  const ans=item.querySelector('.mf-faq-a');
+  if(!ans)return;
+  ans.style.transition='max-height .28s cubic-bezier(.23,1,.32,1)';
+  ans.style.maxHeight='0';
+  setTimeout(()=>{item.open=false;ans.style.maxHeight='';ans.style.transition='';},280);
+}
+faqItems.forEach(el=>{
+  const s=el.querySelector('summary');
+  const a=el.querySelector('.mf-faq-a');
+  if(!s||!a)return;
+  a.style.overflow='hidden';
+  s.addEventListener('click',e=>{
+    e.preventDefault();
+    if(!el.open){
+      faqItems.forEach(other=>{if(other!==el&&other.open)closeItem(other);});
+      el.open=true;
+      a.style.maxHeight='0';
+      requestAnimationFrame(()=>{
+        a.style.transition='max-height .28s cubic-bezier(.23,1,.32,1)';
+        a.style.maxHeight=a.scrollHeight+'px';
+      });
+    } else {
+      closeItem(el);
+    }
+  });
 });
 
 // Auto-load comparison if the URL carries ?a=…&b=…

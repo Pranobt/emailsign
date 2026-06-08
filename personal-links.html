@@ -323,6 +323,66 @@
     .copy-btn:active { transform: scale(.97); }
     .copy-btn.copied { background: #16a34a; color: var(--white); border-color: #16a34a; }
 
+    /* QR BUTTON */
+    .qr-btn {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px; font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .qr-btn:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
+
+    /* QR MODAL */
+    .qr-modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+      padding: 20px;
+    }
+    .qr-modal.show { opacity: 1; pointer-events: all; }
+    .qr-modal-box {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 28px 24px 22px;
+      text-align: center;
+      max-width: 290px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,.22);
+      transform: translateY(14px) scale(.96);
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .qr-modal.show .qr-modal-box { transform: translateY(0) scale(1); }
+    .qr-modal-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .qr-modal-sub { font-size: 11.5px; color: var(--muted); margin-bottom: 18px; }
+    .qr-modal-img { width: 200px; height: 200px; border-radius: 10px; border: 1px solid var(--border); display: block; margin: 0 auto; }
+    .qr-modal-close {
+      margin-top: 18px;
+      width: 100%;
+      padding: 11px;
+      background: var(--green-pale);
+      border: 1.5px solid var(--green-light);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 600;
+      color: var(--green-dark);
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .qr-modal-close:hover { background: var(--green); color: var(--white); border-color: var(--green); }
+
     /* TOAST */
     .toast {
       position: fixed;
@@ -501,6 +561,10 @@
             </button>
           </div>
           <div class="card-url" id="url-finnfit50"></div>
+          <button class="qr-btn" onclick="showQR('url-finnfit50', 'FinnFit Test · 50 Marks')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+            View QR
+          </button>
         </div>
 
         <!-- Card 3: FinnFit 20 -->
@@ -519,6 +583,10 @@
             </button>
           </div>
           <div class="card-url" id="url-finnfit20"></div>
+          <button class="qr-btn" onclick="showQR('url-finnfit20', 'FinnFit Quiz · 20 Marks')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+            View QR
+          </button>
         </div>
 
         <!-- Card 4: Calendly -->
@@ -580,6 +648,16 @@
   <footer class="footer">
     Finnovate Internal Tool &nbsp;·&nbsp; These links are personal, do not share with other team members
   </footer>
+
+  <!-- QR Modal -->
+  <div class="qr-modal" id="qrModal" onclick="if(event.target===this)closeQR()">
+    <div class="qr-modal-box">
+      <div class="qr-modal-title" id="qrModalTitle"></div>
+      <div class="qr-modal-sub">Scan to open on phone</div>
+      <img class="qr-modal-img" id="qrModalImg" src="" alt="QR Code" />
+      <button class="qr-modal-close" onclick="closeQR()">Close</button>
+    </div>
+  </div>
 
   <!-- Toast -->
   <div class="toast" id="toast">
@@ -763,6 +841,20 @@
     document.getElementById('searchInput').value = '';
     renderList(USERS);
     document.getElementById('searchInput').focus();
+  }
+
+  function showQR(elId, label) {
+    const url = document.getElementById(elId).dataset.url;
+    if (!url) { showToast('Select a name first'); return; }
+    document.getElementById('qrModalTitle').textContent = label;
+    document.getElementById('qrModalImg').src =
+      'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=' + encodeURIComponent(url);
+    document.getElementById('qrModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeQR() {
+    document.getElementById('qrModal').classList.remove('show');
+    document.body.style.overflow = '';
   }
 
   function copyIcon() {

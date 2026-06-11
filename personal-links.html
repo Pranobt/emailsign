@@ -589,7 +589,7 @@
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
               View QR
             </button>
-            <button class="qr-btn flyer-btn" onclick="downloadFlyer()">
+            <button class="qr-btn flyer-btn" onclick="downloadFlyer('finopd-flyer.html')">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Flyer
             </button>
@@ -634,10 +634,16 @@
             </button>
           </div>
           <div class="card-url" id="url-finnfit50"></div>
-          <button class="qr-btn" onclick="showQR('url-finnfit50', 'FinnFit Test · 50 Marks')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
-            View QR
-          </button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="qr-btn" onclick="showQR('url-finnfit50', 'FinnFit Test · 50 Marks')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+              View QR
+            </button>
+            <button class="qr-btn flyer-btn" onclick="downloadFlyer('finnfit50-flyer.html')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Flyer
+            </button>
+          </div>
         </div>
 
         <!-- Card 3: FinnFit 20 -->
@@ -656,10 +662,16 @@
             </button>
           </div>
           <div class="card-url" id="url-finnfit20"></div>
-          <button class="qr-btn" onclick="showQR('url-finnfit20', 'FinnFit Quiz · 20 Marks')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
-            View QR
-          </button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="qr-btn" onclick="showQR('url-finnfit20', 'FinnFit Quiz · 20 Marks')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+              View QR
+            </button>
+            <button class="qr-btn flyer-btn" onclick="downloadFlyer('finnfit20-flyer.html')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Flyer
+            </button>
+          </div>
         </div>
 
         <!-- Card 4: Calendly -->
@@ -958,7 +970,7 @@
     document.body.style.overflow = '';
   }
 
-  function downloadFlyer() {
+  function downloadFlyer(file) {
     if (!activeItem) { showToast('Select a name first'); return; }
     document.getElementById('printModal').classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -966,7 +978,7 @@
       closePrintModal();
       const user = USERS.find(u => u.name === activeItem);
       if (!user) return;
-      const url = 'finopd-flyer.html?name=' + encodeURIComponent(user.name) +
+      const url = file + '?name=' + encodeURIComponent(user.name) +
                   '&id=' + encodeURIComponent(user.id) + '&print=1';
       window.open(url, '_blank');
     };

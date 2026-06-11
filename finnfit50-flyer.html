@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FinnFit Test Flyer</title>
+  <style>
+    @page { margin: 0; size: 210mm 252mm; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      margin: 0; padding: 0;
+      background: #fff;
+      line-height: 0; font-size: 0;
+    }
+
+    .flyer-page {
+      width: 210mm;
+      height: 252mm;
+      overflow: hidden;
+      position: relative;
+      display: block;
+    }
+
+    .page-2 {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    .page-bg {
+      width: 210mm;
+      height: 252mm;
+      display: block;
+      object-fit: fill;
+    }
+
+    /* Page 1: QR centered inside phone frame (bottom-right) */
+    .qr-phone {
+      position: absolute;
+      left: 64.5%;
+      top: 69%;
+      width: 28%;
+    }
+    .qr-phone img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Page 2: Calendly QR left of the Book Session section — above About Finnovate */
+    .qr-calendly {
+      position: absolute;
+      left: 6%;
+      top: 43%;
+      width: 22%;
+      background: #fff;
+      border: 2.5px solid #0b8457;
+      border-radius: 10px;
+      padding: 5px;
+    }
+    .qr-calendly img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Page 1: FinnFit Test QR inside phone frame -->
+  <div class="flyer-page page-1">
+    <img src="finnfit-page1.jpg" class="page-bg" alt="">
+    <div class="qr-phone">
+      <img id="qrFinnfit" src="" alt="QR Code">
+    </div>
+  </div>
+
+  <!-- Page 2: 50-mark design with Calendly QR -->
+  <div class="flyer-page page-2">
+    <img src="finnfit50-flyer2.jpg" class="page-bg" alt="">
+
+    <div class="qr-calendly">
+      <img id="qrCalendly" src="" alt="QR Code">
+    </div>
+  </div>
+
+  <script>
+    function buildUTM(base, params) {
+      const q = new URLSearchParams(params);
+      return base + (base.includes('?') ? '&' : '?') + q.toString();
+    }
+
+    const sp   = new URLSearchParams(window.location.search);
+    const name = sp.get('name') || 'Finnovate';
+    const id   = sp.get('id')   || '';
+
+    const base = {
+      utm_origin:  'Direct Lead',
+      utm_source:  name,
+      utm_medium:  'personal link',
+      utm_term:    id,
+    };
+
+    const finnfitUrl = buildUTM('https://plan.finnovate.in/finnfit', {
+      ...base,
+      utm_campaign: 'Finnfit',
+      utm_content:  'Take a FinnFit Test',
+    });
+
+    const calendlyUrl = buildUTM('https://calendly.com/finnovate/financial-fitness-consultation', {
+      ...base,
+      utm_campaign: 'Calendly',
+      utm_content:  'Book a Meeting',
+    });
+
+    const qrFinnfit  = document.getElementById('qrFinnfit');
+    const qrCalendly = document.getElementById('qrCalendly');
+
+    qrFinnfit.src  = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=6&data=' + encodeURIComponent(finnfitUrl);
+    qrCalendly.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=6&data=' + encodeURIComponent(calendlyUrl);
+
+    if (sp.get('print')) {
+      let loaded = 0;
+      function onLoad() { if (++loaded === 2) setTimeout(function() { window.print(); }, 400); }
+      qrFinnfit.onload  = onLoad;
+      qrCalendly.onload = onLoad;
+    }
+  </script>
+
+</body>
+</html>

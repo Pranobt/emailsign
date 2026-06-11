@@ -11,6 +11,8 @@
       margin: 0;
       padding: 0;
       background: #fff;
+      line-height: 0;
+      font-size: 0;
     }
 
     .flyer-page {
@@ -18,13 +20,13 @@
       height: 297mm;
       overflow: hidden;
       position: relative;
-      line-height: 0;
-      font-size: 0;
+      display: block;
     }
 
-    .flyer-page.page-1 {
-      page-break-after: always;
-      break-after: page;
+    /* Use page-break-before on page 2 — avoids trailing blank from page-break-after */
+    .page-2 {
+      page-break-before: always;
+      break-before: page;
     }
 
     .page-bg {
@@ -34,8 +36,6 @@
       object-fit: fill;
     }
 
-    /* QR overlay — positioned over the blank left column of the "Join Financial OPD" section.
-       Adjust top/left/width if the QR lands off-target after a test export. */
     .qr-wrap {
       position: absolute;
       left: 2.5%;
@@ -75,7 +75,7 @@
   </div>
 
   <!-- Page 2: static -->
-  <div class="flyer-page">
+  <div class="flyer-page page-2">
     <img src="finopd-page2.jpg" class="page-bg" alt="">
   </div>
 

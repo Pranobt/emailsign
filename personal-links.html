@@ -391,6 +391,57 @@
     }
     .qr-modal-close:hover { background: var(--green); color: var(--white); border-color: var(--green); }
 
+    /* PRINT INSTRUCTION MODAL */
+    .print-modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2100;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .print-modal.show { opacity: 1; pointer-events: all; }
+    .print-modal-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px 24px 20px;
+      width: 320px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18);
+      transform: translateY(10px);
+      transition: transform .2s;
+    }
+    .print-modal.show .print-modal-box { transform: translateY(0); }
+    .print-modal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .print-modal-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .print-modal-steps {
+      background: var(--green-pale);
+      border: 1px solid var(--green-light);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+    }
+    .print-modal-steps li {
+      font-size: 12px; color: var(--text); line-height: 1.6;
+      list-style: none; padding-left: 18px; position: relative;
+    }
+    .print-modal-steps li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+    .print-modal-btns { display: flex; gap: 8px; }
+    .print-modal-go {
+      flex: 1; padding: 9px; border-radius: 8px;
+      background: var(--green); color: #fff; border: none;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background .18s;
+    }
+    .print-modal-go:hover { background: var(--green-dark); }
+    .print-modal-cancel {
+      padding: 9px 14px; border-radius: 8px;
+      background: transparent; color: var(--muted);
+      border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all .18s;
+    }
+    .print-modal-cancel:hover { border-color: var(--muted); color: var(--text); }
+
     /* TOAST */
     .toast {
       position: fixed;
@@ -683,6 +734,22 @@
     Finnovate Internal Tool &nbsp;·&nbsp; These links are personal, do not share with other team members
   </footer>
 
+  <!-- Print Instruction Modal -->
+  <div class="print-modal" id="printModal" onclick="if(event.target===this)closePrintModal()">
+    <div class="print-modal-box">
+      <div class="print-modal-title">Before you print</div>
+      <div class="print-modal-sub">In Chrome's print dialog, do these two things for a clean PDF:</div>
+      <ul class="print-modal-steps">
+        <li>Set <strong>Margins</strong> to <strong>None</strong></li>
+        <li>Uncheck <strong>Headers and footers</strong></li>
+      </ul>
+      <div class="print-modal-btns">
+        <button class="print-modal-go" id="printModalGo">Open &amp; Print</button>
+        <button class="print-modal-cancel" onclick="closePrintModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- QR Modal -->
   <div class="qr-modal" id="qrModal" onclick="if(event.target===this)closeQR()">
     <div class="qr-modal-box">
@@ -893,11 +960,20 @@
 
   function downloadFlyer() {
     if (!activeItem) { showToast('Select a name first'); return; }
-    const user = USERS.find(u => u.name === activeItem);
-    if (!user) return;
-    const url = 'finopd-flyer.html?name=' + encodeURIComponent(user.name) +
-                '&id=' + encodeURIComponent(user.id) + '&print=1';
-    window.open(url, '_blank');
+    document.getElementById('printModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('printModalGo').onclick = function() {
+      closePrintModal();
+      const user = USERS.find(u => u.name === activeItem);
+      if (!user) return;
+      const url = 'finopd-flyer.html?name=' + encodeURIComponent(user.name) +
+                  '&id=' + encodeURIComponent(user.id) + '&print=1';
+      window.open(url, '_blank');
+    };
+  }
+  function closePrintModal() {
+    document.getElementById('printModal').classList.remove('show');
+    document.body.style.overflow = '';
   }
 
   function copyIcon() {

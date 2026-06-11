@@ -10,23 +10,30 @@
     html, body {
       width: 794px;
       background: #fff;
+      margin: 0;
+      padding: 0;
+      font-size: 0;
+      line-height: 0;
     }
 
     .flyer-page {
       width: 794px;
-      height: 1123px;
       position: relative;
-      break-after: page;
+      font-size: 0;
+      line-height: 0;
     }
 
-    .flyer-page:last-child {
-      break-after: auto;
+    .flyer-page.page-1 {
+      page-break-after: always;
+      break-after: page;
     }
 
     .page-bg {
       width: 100%;
-      height: 100%;
+      height: auto;
       display: block;
+      margin: 0;
+      padding: 0;
     }
 
     /* QR overlay — positioned over the blank left column of the "Join Financial OPD" section.
@@ -59,7 +66,7 @@
 <body>
 
   <!-- Page 1: hero + QR overlay -->
-  <div class="flyer-page">
+  <div class="flyer-page page-1">
     <img src="finopd-page1.jpg" class="page-bg" alt="">
     <div class="qr-wrap">
       <img id="qrImg" src="" alt="QR Code">

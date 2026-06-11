@@ -8,19 +8,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      width: 794px;
-      background: #fff;
       margin: 0;
       padding: 0;
-      font-size: 0;
-      line-height: 0;
+      background: #fff;
     }
 
     .flyer-page {
-      width: 794px;
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
       position: relative;
-      font-size: 0;
       line-height: 0;
+      font-size: 0;
     }
 
     .flyer-page.page-1 {
@@ -29,11 +28,10 @@
     }
 
     .page-bg {
-      width: 100%;
-      height: auto;
+      width: 210mm;
+      height: 297mm;
       display: block;
-      margin: 0;
-      padding: 0;
+      object-fit: fill;
     }
 
     /* QR overlay — positioned over the blank left column of the "Join Financial OPD" section.
@@ -44,6 +42,8 @@
       top: 38.5%;
       width: 22%;
       text-align: center;
+      line-height: normal;
+      font-size: initial;
     }
 
     .qr-wrap img {

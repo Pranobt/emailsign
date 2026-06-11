@@ -184,6 +184,30 @@ const generatePdf = async (targetUrl) => {
     return pdf;
 };
 
+const generateFlyerPdf = async (targetUrl) => {
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({ viewport: { width: 794, height: 1123 }, deviceScaleFactor: 2 });
+    const page = await context.newPage();
+
+    await page.goto(targetUrl, { waitUntil: 'networkidle', timeout: 30000 });
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() =>
+        Promise.all(Array.from(document.images).map(img =>
+            img.complete ? Promise.resolve()
+                : new Promise(r => { img.onload = r; img.onerror = r; })
+        ))
+    );
+
+    const pdf = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: { top: '0', right: '0', bottom: '0', left: '0' }
+    });
+
+    await browser.close();
+    return pdf;
+};
+
 const server = http.createServer(async (req, res) => {
     const requestUrl = new URL(req.url, `http://localhost:${PORT}`);
 
@@ -235,6 +259,28 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({ ok: false, message: err.message }));
             }
         });
+        return;
+    }
+
+    if (requestUrl.pathname === '/download-flyer') {
+        const name = requestUrl.searchParams.get('name') || 'Finnovate';
+        const id   = requestUrl.searchParams.get('id')   || '';
+        const safeName = name.replace(/[^a-zA-Z0-9 ]/g, '').trim();
+        const pdfName  = `FinancialOPD_${safeName}.pdf`;
+        const targetUrl = `http://localhost:${PORT}/finopd-flyer.html?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
+        try {
+            const pdf = await generateFlyerPdf(targetUrl);
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `attachment; filename="${pdfName}"`,
+                'Content-Length': pdf.length
+            });
+            res.end(pdf);
+        } catch (error) {
+            console.error('Flyer PDF generation failed', error);
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.end('PDF generation failed.');
+        }
         return;
     }
 

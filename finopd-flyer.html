@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Financial OPD Flyer</title>
+  <style>
+    @page { margin: 0; size: A4 portrait; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 794px;
+      background: #fff;
+    }
+
+    .flyer-page {
+      width: 794px;
+      height: 1123px;
+      position: relative;
+      break-after: page;
+    }
+
+    .flyer-page:last-child {
+      break-after: auto;
+    }
+
+    .page-bg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* QR overlay — positioned over the blank left column of the "Join Financial OPD" section.
+       Adjust top/left/width if the QR lands off-target after a test export. */
+    .qr-wrap {
+      position: absolute;
+      left: 2.5%;
+      top: 38.5%;
+      width: 22%;
+      text-align: center;
+    }
+
+    .qr-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .scan-label {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #222;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page 1: hero + QR overlay -->
+  <div class="flyer-page">
+    <img src="finopd-page1.jpg" class="page-bg" alt="">
+    <div class="qr-wrap">
+      <img id="qrImg" src="" alt="QR Code">
+      <div class="scan-label">Scan Here</div>
+    </div>
+  </div>
+
+  <!-- Page 2: static -->
+  <div class="flyer-page">
+    <img src="finopd-page2.jpg" class="page-bg" alt="">
+  </div>
+
+  <script>
+    function buildUTM(base, params) {
+      const q = new URLSearchParams(params);
+      return base + (base.includes('?') ? '&' : '?') + q.toString();
+    }
+
+    const sp   = new URLSearchParams(window.location.search);
+    const name = sp.get('name') || 'Finnovate';
+    const id   = sp.get('id')   || '';
+
+    const url = buildUTM('https://www.financialopd.com/sign-up/', {
+      utm_origin:   'Direct Lead',
+      utm_source:   name,
+      utm_medium:   'personal link',
+      utm_term:     id,
+      utm_campaign: 'Financialopd',
+      utm_content:  'Register',
+    });
+
+    document.getElementById('qrImg').src =
+      'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=' +
+      encodeURIComponent(url);
+  </script>
+
+</body>
+</html>

@@ -342,6 +342,14 @@
     }
     .qr-btn:hover { border-color: var(--green-mid); color: var(--green-dark); background: var(--green-pale); }
 
+    /* FLYER DOWNLOAD BUTTON */
+    .flyer-btn {
+      background: var(--green-pale);
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+    }
+    .flyer-btn:hover { background: var(--green); color: var(--white); border-color: var(--green); }
+
     /* QR MODAL */
     .qr-modal {
       position: fixed; inset: 0;
@@ -525,6 +533,16 @@
             </button>
           </div>
           <div class="card-url" id="url-register"></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="qr-btn" onclick="showQR('url-register', 'Financialopd · Register')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+              View QR
+            </button>
+            <button class="qr-btn flyer-btn" onclick="downloadFlyer()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Flyer
+            </button>
+          </div>
         </div>
 
         <!-- Card 2: Google Review -->
@@ -543,6 +561,10 @@
             </button>
           </div>
           <div class="card-url" id="url-review"></div>
+          <button class="qr-btn" onclick="showQR('url-review', 'Google · Leave a Review')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+            View QR
+          </button>
         </div>
 
         <!-- Card 3: FinnFit 50 Marks -->
@@ -605,6 +627,10 @@
             </button>
           </div>
           <div class="card-url" id="url-calendly"></div>
+          <button class="qr-btn" onclick="showQR('url-calendly', 'Calendly · Book a Meeting')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+            View QR
+          </button>
         </div>
 
         <!-- Card 6: App Download -->
@@ -627,6 +653,10 @@
               </button>
             </div>
             <div class="card-url" id="url-playstore"></div>
+            <button class="qr-btn" onclick="showQR('url-playstore', 'App · Google Play Store')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+              View QR
+            </button>
           </div>
           <div class="app-row">
             <div class="app-row-top">
@@ -637,6 +667,10 @@
               </button>
             </div>
             <div class="card-url" id="url-appstore"></div>
+            <button class="qr-btn" onclick="showQR('url-appstore', 'App · Apple Store')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+              View QR
+            </button>
           </div>
         </div>
 
@@ -855,6 +889,20 @@
   function closeQR() {
     document.getElementById('qrModal').classList.remove('show');
     document.body.style.overflow = '';
+  }
+
+  function downloadFlyer() {
+    if (!activeItem) { showToast('Select a name first'); return; }
+    const user = USERS.find(u => u.name === activeItem);
+    if (!user) return;
+    showToast('Generating flyer PDF…');
+    const a = document.createElement('a');
+    const base = (window.location.port && window.location.port !== '3000') ? 'http://localhost:3000' : '';
+    a.href = base + '/download-flyer?name=' + encodeURIComponent(user.name) + '&id=' + encodeURIComponent(user.id);
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   function copyIcon() {

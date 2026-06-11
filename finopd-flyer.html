@@ -91,9 +91,16 @@
       utm_content:  'Register',
     });
 
-    document.getElementById('qrImg').src =
+    const qrImg = document.getElementById('qrImg');
+    qrImg.src =
       'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=' +
       encodeURIComponent(url);
+
+    if (sp.get('print')) {
+      qrImg.onload = function() {
+        setTimeout(function() { window.print(); }, 400);
+      };
+    }
   </script>
 
 </body>

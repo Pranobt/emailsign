@@ -895,14 +895,9 @@
     if (!activeItem) { showToast('Select a name first'); return; }
     const user = USERS.find(u => u.name === activeItem);
     if (!user) return;
-    showToast('Generating flyer PDF…');
-    const a = document.createElement('a');
-    const base = (window.location.port && window.location.port !== '3000') ? 'http://localhost:3000' : '';
-    a.href = base + '/download-flyer?name=' + encodeURIComponent(user.name) + '&id=' + encodeURIComponent(user.id);
-    a.download = '';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const url = '/finopd-flyer.html?name=' + encodeURIComponent(user.name) +
+                '&id=' + encodeURIComponent(user.id) + '&print=1';
+    window.open(url, '_blank');
   }
 
   function copyIcon() {

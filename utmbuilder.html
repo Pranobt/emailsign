@@ -201,11 +201,22 @@
           <div class="field">
             <label>UTM URL (live preview)</label>
             <div id="output" class="code" title="Generated link will appear here"></div>
-            <div class="row" style="margin-top:10px;">
+            <div class="row" style="margin-top:10px; flex-wrap:wrap;">
               <button class="btn" id="btn-copy">Copy URL</button>
               <a class="btn secondary" id="btn-open" href="#" target="_blank" rel="noopener">Open in new tab</a>
+              <button class="btn" id="btn-shorten" type="button">Shorten link</button>
             </div>
             <div class="help" id="regen-hint" style="display:none;">Inputs changed. Click “Generate UTM” again to refresh the link.</div>
+
+            <div id="short-wrap" style="display:none; margin-top:16px;">
+              <label>Short link <span style="font-weight:500; color:var(--muted);">(saved to the Links dashboard)</span></label>
+              <div id="short-output" class="code"></div>
+              <div class="row" style="margin-top:10px; flex-wrap:wrap;">
+                <button class="btn" id="btn-copy-short" type="button">Copy short link</button>
+                <a class="btn secondary" id="btn-open-short" href="#" target="_blank" rel="noopener">Open</a>
+              </div>
+            </div>
+            <div class="help" id="short-msg" style="display:none;"></div>
           </div>
         </div>
       </div>
@@ -379,6 +390,9 @@
       els.output.textContent = finalURL;
       els.btnOpen.href = finalURL;
       els.outputWrap.style.display = 'block';
+      // a new UTM URL invalidates any previously shortened link
+      document.getElementById('short-wrap').style.display = 'none';
+      document.getElementById('short-msg').style.display = 'none';
       lastSig = signature();
       els.btnCopy.disabled = false;
       els.regenHint.style.display = 'none';
@@ -403,6 +417,62 @@
       });
     });
 
+    // ====== Shorten link (Finnovate shortener — appears in the Links dashboard) ======
+    const SHORTENER_API = 'https://team.finnovate.in/s/api.php';
+    const SHORTENER_KEY = 'c636400703b63568da4d9e700d8c6c1741f2b10512339164'; // dedicated, revocable "UTM Builder" key
+    const elShort = {
+      btn: document.getElementById('btn-shorten'),
+      wrap: document.getElementById('short-wrap'),
+      out: document.getElementById('short-output'),
+      copy: document.getElementById('btn-copy-short'),
+      open: document.getElementById('btn-open-short'),
+      msg: document.getElementById('short-msg')
+    };
+
+    async function shortenLink(){
+      const longUrl = els.output.textContent.trim();
+      if(!longUrl){ return; }
+      // Organising metadata so the link is easy to find in the dashboard
+      const origin = els.origin.value || '';
+      const medium = getVal('medium');
+      const campaign = els.campaign.value.trim();
+      const tags = [origin, medium].filter(Boolean).join(', ');
+
+      elShort.btn.disabled = true;
+      elShort.btn.textContent = 'Shortening…';
+      elShort.msg.style.display = 'none';
+      try {
+        const body = new URLSearchParams({ key: SHORTENER_KEY, url: longUrl, folder: 'UTM Builder', title: campaign, tags });
+        const res = await fetch(SHORTENER_API, { method: 'POST', body });
+        const j = await res.json();
+        if(j && j.success){
+          elShort.out.textContent = j.short_url;
+          elShort.open.href = j.short_url;
+          elShort.wrap.style.display = 'block';
+        } else {
+          elShort.msg.textContent = 'Could not shorten: ' + ((j && j.error) || 'unknown error');
+          elShort.msg.style.color = 'var(--danger)';
+          elShort.msg.style.display = 'block';
+        }
+      } catch(err){
+        elShort.msg.textContent = 'Network error contacting the shortener.';
+        elShort.msg.style.color = 'var(--danger)';
+        elShort.msg.style.display = 'block';
+      } finally {
+        elShort.btn.disabled = false;
+        elShort.btn.textContent = 'Shorten link';
+      }
+    }
+    elShort.btn.addEventListener('click', shortenLink);
+    elShort.copy.addEventListener('click', ()=>{
+      const t = elShort.out.textContent.trim();
+      if(!t) return;
+      navigator.clipboard.writeText(t).then(()=>{
+        elShort.copy.textContent = 'Copied!';
+        setTimeout(()=> elShort.copy.textContent = 'Copy short link', 1200);
+      });
+    });
+
     els.btnReset.addEventListener('click', ()=>{
       lastSig = null;
       els.btnCopy.disabled = true;
@@ -412,6 +482,8 @@
       ['origin','link'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value=''; });
       els.customLink.style.display = 'none';
       els.outputWrap.style.display = 'none';
+      document.getElementById('short-wrap').style.display = 'none';
+      document.getElementById('short-msg').style.display = 'none';
       els.linkError.style.display = 'none';
       hideError('source-error');
       hideError('medium-error');

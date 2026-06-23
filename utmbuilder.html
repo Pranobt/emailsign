@@ -415,9 +415,10 @@
       });
     });
 
-    // ====== Shorten link (via same-origin proxy; appears in the Links dashboard) ======
-    // The API key is held server-side in shorten.php, never exposed to the browser.
-    const SHORTENER_PROXY = 'shorten.php';
+    // ====== Shorten link (via Hostinger PHP proxy; appears in the Links dashboard) ======
+    // GitHub Pages can't run PHP, so the proxy lives on the shortener's server.
+    // The key/logic stays server-side there — never in this page or the public repo.
+    const SHORTENER_PROXY = 'https://team.finnovate.in/s/shorten.php';
     const elShort = {
       btn: document.getElementById('btn-shorten'),
       wrap: document.getElementById('short-wrap'),

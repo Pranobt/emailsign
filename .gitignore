@@ -1,7 +1,5 @@
 AkashK - Copy.html
 node_modules/
-# Secret key for the link-shortener proxy (shorten.php) — never commit
-.shortener-config.php
 .gstack/
 .claude/worktrees/clever-dubinsky/
 .claude/worktrees/naughty-bartik-084106/

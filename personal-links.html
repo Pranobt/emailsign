@@ -696,6 +696,28 @@
           </button>
         </div>
 
+        <!-- Card 5: Team Tools -->
+        <div class="link-card">
+          <div class="card-header">
+            <div class="card-icon blue">🛠️</div>
+            <div class="card-meta">
+              <div class="card-title">
+                Finnovate · Team Tools
+                <span class="card-badge badge-blue">Tools</span>
+              </div>
+            </div>
+            <button class="copy-btn" onclick="copyLink('url-tools', this)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="card-url" id="url-tools"></div>
+          <button class="qr-btn" onclick="showQR('url-tools', 'Finnovate · Team Tools')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="17" y1="21" x2="21" y2="21"/></svg>
+            View QR
+          </button>
+        </div>
+
         <!-- Card 6: App Download -->
         <div class="link-card">
           <div class="card-header">
@@ -849,6 +871,7 @@
       finnfit50: buildUTM('https://plan.finnovate.in/finnfit',       { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Test' }),
       finnfit20: buildUTM('https://plan.finnovate.in/finnfit-quiz',  { ...base, utm_campaign: 'Finnfit',      utm_content: 'Take a FinnFit Quiz' }),
       calendly:   buildUTM('https://calendly.com/finnovate/financial-fitness-consultation', { ...base, utm_campaign: 'Calendly',     utm_content: 'Book a Meeting' }),
+      tools:      'https://team.finnovate.in/tools/',
       review:     'https://g.page/r/CZaNoptWqry6EBM/review',
       playstore:  buildUTM('https://play.google.com/store/apps/details?id=com.finnovate.wealthtrack', { ...base, utm_campaign: 'App Download', utm_content: 'Google Play' }),
       appstore:   buildUTM('https://apps.apple.com/in/app/finnovate-wealth-app/id6740236625',         { ...base, utm_campaign: 'App Download', utm_content: 'Apple Store' }),
@@ -924,6 +947,7 @@
     setCard('url-finnfit50', currentLinks.finnfit50,  currentLinks.finnfit50);
     setCard('url-finnfit20', currentLinks.finnfit20,  currentLinks.finnfit20);
     setCard('url-calendly',  currentLinks.calendly,   currentLinks.calendly);
+    setCard('url-tools',     currentLinks.tools,       currentLinks.tools);
     setCard('url-review',     currentLinks.review,      currentLinks.review);
     setCard('url-playstore',  currentLinks.playstore,   currentLinks.playstore);
     setCard('url-appstore',   currentLinks.appstore,    currentLinks.appstore);

@@ -302,6 +302,14 @@
       line-height: 1.6;
       font-family: 'Inter', sans-serif;
       letter-spacing: -.01em;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .card-url:hover {
+      background: var(--green-pale);
+      border-color: var(--green-mid);
+      color: var(--green-dark);
+      text-decoration: underline;
     }
 
     .copy-btn {
@@ -1075,6 +1083,11 @@
 
   document.getElementById('searchInput').addEventListener('input', () => {
     renderList(getFilteredUsers());
+  });
+
+  document.getElementById('linksContainer').addEventListener('click', (e) => {
+    const el = e.target.closest('.card-url');
+    if (el && el.dataset.url) window.open(el.dataset.url, '_blank', 'noopener');
   });
 
   // auto-select from URL param on load

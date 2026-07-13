@@ -8296,12 +8296,17 @@
 
     function isStatementTimeoutError_(err) {
       const message = String(err && err.message ? err.message : err || "").toLowerCase();
-      return message.includes("statement timeout") || message.includes("canceling statement due to statement timeout");
+      return message.includes("statement timeout")
+        || message.includes("canceling statement due to statement timeout")
+        || message.includes("request timed out");
     }
 
     async function fetchAdminDashboardWithRetry_(payload) {
       try {
-        const result = await jsonp("getAdminDashboard", payload, 18000);
+        // Client budget is set above the server statement_timeout (30s) so the
+        // database aborts first with a real statement-timeout error, which lets
+        // the reduced-payload retry below take over instead of hard-failing.
+        const result = await jsonp("getAdminDashboard", payload, 33000);
         return { result, degraded: false };
       } catch (err) {
         if (!isStatementTimeoutError_(err)) throw err;

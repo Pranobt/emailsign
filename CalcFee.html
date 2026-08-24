@@ -369,6 +369,30 @@
 
           <div class="field-row">
             <div>
+              <label for="adv-startmonth">Start Month</label>
+              <select id="adv-startmonth">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7" selected>August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+              </select>
+            </div>
+            <div>
+              <label for="adv-startyear">Start Year</label>
+              <input type="number" id="adv-startyear" value="2026">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div>
               <label for="adv-rate">Annual Return Rate (%)</label>
               <input type="number" id="adv-rate" step="0.1" value="12">
             </div>
@@ -458,6 +482,15 @@
       return { fee: amount * last.rate / 100, label: `${last.rate}%` };
     }
 
+    function monthLabel(startMonthIdx, startYear, offset) {
+      const d = new Date(startYear, startMonthIdx + offset, 1);
+      return {
+        short: d.toLocaleString('en-US', { month: 'short' }),
+        full: d.toLocaleString('en-US', { month: 'short', year: 'numeric' }),
+        year: d.getFullYear()
+      };
+    }
+
     let lastCalc = null;
     let currentView = 'quarter';
 
@@ -477,6 +510,8 @@
       const annualRate = parseFloat($('adv-rate').value) || 0;
       const monthlyRate = annualRate / 12;
       const years = Math.max(1, parseInt($('adv-years').value) || 1);
+      const startMonthIdx = parseInt($('adv-startmonth').value) || 0;
+      const startYear = parseInt($('adv-startyear').value) || new Date().getFullYear();
       const fixedFee = 40000;
       const fixedThreshold = 5000000;
       const slabs = [
@@ -511,7 +546,8 @@
         const { fee, label } = computeVariableFee(avgAua, cfg);
         const monthFee = fee / 12;
         monthCumulative += monthFee;
-        monthly.push({ month: t, aua: aua[t], avgAua, fee: monthFee, cumulativeFee: monthCumulative, label });
+        const cal = monthLabel(startMonthIdx, startYear, t);
+        monthly.push({ month: t, cal, aua: aua[t], avgAua, fee: monthFee, cumulativeFee: monthCumulative, label });
       }
 
       const quarters = [];
@@ -519,9 +555,11 @@
         const qm = monthly.slice(q * 3, q * 3 + 3);
         const fee = qm.reduce((s, m) => s + m.fee, 0);
         const labels = [...new Set(qm.map(m => m.label))];
+        const first = qm[0].cal, last = qm[qm.length - 1].cal;
+        const rangeLabel = first.year === last.year ? `${first.short} - ${last.short}` : `${first.full} - ${last.full}`;
         quarters.push({
           index: q + 1,
-          months: `${qm[0].month}-${qm[qm.length - 1].month}`,
+          rangeLabel,
           auaEnd: qm[qm.length - 1].aua,
           rateLabel: labels.length === 1 ? labels[0] : 'Blended',
           fee
@@ -561,7 +599,7 @@
           + '<th>Status</th><th>Billed</th><th>GST</th><th>Total</th></tr></thead><tbody>';
         lastCalc.quarterRows.forEach(r => {
           tableHTML += `<tr>
-            <td>Q${r.index} (M${r.months})</td>
+            <td>Q${r.index} (${r.rangeLabel})</td>
             <td>₹${fmt(r.auaEnd)}</td>
             <td>${r.rateLabel}</td>
             <td>₹${fmt(r.fee)}</td>
@@ -576,7 +614,7 @@
         tableHTML += '<th>Month</th><th>AUA</th><th>Avg AUA</th><th>Rate</th><th>Monthly Fee</th><th>Cumulative</th></tr></thead><tbody>';
         lastCalc.monthly.forEach(m => {
           tableHTML += `<tr>
-            <td>M${m.month}</td>
+            <td>${m.cal.full}</td>
             <td>₹${fmt(m.aua)}</td>
             <td>₹${fmt(m.avgAua)}</td>
             <td>${m.label}</td>

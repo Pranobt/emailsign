@@ -304,6 +304,16 @@
     tbody tr:hover { background: rgba(0, 147, 86, 0.035); }
     tbody tr:last-child td { border-bottom: none; }
 
+    .cell-value { display: inline-block; }
+
+    .sub-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
     .pill {
       display: inline-flex;
       align-items: center;
@@ -334,11 +344,42 @@
       }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .container { padding: 20px; }
       .field-row { grid-template-columns: 1fr; }
-      table { font-size: 11px; }
-      th, td { padding: 7px 5px; }
+
+      table, thead, tbody, th, td, tr { display: block; }
+      table { table-layout: auto; }
+      thead { display: none; }
+
+      tbody tr {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: 10px;
+        padding: 4px 12px;
+      }
+
+      tbody tr td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+        text-align: right;
+      }
+
+      tbody tr td:last-child { border-bottom: none; }
+
+      tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+        text-align: left;
+      }
     }
   </style>
 </head>
@@ -601,27 +642,35 @@
           + '<th>Status</th><th>Billed</th><th>GST</th><th>Total</th></tr></thead><tbody>';
         lastCalc.quarterRows.forEach(r => {
           tableHTML += `<tr>
-            <td>Q${r.index} (${r.rangeLabel})</td>
-            <td>₹${fmt(r.auaEnd)}</td>
-            <td>${r.rateLabel}</td>
-            <td>₹${fmt(r.fee)}</td>
-            <td>₹${fmt(r.cumulativeFee)}</td>
-            <td><span class="pill ${r.bill > 0 ? 'billed' : 'nobill'}">${r.status}</span></td>
-            <td>₹${fmt(r.bill)}</td>
-            <td>₹${fmt(r.gst)}</td>
-            <td>₹${fmt(r.bill + r.gst)}</td>
+            <td data-label="Quarter"><span class="cell-value">Q${r.index}<span class="sub-label">(${r.rangeLabel})</span></span></td>
+            <td data-label="AUA">₹${fmt(r.auaEnd)}</td>
+            <td data-label="Rate">${r.rateLabel}</td>
+            <td data-label="Qtr Fee">₹${fmt(r.fee)}</td>
+            <td data-label="Cumulative">₹${fmt(r.cumulativeFee)}</td>
+            <td data-label="Status"><span class="pill ${r.bill > 0 ? 'billed' : 'nobill'}">${r.status}</span></td>
+            <td data-label="Billed">₹${fmt(r.bill)}</td>
+            <td data-label="GST">₹${fmt(r.gst)}</td>
+            <td data-label="Total">₹${fmt(r.bill + r.gst)}</td>
           </tr>`;
         });
       } else {
         tableHTML += '<th>Month</th><th>AUA</th><th>Avg AUA</th><th>Rate</th><th>Monthly Fee</th><th>Cumulative</th></tr></thead><tbody>';
+        tableHTML += `<tr>
+          <td data-label="Month">${lastCalc.baseline.cal.full} (Lumpsum)</td>
+          <td data-label="AUA">₹${fmt(lastCalc.baseline.lumpsum)}</td>
+          <td data-label="Avg AUA">—</td>
+          <td data-label="Rate">—</td>
+          <td data-label="Monthly Fee">—</td>
+          <td data-label="Cumulative">₹0</td>
+        </tr>`;
         lastCalc.monthly.forEach(m => {
           tableHTML += `<tr>
-            <td>${m.cal.full}</td>
-            <td>₹${fmt(m.aua)}</td>
-            <td>₹${fmt(m.avgAua)}</td>
-            <td>${m.label}</td>
-            <td>₹${fmt(m.fee)}</td>
-            <td>₹${fmt(m.cumulativeFee)}</td>
+            <td data-label="Month">${m.cal.full}</td>
+            <td data-label="AUA">₹${fmt(m.aua)}</td>
+            <td data-label="Avg AUA">₹${fmt(m.avgAua)}</td>
+            <td data-label="Rate">${m.label}</td>
+            <td data-label="Monthly Fee">₹${fmt(m.fee)}</td>
+            <td data-label="Cumulative">₹${fmt(m.cumulativeFee)}</td>
           </tr>`;
         });
       }

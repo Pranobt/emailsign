@@ -7,160 +7,414 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #009356;
-      --background: #ffffff;
-      --input-bg: #f9fafb;
-      --text-color: #111827;
-      --border-color: #e2e8f0;
-      --gray-text: #6b7280;
+      --primary: #009356;
+      --primary-dark: #007a47;
+      --primary-soft: #e6f6ee;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --border: #e5e7eb;
+      --text: #18181b;
+      --text-muted: #71717a;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06);
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     }
+
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--background);
-      color: var(--text-color);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(0, 147, 86, 0.07), transparent 55%),
+        var(--bg);
+      padding: 40px 20px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      height: 26px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 0;
     }
 
     .container {
-      width: 100%;
-      max-width: 750px;
-      background-color: #fff;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
       padding: 32px;
-      border-radius: 20px;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
-      box-sizing: border-box;
     }
 
-    h2 {
-      text-align: center;
-      font-family: 'Inter', sans-serif;
-      color: var(--primary-color);
-      margin-bottom: 30px;
-      font-size: 24px;
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 32px;
+      align-items: start;
     }
+
+    .calc-inputs, .calc-results {
+      min-width: 0;
+    }
+
+    .calc-results {
+      border-left: 1px solid var(--border);
+      padding-left: 32px;
+    }
+
+    h2.section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin: 28px 0 14px;
+    }
+
+    h2.section-title:first-child { margin-top: 0; }
 
     label {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
+      color: var(--text);
       display: block;
       margin-bottom: 6px;
     }
 
-    select, input {
+    select, input[type="text"], input[type="number"] {
       width: 100%;
-      box-sizing: border-box;
       font-family: 'Inter', sans-serif;
-      padding: 12px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background-color: var(--input-bg);
-      font-size: 15px;
+      padding: 11px 12px;
+      margin-bottom: 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background-color: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+      transition: border-color 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
     }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] { -moz-appearance: textfield; }
 
     .words-display {
-      font-size: 13px;
+      font-size: 12px;
       font-style: italic;
-      color: var(--gray-text);
-      margin-top: -16px;
-      margin-bottom: 12px;
+      color: var(--text-muted);
+      margin-top: -14px;
+      margin-bottom: 14px;
     }
 
-    button {
-      font-family: 'Inter', sans-serif;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      padding: 14px;
-      background-color: var(--primary-color);
-      color: white;
-      font-weight: 600;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field-row label {
+      display: flex;
+      align-items: flex-end;
+      min-height: 34px;
+      line-height: 1.3;
+    }
+
+    .radio-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text);
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
 
-    button:hover {
-      background-color: #007d48;
+    .radio-option input[type="radio"] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
     }
 
-    button:active::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 200%;
-      height: 500%;
-      background: rgba(255, 255, 255, 0.4);
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      z-index: 0;
+    button.primary {
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+      padding: 13px;
+      background-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 160ms var(--ease-out), transform 160ms var(--ease-out);
     }
+
+    button.primary:hover { background-color: var(--primary-dark); }
+    button.primary:active { transform: scale(0.98); }
 
     .result {
-      margin-top: 18px;
-      font-size: 16px;
-      text-align: center;
-      font-weight: 500;
-      color: var(--text-color);
+      margin: 0;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
     }
+
+    .result:last-of-type { border-bottom: none; }
 
     .highlight {
       font-weight: 700;
-      color: var(--primary-color);
+      color: var(--primary-dark);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .stat-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .stat-value.accent { color: var(--primary-dark); }
+
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      margin-top: 24px;
+      margin-bottom: 14px;
+    }
+
+    .toggle-btn {
+      font-family: 'Inter', sans-serif;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out), border-color 160ms var(--ease-out), transform 160ms var(--ease-out);
+    }
+
+    .toggle-btn.active {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      border-color: var(--primary-soft);
+    }
+
+    .toggle-btn:active { transform: scale(0.97); }
+
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+
+    thead th {
+      background: var(--bg);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tbody tr:hover { background: rgba(0, 147, 86, 0.035); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .pill.billed { background: var(--primary-soft); color: var(--primary-dark); }
+    .pill.nobill { background: #f4f4f5; color: var(--text-muted); }
+
+    .note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1000px) {
+      .calc-layout { grid-template-columns: 1fr; }
+      .calc-results {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--border);
+        padding-top: 28px;
+        margin-top: 4px;
+      }
     }
 
     @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-      }
+      .container { padding: 20px; }
+      .field-row { grid-template-columns: 1fr; }
+      table { font-size: 11px; }
+      th, td { padding: 7px 5px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Finnovate Advisory Fee Calculator</h2>
-    <label for="product">Select Strategy</label>
-    <select id="product">
-      <option value="mf">Mutual Funds + Equity</option>
-      <option value="combo">Multi Asset Strategy (Equity + ETF + Bonds)</option>
-    </select>
+  <div class="page">
+    <div class="page-header">
+      <img class="logo" src="https://www.finnovate.in/assets/images/logo.svg" alt="Finnovate">
+      <h1>Finnovate Advisory Fee Calculator</h1>
+      <p class="subtitle">Estimate advisory fees, GST, and quarterly billing schedules</p>
+    </div>
 
-    <label for="lumpsum">Lumpsum Investment (₹)</label>
-    <input type="text" id="lumpsum" placeholder="e.g., 10,00,000" oninput="formatAmountInput(this, 'lumpWords')">
-    <div class="words-display" id="lumpWords"></div>
+    <div class="container">
+      <div class="calc-layout">
+        <div class="calc-inputs">
+          <label for="adv-lumpsum">Lumpsum Investment (₹)</label>
+          <input type="text" id="adv-lumpsum" value="1,00,00,000" oninput="formatAmountInput(this, 'adv-lumpWords')">
+          <div class="words-display" id="adv-lumpWords"></div>
 
-    <label for="sip">Monthly SIP Amount (₹)</label>
-    <input type="text" id="sip" placeholder="e.g., 25,000" oninput="formatAmountInput(this, 'sipWords')">
-    <div class="words-display" id="sipWords"></div>
+          <label for="adv-sip">Monthly SIP Amount (₹)</label>
+          <input type="text" id="adv-sip" value="2,00,000" oninput="formatAmountInput(this, 'adv-sipWords')">
+          <div class="words-display" id="adv-sipWords"></div>
 
-    <label for="years">Number of Years</label>
-    <input type="number" id="years" placeholder="e.g., 5" value="1">
+          <label>SIP Start Timing</label>
+          <div class="radio-row">
+            <label class="radio-option"><input type="radio" name="sipTiming" value="next" checked> Next month</label>
+            <label class="radio-option"><input type="radio" name="sipTiming" value="same"> Same month as lumpsum</label>
+          </div>
 
-    <label for="stepUp">Annual SIP Step-up (%)</label>
-    <input type="number" id="stepUp" placeholder="e.g., 5" value="0">
+          <div class="field-row">
+            <div>
+              <label for="adv-rate">Annual Return Rate (%)</label>
+              <input type="number" id="adv-rate" step="0.1" value="12">
+            </div>
+            <div>
+              <label for="adv-years">Number of Years</label>
+              <input type="number" id="adv-years" value="1">
+            </div>
+          </div>
 
-    <button onclick="calculateFee()">Calculate Fee</button>
+          <h2 class="section-title">Advance Billing</h2>
+          <label for="adv-advance">Fee Paid in Advance (₹)</label>
+          <input type="text" id="adv-advance" value="1,00,000" oninput="formatAmountInput(this, 'adv-advanceWords')">
+          <div class="words-display" id="adv-advanceWords"></div>
 
-    <div class="result" id="totalInvestment"></div>
-    <div class="result" id="rateField"></div>
-    <div class="result" id="result"></div>
-    <div class="result" id="gstResult"></div>
-    <div class="result" id="feeTableContainer"></div>
-    <div class="note" style="font-size:14px; color:#555; margin-top:10px;">
-      Note: If AUM crosses ₹50,00,000, the fee will be calculated on a prorated basis and billed quarterly.
+          <button class="primary" onclick="calculateAdvanceFee()">Calculate Fee</button>
+        </div>
+
+        <div class="calc-results">
+          <div class="stat-grid" id="adv-summary"></div>
+
+          <div class="view-toggle">
+            <button type="button" class="toggle-btn active" data-view="quarter" onclick="setView('quarter')">Quarterly</button>
+            <button type="button" class="toggle-btn" data-view="month" onclick="setView('month')">Monthly</button>
+          </div>
+
+          <div id="adv-tableContainer"></div>
+          <div class="note">
+            Note: No invoice is raised for a quarter until the cumulative accrued fee exceeds the fee paid in advance.
+            Once crossed, only the amount over and above the advance is billed for that quarter (plus 18% GST), and every
+            quarter thereafter is billed in full.
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    function fmt(n) {
+      return Math.round(n).toLocaleString('en-IN');
+    }
+
+    function formatAmountOnly(input) {
+      let raw = input.value.replace(/[^\d]/g, '');
+      if (raw) input.value = new Intl.NumberFormat('en-IN').format(raw);
+    }
+
     function formatAmountInput(input, targetId) {
       let raw = input.value.replace(/[^\d]/g, '');
       if (!raw) {
@@ -190,102 +444,149 @@
       return inWords(num);
     }
 
-    function calculateFee() {
-      const product = document.getElementById('product').value;
-      const years = parseInt(document.getElementById('years').value) || 1;
-      const stepUp = parseFloat(document.getElementById('stepUp').value) || 0;
-      const lumpsumRaw = document.getElementById('lumpsum').value.replace(/[^\d]/g, '');
-      const sipRaw = document.getElementById('sip').value.replace(/[^\d]/g, '');
-      const lumpsum = parseFloat(lumpsumRaw) || 0;
-      const sip = parseFloat(sipRaw) || 0;
-      const amount = lumpsum + (sip * 12);
+    // Fixed + Variable Fee (AUA growth, quarterly, advance-billing threshold)
+    function computeVariableFee(amount, cfg) {
+      if (amount <= cfg.fixedThreshold) {
+        return { fee: cfg.fixedFee, label: `Flat ₹${fmt(cfg.fixedFee)} (up to ₹${fmt(cfg.fixedThreshold)})` };
+      }
+      for (const slab of cfg.slabs) {
+        if (amount <= slab.upper) {
+          return { fee: amount * slab.rate / 100, label: `${slab.rate}%` };
+        }
+      }
+      const last = cfg.slabs[cfg.slabs.length - 1];
+      return { fee: amount * last.rate / 100, label: `${last.rate}%` };
+    }
 
-      const totalInvestment = document.getElementById('totalInvestment');
-      const rateField = document.getElementById('rateField');
-      const result = document.getElementById('result');
-      const gstResult = document.getElementById('gstResult');
-      const feeTableContainer = document.getElementById('feeTableContainer');
+    let lastCalc = null;
+    let currentView = 'quarter';
 
-      if (amount <= 0) {
-        result.innerText = 'Please enter a valid investment amount.';
-        gstResult.innerText = '';
-        rateField.innerText = '';
-        totalInvestment.innerText = '';
-        feeTableContainer.innerHTML = '';
+    function setView(view) {
+      currentView = view;
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+      if (lastCalc) renderTable();
+    }
+
+    function calculateAdvanceFee() {
+      const $ = id => document.getElementById(id);
+      const parseAmt = id => parseFloat(($(id).value || '').replace(/[^\d.]/g, '')) || 0;
+
+      const lumpsum = parseAmt('adv-lumpsum');
+      const sip = parseAmt('adv-sip');
+      const sipTiming = document.querySelector('input[name="sipTiming"]:checked').value;
+      const annualRate = parseFloat($('adv-rate').value) || 0;
+      const monthlyRate = annualRate / 12;
+      const years = Math.max(1, parseInt($('adv-years').value) || 1);
+      const fixedFee = 40000;
+      const fixedThreshold = 5000000;
+      const slabs = [
+        { upper: 20000000, rate: 0.75 },
+        { upper: 50000000, rate: 0.65 },
+        { upper: 100000000, rate: 0.60 },
+        { upper: Infinity, rate: 0.50 }
+      ];
+      const advancePaid = parseAmt('adv-advance');
+      const cfg = { fixedFee, fixedThreshold, slabs };
+
+      const summaryEl = $('adv-summary');
+      const tableEl = $('adv-tableContainer');
+
+      if (lumpsum <= 0 && sip <= 0) {
+        summaryEl.innerHTML = '<div class="result">Please enter a valid lumpsum or SIP amount.</div>';
+        tableEl.innerHTML = '';
+        lastCalc = null;
         return;
       }
 
-      // Show summary for first year
-      const { fee: firstFee, rate: firstRate } = computeFee(product, amount);
-      const firstGst = firstFee * 0.18;
-      totalInvestment.innerHTML = `<span class="highlight">Total Investment Considered for Fee:</span> ₹${Math.round(amount).toLocaleString('en-IN')}`;
-      rateField.innerHTML = `<span class="highlight">Rate Applied:</span> ${firstRate}`;
-      result.innerHTML = `<span class="highlight">Estimated Advisory Fee (excl. GST):</span> ₹${Math.round(firstFee).toLocaleString('en-IN')}`;
-      gstResult.innerHTML = `<span class="highlight">Including 18% GST:</span> ₹${Math.round(firstFee + firstGst).toLocaleString('en-IN')}`;
-
-      // Build year-on-year fee table
-      let tableHTML = '<div style="overflow-x:auto; margin-top:20px;">'
-        + '<table style="min-width:600px; width:100%; border-collapse: collapse;">';
-      tableHTML += '<thead><tr>'
-        + '<th style="border:1px solid #ccc; padding:8px;">Year</th>'
-        + '<th style="border:1px solid #ccc; padding:8px;">AUM (₹)</th>'
-        + '<th style="border:1px solid #ccc; padding:8px;">Rate Applied</th>'
-        + '<th style="border:1px solid #ccc; padding:8px;">Fee (excl. GST)</th>'
-        + '<th style="border:1px solid #ccc; padding:8px;">GST</th>'
-        + '<th style="border:1px solid #ccc; padding:8px;">Total Fee</th>'
-        + '</tr></thead><tbody>';
-      let currentSip = sip;
-      for (let y = 1; y <= years; y++) {
-        const yearAmount = lumpsum + (currentSip * 12);
-        const { fee, rate } = computeFee(product, yearAmount);
-        const gst = fee * 0.18;
-        tableHTML += `<tr>
-          <td style="border:1px solid #ccc; padding:8px;">${y}</td>
-          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(yearAmount).toLocaleString('en-IN')}</td>
-          <td style="border:1px solid #ccc; padding:8px;">${rate}</td>
-          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(fee).toLocaleString('en-IN')}</td>
-          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(gst).toLocaleString('en-IN')}</td>
-          <td style="border:1px solid #ccc; padding:8px;">₹${Math.round(fee + gst).toLocaleString('en-IN')}</td>
-        </tr>`;
-        currentSip *= (1 + stepUp / 100);
+      const months = years * 12;
+      const aua = [sipTiming === 'same' ? lumpsum + sip : lumpsum];
+      for (let t = 1; t <= months; t++) {
+        aua.push(aua[t - 1] * (1 + monthlyRate / 100) + sip);
       }
-      tableHTML += '</tbody></table></div>';
-      feeTableContainer.innerHTML = tableHTML;
+
+      const monthly = [];
+      let monthCumulative = 0;
+      for (let t = 1; t <= months; t++) {
+        const avgAua = (aua[t] + aua[t - 1]) / 2;
+        const { fee, label } = computeVariableFee(avgAua, cfg);
+        const monthFee = fee / 12;
+        monthCumulative += monthFee;
+        monthly.push({ month: t, aua: aua[t], avgAua, fee: monthFee, cumulativeFee: monthCumulative, label });
+      }
+
+      const quarters = [];
+      for (let q = 0; q < months / 3; q++) {
+        const qm = monthly.slice(q * 3, q * 3 + 3);
+        const fee = qm.reduce((s, m) => s + m.fee, 0);
+        const labels = [...new Set(qm.map(m => m.label))];
+        quarters.push({
+          index: q + 1,
+          months: `${qm[0].month}-${qm[qm.length - 1].month}`,
+          auaEnd: qm[qm.length - 1].aua,
+          rateLabel: labels.length === 1 ? labels[0] : 'Blended',
+          fee
+        });
+      }
+
+      let cumulativeFee = 0, billedSoFar = 0, totalGst = 0;
+      const quarterRows = quarters.map(q => {
+        cumulativeFee += q.fee;
+        const outstanding = cumulativeFee - advancePaid - billedSoFar;
+        const bill = outstanding > 0 ? outstanding : 0;
+        billedSoFar += bill;
+        const gst = bill * 0.18;
+        totalGst += gst;
+        return { ...q, cumulativeFee, bill, gst, status: bill > 0 ? 'Billed' : 'No Bill' };
+      });
+
+      summaryEl.innerHTML = `
+        <div class="stat-card"><div class="stat-label">Total Fee Accrued</div><div class="stat-value">₹${fmt(cumulativeFee)}</div></div>
+        <div class="stat-card"><div class="stat-label">Fee Paid in Advance</div><div class="stat-value">₹${fmt(advancePaid)}</div></div>
+        <div class="stat-card"><div class="stat-label">Total Billed (excl. GST)</div><div class="stat-value accent">₹${fmt(billedSoFar)}</div></div>
+        <div class="stat-card"><div class="stat-label">Total GST (18%)</div><div class="stat-value">₹${fmt(totalGst)}</div></div>
+        <div class="stat-card"><div class="stat-label">Grand Total Payable</div><div class="stat-value accent">₹${fmt(billedSoFar + totalGst)}</div></div>
+      `;
+
+      lastCalc = { monthly, quarterRows };
+      renderTable();
     }
 
-    // Extracted fee computation into helper
-    function computeFee(product, amount) {
-      let fee = 0, rate = '';
-      if (product === 'mf') {
-        if (amount <= 5000000) {
-          fee = 40000; rate = 'Flat ₹40,000 (Up to ₹50 Lakhs)';
-        } else if (amount <= 20000000) {
-          fee = amount * 0.0075; rate = '0.75%';
-        } else if (amount <= 50000000) {
-          fee = amount * 0.0065; rate = '0.65%';
-        } else if (amount <= 100000000) {
-          fee = amount * 0.0060; rate = '0.60%';
-        } else if (amount <= 200000000000) {
-          fee = amount * 0.0050; rate = '0.50%';
-        } else {
-          return { fee: 0, rate: 'Custom' };
-        }
-      } else { // combo
-        if (amount <= 5000000) {
-          return { fee: 0, rate: 'NA' };
-        } else if (amount <= 20000000) {
-          fee = amount * 0.02; rate = '2.00%';
-        } else if (amount <= 50000000) {
-          fee = amount * 0.015; rate = '1.50%';
-        } else if (amount <= 100000000) {
-          fee = amount * 0.01; rate = '1.00%';
-        } else if (amount <= 200000000) {
-          fee = amount * 0.0075; rate = '0.75%';
-        } else {
-          return { fee: 0, rate: 'Custom' };
-        }
+    function renderTable() {
+      const tableEl = document.getElementById('adv-tableContainer');
+      if (!lastCalc) { tableEl.innerHTML = ''; return; }
+
+      let tableHTML = '<table><thead><tr>';
+      if (currentView === 'quarter') {
+        tableHTML += '<th>Quarter</th><th>AUA</th><th>Rate</th><th>Qtr Fee</th><th>Cumulative</th>'
+          + '<th>Status</th><th>Billed</th><th>GST</th><th>Total</th></tr></thead><tbody>';
+        lastCalc.quarterRows.forEach(r => {
+          tableHTML += `<tr>
+            <td>Q${r.index} (M${r.months})</td>
+            <td>₹${fmt(r.auaEnd)}</td>
+            <td>${r.rateLabel}</td>
+            <td>₹${fmt(r.fee)}</td>
+            <td>₹${fmt(r.cumulativeFee)}</td>
+            <td><span class="pill ${r.bill > 0 ? 'billed' : 'nobill'}">${r.status}</span></td>
+            <td>₹${fmt(r.bill)}</td>
+            <td>₹${fmt(r.gst)}</td>
+            <td>₹${fmt(r.bill + r.gst)}</td>
+          </tr>`;
+        });
+      } else {
+        tableHTML += '<th>Month</th><th>AUA</th><th>Avg AUA</th><th>Rate</th><th>Monthly Fee</th><th>Cumulative</th></tr></thead><tbody>';
+        lastCalc.monthly.forEach(m => {
+          tableHTML += `<tr>
+            <td>M${m.month}</td>
+            <td>₹${fmt(m.aua)}</td>
+            <td>₹${fmt(m.avgAua)}</td>
+            <td>${m.label}</td>
+            <td>₹${fmt(m.fee)}</td>
+            <td>₹${fmt(m.cumulativeFee)}</td>
+          </tr>`;
+        });
       }
-      return { fee, rate };
+      tableHTML += '</tbody></table>';
+      tableEl.innerHTML = tableHTML;
     }
   </script>
 </body>

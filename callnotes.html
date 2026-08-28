@@ -60,12 +60,13 @@ Copy the variant you prefer into its own file for use.
     }
     .wrapper {
       display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 32px;
+      grid-template-columns: 1fr;
+      gap: 24px;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1760px;
       position: relative;
       z-index: 1;
+      align-items: start;
     }
     /* CARD */
     .card {
@@ -220,6 +221,19 @@ Copy the variant you prefer into its own file for use.
       border: 1px dashed var(--border);
     }
     .hidden { display: none; }
+    .verdict {
+      margin-top: 4px;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+      border: 1px solid;
+    }
+    .verdict .why { display: block; font-weight: 400; margin-top: 4px; }
+    .verdict.book { background: var(--accent-soft); border-color: rgba(15, 118, 110, 0.4); color: var(--accent-dark); }
+    .verdict.no { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -231,12 +245,13 @@ Copy the variant you prefer into its own file for use.
     }
 
     /*  SIDEBAR BOXES  */
+    /*  Bento: cards flow down each column and pack tight, so there is no
+        dead space under the short ones. Column width is kept near 400px
+        so a line of script stays a comfortable length to read aloud.  */
     aside.sidebar {
-      position: sticky;
-      top: 24px;
       align-self: start;
-      display: grid;
-      gap: 16px;
+      display: block;
+      column-gap: 16px;
       background: transparent;
       padding: 0;
       border-radius: 0;
@@ -244,6 +259,22 @@ Copy the variant you prefer into its own file for use.
       box-shadow: none;
       overflow: visible;
       max-height: none;
+    }
+    .side-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 16px;
+    }
+    /*  The two cards the caller leans on most  */
+    .side-card.key { border-top: 3px solid var(--accent); }
+
+    @media (min-width: 1180px) {
+      .wrapper { grid-template-columns: minmax(400px, 460px) 1fr; gap: 28px; }
+      aside.sidebar { columns: 2; }
+    }
+    @media (min-width: 1700px) {
+      .wrapper { grid-template-columns: minmax(440px, 500px) 1fr; }
+      aside.sidebar { columns: 3; }
     }
     .side-card {
       background: var(--card);
@@ -308,9 +339,12 @@ Copy the variant you prefer into its own file for use.
     #helpDetailsWrap { display: none; }
 
     /*  MOBILE  */
+    @media (max-width: 1179px) {
+      .wrapper { max-width: 760px; }
+    }
     @media (max-width: 880px) {
-      .wrapper { grid-template-columns: 1fr; max-width: 620px; }
-      aside.sidebar { position: static; margin-top: 24px; }
+      body { padding: 1rem; }
+      .card { padding: 22px; }
     }
     /* Tooltip styling for info icon */
     .info-icon {
@@ -419,6 +453,8 @@ Copy the variant you prefer into its own file for use.
           </div>
         </fieldset>
 
+        <div id="qualify" class="verdict hidden" role="status" aria-live="polite"></div>
+
         <div class="question-block">
           <label class="required" for="profession">Profession</label>
           <input type="text" id="profession" placeholder="e.g. Doctor, Manager, CXO" required />
@@ -475,7 +511,7 @@ Copy the variant you prefer into its own file for use.
         </ol>
       </section>
 
-      <section class="side-card">
+      <section class="side-card key">
         <h3>2. Introduce Finnovate <span class="version-pill">say it naturally</span></h3>
         <p class="note">Do not read this out word for word. Cover these five beats in your own words.</p>
         <ol class="step-note">
@@ -503,16 +539,21 @@ Copy the variant you prefer into its own file for use.
         </ul>
       </section>
 
-      <section class="side-card">
+      <section class="side-card key">
         <h3>4. Questions to ask (in this order)</h3>
+        <p class="note">Ask both numbers before you decide anything. A lead with little invested but a strong income is still worth booking.</p>
         <ol class="step-note">
-          <li><strong>Investment size first.</strong><br /><span class="say">"May I know what your current investment size is? Mutual funds, stocks and FDs taken together."</span>
-            <div class="branch">
-              <p><strong>Below ₹15 L:</strong> do not book the planner meeting. Say <span class="say">"For where you are right now, the best starting point is our Finnovate Wealth app. It's free, it tracks all your investments in one place and gives you your FIRE number. Let me send you the download link."</span> Send them the link yourself (copy it from the app links card), tick <strong>Spoke about the app</strong> on the form, close warmly, and mark the outcome as <em>Not qualified</em>.</p>
-              <p><strong>₹15 L and above:</strong> carry on with the questions below and book the meeting.</p>
-            </div>
-          </li>
-          <li><strong>Annual income.</strong><br /><span class="say">"And which range best describes your annual household income? A ballpark is fine."</span></li>
+          <li><strong>Investment size first.</strong><br /><span class="say">"May I know what your current investment size is? Mutual funds, stocks and FDs taken together."</span></li>
+          <li><strong>Then annual income.</strong><br /><span class="say">"And which range best describes your annual household income? A ballpark is fine."</span></li>
+        </ol>
+        <div class="branch">
+          <p><strong>Now decide. Book the meeting if either one is true:</strong></p>
+          <p>Investments are <strong>₹15 L or above</strong>, <em>or</em> income is <strong>₹25 L or above</strong>. A lead with no portfolio but a good income still gets a meeting.</p>
+          <p>If the lead will not share a number, book anyway and let the planner qualify them.</p>
+          <p><strong>Only if investments are below ₹15 L and income is below ₹25 L:</strong> do not book. Say <span class="say">"For where you are right now, the best starting point is our Finnovate Wealth app. It's free, it tracks all your investments in one place and gives you your FIRE number. Let me send you the download link."</span> Send them the link yourself (copy it from the app links card), close warmly, and mark the outcome as <em>Not qualified</em>.</p>
+          <p>The form works this out for you: pick both answers and it shows the verdict.</p>
+        </div>
+        <ol class="step-note" start="3" style="margin-top:14px;">
           <li><strong>Lead needs.</strong><br /><span class="say">"What would you most want help with, so I can brief the planner properly?"</span></li>
           <li><strong>Profession.</strong><br /><span class="say">"Could you tell me your profession or role?"</span></li>
           <li><strong>Key challenge.</strong><br /><span class="say">"What is the problem you are facing right now that you want to solve as soon as possible?"</span></li>
@@ -663,6 +704,66 @@ Copy the variant you prefer into its own file for use.
         }
       });
     });
+
+    /* --- Qualification rule -------------------------------------------
+       Book the meeting if EITHER the portfolio is ₹15 L or above, OR the
+       income is ₹25 L or above. If either number is not disclosed, give
+       the lead the benefit of the doubt and book. Otherwise send the app.
+       Options are read by position, not by label, so the ₹ and dash
+       characters in the values cannot break the rule.                   */
+    const LAKH = 100000;
+    const PORTFOLIO_BAR = 15 * LAKH;
+    const INCOME_BAR    = 25 * LAKH;
+    const NOT_DISCLOSED = 4;
+    const CUSTOM        = 5;
+    const qualifyEl = $('#qualify');
+
+    const checkedIndex = (name) =>
+      Array.from(document.querySelectorAll(`input[name="${name}"]`)).findIndex(e => e.checked);
+
+    const typedAmount = (input) => {
+      const n = parseInt(input.value.replace(/[^0-9]/g, ''), 10);
+      return isNaN(n) ? null : n;
+    };
+
+    // true = clears the bar, false = below it, 'nd' = not disclosed, null = no answer yet
+    const clears = (idx, customInput, bar, firstQualifyingIdx) => {
+      if (idx === -1) return null;
+      if (idx === NOT_DISCLOSED) return 'nd';
+      if (idx === CUSTOM) {
+        const amount = typedAmount(customInput);
+        return amount === null ? null : amount >= bar;
+      }
+      return idx >= firstQualifyingIdx;
+    };
+
+    const updateVerdict = () => {
+      const p = clears(checkedIndex('portfolio'), portfolioCustomInput, PORTFOLIO_BAR, 1);
+      const i = clears(checkedIndex('income'), incomeCustomInput, INCOME_BAR, 2);
+
+      if (p === null || i === null) {          // still waiting on an answer
+        qualifyEl.classList.add('hidden');
+        return;
+      }
+
+      const reasons = [];
+      if (p === 'nd' || i === 'nd') reasons.push('a number was not disclosed, so give the lead the benefit of the doubt');
+      if (p === true) reasons.push('the portfolio is ₹15 L or above');
+      if (i === true) reasons.push('the income is ₹25 L or above');
+
+      const book = reasons.length > 0;
+      qualifyEl.className = 'verdict ' + (book ? 'book' : 'no');
+      qualifyEl.innerHTML = book
+        ? 'Book the meeting.<span class="why">Because ' + reasons.join(', and ') + '.</span>'
+        : 'Do not book the meeting.<span class="why">Portfolio is below ₹15 L and income is below ₹25 L. '
+          + 'Send the app download link, close warmly, and mark the outcome as Not qualified.</span>';
+    };
+
+    ['portfolio', 'income'].forEach(name =>
+      document.querySelectorAll(`input[name="${name}"]`).forEach(el =>
+        el.addEventListener('change', updateVerdict)));
+    [incomeCustomInput, portfolioCustomInput].forEach(inp =>
+      inp.addEventListener('input', updateVerdict));
 
     // Caller name selector + custom input
     const updateCallerNamePreview = () => {

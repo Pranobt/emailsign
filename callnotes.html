@@ -130,6 +130,60 @@ Copy the variant you prefer into its own file for use.
       white-space: nowrap;
     }
     .radio .money-input { grid-column: 1 / -1; }
+    .check { margin-top: 8px; display: grid; gap: 8px; }
+    .check label {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .check label:hover { border-color: rgba(15, 118, 110, 0.45); }
+    .check input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 17px;
+      height: 17px;
+      flex: none;
+    }
+    .check label:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(15, 118, 110, 0.45);
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+    /* Must-do step: amber until it is ticked, green once done */
+    .check label.must {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #9a3412;
+      font-weight: 600;
+    }
+    .check label.must::after {
+      content: 'always';
+      margin-left: auto;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fed7aa;
+      color: #9a3412;
+    }
+    .check label.must:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(15, 118, 110, 0.45);
+      color: var(--accent-dark);
+    }
+    .check label.must:has(input:checked)::after {
+      content: 'sent';
+      background: rgba(15, 118, 110, 0.18);
+      color: var(--accent-dark);
+    }
     .radio label:hover {
       border-color: rgba(15, 118, 110, 0.45);
       transform: translateY(-1px);
@@ -307,10 +361,19 @@ Copy the variant you prefer into its own file for use.
           <div class="radio">
             <label><input type="radio" name="callerName" value="Pranav Kumar" required />Pranav Kumar</label>
             <label><input type="radio" name="callerName" value="David Fernandes" />David Fernandes</label>
+            <label><input type="radio" name="callerName" value="Melitta Coutinho" />Melitta Coutinho</label>
             <label><input type="radio" name="callerName" value="Custom" />Custom name</label>
           </div>
           <div id="callerNameCustomWrap" class="hidden">
             <input type="text" id="callerNameCustom" placeholder="Enter caller name" />
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block">
+          <legend>Call checklist</legend>
+          <div class="check">
+            <label><input type="checkbox" id="introDone" />Introduced Finnovate and what we do</label>
+            <label class="must"><input type="checkbox" id="appLinkSent" />Sent the Finnovate Wealth app download link</label>
           </div>
         </fieldset>
 
@@ -388,7 +451,7 @@ Copy the variant you prefer into its own file for use.
           <legend>Call Outcome</legend>
           <div class="radio">
             <label><input type="radio" name="outcome" value="Meeting booked" />Meeting booked</label>
-            <label><input type="radio" name="outcome" value="App link sent (portfolio below ₹15 L)" />App link sent</label>
+            <label><input type="radio" name="outcome" value="Not qualified (portfolio below ₹15 L)" />Not qualified</label>
             <label><input type="radio" name="outcome" value="Call back later" />Call back later</label>
             <label><input type="radio" name="outcome" value="Not interested" />Not interested</label>
           </div>
@@ -424,6 +487,8 @@ Copy the variant you prefer into its own file for use.
         </ol>
         <div class="branch">
           <p><strong>Then ask for the meeting:</strong> "Is this something you are looking for? If yes, I'll assign a certified financial planner to walk you through it in detail, based on your current portfolio size."</p>
+          <p><strong>Then, straight away:</strong> "May I know what your current investment size is?" Do not pause here. The planner is assigned on the basis of this number, so it follows naturally from what you just said.</p>
+          <p>Once you have covered all five beats, tick <strong>Intro</strong> on the form.</p>
         </div>
       </section>
 
@@ -441,9 +506,9 @@ Copy the variant you prefer into its own file for use.
       <section class="side-card">
         <h3>4. Questions to ask (in this order)</h3>
         <ol class="step-note">
-          <li><strong>Portfolio size first.</strong><br /><span class="say">"May I know how much your current portfolio is? Mutual funds, stocks and FDs taken together."</span>
+          <li><strong>Investment size first.</strong><br /><span class="say">"May I know what your current investment size is? Mutual funds, stocks and FDs taken together."</span>
             <div class="branch">
-              <p><strong>Below ₹15 L:</strong> do not book the planner meeting. Say <span class="say">"For where you are right now, the best starting point is our Finnovate Wealth app. It's free, it tracks all your investments in one place and gives you your FIRE number. Let me send you the download link."</span> Send the link, close warmly, and mark the outcome as <em>App link sent</em>.</p>
+              <p><strong>Below ₹15 L:</strong> do not book the planner meeting. Say <span class="say">"For where you are right now, the best starting point is our Finnovate Wealth app. It's free, it tracks all your investments in one place and gives you your FIRE number. Let me send you the download link."</span> Send the link, tick <strong>Sent the app download link</strong> on the form, close warmly, and mark the outcome as <em>Not qualified</em>.</p>
               <p><strong>₹15 L and above:</strong> carry on with the questions below and book the meeting.</p>
             </div>
           </li>
@@ -461,13 +526,16 @@ Copy the variant you prefer into its own file for use.
           <li>Repeat the date and time back to confirm it.</li>
           <li>Confirm the email ID and WhatsApp number for the invite.</li>
           <li><span class="say">"You'll get a calendar invite and a confirmation on WhatsApp shortly."</span></li>
-          <li>Send the app link as well, so they can start tracking before the meeting.</li>
+          <li><strong>Send the app link and say why.</strong><br /><span class="say">"Please download the app before the meeting and pull in your existing investments. It helps the advisor understand where you stand today, so the consultation is tailored to your actual position."</span><br />Then tick <strong>Sent the app download link</strong> on the form.</li>
         </ol>
       </section>
 
       <section class="side-card">
         <h3>Finnovate Wealth app links</h3>
-        <p class="note">Send when the portfolio is below ₹15 L, or after the meeting is booked.</p>
+        <p class="note">Send after every booked meeting, and whenever the portfolio is below ₹15 L. Tick it on the form once sent.</p>
+        <div class="branch">
+          <p><strong>Say this when you send it:</strong> <span class="say">"Please download the app before the meeting and pull in your existing investments. It helps the advisor understand where you stand today, so the consultation is tailored to your actual position."</span></p>
+        </div>
         <button type="button" class="copy-btn app-copy" data-copy="https://apps.apple.com/in/app/finnovate-wealth-app/id6740236625">Copy iOS link</button>
         <button type="button" class="copy-btn app-copy" data-copy="https://play.google.com/store/apps/details?id=com.finnovate.wealthtrack">Copy Android link</button>
       </section>
@@ -646,11 +714,18 @@ Copy the variant you prefer into its own file for use.
       const competitorUrl = competitor === 'Yes' ? competitorUrlInput.value.trim() : '';
       // const timeline   = form.elements['timeline'].value;
       const pain       = $('#pain').value.trim();
+      const intro      = $('#introDone').checked ? 'Given' : 'Not given';
+      const appLink    = $('#appLinkSent').checked ? 'Sent' : 'Not sent';
       const outcomeInput = document.querySelector('input[name="outcome"]:checked');
       const outcome    = outcomeInput ? outcomeInput.value : '';
       const timestamp  = new Date().toLocaleString('en-IN', { hour12: false });
 
+      if (!$('#appLinkSent').checked &&
+          !confirm('The app download link has not been sent.\n\nSend it now, or click OK to log the call without it.')) return;
+
       const note = `${caller} | ${timestamp}\n\n` +
+        `Intro     : ${intro}\n` +
+        `App link  : ${appLink}\n` +
         `Need      : ${need}\n` +
         `Profession: ${profession}\n` +
         (linkedin ? `LinkedIn  : ${linkedin}\n` : '') +

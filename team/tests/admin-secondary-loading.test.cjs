@@ -83,3 +83,13 @@ test('approvals retain date, department and employee filters', async () => {
   calls[0].resolve({ ok: true, approvals: [] });
   await pending;
 });
+
+test('client deadline errors trigger dashboard timeout recovery', () => {
+  const source = html.slice(html.indexOf('    function isStatementTimeoutError_('),
+    html.indexOf('    async function fetchAdminDashboardWithRetry_('));
+  const ctx = vm.createContext({});
+  vm.runInContext(source, ctx);
+  assert.equal(ctx.isStatementTimeoutError_(new Error('Request timed out.')), true);
+  assert.equal(ctx.isStatementTimeoutError_(new Error('canceling statement due to statement timeout')), true);
+  assert.equal(ctx.isStatementTimeoutError_(new Error('Unauthorized')), false);
+});

@@ -60,12 +60,13 @@ Copy the variant you prefer into its own file for use.
     }
     .wrapper {
       display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 32px;
+      grid-template-columns: 1fr;
+      gap: 24px;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1760px;
       position: relative;
       z-index: 1;
+      align-items: start;
     }
     /* CARD */
     .card {
@@ -130,6 +131,60 @@ Copy the variant you prefer into its own file for use.
       white-space: nowrap;
     }
     .radio .money-input { grid-column: 1 / -1; }
+    .check { margin-top: 8px; display: grid; gap: 8px; }
+    .check label {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .check label:hover { border-color: rgba(15, 118, 110, 0.45); }
+    .check input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 17px;
+      height: 17px;
+      flex: none;
+    }
+    .check label:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(15, 118, 110, 0.45);
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+    /* Must-do step: amber until it is ticked, green once done */
+    .check label.must {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #9a3412;
+      font-weight: 600;
+    }
+    .check label.must::after {
+      content: 'always';
+      margin-left: auto;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fed7aa;
+      color: #9a3412;
+    }
+    .check label.must:has(input:checked) {
+      background: var(--accent-soft);
+      border-color: rgba(15, 118, 110, 0.45);
+      color: var(--accent-dark);
+    }
+    .check label.must:has(input:checked)::after {
+      content: 'done';
+      background: rgba(15, 118, 110, 0.18);
+      color: var(--accent-dark);
+    }
     .radio label:hover {
       border-color: rgba(15, 118, 110, 0.45);
       transform: translateY(-1px);
@@ -166,6 +221,19 @@ Copy the variant you prefer into its own file for use.
       border: 1px dashed var(--border);
     }
     .hidden { display: none; }
+    .verdict {
+      margin-top: 4px;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+      border: 1px solid;
+    }
+    .verdict .why { display: block; font-weight: 400; margin-top: 4px; }
+    .verdict.book { background: var(--accent-soft); border-color: rgba(15, 118, 110, 0.4); color: var(--accent-dark); }
+    .verdict.no { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible,
@@ -177,12 +245,13 @@ Copy the variant you prefer into its own file for use.
     }
 
     /*  SIDEBAR BOXES  */
+    /*  Bento: cards flow down each column and pack tight, so there is no
+        dead space under the short ones. Column width is kept near 400px
+        so a line of script stays a comfortable length to read aloud.  */
     aside.sidebar {
-      position: sticky;
-      top: 24px;
       align-self: start;
-      display: grid;
-      gap: 16px;
+      display: block;
+      column-gap: 16px;
       background: transparent;
       padding: 0;
       border-radius: 0;
@@ -190,6 +259,22 @@ Copy the variant you prefer into its own file for use.
       box-shadow: none;
       overflow: visible;
       max-height: none;
+    }
+    .side-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 16px;
+    }
+    /*  The two cards the caller leans on most  */
+    .side-card.key { border-top: 3px solid var(--accent); }
+
+    @media (min-width: 1180px) {
+      .wrapper { grid-template-columns: minmax(400px, 460px) 1fr; gap: 28px; }
+      aside.sidebar { columns: 2; }
+    }
+    @media (min-width: 1700px) {
+      .wrapper { grid-template-columns: minmax(440px, 500px) 1fr; }
+      aside.sidebar { columns: 3; }
     }
     .side-card {
       background: var(--card);
@@ -200,8 +285,11 @@ Copy the variant you prefer into its own file for use.
       animation: rise 0.55s ease both;
       font-size: 14px;
     }
-    .side-card:nth-child(2) { animation-delay: 0.08s; }
-    .side-card:nth-child(3) { animation-delay: 0.16s; }
+    .side-card:nth-child(2) { animation-delay: 0.06s; }
+    .side-card:nth-child(3) { animation-delay: 0.12s; }
+    .side-card:nth-child(4) { animation-delay: 0.18s; }
+    .side-card:nth-child(5) { animation-delay: 0.24s; }
+    .side-card:nth-child(n+6) { animation-delay: 0.3s; }
     .side-card h2,
     .side-card h3 {
       margin: 0 0 14px;
@@ -214,19 +302,49 @@ Copy the variant you prefer into its own file for use.
       color: var(--muted);
     }
     .note strong { color: var(--text); }
-    .side-card ol {
+    .side-card ol,
+    .side-card ul {
       padding-left: 20px;
       margin: 0;
     }
-    .side-card ol li { margin-bottom: 8px; }
+    .side-card ol li,
+    .side-card ul li { margin-bottom: 8px; }
+    .side-card ol li:last-child,
+    .side-card ul li:last-child { margin-bottom: 0; }
+    .side-card .step-note { color: var(--muted); line-height: 1.45; }
+
+    /*  Branching instruction box inside a script card  */
+    .branch {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(15, 118, 110, 0.22);
+      border-radius: 10px;
+      color: var(--muted);
+    }
+    .branch p { margin: 0 0 8px; line-height: 1.45; }
+    .branch p:last-child { margin-bottom: 0; }
+    .branch strong { color: var(--accent-dark); }
+
+    /*  Warning box for compliance / never-say  */
+    .warn {
+      background: #fff7ed;
+      border-color: #fdba74;
+    }
+    .warn strong { color: #9a3412; }
+    .app-copy { margin-top: 8px; }
+    .say { color: var(--text); }
 
     /*  Custom textarea reveal  */
     #helpDetailsWrap { display: none; }
 
     /*  MOBILE  */
+    @media (max-width: 1179px) {
+      .wrapper { max-width: 760px; }
+    }
     @media (max-width: 880px) {
-      .wrapper { grid-template-columns: 1fr; max-width: 620px; }
-      aside.sidebar { position: static; margin-top: 24px; }
+      body { padding: 1rem; }
+      .card { padding: 22px; }
     }
     /* Tooltip styling for info icon */
     .info-icon {
@@ -270,17 +388,26 @@ Copy the variant you prefer into its own file for use.
   <div class="wrapper">
     <!-- =====================  FORM  ======================= -->
     <div class="card">
-      <h1>Lead Qualification <span class="version-pill">v0.3</span></h1>
+      <h1>Lead Qualification <span class="version-pill">v0.4</span></h1>
       <form id="leadForm" novalidate>
         <fieldset class="question-block">
           <legend class="required">Caller Name</legend>
           <div class="radio">
             <label><input type="radio" name="callerName" value="Pranav Kumar" required />Pranav Kumar</label>
             <label><input type="radio" name="callerName" value="David Fernandes" />David Fernandes</label>
+            <label><input type="radio" name="callerName" value="Melitta Coutinho" />Melitta Coutinho</label>
             <label><input type="radio" name="callerName" value="Custom" />Custom name</label>
           </div>
           <div id="callerNameCustomWrap" class="hidden">
             <input type="text" id="callerNameCustom" placeholder="Enter caller name" />
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block">
+          <legend>Call checklist</legend>
+          <div class="check">
+            <label><input type="checkbox" id="introDone" />Introduced Finnovate and what we do</label>
+            <label class="must"><input type="checkbox" id="appSpoken" />Spoke about the app and its importance</label>
           </div>
         </fieldset>
 
@@ -301,6 +428,19 @@ Copy the variant you prefer into its own file for use.
         </div>
 
         <fieldset class="question-block">
+          <legend class="required">Current Portfolio Size (Mutual Funds, Equity Stocks, and FD)</legend>
+          <div class="radio">
+            <label><input type="radio" name="portfolio" value="Less than ₹15 L" required />Less than ₹15 L</label>
+            <label><input type="radio" name="portfolio" value="₹15–25 L" />₹15–25 L</label>
+            <label><input type="radio" name="portfolio" value="₹25–50 L" />₹25–50 L</label>
+            <label><input type="radio" name="portfolio" value="More than ₹50 L" />More than ₹50 L</label>
+            <label><input type="radio" name="portfolio" value="Not disclosed" />Not disclosed</label>
+            <label><input type="radio" name="portfolio" value="custom" id="portfolioCustomRadio" />Exact amount</label>
+            <input type="text" id="portfolioCustomInput" class="hidden money-input" placeholder="Enter amount in ₹" pattern="[0-9,]*" />
+          </div>
+        </fieldset>
+
+        <fieldset class="question-block">
           <legend class="required">Annual Income</legend>
           <div class="radio">
             <label><input type="radio" name="income" value="Less than ₹15 L" required />Less than ₹15 L</label>
@@ -313,18 +453,7 @@ Copy the variant you prefer into its own file for use.
           </div>
         </fieldset>
 
-        <fieldset class="question-block">
-          <legend class="required">Current Portfolio Size (Mutual Funds, Equity Stocks, and FD)</legend>
-          <div class="radio">
-            <label><input type="radio" name="portfolio" value="Less than ₹15 L" required />Less than ₹15 L</label>
-            <label><input type="radio" name="portfolio" value="₹15–25 L" />₹15–25 L</label>
-            <label><input type="radio" name="portfolio" value="₹25–50 L" />₹25–50 L</label>
-            <label><input type="radio" name="portfolio" value="More than ₹50 L" />More than ₹50 L</label>
-            <label><input type="radio" name="portfolio" value="Not disclosed" />Not disclosed</label>
-            <label><input type="radio" name="portfolio" value="custom" id="portfolioCustomRadio" />Exact amount</label>
-            <input type="text" id="portfolioCustomInput" class="hidden money-input" placeholder="Enter amount in ₹" pattern="[0-9,]*" />
-          </div>
-        </fieldset>
+        <div id="qualify" class="verdict hidden" role="status" aria-live="polite"></div>
 
         <div class="question-block">
           <label class="required" for="profession">Profession</label>
@@ -354,6 +483,16 @@ Copy the variant you prefer into its own file for use.
           <textarea id="pain" rows="3" placeholder="e.g. Unsure how much to invest via SIP vs. goals" required></textarea>
         </div>
 
+        <fieldset class="question-block">
+          <legend>Call Outcome</legend>
+          <div class="radio">
+            <label><input type="radio" name="outcome" value="Meeting booked" />Meeting booked</label>
+            <label><input type="radio" name="outcome" value="Not qualified (portfolio below ₹15 L)" />Not qualified</label>
+            <label><input type="radio" name="outcome" value="Call back later" />Call back later</label>
+            <label><input type="radio" name="outcome" value="Not interested" />Not interested</label>
+          </div>
+        </fieldset>
+
         <button type="button" class="btn" id="generate">Generate CRM Notes</button>
       </form>
 
@@ -364,35 +503,111 @@ Copy the variant you prefer into its own file for use.
     <!-- =====================  SIDEBAR  ===================== -->
     <aside class="sidebar">
       <section class="side-card">
-        <h2>Caller Script</h2>
-        <p class="note"><strong>Overall script (before questions)</strong></p>
-        <ol class="note" style="padding-left:20px; margin:0 0 12px;">
+        <h2>1. Opening</h2>
+        <ol class="note" style="margin:0;">
           <li>Good morning, I'm <strong><span id="callerNamePreview">[Your Name]</span></strong>, calling on behalf of Finnovate.</li>
           <li>I'm following up on the form you filled on LinkedIn regarding your FIRE number / Retirement Planning.</li>
-          <li>Would you be available for a 1‑on‑1 consultation with our certified financial experts?</li>
-          <li>When can I schedule the meeting?</li>
-          <li>Great — I will schedule it for you.</li>
-          <li>I have just a few questions to pass on to the team so they can prepare well before the meet.</li>
+          <li>"Before we go ahead, let me take 30 seconds to tell you what Finnovate actually does." <em>Go to card 2.</em></li>
+        </ol>
+      </section>
+
+      <section class="side-card key">
+        <h3>2. Introduce Finnovate <span class="version-pill">say it naturally</span></h3>
+        <p class="note">Do not read this out word for word. Cover these five beats in your own words.</p>
+        <ol class="step-note">
+          <li><strong>What we are.</strong><br /><span class="say">"Finnovate is a financial plan led investment advisory firm."</span></li>
+          <li><strong>We start with your goals.</strong><br /><span class="say">"What that means is, we start by understanding your goals. It could be retirement planning, your child's education, or buying a house, and in how many years you want each one."</span></li>
+          <li><strong>The plan gives you a number.</strong><br /><span class="say">"We feed that into our financial planning platform, and what it gives us is how much you should be saving to reach all of those goals. So we get a clear number. Say it works out to ₹1 lakh a month."</span></li>
+          <li><strong>Then we tell you where to invest it.</strong><br /><span class="say">"Now we already know your goals and your time horizon, so where you invest that ₹1 lakh comes to our investment advisory service. That is where we advise which mutual funds to buy, which stocks, and what mix."</span></li>
+          <li><strong>Close the intro.</strong><br /><span class="say">"That's Finnovate for you. The plan first, and then the investments that deliver the plan."</span></li>
+        </ol>
+        <div class="branch">
+          <p><strong>Then ask for the meeting:</strong> "Is this something you are looking for? If yes, I'll assign a certified financial planner to walk you through it in detail, based on your current portfolio size."</p>
+          <p><strong>Then, straight away:</strong> "May I know what your current investment size is?" Do not pause here. The planner is assigned on the basis of this number, so it follows naturally from what you just said.</p>
+          <p>Once you have covered all five beats, tick <strong>Intro</strong> on the form.</p>
+        </div>
+      </section>
+
+      <section class="side-card">
+        <h3>3. If they ask about the fee</h3>
+        <p class="note"><strong>Say:</strong> <span class="say">"Our advisory fees start from ₹40,000."</span></p>
+        <ul class="step-note">
+          <li>Quote it only if the lead asks. Do not volunteer the fee.</li>
+          <li>Give the starting number, never a final number. The planner confirms the exact fee after seeing the portfolio and the scope of work.</li>
+          <li>Do not discount on the call.</li>
+          <li>If they push back: <span class="say">"That covers a full financial plan plus advice through the year, not a one time report. The planner will show you exactly what is included."</span></li>
+        </ul>
+      </section>
+
+      <section class="side-card key">
+        <h3>4. Questions to ask (in this order)</h3>
+        <p class="note">Ask both numbers before you decide anything. A lead with little invested but a strong income is still worth booking.</p>
+        <ol class="step-note">
+          <li><strong>Investment size first.</strong><br /><span class="say">"May I know what your current investment size is? Mutual funds, stocks and FDs taken together."</span></li>
+          <li><strong>Then annual income.</strong><br /><span class="say">"And which range best describes your annual household income? A ballpark is fine."</span></li>
+        </ol>
+        <div class="branch">
+          <p><strong>Now decide. Book the meeting if either one is true:</strong></p>
+          <p>Investments are <strong>₹15 L or above</strong>, <em>or</em> income is <strong>₹25 L or above</strong>. A lead with no portfolio but a good income still gets a meeting.</p>
+          <p>If the lead will not share a number, book anyway and let the planner qualify them.</p>
+          <p><strong>Only if investments are below ₹15 L and income is below ₹25 L:</strong> do not book. Say <span class="say">"For where you are right now, the best starting point is our Finnovate Wealth app. It's free, it tracks all your investments in one place and gives you your FIRE number. Let me send you the download link."</span> Send them the link yourself (copy it from the app links card), close warmly, and mark the outcome as <em>Not qualified</em>.</p>
+          <p>The form works this out for you: pick both answers and it shows the verdict.</p>
+        </div>
+        <ol class="step-note" start="3" style="margin-top:14px;">
+          <li><strong>Lead needs.</strong><br /><span class="say">"What would you most want help with, so I can brief the planner properly?"</span></li>
+          <li><strong>Profession.</strong><br /><span class="say">"Could you tell me your profession or role?"</span></li>
+          <li><strong>Key challenge.</strong><br /><span class="say">"What is the problem you are facing right now that you want to solve as soon as possible?"</span></li>
         </ol>
       </section>
 
       <section class="side-card">
-        <h3>Questions to ask</h3>
-        <ol>
-          <li><strong>Lead Needs</strong>: "Please tell me what you need help with so we can serve you better."</li>
-          <li><strong>Annual Income</strong>: "Which range best describes your annual household income? A ballpark is fine."</li>
-          <li><strong>Investment Portfolio Size</strong>: "What will be your investment portfolio size (MF + Stocks + FDs together)?"</li>
-          <li><strong>Profession</strong>: "Could you tell me your profession or role?"</li>
-          <li><strong>Key Challenge</strong>: "What problem are you facing right now that you want to solve as soon as possible?"</li>
+        <h3>5. Book and close</h3>
+        <ol class="step-note">
+          <li><span class="say">"When would suit you for the consultation?"</span> Offer two slots rather than an open question.</li>
+          <li>Repeat the date and time back to confirm it.</li>
+          <li>Confirm the email ID and WhatsApp number for the invite.</li>
+          <li><span class="say">"You'll get a calendar invite and a confirmation on WhatsApp shortly."</span></li>
+          <li><strong>Tell them the app link is coming, and why it matters.</strong><br /><span class="say">"Once the meeting is booked, you will receive a link to download our app. Please download it before the meeting and pull in your existing investments. It helps the advisor understand where you stand today, so the consultation is tailored to your actual position."</span><br />Then tick <strong>Spoke about the app</strong> on the form.</li>
         </ol>
+      </section>
+
+      <section class="side-card">
+        <h3>Finnovate Wealth app links</h3>
+        <p class="note">After a booking, the lead gets the link automatically. Copy it from here only when you need to send it yourself, such as a lead below ₹15 L.</p>
+        <div class="branch">
+          <p><strong>What to say on the call:</strong> <span class="say">"Once the meeting is booked, you will receive a link to download our app. Please download it before the meeting and pull in your existing investments. It helps the advisor understand where you stand today, so the consultation is tailored to your actual position."</span></p>
+        </div>
+        <button type="button" class="copy-btn app-copy" data-copy="https://apps.apple.com/in/app/finnovate-wealth-app/id6740236625">Copy iOS link</button>
+        <button type="button" class="copy-btn app-copy" data-copy="https://play.google.com/store/apps/details?id=com.finnovate.wealthtrack">Copy Android link</button>
+      </section>
+
+      <section class="side-card">
+        <h3>Handling common objections</h3>
+        <ul class="step-note">
+          <li><strong>"Just send me the details on WhatsApp."</strong><br /><span class="say">"I'll send it right away. The details make far more sense with the planner walking you through your own numbers, so let me pencil in a slot as well."</span></li>
+          <li><strong>"I already have an advisor / my CA handles this."</strong><br /><span class="say">"That's good. We work differently: we start with a written financial plan and we're paid a fee by you, not a commission by a fund. Most people find it useful as a second opinion."</span></li>
+          <li><strong>"Are you selling insurance or a product?"</strong><br /><span class="say">"No. We're a SEBI registered advisory firm. We charge a fee and advise, we don't earn on what you buy."</span></li>
+          <li><strong>"I'll think about it."</strong><br /><span class="say">"Of course. Shall I hold a slot for later this week? It's free to cancel."</span></li>
+          <li><strong>"How much return will I get?"</strong><br /><span class="say">"I can't promise a return, and nobody honestly can. What the plan tells you is how much you need to save to reach your goals."</span></li>
+        </ul>
+      </section>
+
+      <section class="side-card">
+        <h3>Never say <span class="version-pill">compliance</span></h3>
+        <div class="branch warn">
+          <p><strong>No guaranteed or assured returns.</strong> Not even as a rough promise.</p>
+          <p><strong>No specific fund or stock recommendation on this call.</strong> That is the planner's job, after the plan.</p>
+          <p><strong>Never quote a fee below ₹40,000</strong> and never negotiate it on the call.</p>
+          <p><strong>Do not pressure.</strong> If the lead says no, close politely and log it.</p>
+        </div>
       </section>
 
       <section class="side-card">
         <h3>How to find LinkedIn URL (internal)</h3>
         <ol>
-          <li>First check if lead came from LinkedIn form – if yes, copy URL from CRM directly.</li>
-          <li>Otherwise, use lead’s email / phone / city from Facebook form to search LinkedIn.</li>
-          <li>Manually copy‑paste the profile URL into the form (not asked on call).</li>
+          <li>First check if lead came from LinkedIn form. If yes, copy the URL from CRM directly.</li>
+          <li>Otherwise, use the lead's email / phone / city from the Facebook form to search LinkedIn.</li>
+          <li>Manually copy and paste the profile URL into the form. Never ask for it on the call.</li>
         </ol>
       </section>
     </aside>
@@ -490,6 +705,66 @@ Copy the variant you prefer into its own file for use.
       });
     });
 
+    /* --- Qualification rule -------------------------------------------
+       Book the meeting if EITHER the portfolio is ₹15 L or above, OR the
+       income is ₹25 L or above. If either number is not disclosed, give
+       the lead the benefit of the doubt and book. Otherwise send the app.
+       Options are read by position, not by label, so the ₹ and dash
+       characters in the values cannot break the rule.                   */
+    const LAKH = 100000;
+    const PORTFOLIO_BAR = 15 * LAKH;
+    const INCOME_BAR    = 25 * LAKH;
+    const NOT_DISCLOSED = 4;
+    const CUSTOM        = 5;
+    const qualifyEl = $('#qualify');
+
+    const checkedIndex = (name) =>
+      Array.from(document.querySelectorAll(`input[name="${name}"]`)).findIndex(e => e.checked);
+
+    const typedAmount = (input) => {
+      const n = parseInt(input.value.replace(/[^0-9]/g, ''), 10);
+      return isNaN(n) ? null : n;
+    };
+
+    // true = clears the bar, false = below it, 'nd' = not disclosed, null = no answer yet
+    const clears = (idx, customInput, bar, firstQualifyingIdx) => {
+      if (idx === -1) return null;
+      if (idx === NOT_DISCLOSED) return 'nd';
+      if (idx === CUSTOM) {
+        const amount = typedAmount(customInput);
+        return amount === null ? null : amount >= bar;
+      }
+      return idx >= firstQualifyingIdx;
+    };
+
+    const updateVerdict = () => {
+      const p = clears(checkedIndex('portfolio'), portfolioCustomInput, PORTFOLIO_BAR, 1);
+      const i = clears(checkedIndex('income'), incomeCustomInput, INCOME_BAR, 2);
+
+      if (p === null || i === null) {          // still waiting on an answer
+        qualifyEl.classList.add('hidden');
+        return;
+      }
+
+      const reasons = [];
+      if (p === 'nd' || i === 'nd') reasons.push('a number was not disclosed, so give the lead the benefit of the doubt');
+      if (p === true) reasons.push('the portfolio is ₹15 L or above');
+      if (i === true) reasons.push('the income is ₹25 L or above');
+
+      const book = reasons.length > 0;
+      qualifyEl.className = 'verdict ' + (book ? 'book' : 'no');
+      qualifyEl.innerHTML = book
+        ? 'Book the meeting.<span class="why">Because ' + reasons.join(', and ') + '.</span>'
+        : 'Do not book the meeting.<span class="why">Portfolio is below ₹15 L and income is below ₹25 L. '
+          + 'Send the app download link, close warmly, and mark the outcome as Not qualified.</span>';
+    };
+
+    ['portfolio', 'income'].forEach(name =>
+      document.querySelectorAll(`input[name="${name}"]`).forEach(el =>
+        el.addEventListener('change', updateVerdict)));
+    [incomeCustomInput, portfolioCustomInput].forEach(inp =>
+      inp.addEventListener('input', updateVerdict));
+
     // Caller name selector + custom input
     const updateCallerNamePreview = () => {
       const selected = document.querySelector('input[name="callerName"]:checked');
@@ -540,17 +815,27 @@ Copy the variant you prefer into its own file for use.
       const competitorUrl = competitor === 'Yes' ? competitorUrlInput.value.trim() : '';
       // const timeline   = form.elements['timeline'].value;
       const pain       = $('#pain').value.trim();
+      const intro      = $('#introDone').checked ? 'Given' : 'Not given';
+      const appTalk    = $('#appSpoken').checked ? 'Covered' : 'Not covered';
+      const outcomeInput = document.querySelector('input[name="outcome"]:checked');
+      const outcome    = outcomeInput ? outcomeInput.value : '';
       const timestamp  = new Date().toLocaleString('en-IN', { hour12: false });
 
+      if (!$('#appSpoken').checked &&
+          !confirm('The app was not covered on this call.\n\nGo back and mention it, or click OK to log the call without it.')) return;
+
       const note = `${caller} | ${timestamp}\n\n` +
+        `Intro     : ${intro}\n` +
+        `App       : ${appTalk}\n` +
         `Need      : ${need}\n` +
         `Profession: ${profession}\n` +
         (linkedin ? `LinkedIn  : ${linkedin}\n` : '') +
         `Competitor: ${competitor}\n` +
         (competitorUrl ? `Competitor URL: ${competitorUrl}\n` : '') +
+        `Portfolio : ${portfolio}\n` +
         `Income    : ${income}\n` +
-        `Portfolio : ${portfolio}\n\n` +
-        `Key Challenge → ${pain}`;
+        (outcome ? `Outcome   : ${outcome}\n` : '') +
+        `\nKey Challenge → ${pain}`;
 
       outputEl.textContent = note;
       outputEl.classList.remove('hidden');
@@ -574,6 +859,21 @@ Copy the variant you prefer into its own file for use.
           origin: { x: 1, y: yPos }
         });
       }
+    });
+
+    // Sidebar app-link copy buttons
+    document.querySelectorAll('.app-copy').forEach(btn => {
+      const original = btn.textContent;
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+          btn.classList.add('copied');
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.textContent = original;
+          }, 2000);
+        });
+      });
     });
 
     // Clipboard

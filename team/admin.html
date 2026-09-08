@@ -4992,6 +4992,8 @@
     let failedCliqRows = [];
     let approvalRows = [];
     let streakRows = [];
+    let dashboardRequestId = 0;
+    const secondaryLoads = new Map();
     let employeeKpiFocus = "all";
     let leaderboardVisible = false;
     let isDeptCliqSending = false;
@@ -5928,6 +5930,12 @@
         leaderboardToggleBtn.setAttribute("aria-expanded", leaderboardVisible ? "true" : "false");
       }
       if (!leaderboardVisible) return;
+      const message = secondaryMessage_("leaderboard");
+      if (message) {
+        leaderboardPanelBodyEl.className = "empty";
+        leaderboardPanelBodyEl.textContent = message;
+        return;
+      }
       const list = (Array.isArray(rows) ? rows : []).slice(0, 3);
       if (!list.length) {
         leaderboardPanelBodyEl.className = "empty";
@@ -7301,6 +7309,12 @@
 
     function renderTable() {
       copyAllLinksBtn.hidden = true;
+      const secondaryMessage = secondaryMessage_(activeTab);
+      if (secondaryMessage) {
+        tableWrapEl.innerHTML = '<div class="empty">' + escapeHtml(secondaryMessage) + '</div>';
+        tableMetaEl.textContent = secondaryMessage;
+        return;
+      }
       log("info", "Starting table render", {
         module: "render",
         page: activeTab,
@@ -8214,6 +8228,73 @@
       setStatus("CSV exported.", "success");
     }
 
+    function secondaryRequest_(kind) {
+      const range = getDateRangeForFilters_();
+      const department = departmentFilterEl.value || "All";
+      const payload = { admin: adminSession.admin, code: adminSession.code, clientVersion: CLIENT_VERSION };
+      const config = {
+        streaks: ["getAdminStreaks", "streaks", 20000, { department }],
+        leaderboard: ["getStreakLeaderboard", "leaders", 12000, { department, limit: 3 }],
+        cliq_failed: ["getFailedCliqLogs", "logs", 12000, { limit: 400 }],
+        approvals: ["getAdminApprovals", "approvals", 12000, {
+          status: "all", department: department === "All" ? "" : department,
+          requesterName: employeeFilterEl.value === "All" ? "" : (employeeFilterEl.value || ""),
+          fromDate: range.fromDate, toDate: range.toDate
+        }]
+      }[kind];
+      if (!config) return null;
+      Object.assign(payload, config[3]);
+      return { action: config[0], field: config[1], timeout: config[2], payload,
+        key: JSON.stringify([kind, payload, todayISO()]) };
+    }
+
+    function secondaryMessage_(kind) {
+      if (!adminSession) return "";
+      const request = secondaryRequest_(kind);
+      if (!request) return "";
+      const state = secondaryLoads.get(request.key);
+      if (!state || state.loading) return "Loading...";
+      return state.error ? "Could not load data. Reopen this tab or press Refresh to retry." : "";
+    }
+
+    function loadVisibleSecondary_() {
+      if (!adminSession || isLocked) return;
+      if (["streaks", "approvals", "cliq_failed"].includes(activeTab)) void loadSecondary_(activeTab);
+      if (leaderboardVisible) void loadSecondary_("leaderboard");
+    }
+
+    async function loadSecondary_(kind) {
+      const request = secondaryRequest_(kind);
+      if (!request) return;
+      const previous = secondaryLoads.get(request.key);
+      if (previous && (previous.loading || (!previous.error && Date.now() - previous.loadedAt < 60000))) return;
+      const state = { loading: true, error: false, loadedAt: 0 };
+      secondaryLoads.set(request.key, state);
+      const render = () => {
+        if (kind === "leaderboard") renderLeaderboardPanel_(leaderboardRows);
+        else if (activeTab === kind) renderTable();
+      };
+      render();
+      try {
+        const result = await jsonp(request.action, request.payload, request.timeout);
+        if (!result || result.ok === false) throw new Error(result && result.message || "Request failed.");
+        // Ignore responses superseded by a refresh or filter change.
+        if (secondaryLoads.get(request.key) !== state || secondaryRequest_(kind).key !== request.key) return;
+        const rows = Array.isArray(result[request.field]) ? result[request.field] : [];
+        if (kind === "streaks") streakRows = rows;
+        else if (kind === "leaderboard") leaderboardRows = rows;
+        else if (kind === "approvals") approvalRows = rows;
+        else failedCliqRows = rows;
+        state.loadedAt = Date.now();
+      } catch (err) {
+        state.error = true;
+        console.warn("Secondary dashboard request failed:", kind, err);
+      } finally {
+        state.loading = false;
+        if (secondaryLoads.get(request.key) === state) render();
+      }
+    }
+
     function applyTab(tab) {
       activeTab = tab;
       tabButtons.forEach((btn) => {
@@ -8222,6 +8303,7 @@
         btn.setAttribute("aria-selected", isActive ? "true" : "false");
       });
       renderTable();
+      loadVisibleSecondary_();
     }
 
     function populateFilters(data) {
@@ -8459,6 +8541,9 @@
     async function fetchDashboard(opts = {}) {
       if (!ensureUnlockedAction_()) return;
       if (!adminSession) return;
+      const requestId = ++dashboardRequestId;
+      ++attendanceHydrationToken;
+      secondaryLoads.clear();
       const skipDirectorySync = Boolean(opts.skipDirectorySync);
       refreshBtn.disabled = true;
       setStatus("Loading dashboard data...", "info");
@@ -8489,13 +8574,6 @@
         const limits = getDashboardRowLimits_();
         payload.carryoverLimit = limits.carryoverLimit;
         payload.completedLimit = limits.completedLimit;
-        const leaderboardPayload = {
-          admin: adminSession.admin,
-          code: adminSession.code,
-          department: departmentFilterEl.value || "All",
-          limit: 3,
-          clientVersion: CLIENT_VERSION
-        };
         const dashboardPromise = fetchAdminDashboardWithRetry_(payload)
           .catch(async (err) => {
             if (!isStatementTimeoutError_(err)) throw err;
@@ -8510,32 +8588,9 @@
               degraded: true
             };
           });
-        const leaderboardPromise = jsonp("getStreakLeaderboard", leaderboardPayload, 12000)
-          .catch(() => ({ ok: false, leaders: [] }));
-        const failedCliqPromise = jsonp("getFailedCliqLogs", {
-          admin: adminSession.admin,
-          code: adminSession.code,
-          limit: 400,
-          clientVersion: CLIENT_VERSION
-        }, 12000).catch(() => ({ ok: false, logs: [] }));
-        const approvalsPromise = jsonp("getAdminApprovals", {
-          admin: adminSession.admin,
-          code: adminSession.code,
-          status: "all",
-          department: departmentFilterEl.value === "All" ? "" : (departmentFilterEl.value || ""),
-          requesterName: employeeFilterEl.value === "All" ? "" : (employeeFilterEl.value || ""),
-          fromDate: range.fromDate,
-          toDate: range.toDate,
-          clientVersion: CLIENT_VERSION
-        }, 12000).catch(() => ({ ok: false, approvals: [] }));
-        const adminStreaksPromise = jsonp("getAdminStreaks", {
-          admin: adminSession.admin,
-          code: adminSession.code,
-          department: departmentFilterEl.value || "All",
-          clientVersion: CLIENT_VERSION
-        }, 20000).catch(() => ({ ok: false, streaks: [] }));
-        const [dashboardResponse, leaderboardResult, failedCliqResult, approvalsResult, adminStreaksResult] = await Promise.all([dashboardPromise, leaderboardPromise, failedCliqPromise, approvalsPromise, adminStreaksPromise]);
+        const dashboardResponse = await dashboardPromise;
         await dirPromise;
+        if (requestId !== dashboardRequestId) return;
         if (dirErr) console.warn("Directory sync skipped:", dirErr);
         const result = dashboardResponse && dashboardResponse.result ? dashboardResponse.result : null;
         if (!result || result.ok === false) {
@@ -8579,19 +8634,6 @@
             fieldSamples: debugSampleFields_(dashboardData.completedTasks)
           }
         });
-        leaderboardRows = (leaderboardResult && leaderboardResult.ok && Array.isArray(leaderboardResult.leaders))
-          ? leaderboardResult.leaders
-          : [];
-        failedCliqRows = (failedCliqResult && failedCliqResult.ok && Array.isArray(failedCliqResult.logs))
-          ? failedCliqResult.logs
-          : [];
-        approvalRows = (approvalsResult && approvalsResult.ok && Array.isArray(approvalsResult.approvals))
-          ? approvalsResult.approvals
-          : [];
-        streakRows = (adminStreaksResult && adminStreaksResult.ok && Array.isArray(adminStreaksResult.streaks))
-          ? adminStreaksResult.streaks
-          : [];
-
         if (!dashboardData.departmentSummary.length) {
           dashboardData.departmentSummary = buildDepartmentRowsFromEmployees_(dashboardData.employeeCompliance);
         }
@@ -8600,7 +8642,8 @@
         renderKpis(dashboardData.kpis, dashboardData.employeeCompliance);
         renderLeaderboardPanel_(leaderboardRows);
         renderTable();
-        await hydrateEmployeeAttendanceTimes_(
+        loadVisibleSecondary_();
+        void hydrateEmployeeAttendanceTimes_(
           dashboardData.employeeCompliance,
           nextFilters.toDate || nextFilters.workDate || (toDateEl && toDateEl.value) || todayISO()
         );
@@ -8621,6 +8664,7 @@
           generatedAt: dashboardData && dashboardData.meta ? dashboardData.meta.generatedAt : ""
         });
       } catch (err) {
+        if (requestId !== dashboardRequestId) return;
         log("error", "Failed to load dashboard", {
           module: "dashboard",
           page: activeTab,
@@ -8628,7 +8672,7 @@
         });
         setStatus(`Failed to load dashboard: ${err.message}`, "error");
       } finally {
-        refreshBtn.disabled = false;
+        if (requestId === dashboardRequestId) refreshBtn.disabled = false;
       }
     }
 
@@ -10037,6 +10081,7 @@
         leaderboardToggleBtn.addEventListener("click", () => {
           leaderboardVisible = !leaderboardVisible;
           renderLeaderboardPanel_(leaderboardRows);
+          loadVisibleSecondary_();
         });
       }
       if (sendDeptCliqBtn) {

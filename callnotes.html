@@ -505,7 +505,7 @@ Copy the variant you prefer into its own file for use.
       <section class="side-card">
         <h2>1. Opening</h2>
         <ol class="note" style="margin:0;">
-          <li>Good morning, I'm <strong><span id="callerNamePreview">[Your Name]</span></strong>, calling on behalf of Finnovate.</li>
+          <li>Good morning, I'm <strong><span id="callerNamePreview" class="caller-name">[Your Name]</span></strong>, calling on behalf of Finnovate.</li>
           <li>I'm following up on the form you filled on LinkedIn regarding your FIRE number / Retirement Planning.</li>
           <li>"Before we go ahead, let me take 30 seconds to tell you what Finnovate actually does." <em>Go to card 2.</em></li>
         </ol>
@@ -610,6 +610,31 @@ Copy the variant you prefer into its own file for use.
           <li>Manually copy and paste the profile URL into the form. Never ask for it on the call.</li>
         </ol>
       </section>
+      <section class="side-card key">
+        <h3>Financial OPD: Not registered yet <span class="version-pill">script 1</span></h3>
+        <ol class="step-note">
+          <li><strong>Opening.</strong><br /><span class="say">"Good afternoon, Doctor. This is <strong class="caller-name">[Your Name]</strong> calling from Financial OPD, an initiative by Finnovate. May I take a minute?"</span></li>
+          <li><strong>What is Financial OPD?</strong><br /><span class="say">"Doctor, Financial OPD is a personal finance community created exclusively for doctors. Through this community, we share financial insights, educational resources and expert guidance on topics such as tax planning, investments, insurance, loans and retirement planning, keeping doctors' financial needs in mind."</span></li>
+          <li><strong>Why are we calling?</strong><br /><span class="say">"We are inviting doctors to become part of this community and stay informed about important personal finance matters."</span></li>
+          <li><strong>Registration.</strong><br /><span class="say">"Joining Financial OPD is completely free. Doctor, can I help you register?"</span></li>
+        </ol>
+        <div class="branch">
+          <p><strong>If yes:</strong> <span class="say">"Thank you, Doctor. I'll register you and share the community details on WhatsApp."</span></p>
+          <p><strong>If not interested:</strong> <span class="say">"No problem, Doctor. May I share the details on WhatsApp so you can explore them at your convenience?"</span></p>
+        </div>
+        <p class="note" style="margin:14px 0 0;"><strong>Closing:</strong> <span class="say">"Thank you for your time, Doctor. Have a great day."</span></p>
+      </section>
+
+      <section class="side-card key">
+        <h3>Financial OPD: Registered, follow-up <span class="version-pill">script 2</span></h3>
+        <ol class="step-note">
+          <li><strong>Opening.</strong><br /><span class="say">"Good afternoon, Doctor. This is <strong class="caller-name">[Your Name]</strong> calling from Financial OPD by Finnovate. You recently registered with our personal finance community. May I take a minute?"</span></li>
+          <li><strong>Why are we calling?</strong><br /><span class="say">"Doctor, I'm calling to welcome you to Financial OPD and help you get started. As part of the community, you can access personal finance insights, educational resources and expert-led sessions designed specifically for doctors."</span></li>
+          <li><strong>Understand their interests.</strong><br /><span class="say">"Doctor, is there any particular area of personal finance you would like to know more about, such as taxation, investments, insurance or retirement planning?"</span></li>
+          <li><strong>Next step.</strong><br /><span class="say">"Thank you, Doctor. I'll share some relevant resources with you on WhatsApp. You will also receive regular emails and WhatsApp messages on the financial content we publish on Financial OPD. In case you face any difficulty in accessing the platform, you can reach out to us. If you would like personalised financial planning assistance, we can also arrange a discussion with one of our financial planners."</span></li>
+        </ol>
+        <p class="note" style="margin:14px 0 0;"><strong>Closing:</strong> <span class="say">"Thank you for your time, Doctor. We look forward to having you as part of Financial OPD."</span></p>
+      </section>
     </aside>
   </div>
 
@@ -642,7 +667,6 @@ Copy the variant you prefer into its own file for use.
     const competitorUrlInput = $('#competitorUrl');
     const callerNameCustomWrap = document.getElementById('callerNameCustomWrap');
     const callerNameCustom = document.getElementById('callerNameCustom');
-    const callerNamePreview = document.getElementById('callerNamePreview');
 
     // Show / hide custom number fields
     document.querySelectorAll('input[name="income"]').forEach(el => {
@@ -771,7 +795,7 @@ Copy the variant you prefer into its own file for use.
       const selectedVal = selected ? selected.value : '';
       const custom = callerNameCustom.value.trim();
       const name = selectedVal === 'Custom' ? custom : selectedVal;
-      callerNamePreview.textContent = name ? name : '[Your Name]';
+      document.querySelectorAll('.caller-name').forEach(el => { el.textContent = name ? name : '[Your Name]'; });
     };
     document.querySelectorAll('input[name="callerName"]').forEach(el => {
       el.addEventListener('change', (e) => {
